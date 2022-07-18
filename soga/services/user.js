@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:5005";
+const baseUrl = "https://covalnt.herokuapp.com";
 
 const allUsers = async (token) => {
   const response = await axios.get(

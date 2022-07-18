@@ -2,7 +2,7 @@ import axios from "axios";
 
 const signIn = async (data) => {
   const { email, password } = data;
-  const response = await axios.post("http://localhost:5005/api/login/", {
+  const response = await axios.post("https://covalnt.herokuapp.com/api/login/", {
     email,
     password,
   });
@@ -12,7 +12,7 @@ const signIn = async (data) => {
 const signUp = async (data) => {
   const { email, password, firstname, lastname, username, birthday, gender } =
     data;
-  const response = await axios.post("http://localhost:5005/api/users/", {
+  const response = await axios.post("https://covalnt.herokuapp.com/api/users/", {
     email,
     password,
     firstname,
@@ -25,7 +25,7 @@ const signUp = async (data) => {
 };
 
 const getUsers = async () => {
-  const response = await axios.get("http://localhost:5005/api/users/");
+  const response = await axios.get("https://covalnt.herokuapp.com/users/");
   return response.data;
 };
 export default { signIn, signUp, getUsers };

@@ -94,10 +94,9 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
               const todaysYear = today.getFullYear();
 
               return (
-                <Box>
+                <Box key={index}>
                   {/* Days of the week */}
                   <Box
-                    key={index}
                     sx={{
                       //  arranged as in calendar
 
@@ -141,7 +140,6 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
                         `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
                           ? " "
                           : " 1px solid gray",
-                          
                     }}
                     onClick={() => {
                       handleChange(day.fullDayDetail);
