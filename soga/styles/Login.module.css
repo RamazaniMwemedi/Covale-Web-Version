@@ -1,0 +1,67 @@
+.login {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 1000px;
+  height: 500px;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+}
+.main_soga {
+  color: rgb(180, 17, 180);
+  font-size: 100px;
+  font-style: italic;
+  font-family: sans-serif;
+}
+
+.signin_form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.form_one {
+  display: flex;
+  gap: 10px;
+}
+.form_two {
+  display: flex;
+  gap: 10px;
+}
+
+.dialog_title {
+  display: flex;
+  gap: 170px;
+}
+
+.soga {
+  color: purple;
+  font-style: bold;
+  font-family: sans-serif;
+  margin-left : -20px
+}
+.login_left_top {
+  padding-bottom: 100px;
+}
+.continue_as {
+  background-color: azure;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #008080;
+  border-radius: 10px;
+  padding: 10px;
+}
+.signin_container {
+  justify-content: space-between;
+  flex: 1;
+  padding: 10px;
+  border-style: solid;
+  background-color: azure;
+  border-width: 1px;
+  border-color: #008080;
+  border-radius: 10px;
+  width: 350px;
+}

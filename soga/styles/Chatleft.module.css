@@ -1,0 +1,5 @@
+.drawer_header{
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}

@@ -1,0 +1,342 @@
+import React, { useState } from "react";
+import { Box } from "@mui/system";
+import { Avatar, Typography, IconButton, Button } from "@mui/material";
+import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
+import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
+import VideoFileIcon from "@mui/icons-material/VideoFile";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
+import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+
+const ChatSectionLeft = ({
+  id,
+  user,
+  chat,
+  messageChangeHandler,
+  sendMessageHandler,
+  message,
+}) => {
+  if (chat) {
+    console.log("chat", chat.friend);
+  }
+  const friendUsername = chat
+    ? chat.friend.id !== user.id
+      ? `${chat.friend.firstname}  ${chat.friend.lastname}`
+      : ""
+    : "";
+  return (
+    <Box
+      sx={{
+        flex: 0.65,
+        width: "100%",
+        // Scrollable
+        // overflowY: "scroll",
+        // border
+        borderRight: "1px solid #e0e0e0",
+      }}
+    >
+      <TopBar friendUsername={friendUsername} />
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          width: "47.25%",
+        }}
+      >
+        {chat && <Mid user={user} chat={chat} />}
+        <Bottom
+          messageChangeHandler={messageChangeHandler}
+          sendMessageHandler={sendMessageHandler}
+          message={message}
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export default ChatSectionLeft;
+
+const TopBar = ({ friendUsername }) => {
+  return (
+    <Box
+      sx={{
+        position: "fixed",
+        width: "47.25%",
+        height: "4rem",
+        backgroundColor: "white",
+        // centered
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        textAlign: "center",
+        paddingLeft: "5px",
+        // z-index
+        zIndex: "1",
+        // border
+        borderBottom: "1px solid #e0e0e0",
+        borderRight: "1px solid #e0e0e0",
+      }}
+    >
+      {/* Left */}
+      <Box
+        sx={{
+          display: "flex",
+          // centerd
+          justifyContent: "space-between",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <Avatar alt={friendUsername} sx={{ width: 45, height: 45 }} />
+        <Typography
+          variant="h6"
+          sx={{
+            paddingLeft: "10px",
+          }}
+        >
+          {friendUsername}
+        </Typography>
+      </Box>
+      {/* Right */}
+      <Box
+        sx={{
+          display: "flex",
+          // centerd
+          justifyContent: "space-between",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <IconButton>
+          <AddIcCallRoundedIcon
+            color="secondary"
+            sx={{
+              fontSize: 25,
+            }}
+          />
+        </IconButton>
+        <IconButton>
+          <VideoCallRoundedIcon
+            color="secondary"
+            sx={{
+              fontSize: 25,
+            }}
+          />
+        </IconButton>
+      </Box>
+    </Box>
+  );
+};
+
+const Mid = ({ user, chat }) => {
+  console.log(chat);
+  return (
+    <Box
+      sx={{
+        marginLeft: "5px",
+        marginRight: "5px",
+      }}
+    >
+      {chat.chat.messege.map((message) => {
+        return message.sender === user.id ? (
+          <UserMessage message={message} />
+        ) : (
+          <FriendMessage message={message} />
+        );
+      })}
+    </Box>
+  );
+};
+
+const UserMessage = ({ message }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        // centerd
+        alignItems: "center",
+        textAlign: "center",
+        // FLoat right
+        justifyContent: "flex-end",
+      }}
+    >
+      {/* Message */}
+      <Box
+        sx={{
+          backgroundColor: "purple",
+          // centered
+          display: "flex",
+          // paddingLeft: "5px",
+          // paddingRight: "5px",
+          paddingTop: "5px",
+          paddingBottom: "5px",
+          borderRadius: "12px",
+          width: "auto",
+          height: "auto",
+          marginBottom: "10px",
+          borderBottomRightRadius: "0px",
+          // max width 80%
+          maxWidth: "80%",
+          marginRight: "6px",
+        }}
+      >
+        <Typography variant="subtitle2" sx={{ color: "white" }}>
+          {message.message}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
+const FriendMessage = ({ message }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        // centerd
+        alignItems: "center",
+        textAlign: "center",
+        // FLoat right
+        justifyContent: "flex-start",
+      }}
+    >
+      {/* Avatar */}
+      <Avatar
+        sx={{
+          width: 25,
+          height: 25,
+          marginRight: "6px",
+        }}
+      />
+      {/* Message */}
+      <Box
+        sx={{
+          backgroundColor: "white",
+          // centered
+          display: "flex",
+          paddingLeft: "5px",
+          paddingRight: "5px",
+          paddingTop: "5px",
+          paddingBottom: "5px",
+          borderRadius: "7px",
+          width: "auto",
+          height: "auto",
+          marginBottom: "10px",
+          borderBottomLeftRadius: "0px",
+          // max width 80%
+          maxWidth: "80%",
+        }}
+      >
+        <Typography variant="subtitle2">{message.message}</Typography>
+      </Box>
+    </Box>
+  );
+};
+
+const Bottom = ({ messageChangeHandler, sendMessageHandler, message }) => {
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+  const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
+
+  return (
+    <Box
+      sx={{
+        height: "3rem",
+        backgroundColor: "white",
+        display: "flex",
+        marginBottom: "4px",
+        borderRight: "1px solid #e0e0e0",
+      }}
+    >
+      {showEmojiPeaker && (
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: "53px",
+            marginLeft: "30px",
+            backgroundColor: "white",
+            borderRadius: "15px",
+          }}
+        >
+          <IconButton
+            sx={{
+              marginLeft: "250px",
+            }}
+            onClick={() => {
+              setShowEmojiPeaker(false);
+            }}
+          >
+            <CloseRoundedIcon color="secondary" fontSize="small" />
+          </IconButton>
+          <h1>Hello emoji</h1>
+        </Box>
+      )}
+
+      <IconButton>
+        <VideoFileIcon color="secondary" />
+      </IconButton>
+      <IconButton>
+        <PhotoSizeSelectActualRoundedIcon color="secondary" />
+      </IconButton>
+      {/* Communication */}
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+        }}
+      >
+        <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
+          <OutlinedInput
+            startAdornment={
+              <InputAdornment
+                sx={{
+                  marginLeft: "-15px",
+                }}
+                position="start"
+              >
+                <IconButton>
+                  <EmojiEmotionsRoundedIcon
+                    color="secondary"
+                    onClick={() => {
+                      setShowEmojiPeaker(true);
+                    }}
+                  />
+                </IconButton>
+              </InputAdornment>
+            }
+            id="outlined-adornment-password"
+            type="text"
+            value={message}
+            onChange={(e) => {
+              messageChangeHandler(e);
+            }}
+            sx={{
+              height: "35px",
+              borderRadius: "15px",
+            }}
+            color="secondary"
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton onClick={() => sendMessageHandler()} edge="end">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="purple"
+                    // class="bi bi-send-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                  </svg>
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+      </Box>
+    </Box>
+  );
+};

@@ -1,0 +1,82 @@
+import React, { useState, useEffect } from "react";
+import {
+  Avatar,
+  List,
+  ListItem,
+  Box,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useRouter } from "next/router";
+
+const Chat = ({ message }) => {
+  const router = useRouter();
+  const { id } = router.query;
+  
+  return (
+    <List
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        textAlign: "center",
+      }}
+    >
+      <ListItem
+        button
+        onClick={() => {
+          router.push(`/chats/${message.chatId}`);
+        }}
+        sx={{
+          borderRadius: "0.5rem",
+          backgroundColor: message.chatId === id ? "white" : "unset",
+          "&:hover": {
+            boxShadow: 1,
+            backgroundColor: "whitesmoke",
+          },
+        }}
+      >
+        <Avatar
+          alt="Remy Sharp"
+          src="https://material-ui.com/static/images/avatar/1.jpg"
+        />
+        <Box
+          sx={{
+            marginLeft: "5px",
+          }}
+        >
+          <Typography variant="subtitle1">{message.friendUsername}</Typography>
+          {/* Show the first 25 characters only else add ... */}
+          <Typography variant="body2">
+            {message.lastMessege.length > 30
+              ? message.lastMessege.substring(0, 30) + "..."
+              : message.lastMessege}
+          </Typography>
+        </Box>
+
+        {/* <IconButton
+          sx={{
+            marginRight: "5px",
+            right: "0",
+            position: "absolute",
+            
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            "&:hover": {
+              backgroundColor: "white",
+            },
+            // Rounded
+            borderRadius: "50%",
+
+          }}
+        >
+          <MoreVertIcon />{" "}
+        </IconButton> */}
+      </ListItem>
+    </List>
+  );
+};
+
+export default Chat;

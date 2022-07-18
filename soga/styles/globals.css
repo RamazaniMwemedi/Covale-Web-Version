@@ -1,0 +1,136 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: aliceblue;
+}
+
+a {
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  color: blue;
+  padding-left: 60%;
+  font-size: small;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  width: 100%;
+  color: red;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0)
+  );
+
+}
+
+.logo {
+  background-color: rgb(180, 17, 180);
+  width: 65%;
+  height: 20%;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+.logo h1 {
+  color: white;
+  font-size: 25px;
+  font-family: sans-serif;
+  text-align: center;
+  padding-top: -10px;
+}
+.drawerMain {
+  /* height: calc(100vh - 5px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2px; */
+}
+
+.avatarClick :hover {
+  cursor: pointer;
+}
+
+.cropper {
+  /* PopUp */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 50%;
+  z-index: 100;
+  background-color: aliceblue;
+}
+
+.bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+/* Background Image */
+.backgroundImage {
+  height: 90px;
+  width: 100%;
+  background-color: dodgerblue;
+}
+
+.redirectToSentReq :hover {
+  cursor: pointer;
+  background-color: plum;
+}
+.redirect {
+  border-radius: 15px;
+  border-style: solid;
+  border-color: plum;
+  border-width: 1.5px;
+  width: 40%;
+  top: 50%;
+  left: 50%;
+  transform: translate(75%, 50%);
+  cursor: pointer;
+}
+.redirect :hover {
+  background-color: plum;
+  border-radius: 15px;
+}
+#frSent :hover {
+  cursor: pointer;
+}
+#frSent {
+  color: purple;
+  font-size: small;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px whitesmoke; 
+  border-radius: 0px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: gainsboro; 
+  border-radius: 50px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: gray; 
+}

@@ -1,0 +1,37 @@
+{
+  "license": "MIT",
+  "name": "soga",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@fontsource/open-sans": "^4.5.8",
+    "@fontsource/roboto": "^4.5.5",
+    "@mui/icons-material": "^5.6.1",
+    "@mui/lab": "^5.0.0-alpha.86",
+    "@mui/material": "^5.6.1",
+    "@mui/styles": "^5.6.2",
+    "@mui/system": "^5.8.0",
+    "@mui/x-date-pickers": "^5.0.0-alpha.3",
+    "axios": "^0.26.1",
+    "date-fns": "^2.28.0",
+    "material-ui-popup-state": "^2.0.1",
+    "next": "^12.2.2-canary.0",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
+    "react-easy-crop": "^4.2.0",
+    "socket.io-client": "^4.5.1"
+  },
+  "proxy": "http://localhost:5005",
+  "devDependencies": {
+    "eslint": "8.13.0",
+    "eslint-config-next": "12.1.5"
+  }
+}
