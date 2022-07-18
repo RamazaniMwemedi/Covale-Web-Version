@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 // Components
 import DrawerComponent from "../components/DrawerComponent";
 import ChatLeft from "../components/ChatLeft";
-import chatService from "../services/chats";
+import chatService from "../../services/chats";
 import { responsiveFontSizes } from "@mui/material";
 
 export default function Home() {

@@ -12,7 +12,7 @@ import "@fontsource/open-sans/500.css"; // Weight 500.
 
 import ProfileDialog from "../components/ProfileDialog";
 import Chats from "./Chats";
-import chatService from "../services/chats";
+import chatService from "../../services/chats";
 
 
 const closedMixin = (theme) => ({

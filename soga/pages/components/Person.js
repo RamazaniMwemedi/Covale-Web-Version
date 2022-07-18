@@ -4,7 +4,7 @@ import { Avatar, Divider, Typography, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import userServices from "../services/user";
+import userServices from "../../services/user";
 
 const useStyle = makeStyles({
   typographyDetails: {

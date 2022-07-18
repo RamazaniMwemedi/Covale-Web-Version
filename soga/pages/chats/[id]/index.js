@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import ChatLeft from "../../components/ChatLeft";
 import ChatSection from "../../components/ChatSection";
-import chatServices from "../../services/chats";
+import chatServices from "../../../services/chats";
 
 export default function Chat({ signoutHandler }) {
   const [user, setUser] = useState(null);
