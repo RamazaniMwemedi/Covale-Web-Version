@@ -10,7 +10,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 
-const Chat = ({ message }) => {
+export default function Chat  ({ message })  {
   const router = useRouter();
   const { id } = router.query;
   
@@ -23,6 +23,7 @@ const Chat = ({ message }) => {
         textAlign: "center",
       }}
     >
+      {message &&
       <ListItem
         button
         onClick={() => {
@@ -75,8 +76,8 @@ const Chat = ({ message }) => {
           <MoreVertIcon />{" "}
         </IconButton> */}
       </ListItem>
+      }
     </List>
   );
 };
 
-export default Chat;

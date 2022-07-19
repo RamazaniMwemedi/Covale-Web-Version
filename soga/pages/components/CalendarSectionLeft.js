@@ -35,8 +35,9 @@ function getDaysArray(year, month) {
 }
 
 export default function StaticDatePickerDemo({ value, handleChange }) {
+ 
   const [showAddEvent, setShowAddEvent] = React.useState(false);
-  const [clickedDay, setClickedDay] = React.useState(null)
+  const [clickedDay, setClickedDay] = React.useState(null);
   const showAddEventHandler = () => {
     setShowAddEvent(true);
   };
@@ -44,49 +45,49 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
     setShowAddEvent(false);
   };
 
-  const clickedDayHandler = (day) => { 
-    setClickedDay(day)
-   }
-   const clickedDayDate = new Date(clickedDay);
-    const clickedDate = clickedDayDate.getDate();
-    const clickedMonthDate = clickedDayDate.getMonth();
-    const clickedYearDate = clickedDayDate.getFullYear();
+  const clickedDayHandler = (day) => {
+    setClickedDay(day);
+  };
+  const clickedDayDate = new Date(clickedDay);
+  const clickedDate = clickedDayDate.getDate();
+  const clickedMonthDate = clickedDayDate.getMonth();
+  const clickedYearDate = clickedDayDate.getFullYear();
 
-   console.log(clickedYearDate, clickedMonthDate);
   return (
     <Box>
       {/* Table for days of a month */}
-      <Box
-        sx={{
-          flexDirection: "column",
-          border: "1px solid #e0e0e0 ",
-          margin: "1px",
-          backgroundColor: "white",
-          height: "100%",
-          padding: "12px",
-        }}
-      >
-        {showAddEvent && (
-          <AddEvent
-            hideAddEventHandler={hideAddEventHandler}
-            clickedDay={clickedDay}
-          />
-        )}
-
-        <Typography variant="h2">
-          {value.toString().split(" ")[1]} {value.toString().split(" ")[3]}{" "}
-        </Typography>
+      {value && (
         <Box
           sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(7, 1fr)",
-            gap: "5px",
-            width: "100%",
-            paddingTop: "15px",
+            flexDirection: "column",
+            border: "1px solid #e0e0e0 ",
+            margin: "1px",
+            backgroundColor: "white",
+            height: "100%",
+            padding: "12px",
           }}
         >
-          {getDaysArray(value.getFullYear(), value.getMonth() + 1).map(
-            (day, index) => {
+          {showAddEvent && (
+            <AddEvent
+              hideAddEventHandler={hideAddEventHandler}
+              clickedDay={clickedDay}
+            />
+          )}
+
+          <Typography variant="h2">
+            {/* {value.toString().split(" ")[1]} {value.toString().split(" ")[3]}{" "} */}
+            Hello
+          </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(7, 1fr)",
+              gap: "5px",
+              width: "100%",
+              paddingTop: "15px",
+            }}
+          >
+            {getDaysArray(2022, 8).map((day, index) => {
               const today = new Date();
               // Todays valus
               const todaysDay = today.getDate();
@@ -154,10 +155,10 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
                   </Box>
                 </Box>
               );
-            }
-          )}
+            })}
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 }

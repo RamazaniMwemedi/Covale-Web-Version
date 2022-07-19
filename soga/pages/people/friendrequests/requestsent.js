@@ -7,7 +7,7 @@ import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
 import Loader from "../../components/Loader";
 import PersonRequestSent from "../../components/PersonRequestSent";
-import userServices from "../../services/user";
+import userServices from "../../../services/user";
 import { IconButton, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 

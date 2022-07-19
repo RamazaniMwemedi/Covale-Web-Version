@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",
@@ -31,7 +31,8 @@
   },
   "proxy": "http://localhost:5005",
   "devDependencies": {
-    "eslint": "8.13.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.13.0",
     "eslint-config-next": "12.1.5"
   }
 }

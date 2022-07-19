@@ -8,7 +8,7 @@ import { Typography } from "@mui/material";
 import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
 import PersonRequest from "../../components/PersonRequest";
-import userServices from "../../services/user";
+import userServices from "../../../services/user";
 import Loader from "../../components/Loader"
 
 export default function Explore() {

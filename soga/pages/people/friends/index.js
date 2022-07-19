@@ -11,7 +11,7 @@ import PeopleLeft from "../../components/PeopleLeft";
 import Friend from "../../components/Friend";
 import Loader from "../../components/Loader"
 
-import userServices from "../../services/user";
+import userServices from "../../../services/user";
 
 const useStyles = makeStyles({
   text: {

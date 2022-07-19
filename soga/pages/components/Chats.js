@@ -12,12 +12,11 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 // My components
 import AddMoreFriends from "./AddMoreFriends";
-import Chat from "./Chat"
+import Chat from "./Chat";
 
 const Chats = ({ messages }) => {
   const [showMoreFriends, setShowMoreFriends] = useState(false);
   const [showButton, setShowButton] = useState(true);
-  
 
   const buttonHandler = () => {
     setShowMoreFriends(true);
@@ -29,22 +28,25 @@ const Chats = ({ messages }) => {
   };
 
   return (
-    <Box>
+    <>
+      {messages && (
+        <Box>
+          {messages.map((message) => {
+            return (
+              <>
+                <Chat message={message} />
+              </>
+            );
+          })}
 
-      {messages.map((message) => {
-       return (
-         <>
-           <Chat message={message} />
-         </>
-       );
-      })}
+          {showMoreFriends && (
+            <AddMoreFriends closeMorePeopleHandler={closeMorePeopleHandler} />
+          )}
 
-      {showMoreFriends && (
-        <AddMoreFriends closeMorePeopleHandler={closeMorePeopleHandler} />
+          {showButton && <FloatingAButton buttonHandler={buttonHandler} />}
+        </Box>
       )}
-
-      {showButton && <FloatingAButton buttonHandler={buttonHandler} />}
-    </Box>
+    </>
   );
 };
 

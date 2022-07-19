@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
 
 // My Modules
-import userServices from "../../services/user";
+import userServices from "../../../services/user";
 import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
 import Person from "../../components/Person";

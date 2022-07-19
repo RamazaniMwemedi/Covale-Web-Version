@@ -7,10 +7,10 @@ export default function CalendarSection({ handleChange, value }) {
     <Box
       sx={{
         height: "100%",
-        marginLeft:"-66px",
-        display:"flex",
-        backgroundColor:"white",
-        flex:1
+        marginLeft: "-66px",
+        display: "flex",
+        backgroundColor: "white",
+        flex: 1,
       }}
     >
       <CalendarSectionLeft handleChange={handleChange} value={value} />
