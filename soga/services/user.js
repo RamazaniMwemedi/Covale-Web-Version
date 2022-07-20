@@ -55,6 +55,7 @@ const friendReqRecieved = async (token) => {
 
 // Friend Requests Sent
 const friendReqSent = async (token) => {
+  console.log("friendReqRecieved ")
   const response = await axios.get(
     `${baseUrl}/api/authorizeduser/friend/friendReqSent`,
     {
@@ -63,6 +64,9 @@ const friendReqSent = async (token) => {
       },
     }
   );
+    console.log("friendReqRecieved data ");
+    console.log(response.data);
+
   return response.data;
 };
 

@@ -7,7 +7,6 @@ import { Typography } from "@mui/material";
 import userServices from "../../../services/user";
 import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
-import Person from "../../components/Person";
 import Loader from "../../components/Loader";
 
 export default function Explore() {
@@ -18,7 +17,7 @@ export default function Explore() {
 
   const token = user ? user.token : null;
 
-  React.useEffect((router) => {
+  React.useLayoutEffect(() => {
     // Loged in user from localStorage
     const signedInUser = localStorage.getItem("logedinUser");
     if (!signedInUser) {
@@ -116,7 +115,8 @@ const People = ({ users, loading }) => {
         ) : (
           users.map((user) => (
             <Box key={user.id}>
-              <Person user={user} />
+              <Typography>{user.firstname}</Typography>
+              <Typography>{user.lastname}</Typography>
             </Box>
           ))
         )}

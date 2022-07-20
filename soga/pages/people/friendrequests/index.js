@@ -3,13 +3,12 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
 
-
 // My Modules
 import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
 import PersonRequest from "../../components/PersonRequest";
 import userServices from "../../../services/user";
-import Loader from "../../components/Loader"
+import Loader from "../../components/Loader";
 
 export default function Explore() {
   const [users, setUsers] = React.useState([]);
@@ -19,18 +18,23 @@ export default function Explore() {
 
   const token = user ? user.token : null;
 
-  React.useEffect((router ,user) => {
-    // Loged in user from localStorage
-    const signedInUser = localStorage.getItem("logedinUser");
-    if (!signedInUser) {
-      router.push("/");
-    }
-    if (user === null) {
-      setUser(JSON.parse(signedInUser));
-    }
-  }, [user]);
+  React.useEffect(
+    (router, user) => {
+      // Loged in user from localStorage
+      const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
+      console.log("signedInUser", signedInUser);
+      if (!signedInUser) {
+        router.push("/");
+      } else {
+        setUser(signedInUser);
+      }
+    },
+    [user]
+  );
+  console.log("user", user);
 
   React.useEffect(() => {
+    console.log("token", token);
     if (token) {
       userServices.friendReqRecieved(token).then((res) => {
         setUsers(res);
@@ -90,7 +94,7 @@ export default function Explore() {
           </div>
         </div>
         {loading ? (
-          <Loader/>
+          <Loader />
         ) : (
           <>
             {users.length > 0 ? (
@@ -107,11 +111,13 @@ export default function Explore() {
 
 const People = ({ users, token }) => {
   return (
-    <Box sx={{
-      display:"grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-      gap: "10px",
-    }}>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+        gap: "10px",
+      }}
+    >
       {users.map((user) => (
         <PersonRequest key={user.id} user={user} token={token} />
       ))}
