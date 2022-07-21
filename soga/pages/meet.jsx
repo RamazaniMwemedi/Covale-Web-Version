@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 // My Modules
 import DrawerComponent from "./components/DrawerComponent";
 import MeetLeft from "./components/MeetLeft";
-import MeetRight from "./components/MeetRight";
+import MeetSection from "./components/MeetSection";
 
 export default function Calendar() {
   
@@ -34,7 +34,7 @@ export default function Calendar() {
       <Box component="main" sx={{ display: "flex", height: "100%" }}>
         {/* App will start here */}
         <MeetLeft/>
-        <MeetRight/>
+        <MeetSection/>
       </Box>
     </Box>
   );

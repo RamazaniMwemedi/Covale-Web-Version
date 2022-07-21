@@ -129,13 +129,13 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   height: "45px",
                   borderRadius: "10px",
                   marginLeft: "10px",
-                  border: " 1.8px solid rgb(180, 17, 180) ",
+                  backgroundColor: "  rgb(180, 17, 180) ",
                   justifyContent: "center",
                   alignItem: "center",
                   textAlign: "center",
                 }}
               >
-                <Typography variant="h4" color="secondary">
+                <Typography variant="h4" sx={{ color: "white" }}>
                   c
                 </Typography>
               </Box>
@@ -215,24 +215,23 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 </ListItemButton>
               </Tooltip>
               {/* Meet */}
-                            <Tooltip title="Meet">
-
-              <ListItemButton
-                button
-                onClick={() => {
-                  router.push("/meet");
-                }}
-                sx={{
-                  borderRadius: "10px",
-                  margin: "5px",
-                  backgroundColor: meetBackgroundColor,
-                }}
-              >
-                <ListItemIcon>
-                  <VideocamRoundedIcon color={meet} />
-                </ListItemIcon>
-                <ListItemText primary="Calender" />
-              </ListItemButton>
+              <Tooltip title="Meet">
+                <ListItemButton
+                  button
+                  onClick={() => {
+                    router.push("/meet");
+                  }}
+                  sx={{
+                    borderRadius: "10px",
+                    margin: "5px",
+                    backgroundColor: meetBackgroundColor,
+                  }}
+                >
+                  <ListItemIcon>
+                    <VideocamRoundedIcon color={meet} />
+                  </ListItemIcon>
+                  <ListItemText primary="Calender" />
+                </ListItemButton>
               </Tooltip>
             </List>
           </Box>
@@ -245,11 +244,13 @@ export default function DrawerComponent({ signoutHandler, user }) {
           >
             {" "}
             <Box>
-              <IconButton>
-                <VideoCallRoundedIcon
-                  sx={{ fontSize: "30px", color: "gray" }}
-                />
-              </IconButton>
+              <Tooltip title="Join">
+                <IconButton>
+                  <VideoCallRoundedIcon
+                    sx={{ fontSize: "30px", color: "gray" }}
+                  />
+                </IconButton>
+              </Tooltip>
               <Signout signoutHandler={signoutHandler} user={user} />
             </Box>
           </Box>
