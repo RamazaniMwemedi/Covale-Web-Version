@@ -92,7 +92,7 @@ const LoginPage = () => {
         console.log(response);
         if (response) {
           window.localStorage.setItem("logedinUser", JSON.stringify(response));
-          router.push(`/chats/${1}`);
+          router.push(`/chats/`);
         }
       } catch (exception) {
         setLoginError(exception.response.data.error);

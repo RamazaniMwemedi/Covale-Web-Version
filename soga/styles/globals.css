@@ -34,31 +34,7 @@ hr {
 
 }
 
-.logo {
-  background-color: rgb(180, 17, 180);
-  width: 65%;
-  height: 20%;
-  border-radius: 10px;
-  margin-left: 10px;
-}
-.logo h1 {
-  color: white;
-  font-size: 25px;
-  font-family: sans-serif;
-  text-align: center;
-  padding-top: -10px;
-}
-.drawerMain {
-  /* height: calc(100vh - 5px);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 2px; */
-}
 
-.avatarClick :hover {
-  cursor: pointer;
-}
 
 .cropper {
   /* PopUp */

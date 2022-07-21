@@ -6,14 +6,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 // My Modules
 import DrawerComponent from "./components/DrawerComponent";
-import CalenderLeft from "./components/CalenderLeft";
-import CalenderSection from "./components/CalenderSection";
+import MeetLeft from "./components/MeetLeft";
+import MeetRight from "./components/MeetRight";
 
 export default function Calendar() {
-  const [value, setValue] = React.useState(new Date());
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
+  
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
@@ -34,10 +31,10 @@ export default function Calendar() {
     <Box sx={{ display: "flex", height: "100%" }}>
       <CssBaseline />
       <DrawerComponent user={user} />
-      <CalenderLeft handleChange={handleChange} value={value} />
       <Box component="main" sx={{ display: "flex", height: "100%" }}>
         {/* App will start here */}
-        <CalenderSection handleChange={handleChange} value={value} />
+        <MeetLeft/>
+        <MeetRight/>
       </Box>
     </Box>
   );

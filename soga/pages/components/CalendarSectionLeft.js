@@ -35,7 +35,6 @@ function getDaysArray(year, month) {
 }
 
 export default function StaticDatePickerDemo({ value, handleChange }) {
- 
   const [showAddEvent, setShowAddEvent] = React.useState(false);
   const [clickedDay, setClickedDay] = React.useState(null);
   const showAddEventHandler = () => {
@@ -48,7 +47,14 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
   const clickedDayHandler = (day) => {
     setClickedDay(day);
   };
-  const clickedDayDate = new Date(clickedDay);
+
+  const todayDayHandler = (day) => {
+    setTodayDay(day);
+  };
+
+  const [todayDay, setTodayDay] = React.useState("");
+
+  const clickedDayDate = new Date(value);
   const clickedDate = clickedDayDate.getDate();
   const clickedMonthDate = clickedDayDate.getMonth();
   const clickedYearDate = clickedDayDate.getFullYear();
@@ -74,9 +80,9 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
             />
           )}
 
-          <Typography variant="h2">
-            {/* {value.toString().split(" ")[1]} {value.toString().split(" ")[3]}{" "} */}
-            Hello
+          <Typography variant="h3">
+            {value.toString().split(" ")[2]} {value.toString().split(" ")[1]} ,
+            {todayDay}
           </Typography>
           <Box
             sx={{
@@ -87,75 +93,87 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
               paddingTop: "15px",
             }}
           >
-            {getDaysArray(2022, 8).map((day, index) => {
-              const today = new Date();
-              // Todays valus
-              const todaysDay = today.getDate();
-              const todaysMonth = today.getMonth();
-              const todaysYear = today.getFullYear();
+            {getDaysArray(value.getFullYear(), value.getMonth() + 1).map(
+              (day, index) => {
+                const today = new Date();
+                // Todays valus
+                const todaysDay = today.getDate();
+                const todaysMonth = today.getMonth();
+                const todaysYear = today.getFullYear();
 
-              return (
-                <Box key={index}>
-                  {/* Days of the week */}
-                  <Box
-                    sx={{
-                      //  arranged as in calendar
+                return (
+                  <Box key={index}>
+                    {/* Days of the week */}
+                    <Box
+                      sx={{
+                        //  arranged as in calendar
 
-                      width: "80px",
-                      height: "110px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      margin: "1px",
-                      fontSize: "12px",
-                      textAlign: "center",
-                      cursor: "pointer",
-                      "&:hover": {
-                        backgroundColor: "#f5f5f5",
-                        color: "black",
-                        fontWeight: "bold",
-                      },
-                      borderRadius: "5px",
-                      borderTop:
-                        `${day.date} ${day.month} ${day.year}` ===
-                        `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
-                          ? "4px solid purple"
-                          : "1px solid gray",
-                      //Styled components for the days of the week
-                      "& .MuiTypography-root": {
-                        fontWeight: "bold",
+                        width: "80px",
+                        height: "110px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        margin: "1px",
+                        fontSize: "12px",
                         textAlign: "center",
-                      },
-                      paddingTop: "10px",
-                      backgroundColor:
-                        `${day.date} ${day.month} ${day.year}` ===
-                        `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
-                          ? " plum"
-                          : " ",
-                      // backgroundColor:
-                      //   `${day.date} ${day.month} ${day.year}` ===
-                      //   `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
-                      //     ? "plum"
-                      //     : " ",
-                      border:
-                        `${day.date} ${day.month} ${day.year}` ===
-                        `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
-                          ? " "
-                          : " 1px solid gray",
-                    }}
-                    onClick={() => {
-                      handleChange(day.fullDayDetail);
-                    }}
-                    onDoubleClick={() => {
-                      showAddEventHandler();
-                      clickedDayHandler(day.fullDayDetail);
-                    }}
-                  >
-                    <Typography variant="body2">{day.day}</Typography>
-                    <Typography variant="button">{day.date}</Typography>
+                        cursor: "pointer",
+                        "&:hover": {
+                          backgroundColor:
+                            `${day.date} ${day.month} ${day.year}` ===
+                            `${clickedDate} ${
+                              clickedMonthDate + 1
+                            } ${clickedYearDate}`
+                              ? " rgba(221, 160, 221, 0.863)"
+                              : " #f5f5f5",
+                          color: "black",
+                          fontWeight: "bold",
+                        },
+                        borderRadius: "5px",
+                        borderTop:
+                          `${day.date} ${day.month} ${day.year}` ===
+                          `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
+                            ? "6px solid plum"
+                            : "",
+                        //Styled components for the days of the week
+                        "& .MuiTypography-root": {
+                          fontWeight: "bold",
+                          textAlign: "center",
+                        },
+                        paddingTop: "10px",
+                        backgroundColor:
+                          `${day.date} ${day.month} ${day.year}` ===
+                          `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
+                            ? " plum"
+                            : " ",
+
+                        border:
+                          `${day.date} ${day.month} ${day.year}` ===
+                          `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
+                            ? " 2px solid plum"
+                            : " 1px dotted gray",
+                        backgroundColor:
+                          `${day.date} ${day.month} ${day.year}` ===
+                          `${clickedDate} ${
+                            clickedMonthDate + 1
+                          } ${clickedYearDate}`
+                            ? " plum"
+                            : " ",
+                      }}
+                      onClick={() => {
+                        handleChange(day.fullDayDetail);
+                        clickedDayHandler(day.fullDayDetail);
+                        todayDayHandler(day.day);
+                      }}
+                      onDoubleClick={() => {
+                        showAddEventHandler();
+                      }}
+                    >
+                      <Typography variant="body2">{day.day}</Typography>
+                      <Typography variant="button">{day.date}</Typography>
+                    </Box>
                   </Box>
-                </Box>
-              );
-            })}
+                );
+              }
+            )}
           </Box>
         </Box>
       )}
