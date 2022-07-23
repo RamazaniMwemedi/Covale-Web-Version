@@ -13,7 +13,7 @@ const ChatSectionRight = ({ friend }) => {
       {friend &&
       <Box
         sx={{
-          flex: 0.35,
+          flex: 0.38,
           width: "100%",
           backgroundColor: "white",
         }}
