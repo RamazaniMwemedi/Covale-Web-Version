@@ -12,8 +12,9 @@ import { useEffect, useState } from "react";
 import { Typography, Box, IconButton } from "@mui/material";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
-import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import Tooltip from "@mui/material/Tooltip";
+
+import NewMeet from "./NewMeet";
 
 import Signout from "./Signout";
 
@@ -27,8 +28,9 @@ const closedMixin = (theme) => ({
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-  backgroundColor: "#fff",
+  backgroundColor: "white",
   justifyContent: "spaceBetween",
+  borderRadiusRight:"1px solid red"
 });
 
 const Drawer = styled(MuiDrawer, {
@@ -39,7 +41,7 @@ const Drawer = styled(MuiDrawer, {
   backgroundColor: theme.palette.background.paper,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
-  borderRight: "1px solid #e0e0e0",
+  borderRight: "1px solid black",
   ...(open && {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
@@ -245,11 +247,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
             {" "}
             <Box>
               <Tooltip title="Join">
-                <IconButton>
-                  <VideoCallRoundedIcon
-                    sx={{ fontSize: "30px", color: "gray" }}
-                  />
-                </IconButton>
+                <NewMeet/>
               </Tooltip>
               <Signout signoutHandler={signoutHandler} user={user} />
             </Box>

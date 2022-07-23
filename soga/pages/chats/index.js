@@ -62,7 +62,7 @@ function App({ user, signoutHandler }) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <DrawerComponent signoutHandler={signoutHandler} />
+      <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <Box
         component="main"
         sx={{

@@ -29,6 +29,7 @@ const closedMixin = (theme) => ({
   },
   backgroundColor: "#fff",
   justifyContent: "spaceBetween",
+  borderLeft: "1px solid #e0e0e0",
 });
 
 const Drawer = styled(MuiDrawer, {
@@ -39,6 +40,7 @@ const Drawer = styled(MuiDrawer, {
   backgroundColor: theme.palette.background.paper,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
+  
   ...(open && {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
