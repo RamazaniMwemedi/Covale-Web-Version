@@ -23,40 +23,50 @@ export default function Chat  ({ message })  {
         textAlign: "center",
       }}
     >
-      {message &&
-      <ListItem
-        button
-        onClick={() => {
-          router.push(`/chats/${message.chatId}`);
-        }}
-        sx={{
-          borderRadius: "0.5rem",
-          backgroundColor: message.chatId === id ? "white" : "unset",
-          "&:hover": {
-            boxShadow: 1,
-            backgroundColor: "whitesmoke",
-          },
-        }}
-      >
-        <Avatar
-          alt="Remy Sharp"
-          src="https://material-ui.com/static/images/avatar/1.jpg"
-        />
-        <Box
+      {message && (
+        <ListItem
+          button
+          onClick={() => {
+            router.push(`/chats/${message.chatId}`);
+          }}
           sx={{
-            marginLeft: "5px",
+            borderRadius: "0.5rem",
+            backgroundColor: message.chatId === id ? "white" : "unset",
+            "&:hover": {
+              boxShadow: 1,
+              backgroundColor: "whitesmoke",
+            },
+            // border style
+            borderStyle: " solid ",
+            // border color
+            borderColor: "lightgrey",
+            // border width
+            borderWidth: "1px",
           }}
         >
-          <Typography variant="subtitle1">{message.friendUsername}</Typography>
-          {/* Show the first 25 characters only else add ... */}
-          <Typography variant="body2">
-            {message.lastMessege.length > 30
-              ? message.lastMessege.substring(0, 30) + "..."
-              : message.lastMessege}
-          </Typography>
-        </Box>
+          <Avatar
+            alt={message.friendUsername[0]}
+            src="https://material-ui.com/static/images/avatar/1.jpg"
+          >
+            {message.friendUsername[0]}
+          </Avatar>
+          <Box
+            sx={{
+              marginLeft: "5px",
+            }}
+          >
+            <Typography variant="subtitle1">
+              {message.friendUsername}
+            </Typography>
+            {/* Show the first 25 characters only else add ... */}
+            <Typography variant="body2">
+              {message.lastMessege.length > 30
+                ? message.lastMessege.substring(0, 30) + "..."
+                : message.lastMessege}
+            </Typography>
+          </Box>
 
-        {/* <IconButton
+          {/* <IconButton
           sx={{
             marginRight: "5px",
             right: "0",
@@ -75,8 +85,8 @@ export default function Chat  ({ message })  {
         >
           <MoreVertIcon />{" "}
         </IconButton> */}
-      </ListItem>
-      }
+        </ListItem>
+      )}
     </List>
   );
 };

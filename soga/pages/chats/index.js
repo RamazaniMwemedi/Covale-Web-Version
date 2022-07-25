@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
+
+
 // Components
 import DrawerComponent from "../components/DrawerComponent";
 import ChatLeft from "../components/ChatLeft";

@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "deploy":"git add . && git commit -am'Deploy' && npm run build && git push"
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",

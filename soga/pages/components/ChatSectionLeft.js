@@ -16,7 +16,7 @@ const ChatSectionLeft = ({
   user,
   chat,
   messageChangeHandler,
-  sendMessageHandler,
+  sendNewMessage,
   message,
 }) => {
   if (chat) {
@@ -49,7 +49,7 @@ const ChatSectionLeft = ({
         {chat && <Mid user={user} chat={chat} />}
         <Bottom
           messageChangeHandler={messageChangeHandler}
-          sendMessageHandler={sendMessageHandler}
+          sendNewMessage={sendNewMessage}
           message={message}
         />
       </Box>
@@ -320,7 +320,7 @@ const Bottom = ({ messageChangeHandler, sendMessageHandler, message }) => {
             color="secondary"
             endAdornment={
               <InputAdornment position="end">
-                <IconButton onClick={() => sendMessageHandler()} edge="end">
+                <IconButton onClick={() => sendNewMessage()} edge="end">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"

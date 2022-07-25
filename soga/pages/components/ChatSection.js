@@ -9,8 +9,8 @@ const ChatSection = ({
   user,
   chat,
   messageChangeHandler,
-  sendMessageHandler,
   message,
+  sendNewMessage,
 }) => {
   const friend = chat ? chat.friend : {};
   return (
@@ -27,7 +27,7 @@ const ChatSection = ({
         user={user}
         chat={chat}
         messageChangeHandler={messageChangeHandler}
-        sendMessageHandler={sendMessageHandler}
+        sendNewMessage={sendNewMessage}
         message={message}
       />
       <ChatSectionRight friend={friend} />

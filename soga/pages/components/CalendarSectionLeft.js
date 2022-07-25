@@ -71,6 +71,7 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
             backgroundColor: "white",
             height: "100%",
             padding: "12px",
+            
           }}
         >
           {showAddEvent && (

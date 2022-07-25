@@ -51,7 +51,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function Tabs({ messages }) {
+function Tabs({ messages, loading }) {
   const [value, setValue] = React.useState("chats");
 
   const handleChange = (event, newValue) => {
@@ -87,7 +87,7 @@ function Tabs({ messages }) {
               margin: "-20px",
             }}
           >
-            <Chats messages={messages} />
+            <Chats messages={messages} loading={loading} />
           </Box>
         </TabPanel>
         <TabPanel value="team">Tam App will appear here</TabPanel>
@@ -98,24 +98,27 @@ function Tabs({ messages }) {
 
 export default function ChatLeft({ user }) {
   const [messages, setMessages] = React.useState([]);
-  const token = user ? user.token : null
+  const [loading, setLoading] = React.useState(true);
+  const token = user ? user.token : null;
 
   React.useEffect(() => {
-    if(token) {
+    if (token) {
       chatService.getChats(token).then((res) => {
         setMessages(res);
-      });
+      }).then(() => {
+        setLoading(false);
+      }
+      );
     }
-    
-  }, [token])
+  }, [token]);
   console.log("messages", messages);
   return (
     <Box>
       <CssBaseline />
       <Drawer variant="permanent">
         <ProfileDialog user={user} />
-        
-        <Tabs messages={messages} />
+
+        <Tabs messages={messages} loading={loading} />
       </Drawer>
     </Box>
   );

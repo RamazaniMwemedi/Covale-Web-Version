@@ -9,6 +9,9 @@ import ChatLeft from "../../components/ChatLeft";
 import ChatSection from "../../components/ChatSection";
 import chatServices from "../../../services/chats";
 
+// Hooks
+import { useSendMessage } from "../../../hooks/useSendMessage";
+
 export default function Chat({ signoutHandler }) {
   const [user, setUser] = useState(null);
   const router = useRouter();
@@ -16,24 +19,13 @@ export default function Chat({ signoutHandler }) {
   const [chat, setChat] = useState(null);
   const [message, setMessage] = useState("");
 
-  const messageChangeHandler = (e) => { 
-
+  const messageChangeHandler = (e) => {
     setMessage(e.target.value);
-  }
-  const sendMessageHandler =  () => {
-    if (message) {
-      const newMessage = {
-        message,
-        user: user._id,
-        chat: chat._id,
-      };
-      
-      }
-    
-  }
+  };
+ 
   const token = user ? user.token : null;
 
-  useEffect((router) => {
+  useEffect(() => {
     const signedInUser = localStorage.getItem("logedinUser");
     if (signedInUser) {
       setUser(JSON.parse(signedInUser));
@@ -42,13 +34,10 @@ export default function Chat({ signoutHandler }) {
     }
   }, []);
 
-  useEffect(() => {
-    if (token && id) {
-      chatServices.getChatById(token, id).then((chat) => {
-        setChat(chat);
-      });
-    }
-  }, [token, id]);
+  const sendNewMessage = (friendId, token, message) => {
+    const newMessage = useSendMessage(friendId, token, message);
+    console.log(newMessage)
+  };
 
   signoutHandler = () => {
     localStorage.removeItem("logedinUser");
@@ -67,9 +56,8 @@ export default function Chat({ signoutHandler }) {
         id={id}
         user={user}
         chat={chat}
-        messageChangeHandler={messageChangeHandler}
-        sendMessageHandler={sendMessageHandler}
         message={message}
+        sendNewMessage={sendNewMessage}
       />
     </Box>
   );
