@@ -10,28 +10,28 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 const ChatSectionRight = ({ friend }) => {
   return (
     <>
-      {friend &&
-      <Box
-        sx={{
-          flex: 0.38,
-          width: "100%",
-          backgroundColor: "white",
-        }}
-      >
-        <IconButton
+      {friend && (
+        <Box
           sx={{
-            position: "fixed",
-            top: "1",
-            right: "0",
+            flex: "38%",
+            // width: "100%",
+            backgroundColor: "white",
           }}
         >
-          <MoreHorizIcon color="secondary" />
-        </IconButton>
-        <Friend friend={friend} />
-        <ComunicationShortCut />
-        <Media />
-      </Box>
-      }
+          <IconButton
+            sx={{
+              position: "fixed",
+              top: "1",
+              right: "0",
+            }}
+          >
+            <MoreHorizIcon color="secondary" />
+          </IconButton>
+          <Friend friend={friend} />
+          <ComunicationShortCut />
+          <Media />
+        </Box>
+      )}
     </>
   );
 };
@@ -153,7 +153,7 @@ const Media = () => {
 const MediaPhotos = () => {
   return (
     <Box>
-      <Typography variant="subtitle1" >Photos</Typography>
+      <Typography variant="subtitle1">Photos</Typography>
     </Box>
   );
 };
@@ -161,15 +161,15 @@ const MediaPhotos = () => {
 const MediaVideos = () => {
   return (
     <Box>
-      <Typography variant="subtitle1" >Videos</Typography>
+      <Typography variant="subtitle1">Videos</Typography>
     </Box>
   );
 };
 
-const MediaLinks=()=>{
+const MediaLinks = () => {
   return (
     <Box>
       <Typography variant="subtitle1">Links</Typography>
     </Box>
   );
-}
+};
