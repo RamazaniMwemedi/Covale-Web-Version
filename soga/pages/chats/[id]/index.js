@@ -7,52 +7,35 @@ import { useEffect, useState } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import ChatLeft from "../../components/ChatLeft";
 import ChatSection from "../../components/ChatSection";
-import chatServices from "../../../services/chats";
 
 // Hooks
-import { useSendMessage } from "../../../hooks/hooks";
+import { useCheckLogedinUser, useGetChatById } from "../../../hooks/hooks";
 
 export default function Chat({ signoutHandler }) {
-  const [user, setUser] = useState(null);
+  var user = useCheckLogedinUser();
   const router = useRouter();
   const { id } = router.query;
-  const [chat, setChat] = useState(null);
+  const token = user ? user.token : null;
+  const chat = useGetChatById(token, id);
   const [message, setMessage] = useState("");
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
   };
- 
-  const token = user ? user.token : null;
-
-  useEffect(() => {
-    const signedInUser = localStorage.getItem("logedinUser");
-    if (signedInUser) {
-      setUser(JSON.parse(signedInUser));
-    } else {
-      router.push("/");
-    }
-  }, []);
 
   signoutHandler = () => {
-    localStorage.removeItem("logedinUser");
-    setUser(null);
     router.push("/");
+    localStorage.removeItem("logedinUser");
+    user = null;
   };
 
- console.table("chat", chat);
   return (
     <Box sx={{ display: "flex", backgroundColor: "white", height: "100vh" }}>
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <ChatLeft user={user} chat={chat} />
       {/* <Typography variant="h4">{id}</Typography> */}
-      <ChatSection
-        id={id}
-        user={user}
-        chat={chat}
-        message={message}
-      />
+      <ChatSection id={id} user={user} chat={chat} message={message} />
     </Box>
   );
 }

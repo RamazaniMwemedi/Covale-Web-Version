@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+const { useEffect, useState } = require("react");
+const { useRouter } = require("next/router");
 
-import { getChatById } from "../services/chats";
+const { getChatById } = require("../services/chats");
 
 const useCheckLogedinUser = () => {
   const [logedInUser, setLogedInUser] = useState("");
@@ -22,16 +22,17 @@ const useGetChatById = (token, id) => {
   const [chat, setChat] = useState(null);
   // Get chat by id and set it to chat
   useEffect(() => {
-    getChatById(token, id).then((res) => {
-      setChat(res);
-    });
-  }, [id]);
+    if ((token, id)) {
+      getChatById(token, id).then((res) => {
+        setChat(res);
+      });
+    }
+  }, [token, id]);
 
   return chat;
 };
 
-export default {
+module.exports = {
   useCheckLogedinUser,
   useGetChatById,
-  
 };
