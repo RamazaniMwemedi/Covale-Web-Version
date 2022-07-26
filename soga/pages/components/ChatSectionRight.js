@@ -7,10 +7,10 @@ import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-const ChatSectionRight = ({ friend }) => {
+const ChatSectionRight = ({ friendUsername }) => {
   return (
     <>
-      {friend && (
+      {friendUsername && (
         <Box
           sx={{
             backgroundColor: "white",
@@ -29,7 +29,7 @@ const ChatSectionRight = ({ friend }) => {
           >
             <MoreHorizIcon color="secondary" />
           </IconButton>
-          <Friend friend={friend} />
+          <Friend friendUsername={friendUsername} />
           <ComunicationShortCut />
           <Media />
         </Box>
@@ -42,7 +42,7 @@ export default ChatSectionRight;
 
 // Friend short details
 
-const Friend = ({ friend }) => {
+const Friend = ({ friendUsername }) => {
   return (
     <Box>
       <Box>
@@ -61,7 +61,7 @@ const Friend = ({ friend }) => {
               fontSize: "1.4rem",
             }}
           >
-            {friend.username}
+            {friendUsername}
           </Typography>
         </Box>
         {/* Icons */}

@@ -14,19 +14,12 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 const ChatSectionLeft = ({
   id,
   user,
-  chat,
   messageChangeHandler,
   sendNewMessage,
   message,
+  messages,
+  friendUsername,
 }) => {
-  if (chat) {
-    console.log("chat", chat.friend);
-  }
-  const friendUsername = chat
-    ? chat.friend.id !== user.id
-      ? `${chat.friend.firstname}  ${chat.friend.lastname}`
-      : ""
-    : "";
   return (
     <Box
       sx={{
@@ -48,7 +41,7 @@ const ChatSectionLeft = ({
           paddingBottom: "2px",
         }}
       >
-        {chat && <Mid user={user} chat={chat} />}
+        {messages && <Mid user={user} messages={messages} />}
         <Bottom
           messageChangeHandler={messageChangeHandler}
           sendNewMessage={sendNewMessage}
@@ -132,8 +125,7 @@ const TopBar = ({ friendUsername }) => {
   );
 };
 
-const Mid = ({ user, chat }) => {
-  console.log(chat);
+const Mid = ({ user, messages }) => {
   return (
     <Box
       sx={{
@@ -141,7 +133,7 @@ const Mid = ({ user, chat }) => {
         marginRight: "5px",
       }}
     >
-      {chat.chat.messege.map((message) => {
+      {messages.map((message) => {
         return message.sender === user.id ? (
           <UserMessage message={message} />
         ) : (
@@ -237,7 +229,7 @@ const FriendMessage = ({ message }) => {
   );
 };
 
-const Bottom = ({ messageChangeHandler, sendMessageHandler, message }) => {
+const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
 

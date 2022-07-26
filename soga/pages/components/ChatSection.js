@@ -11,24 +11,11 @@ const ChatSection = ({
   messageChangeHandler,
   message,
   sendNewMessage,
+  messages,
+  friendUsername,
 }) => {
   
-  const friend = chat ? chat.friend : {};
-  const [size, setSize] = React.useState(0);
-  React.useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => {
-        setSize(window.innerWidth);
-      },
-      // Remove the listener when the component is unmounted
-      () => {
-        window.removeEventListener("resize", () => {
-          setSize(window.innerWidth);
-        });
-      }
-    );
-  }, [, size]);
+
   return (
     <Box
       sx={{
@@ -45,10 +32,11 @@ const ChatSection = ({
         messageChangeHandler={messageChangeHandler}
         sendNewMessage={sendNewMessage}
         message={message}
-        size={size}
+        messages={messages}
+        friendUsername={friendUsername}
       />
 
-      <ChatSectionRight friend={friend} />
+      <ChatSectionRight friendUsername={friendUsername} />
     </Box>
   );
 };

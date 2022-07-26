@@ -11,22 +11,41 @@ import ChatSection from "../../components/ChatSection";
 // Hooks
 import { useCheckLogedinUser, useGetChatById } from "../../../hooks/hooks";
 
-export default function Chat({ signoutHandler }) {
+export default function Chat() {
   var user = useCheckLogedinUser();
   const router = useRouter();
   const { id } = router.query;
   const token = user ? user.token : null;
   const chat = useGetChatById(token, id);
+  const [messages, setMessages] = useState(chat ? chat.chat : []);
+  console.log("messages", messages);
   const [message, setMessage] = useState("");
+
+  const friendUsername = chat
+    ? chat.friend.id !== user.id
+      ? `${chat.friend.firstname}  ${chat.friend.lastname}`
+      : ""
+    : "";
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
   };
 
-  signoutHandler = () => {
+  const signoutHandler = () => {
     router.push("/");
     localStorage.removeItem("logedinUser");
     user = null;
+  };
+
+  const sendMessageHandle = () => {
+    if (message.length > 0) {
+      const newMessage = {
+        message: message,
+        sender: user.id,
+      };
+      setMessages([...messages, newMessage]);
+      setMessage("");
+    }
   };
 
   return (
@@ -35,7 +54,16 @@ export default function Chat({ signoutHandler }) {
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <ChatLeft user={user} chat={chat} />
       {/* <Typography variant="h4">{id}</Typography> */}
-      <ChatSection id={id} user={user} chat={chat} message={message} />
+      <ChatSection
+        id={id}
+        user={user}
+        chat={chat}
+        messageChangeHandler={messageChangeHandler}
+        message={message}
+        messages={messages}
+        sendNewMessage={sendMessageHandle}
+        friendUsername={friendUsername}
+      />
     </Box>
   );
 }
