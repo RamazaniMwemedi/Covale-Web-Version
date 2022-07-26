@@ -13,9 +13,11 @@ const ChatSectionRight = ({ friend }) => {
       {friend && (
         <Box
           sx={{
-            flex: "38%",
-            // width: "100%",
             backgroundColor: "white",
+            // Show this component when the window is wider than 1000px
+            [`@media (min-width: > ${1000}px)`]: {
+              display: "none",
+            },
           }}
         >
           <IconButton

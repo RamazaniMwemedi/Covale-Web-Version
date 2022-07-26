@@ -111,7 +111,6 @@ export default function ChatLeft({ user }) {
       );
     }
   }, [token]);
-  console.log("messages", messages);
   return (
     <Box>
       <CssBaseline />

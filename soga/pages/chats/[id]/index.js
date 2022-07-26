@@ -10,7 +10,7 @@ import ChatSection from "../../components/ChatSection";
 import chatServices from "../../../services/chats";
 
 // Hooks
-import { useSendMessage } from "../../../hooks/useSendMessage";
+import { useSendMessage } from "../../../hooks/hooks";
 
 export default function Chat({ signoutHandler }) {
   const [user, setUser] = useState(null);
@@ -34,18 +34,13 @@ export default function Chat({ signoutHandler }) {
     }
   }, []);
 
-  const sendNewMessage = (friendId, token, message) => {
-    const newMessage = useSendMessage(friendId, token, message);
-    console.log(newMessage)
-  };
-
   signoutHandler = () => {
     localStorage.removeItem("logedinUser");
     setUser(null);
     router.push("/");
   };
 
-  console.log("User", user);
+ console.table("chat", chat);
   return (
     <Box sx={{ display: "flex", backgroundColor: "white", height: "100vh" }}>
       <CssBaseline />
@@ -57,7 +52,6 @@ export default function Chat({ signoutHandler }) {
         user={user}
         chat={chat}
         message={message}
-        sendNewMessage={sendNewMessage}
       />
     </Box>
   );

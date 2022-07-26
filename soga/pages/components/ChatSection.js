@@ -12,25 +12,23 @@ const ChatSection = ({
   message,
   sendNewMessage,
 }) => {
+  
   const friend = chat ? chat.friend : {};
-    const [size, setSize] = React.useState(0);
-    React.useEffect(() => {
-      // Check the width of the window and change the value of size
-
-      // Add a listener to the resize event
-      window.addEventListener(
-        "resize",
-        () => {
+  const [size, setSize] = React.useState(0);
+  React.useEffect(() => {
+    window.addEventListener(
+      "resize",
+      () => {
+        setSize(window.innerWidth);
+      },
+      // Remove the listener when the component is unmounted
+      () => {
+        window.removeEventListener("resize", () => {
           setSize(window.innerWidth);
-        },
-        // Remove the listener when the component is unmounted
-        () => {
-          window.removeEventListener("resize", () => {
-            setSize(window.innerWidth);
-          });
-        }
-      );
-    }, [size]);
+        });
+      }
+    );
+  }, [, size]);
   return (
     <Box
       sx={{
@@ -49,11 +47,8 @@ const ChatSection = ({
         message={message}
         size={size}
       />
-      {size > 1000 ? (
-        <ChatSectionRight friend={friend} />
-      ) : (
-        null
-      )}
+
+      <ChatSectionRight friend={friend} />
     </Box>
   );
 };

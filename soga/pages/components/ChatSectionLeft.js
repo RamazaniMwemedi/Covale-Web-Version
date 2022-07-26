@@ -30,22 +30,31 @@ const ChatSectionLeft = ({
   return (
     <Box
       sx={{
-        flex: "65%",
-        // width: "100%",
-        // Scrollable
-        // overflowY: "scroll",
-        // border
+        flex: "55%",
+        display: "flex",
+        justifyContent: "flex-end",
+        flexDirection: "column",
         borderRight: "1px solid #e0e0e0",
       }}
     >
       <TopBar friendUsername={friendUsername} />
-
-      {chat && <Mid user={user} chat={chat} />}
-      <Bottom
-        messageChangeHandler={messageChangeHandler}
-        sendNewMessage={sendNewMessage}
-        message={message}
-      />
+      <Box
+        sx={{
+          flex: "55%",
+          display: "flex",
+          justifyContent: "flex-end",
+          flexDirection: "column",
+          borderRight: "1px solid #e0e0e0",
+          paddingBottom: "2px",
+        }}
+      >
+        {chat && <Mid user={user} chat={chat} />}
+        <Bottom
+          messageChangeHandler={messageChangeHandler}
+          sendNewMessage={sendNewMessage}
+          message={message}
+        />
+      </Box>
     </Box>
   );
 };
@@ -241,10 +250,7 @@ const Bottom = ({ messageChangeHandler, sendMessageHandler, message }) => {
         marginBottom: "4px",
         borderRight: "1px solid #e0e0e0",
         // Be at the bottom of the page
-        position: "fixed",
-        bottom: 0,
-        // width to be 100% of the parent component
-        
+        verticalAlign: "bottom",
       }}
     >
       {showEmojiPeaker && (
