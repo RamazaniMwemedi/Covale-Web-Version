@@ -10,10 +10,10 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 
-export default function Chat  ({ message })  {
+export default function Chat({ message }) {
   const router = useRouter();
   const { id } = router.query;
-  
+
   return (
     <List
       sx={{
@@ -26,8 +26,11 @@ export default function Chat  ({ message })  {
       {message && (
         <ListItem
           button
-          onClick={() => {
-            router.push(`/chats/${message.chatId}`);
+          onClick={(e) => {
+            e.preventDefault();
+            router.push(`/chats/${message.chatId}`, undefined, {
+              shallow: true,
+            });
           }}
           sx={{
             borderRadius: "0.5rem",
@@ -89,5 +92,4 @@ export default function Chat  ({ message })  {
       )}
     </List>
   );
-};
-
+}

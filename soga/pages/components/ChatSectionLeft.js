@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box } from "@mui/system";
-import { Avatar, Typography, IconButton, Button } from "@mui/material";
+import { Avatar, Typography, IconButton, Button, List } from "@mui/material";
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import VideoFileIcon from "@mui/icons-material/VideoFile";
@@ -28,6 +28,8 @@ const ChatSectionLeft = ({
         justifyContent: "flex-end",
         flexDirection: "column",
         borderRight: "1px solid #e0e0e0",
+        borderBottom: "1px solid #e0e0e0",
+
       }}
     >
       <TopBar friendUsername={friendUsername} />
@@ -39,6 +41,7 @@ const ChatSectionLeft = ({
           flexDirection: "column",
           borderRight: "1px solid #e0e0e0",
           paddingBottom: "2px",
+        
         }}
       >
         {messages && <Mid user={user} messages={messages} />}
@@ -59,7 +62,7 @@ const TopBar = ({ friendUsername }) => {
     <Box
       sx={{
         height: "4rem",
-        backgroundColor: "white",
+        backgroundColor: "whitesmoke",
         // centered
         display: "flex",
         flexDirection: "row",
@@ -72,6 +75,9 @@ const TopBar = ({ friendUsername }) => {
         // border
         borderBottom: "1px solid #e0e0e0",
         borderRight: "1px solid #e0e0e0",
+        webkitBackdropFilter: "blur(10px)",
+        position: "sticky",
+        top: "0px",
       }}
     >
       {/* Left */}
@@ -131,15 +137,26 @@ const Mid = ({ user, messages }) => {
       sx={{
         marginLeft: "5px",
         marginRight: "5px",
+        marginTop: "105px",
       }}
     >
-      {messages.map((message) => {
-        return message.sender === user.id ? (
-          <UserMessage message={message} />
-        ) : (
-          <FriendMessage message={message} />
-        );
-      })}
+      <List
+        sx={{
+          // Scrowllable
+          overflowY: "scroll",
+          // scrowll bar margin 10px top
+          marginTop: "-20px",
+
+        }}
+      >
+        {messages.map((message) => {
+          return message.sender === user.id ? (
+            <UserMessage message={message} />
+          ) : (
+            <FriendMessage message={message} />
+          );
+        })}
+      </List>
     </Box>
   );
 };

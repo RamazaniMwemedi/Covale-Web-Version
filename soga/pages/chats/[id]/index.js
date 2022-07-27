@@ -8,6 +8,9 @@ import DrawerComponent from "../../components/DrawerComponent";
 import ChatLeft from "../../components/ChatLeft";
 import ChatSection from "../../components/ChatSection";
 
+import { getChatById } from "../../../services/chats";
+import { sendMessageChatRoom } from "../../../services/messages";
+
 // Hooks
 import { useCheckLogedinUser, useGetChatById } from "../../../hooks/hooks";
 
@@ -17,9 +20,16 @@ export default function Chat() {
   const { id } = router.query;
   const token = user ? user.token : null;
   const chat = useGetChatById(token, id);
-  const [messages, setMessages] = useState(chat ? chat.chat : []);
-  console.log("messages", messages);
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if ((token, id)) {
+      getChatById(token, id).then((res) => {
+        setMessages(res.chat.messege);
+      });
+    }
+  }, [token, id]);
 
   const friendUsername = chat
     ? chat.friend.id !== user.id
@@ -41,10 +51,12 @@ export default function Chat() {
     if (message.length > 0) {
       const newMessage = {
         message: message,
-        sender: user.id,
       };
-      setMessages([...messages, newMessage]);
-      setMessage("");
+      sendMessageChatRoom(id, token, newMessage).then((res) => {
+        setMessages([...messages, res]);
+        setMessage("");
+      });
+
     }
   };
 

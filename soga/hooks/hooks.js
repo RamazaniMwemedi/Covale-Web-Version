@@ -2,6 +2,7 @@ const { useEffect, useState } = require("react");
 const { useRouter } = require("next/router");
 
 const { getChatById } = require("../services/chats");
+const { sendMessege } = require("../services/messages");
 
 const useCheckLogedinUser = () => {
   const [logedInUser, setLogedInUser] = useState("");
@@ -28,7 +29,6 @@ const useGetChatById = (token, id) => {
       });
     }
   }, [token, id]);
-
   return chat;
 };
 
