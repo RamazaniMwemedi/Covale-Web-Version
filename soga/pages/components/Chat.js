@@ -15,14 +15,7 @@ export default function Chat({ message }) {
   const  id  = router.query.t;
 
   return (
-    <List
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
+    <List>
       {message && (
         <ListItem
           button
@@ -34,10 +27,10 @@ export default function Chat({ message }) {
           }}
           sx={{
             borderRadius: "0.5rem",
-            backgroundColor: message.chatId === id ? "white" : "unset",
+            backgroundColor: message.chatId === id ? "whitesmoke" : "unset",
             "&:hover": {
+              backgroundColor: "ghostwhite",
               boxShadow: 1,
-              backgroundColor: "whitesmoke",
             },
             // border style
             borderStyle: " solid ",
@@ -45,6 +38,7 @@ export default function Chat({ message }) {
             borderColor: "lightgrey",
             // border width
             borderWidth: "1px",
+            marginTop:"-8px"
           }}
         >
           <Avatar

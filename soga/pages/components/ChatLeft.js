@@ -62,7 +62,12 @@ function Tabs({ messages, loading }) {
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
+          <TabList
+            textColor="secondary"
+            indicatorColor="secondary"
+            onChange={handleChange}
+            aria-label="lab API tabs example"
+          >
             <Tab
               label="Chats"
               sx={{

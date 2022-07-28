@@ -18,7 +18,7 @@ export default function DatepickerForCalender({ value, handleChange }) {
       >
         <StaticDatePicker
           //   displayStaticWrapperAs="desktop"
-
+          color="secondary"
           value={value}
           onChange={(value) => {
             handleChange(value);

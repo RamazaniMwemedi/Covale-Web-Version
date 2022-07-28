@@ -13,6 +13,7 @@ import { sendMessageChatRoom } from "../../services/messages";
 
 // Hooks
 import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
+import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
 export default function Chat() {
   var user = useCheckLogedinUser();
@@ -64,8 +65,8 @@ export default function Chat() {
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <ChatLeft user={user} chat={chat} />
-      {/* <Typography variant="h4">{id}</Typography> */}
-      <ChatSection
+      <ChatSectionSkeleton/>
+      {/* <ChatSection
         id={id}
         user={user}
         chat={chat}
@@ -74,7 +75,7 @@ export default function Chat() {
         messages={messages}
         sendNewMessage={sendMessageHandle}
         friendUsername={friendUsername}
-      />
+      /> */}
     </Box>
   );
 }
