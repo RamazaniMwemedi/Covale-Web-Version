@@ -19,8 +19,13 @@ const Friend = ({ friend, token }) => {
     e.preventDefault();
     if (messege.length > 0) {
       chatServices.sendMessege(friend.id, token, messege).then(() => {
-        console.log("Messege sent");
-      });
+        //  Alart message sent successfully
+        window.alert("Messege sent successfully");
+      }).catch(() => {
+        //  Alart message sent failed
+        window.alert("Messege sent failed");
+      }
+      );
     } else {
       window.alert("You can't send an empty message");
     }

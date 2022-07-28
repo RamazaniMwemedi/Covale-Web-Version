@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import DrawerComponent from "../components/DrawerComponent";
 import ChatLeft from "../components/ChatLeft";
 import ChatSection from "../components/ChatSection";
-k
+
 import { getChatById } from "../../services/chats";
 import { sendMessageChatRoom } from "../../services/messages";
 
