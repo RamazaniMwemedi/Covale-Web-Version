@@ -1,81 +1,80 @@
+import { useRouter } from "next/router";
+import { Box, Typography } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState } from "react";
 
-import { useRouter } from "next/router";
-import * as React from "react";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-
-
-// Components
+// My components
 import DrawerComponent from "../components/DrawerComponent";
 import ChatLeft from "../components/ChatLeft";
-import chatService from "../../services/chats";
-import { responsiveFontSizes } from "@mui/material";
+import ChatSection from "../components/ChatSection";
+k
+import { getChatById } from "../../services/chats";
+import { sendMessageChatRoom } from "../../services/messages";
 
-export default function Home() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [chats, setChats] = useState([]);
+// Hooks
+import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
+
+export default function Chat() {
+  var user = useCheckLogedinUser();
   const router = useRouter();
-
+  const  id  = router.query.t;
   const token = user ? user.token : null;
-
-  useEffect((user, router) => {
-    const signedInUser = localStorage.getItem("logedinUser");
-    if (!user) {
-      setUser(JSON.parse(signedInUser));
-    } else {
-      setUser(null);
-      router.push("/");
-    }
-  }, []);
+  const chat = useGetChatById(token, id);
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (user) {
-      setLoading(false);
+    if ((token, id)) {
+      getChatById(token, id).then((res) => {
+        setMessages(res.chat.messege);
+      });
     }
-  }, [user]);
+  }, [token, id]);
 
-  // log chats
-  console.log(chats);
+  const friendUsername = chat
+    ? chat.friend.id !== user.id
+      ? `${chat.friend.firstname}  ${chat.friend.lastname}`
+      : ""
+    : "";
+
+  const messageChangeHandler = (e) => {
+    setMessage(e.target.value);
+  };
 
   const signoutHandler = () => {
-    localStorage.removeItem("logedinUser");
-    setUser(null);
     router.push("/");
-    console.log("signoutHandler");
+    localStorage.removeItem("logedinUser");
+    user = null;
   };
-  console.log("User", user);
-  return (
-    <>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <App user={user} signoutHandler={signoutHandler} />
-      )}
-    </>
-  );
-}
 
-// Signout handler
+  const sendMessageHandle = () => {
+    if (message.length > 0) {
+      const newMessage = {
+        message: message,
+      };
+      sendMessageChatRoom(id, token, newMessage).then((res) => {
+        setMessages([...messages, res]);
+        setMessage("");
+      });
+    }
+  };
 
-function App({ user, signoutHandler }) {
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", backgroundColor: "white", height: "100vh" }}>
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          display: "flex",
-          justifyContent: "space-evenly",
-        }}
-      >
-        <ChatLeft user={user} />
-        
-      </Box>
+      <ChatLeft user={user} chat={chat} />
+      {/* <Typography variant="h4">{id}</Typography> */}
+      <ChatSection
+        id={id}
+        user={user}
+        chat={chat}
+        messageChangeHandler={messageChangeHandler}
+        message={message}
+        messages={messages}
+        sendNewMessage={sendMessageHandle}
+        friendUsername={friendUsername}
+      />
     </Box>
   );
 }
