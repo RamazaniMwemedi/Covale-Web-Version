@@ -23,7 +23,7 @@ const ChatSectionLeft = ({
   return (
     <Box
       sx={{
-        flex: "55%",
+        flex: "65%",
         display: "flex",
         justifyContent: "flex-end",
         flexDirection: "column",

@@ -14,10 +14,7 @@ const ChatSectionRight = ({ friendUsername }) => {
         <Box
           sx={{
             backgroundColor: "white",
-            // Show this component when the window is wider than 1000px
-            [`@media (min-width: > ${1000}px)`]: {
-              display: "none",
-            },
+            flex: "25%",
           }}
         >
           <IconButton
