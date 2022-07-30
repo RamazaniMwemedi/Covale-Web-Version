@@ -61,7 +61,7 @@ export default function Chat() {
   };
 
   return (
-    <Box sx={{ display: "flex", backgroundColor: "white", height: "100vh" }}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <ChatLeft user={user} chat={chat} />
