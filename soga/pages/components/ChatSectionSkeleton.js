@@ -29,8 +29,6 @@ const ChatSectionSkeleton = () => {
           display: "flex",
           justifyContent: "flex-end",
           flexDirection: "column",
-          borderRight: "1px solid #e0e0e0",
-          borderBottom: "1px solid #e0e0e0",
         }}
       >
         <TopBar />
@@ -39,10 +37,11 @@ const ChatSectionSkeleton = () => {
       {/* ChatSectionRigth */}
       <Box
         sx={{
-          backgroundColor: "dodgerblue",
           flex: "40%",
         }}
-      ></Box>
+      >
+        <Right />
+      </Box>
     </Box>
   );
 };
@@ -301,3 +300,25 @@ const Left = () => {
     </Box>
   );
 };
+
+
+const Right = () => {
+  return (
+    <Box
+      sx={{
+        flex: "55%",
+        display: "flex",
+        justifyContent: "flex-start",
+        flexDirection: "column",
+        borderLeft: "1px solid #e0e0e0",
+        paddingBottom: "2px",
+      }}
+    >
+      {/* Top */}
+      <Typography variant="h6">
+        Top
+      </Typography> 
+      
+    </Box>
+  );
+}

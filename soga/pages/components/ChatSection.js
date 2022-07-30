@@ -14,29 +14,44 @@ const ChatSection = ({
   messages,
   friendUsername,
 }) => {
-  
-
   return (
     <Box
       sx={{
         display: "flex",
-        flex: "100%",
+        flex: 1,
         marginLeft: "-65px",
-        backgroundColor: "aliceblue",
       }}
     >
-      <ChatSectionLeft
-        id={id}
-        user={user}
-        chat={chat}
-        messageChangeHandler={messageChangeHandler}
-        sendNewMessage={sendNewMessage}
-        message={message}
-        messages={messages}
-        friendUsername={friendUsername}
-      />
-
-      <ChatSectionRight friendUsername={friendUsername} />
+      <Box
+        sx={{
+          flex: "65%",
+          display: "flex",
+          justifyContent: "flex-end",
+          flexDirection: "column",
+          borderRight: "1px solid #e0e0e0",
+          borderBottom: "1px solid #e0e0e0",
+        }}
+      >
+        {/* ChatSectionLeft */}
+        <ChatSectionLeft
+          id={id}
+          user={user}
+          chat={chat}
+          messageChangeHandler={messageChangeHandler}
+          sendNewMessage={sendNewMessage}
+          message={message}
+          messages={messages}
+          friendUsername={friendUsername}
+        />
+      </Box>
+      {/* ChatSectionRight */}
+      <Box
+        sx={{
+          flex: "40%",
+        }}
+      >
+        <ChatSectionRight friendUsername={friendUsername} />
+      </Box>
     </Box>
   );
 };

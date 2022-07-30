@@ -27,8 +27,6 @@ const ChatSectionLeft = ({
         display: "flex",
         justifyContent: "flex-end",
         flexDirection: "column",
-        borderRight: "1px solid #e0e0e0",
-        borderBottom: "1px solid #e0e0e0",
 
       }}
     >
@@ -179,8 +177,8 @@ const UserMessage = ({ message }) => {
           backgroundColor: "purple",
           // centered
           display: "flex",
-          // paddingLeft: "5px",
-          // paddingRight: "5px",
+          paddingLeft: "5px",
+          paddingRight: "5px",
           paddingTop: "5px",
           paddingBottom: "5px",
           borderRadius: "12px",
@@ -224,7 +222,7 @@ const FriendMessage = ({ message }) => {
       {/* Message */}
       <Box
         sx={{
-          backgroundColor: "white",
+          backgroundColor: "lightgray",
           // centered
           display: "flex",
           paddingLeft: "5px",

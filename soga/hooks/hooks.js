@@ -21,15 +21,17 @@ const useCheckLogedinUser = () => {
 
 const useGetChatById = (token, id) => {
   const [chat, setChat] = useState(null);
+const[loading, setLoading] = useState(true);
   // Get chat by id and set it to chat
   useEffect(() => {
     if ((token, id)) {
       getChatById(token, id).then((res) => {
         setChat(res);
+        setLoading(false);
       });
     }
   }, [token, id]);
-  return chat;
+  return { chat, loading };
 };
 
 module.exports = {

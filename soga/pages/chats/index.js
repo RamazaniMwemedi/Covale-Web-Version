@@ -18,23 +18,25 @@ import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 export default function Chat() {
   var user = useCheckLogedinUser();
   const router = useRouter();
-  const  id  = router.query.t;
+  const id = router.query.t;
   const token = user ? user.token : null;
   const chat = useGetChatById(token, id);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if ((token, id)) {
       getChatById(token, id).then((res) => {
         setMessages(res.chat.messege);
+        setLoading(false);
       });
     }
   }, [token, id]);
 
-  const friendUsername = chat
-    ? chat.friend.id !== user.id
-      ? `${chat.friend.firstname}  ${chat.friend.lastname}`
+  const friendUsername = chat.chat
+    ? chat.chat.friend.id !== user.id
+      ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
       : ""
     : "";
 
@@ -65,17 +67,20 @@ export default function Chat() {
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <ChatLeft user={user} chat={chat} />
-      <ChatSectionSkeleton/>
-      {/* <ChatSection
-        id={id}
-        user={user}
-        chat={chat}
-        messageChangeHandler={messageChangeHandler}
-        message={message}
-        messages={messages}
-        sendNewMessage={sendMessageHandle}
-        friendUsername={friendUsername}
-      /> */}
+      {chat.loading ? (
+        <ChatSectionSkeleton />
+      ) : (
+        <ChatSection
+          id={id}
+          user={user}
+          chat={chat.chat}
+          messageChangeHandler={messageChangeHandler}
+          message={message}
+          messages={messages}
+          sendNewMessage={sendMessageHandle}
+          friendUsername={friendUsername}
+        />
+      )}
     </Box>
   );
 }

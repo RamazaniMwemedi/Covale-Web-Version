@@ -12,10 +12,6 @@ const ChatSectionRight = ({ friendUsername }) => {
     <>
       {friendUsername && (
         <Box
-          sx={{
-            backgroundColor: "white",
-            flex: "25%",
-          }}
         >
           <IconButton
             sx={{
@@ -44,14 +40,11 @@ const Friend = ({ friendUsername }) => {
     <Box>
       <Box>
         {/* Avatr */}
-        <Box sx={{ paddingTop: "30px", paddingLeft: "110px" }}>
+        <Box >
           <Avatar sx={{ width: "130px", height: "130px" }} />
         </Box>
         {/* Name */}
         <Box
-          sx={{
-            paddingLeft: "98px",
-          }}
         >
           <Typography
             sx={{
@@ -71,8 +64,6 @@ const ComunicationShortCut = () => {
   return (
     <Box
       sx={{
-        paddingTop: "20px",
-        paddingLeft: "90px",
         display: "flex",
         gap: "8px",
       }}
