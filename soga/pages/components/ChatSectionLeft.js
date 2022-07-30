@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { Box } from "@mui/system";
 import { Avatar, Typography, IconButton, Button, List } from "@mui/material";
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
@@ -11,6 +11,8 @@ import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
+import Picker from "emoji-picker-react";
+
 const ChatSectionLeft = ({
   id,
   user,
@@ -19,6 +21,8 @@ const ChatSectionLeft = ({
   message,
   messages,
   friendUsername,
+  chosenEmoji,
+  onEmojiClick,
 }) => {
   return (
     <Box
@@ -27,7 +31,6 @@ const ChatSectionLeft = ({
         display: "flex",
         justifyContent: "flex-end",
         flexDirection: "column",
-
       }}
     >
       <TopBar friendUsername={friendUsername} />
@@ -39,7 +42,6 @@ const ChatSectionLeft = ({
           flexDirection: "column",
           borderRight: "1px solid #e0e0e0",
           paddingBottom: "2px",
-        
         }}
       >
         {messages && <Mid user={user} messages={messages} />}
@@ -47,6 +49,8 @@ const ChatSectionLeft = ({
           messageChangeHandler={messageChangeHandler}
           sendNewMessage={sendNewMessage}
           message={message}
+          chosenEmoji={chosenEmoji}
+          onEmojiClick={onEmojiClick}
         />
       </Box>
     </Box>
@@ -144,7 +148,6 @@ const Mid = ({ user, messages }) => {
           overflowY: "scroll",
           // scrowll bar margin 10px top
           marginTop: "-20px",
-
         }}
       >
         {messages.map((message) => {
@@ -244,8 +247,13 @@ const FriendMessage = ({ message }) => {
   );
 };
 
-const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
-  const [chosenEmoji, setChosenEmoji] = useState(null);
+const Bottom = ({
+  messageChangeHandler,
+  sendNewMessage,
+  message,
+  chosenEmoji,
+  onEmojiClick,
+}) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
 
   return (
@@ -268,6 +276,10 @@ const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
             marginLeft: "30px",
             backgroundColor: "white",
             borderRadius: "15px",
+            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
           }}
         >
           <IconButton
@@ -280,7 +292,7 @@ const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
           >
             <CloseRoundedIcon color="secondary" fontSize="small" />
           </IconButton>
-          <h1>Hello emoji</h1>
+          <Picker onEmojiClick={onEmojiClick} />
         </Box>
       )}
 
