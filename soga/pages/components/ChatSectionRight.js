@@ -7,12 +7,20 @@ import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import InsertPhotoRoundedIcon from "@mui/icons-material/InsertPhotoRounded";
+import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
+import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
+import TabPanel from "@mui/lab/TabPanel";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+
 const ChatSectionRight = ({ friendUsername }) => {
   return (
     <>
       {friendUsername && (
-        <Box
-        >
+        <Box>
           <IconButton
             sx={{
               position: "fixed",
@@ -22,9 +30,28 @@ const ChatSectionRight = ({ friendUsername }) => {
           >
             <MoreHorizIcon color="secondary" />
           </IconButton>
-          <Friend friendUsername={friendUsername} />
-          <ComunicationShortCut />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              // Center this section
+              alignItems: "center",
+              // Padding
+            }}
+          >
+            <Friend friendUsername={friendUsername} />
+            <br />
+            <ComunicationShortCut />
+          </Box>
+          <br />
+          <Box sx={{
+            // alignItems: "center",
+            // justifyContent: "center",
+            // textAlign: "center",
+
+          }}>
           <Media />
+          </Box>
         </Box>
       )}
     </>
@@ -37,24 +64,73 @@ export default ChatSectionRight;
 
 const Friend = ({ friendUsername }) => {
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        paddingTop: "25px",
+      }}
+    >
+      {/* Avatr  Name */}
+      <Avatar sx={{ width: "90px", height: "90px" }} />
       <Box>
-        {/* Avatr */}
-        <Box >
-          <Avatar sx={{ width: "130px", height: "130px" }} />
-        </Box>
-        {/* Name */}
-        <Box
+        <Typography
+          sx={{
+            fontSize: "1.4rem",
+          }}
         >
-          <Typography
-            sx={{
-              fontSize: "1.4rem",
-            }}
-          >
-            {friendUsername}
-          </Typography>
+          {friendUsername}
+        </Typography>
+        <Typography variant="body2">Mutual Team </Typography>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "1fr  1fr 1fr",
+            gridGap: "5px",
+            alignItems: "center",
+            justifyContent: "center",
+
+            maxHeight: "100px",
+            overflowY: "scroll",
+          }}
+        >
+          {Array.from(["Veloci", "Covalent", "SIR"], (team, index) => {
+            return (
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "2px",
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: "whitesmoke",
+                    boxShadow: 1,
+                  },
+                  borderRadius: "5px",
+                  padding: "2px",
+                }}
+              >
+                <Avatar sx={{ width: "30px", height: "30px" }}>
+                  {team[0]}
+                </Avatar>
+                <Typography
+                  sx={{
+                    // Max width of the text
+                    maxWidth: "100px",
+                    // Text overflow
+                  }}
+                  color="secondary"
+                  variant="caption"
+                >
+                  {/* Max text 3 characters else add ...*/}
+                  {team.length > 3 ? team.substring(0, 3) + "..." : team}
+                </Typography>
+              </Box>
+            );
+          })}
         </Box>
-        {/* Icons */}
       </Box>
     </Box>
   );
@@ -126,20 +202,6 @@ const ComunicationShortCut = () => {
   );
 };
 
-const Media = () => {
-  return (
-    <Box
-      sx={{
-        paddingLeft: "20px",
-      }}
-    >
-      <Typography variant="h5">Media</Typography>
-      <MediaPhotos />
-      <MediaVideos />
-    </Box>
-  );
-};
-
 const MediaPhotos = () => {
   return (
     <Box>
@@ -163,3 +225,66 @@ const MediaLinks = () => {
     </Box>
   );
 };
+
+function Media() {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <TabContext value={value}>
+      <TabList
+        value={value}
+        onChange={handleChange}
+        aria-label="icon label tabs example"
+        textColor="secondary"
+        indicatorColor="secondary"
+        sx={{
+          height: "20px",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+        }}
+      >
+        <Tab
+          iconPosition="start"
+          icon={<InsertPhotoRoundedIcon />}
+          label="Photos"
+          sx={{
+            textTransform: "none",
+            fontSize: "16px",
+          }}
+        />
+        <Tab
+          iconPosition="start"
+          icon={<VideoLibraryRoundedIcon />}
+          label="Videos"
+          sx={{
+            textTransform: "none",
+            fontSize: "16px",
+          }}
+        />
+        <Tab
+          iconPosition="start"
+          icon={<InsertLinkRoundedIcon />}
+          label="Links"
+          sx={{
+            textTransform: "none",
+            fontSize: "16px",
+          }}
+        />
+      </TabList>
+      <TabPanel value={0}>
+        <MediaPhotos />
+      </TabPanel>
+      <TabPanel value={1}>
+        <MediaVideos />
+      </TabPanel>
+      <TabPanel value={2}>
+        <MediaLinks />
+      </TabPanel>
+    </TabContext>
+  );
+}

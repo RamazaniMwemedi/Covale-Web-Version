@@ -27,8 +27,6 @@ const Chats = ({ messages, loading }) => {
     setShowMoreFriends(false);
     setShowButton(true);
   };
-  console.log("Loading is : ", loading);
-
 
   return (
     <>
