@@ -14,12 +14,6 @@ const ChatSection = ({
   messages,
   friendUsername,
 }) => {
-  const [windowSize, setWindowSize] = React.useState(window.innerWidth);
-  React.useEffect(() => {
-    window.addEventListener("resize", () => {
-      setWindowSize(window.innerWidth);
-    });
-  }, [windowSize]);
   return (
     <Box
       sx={{
@@ -53,12 +47,10 @@ const ChatSection = ({
       {/* ChatSectionRight */}
       <Box
         sx={{
-          flex: windowSize < 1100 ? "0" : "35%",
+          flex: "35%",
         }}
       >
-        {windowSize > 1100 ? (
-          <ChatSectionRight friendUsername={friendUsername} />
-        ) : null}
+        <ChatSectionRight friendUsername={friendUsername} />
       </Box>
     </Box>
   );
