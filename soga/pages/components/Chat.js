@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 
 export default function Chat({ message }) {
   const router = useRouter();
-  const  id  = router.query.t;
+  const id = router.query.t;
 
   return (
     <List>
@@ -27,10 +27,11 @@ export default function Chat({ message }) {
           }}
           sx={{
             borderRadius: "0.5rem",
+            boxShadow: message.chatId === id ? 1 : "unset",
             backgroundColor: message.chatId === id ? "whitesmoke" : "unset",
             "&:hover": {
               backgroundColor: "ghostwhite",
-              boxShadow: 1,
+              // boxShadow: 1,
             },
             // border style
             borderStyle: " solid ",
@@ -38,7 +39,7 @@ export default function Chat({ message }) {
             borderColor: "lightgrey",
             // border width
             borderWidth: "1px",
-            marginTop:"-8px"
+            marginTop: "-8px",
           }}
         >
           <Avatar

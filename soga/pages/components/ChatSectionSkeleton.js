@@ -1,17 +1,22 @@
 import { Box } from "@mui/system";
 import Skeleton from "@mui/material/Skeleton";
 import React from "react";
+import { Typography } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 
-import { Avatar, Typography, IconButton, Button, List } from "@mui/material";
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
-import VideoFileIcon from "@mui/icons-material/VideoFile";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
-import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import SearchIcon from "@mui/icons-material/Search";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import InsertPhotoRoundedIcon from "@mui/icons-material/InsertPhotoRounded";
+import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
+import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
+import TabPanel from "@mui/lab/TabPanel";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
 
 const ChatSectionSkeleton = () => {
   return (
@@ -38,6 +43,7 @@ const ChatSectionSkeleton = () => {
       <Box
         sx={{
           flex: "40%",
+          display: "flex",
         }}
       >
         <Right />
@@ -69,6 +75,7 @@ const TopBar = () => {
         webkitBackdropFilter: "blur(10px)",
         position: "sticky",
         top: "0px",
+        padding: "3px",
       }}
     >
       <Box
@@ -108,7 +115,6 @@ const Bottom = () => {
     <Box
       sx={{
         height: "3rem",
-        backgroundColor: "white",
         display: "flex",
         // Be at the bottom of the page
         verticalAlign: "bottom",
@@ -175,12 +181,19 @@ const Mid = () => {
   // Skeleton for the middle of the chat of sender and receiver
   return (
     <Box>
-      <Box>
+      <Box
+        sx={{
+          overflowY: "scroll",
+          height: "85vMin",
+          margin: "0px",
+          padding: "0px",
+        }}
+      >
         {/* Array of messages skeletons of sender and receiver */}
-        {Array.from({ length: 11 }, (element, index) => {
-          console.log(index);
+        {Array.from({ length: 110 }, (_, index) => {
           return (
             <Box
+              key={index}
               sx={{
                 display: "flex",
                 // centerd
@@ -234,7 +247,7 @@ const Mid = () => {
                     variant="circular"
                     width={25}
                     height={25}
-                    sx={{ marginRight: "6px"}}
+                    sx={{ marginRight: "6px" }}
                     animation="wave"
                   />
                   <Skeleton
@@ -254,7 +267,6 @@ const Mid = () => {
                       borderBottomLeftRadius: "0px",
                       // max width 80%
                       maxWidth: "80%",
-
                     }}
                     width={400}
                     height={30}
@@ -301,7 +313,7 @@ const Left = () => {
   );
 };
 
-
+// Right
 const Right = () => {
   return (
     <Box
@@ -312,13 +324,77 @@ const Right = () => {
         flexDirection: "column",
         borderLeft: "1px solid #e0e0e0",
         paddingBottom: "2px",
+        justifyContent: "space-between",
       }}
     >
       {/* Top */}
-      <Typography variant="h6">
-        Top
-      </Typography> 
-      
+      <Friend />
     </Box>
   );
-}
+};
+
+const Friend = ({ friendUsername }) => {
+  return (
+    <Box
+      sx={{
+        flex: "40%",
+        display: "flex",
+      }}
+    >
+      {/* Avatr  Name */}
+      <Skeleton variant="circular" width={90} height={90} animation="wave" />
+      <Box>
+        <Skeleton variant="text" width={"100%"} height={25} animation="wave" />
+        <Typography variant="body2">Mutual Team </Typography>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gridGap: "5px",
+            alignItems: "center",
+            justifyContent: "center",
+
+            maxHeight: "100px",
+            overflowY: "scroll",
+          }}
+        >
+          {Array.from(["Veloci", "Covalent", "SIR"], (team, index) => {
+            return (
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "2px",
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: "whitesmoke",
+                    boxShadow: 1,
+                  },
+                  borderRadius: "5px",
+                  padding: "2px",
+                }}
+              >
+                <Avatar sx={{ width: "30px", height: "30px" }}>
+                  {team[0]}
+                </Avatar>
+                <Typography
+                  sx={{
+                    // Max width of the text
+                    maxWidth: "100px",
+                    // Text overflow
+                  }}
+                  color="secondary"
+                  variant="caption"
+                >
+                  {/* Max text 3 characters else add ...*/}
+                  {team.length > 3 ? team.substring(0, 3) + "..." : team}
+                </Typography>
+              </Box>
+            );
+          })}
+        </Box>
+      </Box>
+    </Box>
+  );
+};

@@ -11,7 +11,7 @@ import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
-import Picker from "emoji-picker-react";
+// import Picker from "emoji-picker-react";
 
 const ChatSectionLeft = ({
   id,
@@ -21,8 +21,6 @@ const ChatSectionLeft = ({
   message,
   messages,
   friendUsername,
-  chosenEmoji,
-  onEmojiClick,
 }) => {
   return (
     <Box
@@ -33,7 +31,7 @@ const ChatSectionLeft = ({
         flexDirection: "column",
       }}
     >
-      <TopBar friendUsername={friendUsername} />
+      {/* <TopBar friendUsername={friendUsername} /> */}
       <Box
         sx={{
           flex: "55%",
@@ -49,8 +47,6 @@ const ChatSectionLeft = ({
           messageChangeHandler={messageChangeHandler}
           sendNewMessage={sendNewMessage}
           message={message}
-          chosenEmoji={chosenEmoji}
-          onEmojiClick={onEmojiClick}
         />
       </Box>
     </Box>
@@ -144,12 +140,20 @@ const Mid = ({ user, messages }) => {
     >
       <List
         sx={{
-          // Scrowllable
+          // position: "relative",
+          maxHeight: "85vh",
           overflowY: "scroll",
-          // scrowll bar margin 10px top
-          marginTop: "-20px",
+          overflowX: "hidden",
+          padding: "0px",
+          margin: "0px",
+          // flexDirection: "column",
+          // justifyContent: "flex-end",
         }}
       >
+        {/* {Array.from({ length: 100 }, (_, index) => {
+          return <p>{index}</p>;
+        })} */}
+
         {messages.map((message) => {
           return message.sender === user.id ? (
             <UserMessage message={message} />
@@ -247,13 +251,7 @@ const FriendMessage = ({ message }) => {
   );
 };
 
-const Bottom = ({
-  messageChangeHandler,
-  sendNewMessage,
-  message,
-  chosenEmoji,
-  onEmojiClick,
-}) => {
+const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
 
   return (
@@ -292,7 +290,7 @@ const Bottom = ({
           >
             <CloseRoundedIcon color="secondary" fontSize="small" />
           </IconButton>
-          <Picker onEmojiClick={onEmojiClick} />
+          <Typography variant="h6">Emoji</Typography>
         </Box>
       )}
 

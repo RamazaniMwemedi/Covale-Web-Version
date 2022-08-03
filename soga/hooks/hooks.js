@@ -24,6 +24,7 @@ const useGetChatById = (token, id) => {
 const[loading, setLoading] = useState(true);
   // Get chat by id and set it to chat
   useEffect(() => {
+    setLoading(true)
     if ((token, id)) {
       getChatById(token, id).then((res) => {
         setChat(res);

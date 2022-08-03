@@ -13,8 +13,6 @@ const ChatSection = ({
   sendNewMessage,
   messages,
   friendUsername,
-  chosenEmoji,
-  onEmojiClick,
 }) => {
   const [windowSize, setWindowSize] = React.useState(window.innerWidth);
   React.useEffect(() => {
@@ -50,8 +48,6 @@ const ChatSection = ({
           message={message}
           messages={messages}
           friendUsername={friendUsername}
-          chosenEmoji={chosenEmoji}
-          onEmojiClick={onEmojiClick}
         />
       </Box>
       {/* ChatSectionRight */}

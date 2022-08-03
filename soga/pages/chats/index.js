@@ -24,10 +24,11 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [chosenEmoji, setChosenEmoji] = useState(null);
 
   useEffect(() => {
     if ((token, id)) {
+      setLoading(true);
+      setMessages([]);
       getChatById(token, id).then((res) => {
         setMessages(res.chat.messege);
         setLoading(false);
@@ -62,17 +63,13 @@ export default function Chat() {
       });
     }
   };
-   const onEmojiClick = (event, emojiObject) => {
-     setChosenEmoji(emojiObject);
-     setMessage(message + emojiObject.emoji);
-   };
-
+  
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <ChatLeft user={user} chat={chat} />
-      {chat.loading ? (
+      {loading && chat.loading ? (
         <ChatSectionSkeleton />
       ) : (
         <ChatSection
@@ -84,8 +81,6 @@ export default function Chat() {
           messages={messages}
           sendNewMessage={sendMessageHandle}
           friendUsername={friendUsername}
-          chosenEmoji={chat.chosenEmoji}
-          onEmojiClick={chat.onEmojiClick}
         />
       )}
     </Box>
