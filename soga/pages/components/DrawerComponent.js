@@ -28,7 +28,6 @@ const closedMixin = (theme) => ({
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-  backgroundColor: "white",
   justifyContent: "spaceBetween",
   borderRadiusRight:"1px solid red"
 });

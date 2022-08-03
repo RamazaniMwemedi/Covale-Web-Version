@@ -31,7 +31,7 @@ const ChatSectionLeft = ({
         flexDirection: "column",
       }}
     >
-      {/* <TopBar friendUsername={friendUsername} /> */}
+      <TopBar friendUsername={friendUsername} />
       <Box
         sx={{
           flex: "55%",
@@ -60,7 +60,6 @@ const TopBar = ({ friendUsername }) => {
     <Box
       sx={{
         height: "4rem",
-        backgroundColor: "whitesmoke",
         // centered
         display: "flex",
         flexDirection: "row",
@@ -71,7 +70,6 @@ const TopBar = ({ friendUsername }) => {
         // z-index
         zIndex: "1",
         // border
-        borderBottom: "1px solid #e0e0e0",
         borderRight: "1px solid #e0e0e0",
         webkitBackdropFilter: "blur(10px)",
         position: "sticky",
@@ -258,7 +256,6 @@ const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
     <Box
       sx={{
         height: "3rem",
-        backgroundColor: "white",
         display: "flex",
         marginBottom: "4px",
         borderRight: "1px solid #e0e0e0",

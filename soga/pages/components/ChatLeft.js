@@ -27,7 +27,6 @@ const closedMixin = (theme) => ({
     width: `calc(${theme.spacing(35)} + 1px)`,
     marginLeft: theme.spacing(8),
   },
-  backgroundColor: "#fff",
   justifyContent: "spaceBetween",
   borderLeft: "1px solid #e0e0e0",
 });
