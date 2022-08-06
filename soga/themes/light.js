@@ -10,5 +10,6 @@ module.exports = {
     background: "rgb(226, 216, 226)",
     background1: "rgb(255, 255, 255)",
     textBackground: "rgb(255, 255, 255)",
+    itemBackground: "whitesmoke",
   },
 };

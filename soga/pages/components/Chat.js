@@ -35,15 +35,15 @@ export default function Chat({ message }) {
             borderRadius: "0.5rem",
             boxShadow: message.chatId === id ? 1 : "unset",
             backgroundColor:
-              message.chatId === id ? "whitesmoke" : "lightgray",
+              message.chatId === id ? theme.colors.itemBackground : "unset",
             "&:hover": {
-              backgroundColor: "whitesmoke",
+              // backgroundColor: ,
               // boxShadow: 1,
             },
             // border style
             borderStyle: " solid ",
             // border color
-            borderColor: "lightgrey",
+            borderColor: "whitesmoke",
             // border width
             borderWidth: "1px",
             marginTop: "-8px",

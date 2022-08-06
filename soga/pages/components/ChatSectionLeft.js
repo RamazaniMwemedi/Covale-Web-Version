@@ -57,6 +57,7 @@ const ChatSectionLeft = ({
 export default ChatSectionLeft;
 
 const TopBar = ({ friendUsername }) => {
+  const theme = useTheme()
   return (
     <Box
       sx={{
@@ -76,6 +77,8 @@ const TopBar = ({ friendUsername }) => {
         position: "sticky",
         top: "0px",
         borderBottom: "1px solid #e0e0e0",
+        backgroundColor: theme.colors.background1,
+        borderTopRightRadius: "2px",
       }}
     >
       {/* Left */}
