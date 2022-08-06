@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { useTheme } from "@mui/material";
 
 // import Picker from "emoji-picker-react";
 
@@ -223,6 +224,7 @@ const UserMessage = ({ message }) => {
 };
 
 const FriendMessage = ({ message }) => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -245,7 +247,7 @@ const FriendMessage = ({ message }) => {
       {/* Message */}
       <Box
         sx={{
-          backgroundColor: "lightgray",
+          backgroundColor: theme.colors.textBackground,
           // centered
           display: "flex",
           paddingLeft: "5px",

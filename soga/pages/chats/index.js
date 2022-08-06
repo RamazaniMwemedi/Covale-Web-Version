@@ -75,24 +75,49 @@ export default function Chat() {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", backgroundColor: theme.colors.background }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        backgroundColor: theme.colors.background,
+      }}
+    >
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <ChatLeft user={user} chat={chat} />
-      {loading ? (
-        <ChatSectionSkeleton />
+      {id ? (
+        loading ? (
+          <ChatSectionSkeleton />
+        ) : (
+          <ChatSection
+            id={id}
+            user={user}
+            chat={chat.chat}
+            messageChangeHandler={messageChangeHandler}
+            message={message}
+            messages={messages}
+            sendNewMessage={sendMessageHandle}
+            friendUsername={friendUsername}
+          />
+        )
       ) : (
-        <ChatSection
-          id={id}
-          user={user}
-          chat={chat.chat}
-          messageChangeHandler={messageChangeHandler}
-          message={message}
-          messages={messages}
-          sendNewMessage={sendMessageHandle}
-          friendUsername={friendUsername}
-        />
+        <ClickaChat />
       )}
     </Box>
   );
 }
+
+const ClickaChat = () => {
+  return (
+    <Box
+      sx={{
+        alignItems: "center",
+        textAlign: "center",
+        justifyContent: "center",
+        margin:"200px"
+      }}
+    >
+      <Typography variant="h1">Click a chat</Typography>
+    </Box>
+  );
+};

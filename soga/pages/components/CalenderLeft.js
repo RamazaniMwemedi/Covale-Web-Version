@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import "@fontsource/open-sans/500.css"; // Weight 500.
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
