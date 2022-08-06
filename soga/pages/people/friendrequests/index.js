@@ -57,7 +57,6 @@ export default function Explore() {
       <PeopleLeft />
       <Box
         sx={{
-          backgroundColor: "aliceblue",
           flex: 1,
           grow: 1,
           height: "100%",

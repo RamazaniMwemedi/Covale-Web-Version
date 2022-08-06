@@ -1,15 +1,29 @@
 import "../styles/globals.css";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import * as React from "react";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
 function MyApp({ Component, pageProps }) {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? "dark" : "light",
+        },
+        colors: {
+          primary: "#00bcd4",
+          secondary: "#ff4081",
+          error: "#f44336",
+          background: prefersDarkMode ? "red" : "rgb(226, 216, 226)",
+        },
+      }),
+    [prefersDarkMode]
+  );
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Component {...pageProps} />
     </ThemeProvider>

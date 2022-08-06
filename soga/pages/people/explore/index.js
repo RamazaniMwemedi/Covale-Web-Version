@@ -53,7 +53,6 @@ export default function Explore() {
       <PeopleLeft />
       <Box
         sx={{
-          backgroundColor: "aliceblue",
           flex: 1,
           grow: 1,
           height: "100%",
@@ -152,7 +151,6 @@ const Person = ({ user, logedinUser }) => {
     <>
       <Box
         sx={{
-          backgroundColor: "white",
           borderRadius: "10px",
           width: "115%",
           padding: "3px",

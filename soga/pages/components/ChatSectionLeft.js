@@ -74,6 +74,7 @@ const TopBar = ({ friendUsername }) => {
         webkitBackdropFilter: "blur(10px)",
         position: "sticky",
         top: "0px",
+        borderBottom: "1px solid #e0e0e0",
       }}
     >
       {/* Left */}
@@ -112,6 +113,15 @@ const TopBar = ({ friendUsername }) => {
             sx={{
               fontSize: 25,
             }}
+            onClick={() => {
+              // Open a new window with a adio call
+              window.open(
+                //  adio call api gmeet.net/join/{roomId}
+                "https://meet.google.com/join/",
+                "_blank",
+                "toolbar=no,scrollbars=yes,resizable=yes,top=100,left=300,width=1000,height=500"
+              );
+            }}
           />
         </IconButton>
         <IconButton>
@@ -119,6 +129,14 @@ const TopBar = ({ friendUsername }) => {
             color="secondary"
             sx={{
               fontSize: 25,
+            }}
+            onClick={() => {
+              // Open a new window with a video call
+              window.open(
+                "https://meet.google.com/join/",
+                "_blank",
+                "toolbar=no,scrollbars=yes,resizable=yes,top=100,left=300,width=1000,height=500"
+              );
             }}
           />
         </IconButton>

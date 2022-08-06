@@ -14,6 +14,7 @@ import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import Tooltip from "@mui/material/Tooltip";
 
+
 import NewMeet from "./NewMeet";
 
 import Signout from "./Signout";
@@ -74,7 +75,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setCalendar("gray");
       setMeet("gray");
       // Background color
-      setChatBackgroundColor("whitesmoke");
+      setChatBackgroundColor("rgba(255, 255, 255, 0.08)");
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
@@ -85,7 +86,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setMeet("gray");
       // Background color
       setChatBackgroundColor("");
-      setPeopleBackgroundColor("whitesmoke");
+      setPeopleBackgroundColor("rgba(255, 255, 255, 0.08)");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
     } else if (pathname === "/calender") {
@@ -96,7 +97,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       // Background color
       setChatBackgroundColor("");
       setPeopleBackgroundColor("");
-      setCalenderBackgroundColor("whitesmoke");
+      setCalenderBackgroundColor("rgba(255, 255, 255, 0.08)");
       setMeetBackgroundColor("");
     } else if (pathname === "/meet") {
       setChatColor("gray");
@@ -107,7 +108,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setChatBackgroundColor("");
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
-      setMeetBackgroundColor("whitesmoke");
+      setMeetBackgroundColor("rgba(255, 255, 255, 0.08)");
     }
   }, [router.pathname]);
 

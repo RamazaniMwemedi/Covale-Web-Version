@@ -28,9 +28,10 @@ export default function Chat({ message }) {
           sx={{
             borderRadius: "0.5rem",
             boxShadow: message.chatId === id ? 1 : "unset",
-            backgroundColor: message.chatId === id ? "gray" : "unset",
+            backgroundColor:
+              message.chatId === id ? "rgba(255, 255, 255, 0.08)" : "unset",
             "&:hover": {
-              backgroundColor: "gray",
+              backgroundColor: "whitesmoke",
               // boxShadow: 1,
             },
             // border style

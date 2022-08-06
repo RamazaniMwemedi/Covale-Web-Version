@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { TextField, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
+import { Box } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 // CSS
 import styles from "../styles/Login.module.css";
 // My modules
@@ -26,7 +28,7 @@ const LoginPage = () => {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupBirthday, setSignupBirthday] = useState(new Date());
-  const [signupGender, setSignupGender]= useState(null)
+  const [signupGender, setSignupGender] = useState(null);
 
   const [error, setError] = useState("");
   // Login Form Error states
@@ -52,9 +54,11 @@ const LoginPage = () => {
   const [signupPasswordErrorBoolean, setSignupPasswordErrorBoolean] =
     useState(false);
   const [signupBirthdayError, setSignupBirthdayError] = useState("");
-  const [signupGenderError, setSignupGenderError] = useState("")
-  const [signupError, setSignupError] = useState("")
+  const [signupGenderError, setSignupGenderError] = useState("");
+  const [signupError, setSignupError] = useState("");
   const signupRef = useRef(null);
+  
+  const theme = useTheme();
 
   // Signin Handlers
   const signInHandlerSubmit = async (e) => {
@@ -169,14 +173,14 @@ const LoginPage = () => {
         setSignupPasswordErrorBoolean(false);
       }, 3000);
     } else if (age < 13) {
-      setSignupBirthdayError("You must be 13 years or above")
+      setSignupBirthdayError("You must be 13 years or above");
       setTimeout(() => {
-        setSignupBirthdayError("")
+        setSignupBirthdayError("");
       }, 3000);
-    }else if(!signupGender){
-      setSignupGenderError("Gender is required")
+    } else if (!signupGender) {
+      setSignupGenderError("Gender is required");
       setTimeout(() => {
-        setSignupGenderError("")
+        setSignupGenderError("");
       }, 3000);
     } else {
       try {
@@ -244,30 +248,51 @@ const LoginPage = () => {
     setSignupPassword(e.target.value);
   };
 
-  const signupGenderHandler = (e) => { 
-    setSignupGender(e.target.value)
-   }
+  const signupGenderHandler = (e) => {
+    setSignupGender(e.target.value);
+  };
+
+
 
   return (
-    <div className={styles.login}>
-      <div className={styles.login_left}>
-        <div className={styles.login_left_top}>
-          <h1 className={styles.main_soga}>Covalent</h1>
-          <p
-            style={{
-              fontSize: "1rem",
-              fontWeight: "bold",
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        flex: 1,
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        width: "80vw",
+        height: "50vh",
+        transform: "translate(-50%, -50%)",
+        padding: "10px",
+        backgroundColor: theme.colors.background,
+      }}
+    >
+      <Box>
+        <Box>
+          <Typography
+            variant="h1"
+            sx={{ color: "rgb(180, 17, 180)", fontWeight: "bold" }}
+          >
+            Covalent
+          </Typography>
+          <Typography
+            sx={{
+              fontWeight: "100",
               color: "purple",
               marginBottom: "1rem",
             }}
+            variant="subtitle1"
           >
             Connect with people you love, share your stories and explore the
             world.
-          </p>
-        </div>
+          </Typography>
+        </Box>
         {/* <ContinueAs user={user} /> */}
-      </div>
-      <div className={styles.login_right}>
+      </Box>
+      <Box>
         <Signin
           // Signin Change Handlers
           signInHandlerSubmit={signInHandlerSubmit}
@@ -306,15 +331,14 @@ const LoginPage = () => {
           signupPasswordErrorBoolean={signupPasswordErrorBoolean}
           signupBirthdayError={signupBirthdayError}
           signupGenderError={signupGenderError}
-          
           signupError={signupError}
           // Signup Values
           signupBirthday={signupBirthday}
           signupGender={signupGender}
         />
         <br />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
@@ -322,9 +346,31 @@ export default LoginPage;
 
 const Signin = (props) => {
   return (
-    <div className={styles.signin_container}>
+    <Box
+      sx={{
+        justifyContent: "space-between",
+        flex: 1,
+        padding: "10px",
+        borderStyle: "solid",
+        borderWidth: "2px",
+        borderColor: "rgb(180, 17, 180)",
+        borderRadius: "10px",
+        width: "350px",
+      }}
+    >
       <form onSubmit={props.signInHandlerSubmit} className={styles.signin_form}>
-        <h4>Sign in</h4>
+        <Typography
+          variant="h5"
+          component="h5"
+          sx={{
+            fontWeight: "bold",
+            color: "rgb(180, 17, 180)",
+            marginBottom: "1rem",
+            marginTop: "10px",
+          }}
+        >
+          Sign in
+        </Typography>
         <TextField
           label="Email"
           color="secondary"
@@ -392,18 +438,6 @@ const Signin = (props) => {
         signupBirthday={props.signupBirthday}
         singupGender={props.singupGender}
       />
-    </div>
-  );
-};
-
-const ContinueAs = ({ user }) => {
-  console.log("The user is: ", user);
-  return (
-    <div className={styles.continue_as}>
-      <Typography variant="h5">Continue as</Typography>
-      <div className={styles.continue_as_user}>
-        <h4>{user.username}</h4>
-      </div>
-    </div>
+    </Box>
   );
 };

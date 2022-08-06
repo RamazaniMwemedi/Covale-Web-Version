@@ -20,9 +20,9 @@ const PersonRequest = ({ user, token }) => {
       {user && (
         <Box
           sx={{
-            backgroundColor: "white",
             width: "300px",
             borderRadius: "15px",
+            boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
           }}
         >
           <br />

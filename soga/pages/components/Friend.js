@@ -37,8 +37,6 @@ const Friend = ({ friend, token }) => {
       {friend && (
         <Box
           sx={{
-            // boxShadow: ,
-            backgroundColor: "white",
             borderRadius: "10px",
             width: "155%",
             padding: "3px",
@@ -50,7 +48,7 @@ const Friend = ({ friend, token }) => {
             },
           }}
         >
-          <Box
+          {/* <Box
             sx={{
               backgroundImage: `linear-gradient(to right, purple, green)`,
               width: "100%",
@@ -60,10 +58,10 @@ const Friend = ({ friend, token }) => {
               borderTopRightRadius: "5px",
               borderTopLeftRadius: "5px",
             }}
-          />{" "}
+          />{" "} */}
           <Box
             sx={{
-              marginTop: "-25px",
+              marginTop: "25px",
               display: "flex",
             }}
           >

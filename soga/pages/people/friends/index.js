@@ -64,7 +64,6 @@ export default function People() {
       <Box
         component="main"
         sx={{
-          backgroundColor: "aliceblue",
           flex: 1,
           grow: 1,
           height: "100%",

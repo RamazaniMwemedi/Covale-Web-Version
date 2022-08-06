@@ -62,7 +62,6 @@ export default function Explore() {
       <PeopleLeft />
       <Box
         sx={{
-          backgroundColor: "aliceblue",
           flex: 1,
           grow: 1,
           height: "100%",
@@ -81,10 +80,7 @@ export default function Explore() {
             sx={{
               height: "3rem",
               width: "3rem",
-              backgroundColor: "#fff",
-              "&:hover": {
-                backgroundColor: "#fff",
-              },
+              boxShadow: 1,
             }}
             onClick={() => router.back()}
           >

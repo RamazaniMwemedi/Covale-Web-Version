@@ -15,14 +15,18 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import { useTheme } from "@mui/material/styles";
+
 
 import DatePicker from "./DatePicker"
 
 import styles from "../../styles/Login.module.css";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
+    backgroundColor: theme.colors.background,
   },
   "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
@@ -31,9 +35,10 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
+  const theme = useTheme();
 
   return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+    <DialogTitle sx={{ m: 0, p: 2, backgroundColor: theme.colors.background }} {...other}>
       {children}
       {onClose ? (
         <IconButton
@@ -59,7 +64,7 @@ BootstrapDialogTitle.propTypes = {
 };
 
 const CreateAccount = forwardRef((props, ref) => {
-  
+  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -74,7 +79,7 @@ const CreateAccount = forwardRef((props, ref) => {
    });
 
   return (
-    <div>
+    <Box>
       <Button variant="contained" color="success" onClick={handleClickOpen}>
         Signup
       </Button>
@@ -200,7 +205,7 @@ const CreateAccount = forwardRef((props, ref) => {
           </form>
         </DialogContent>
       </BootstrapDialog>
-    </div>
+    </Box>
   );
 });
 

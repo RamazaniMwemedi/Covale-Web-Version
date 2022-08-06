@@ -190,7 +190,8 @@ const Mid = () => {
         }}
       >
         {/* Array of messages skeletons of sender and receiver */}
-        {Array.from({ length: 110 }, (_, index) => {
+        {Array.from({ length: 11 }, (_, index) => {
+          console.log(index);
           return (
             <Box
               key={index}

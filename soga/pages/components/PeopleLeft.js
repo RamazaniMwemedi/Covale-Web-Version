@@ -41,7 +41,6 @@ const closedMixin = (theme) => ({
     width: `calc(${theme.spacing(35)} + 1px)`,
     marginLeft: theme.spacing(8),
   },
-  backgroundColor: "#fff",
   justifyContent: "spaceBetween",
 });
 const Drawer = styled(MuiDrawer, {
@@ -96,7 +95,6 @@ export default function PeopleLeft() {
             display: "flex",
             alignItem: "center",
             textAlign: "center",
-            backgroundColor: "white",
             paddingTop: "8px",
             paddingLeft: "8px",
           }}
@@ -120,11 +118,13 @@ export default function PeopleLeft() {
         <List sx={{ width: "100%", maxWidth: 360 }}>
           {/* Friend Request Button */}
           <ListItem
-            className={classes.listItem}
             sx={{
-              backgroundColor: "white",
               borderTopRightRadius: "16px",
               borderBottomRightRadius: "16px",
+              // if pathname is /friendrequests, background color is gray
+              backgroundColor: pathname.includes("/friendrequests")
+                ? "rgba(255, 255, 255, 0.08)"
+                : "unset",
             }}
             disablePadding
           >
@@ -159,12 +159,12 @@ export default function PeopleLeft() {
             </ListItemButton>
           </ListItem>
           <ListItem
-            className={classes.listItem}
             sx={{
-              backgroundColor: "white",
               borderTopRightRadius: "16px",
               borderBottomRightRadius: "16px",
               marginTop: "5px",
+              // if pathname is /friends, background color is gray
+              backgroundColor: pathname.includes("/friends") ? "gray" : "unset",
             }}
             disablePadding
           >
@@ -197,12 +197,12 @@ export default function PeopleLeft() {
           </ListItem>
           <ListItem
             sx={{
-              backgroundColor: "white",
               marginTop: "5px",
               borderTopRightRadius: "16px",
               borderBottomRightRadius: "16px",
+              // if pathname is /explore, background color is gray
+              backgroundColor: pathname.includes("/explore") ? "gray" : "unset",
             }}
-            className={classes.listItem}
             disablePadding
           >
             {/* Discover People button */}
