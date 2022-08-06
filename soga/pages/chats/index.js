@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
+import { useTheme } from "@mui/material/styles";
 
 // My components
 import DrawerComponent from "../components/DrawerComponent";
@@ -17,6 +18,7 @@ import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
 import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
 export default function Chat() {
+  const theme = useTheme();
   var user = useCheckLogedinUser();
   const router = useRouter();
   const id = router.query.t;
@@ -73,7 +75,7 @@ export default function Chat() {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box sx={{ display: "flex", height: "100vh", backgroundColor: theme.colors.background }}>
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <ChatLeft user={user} chat={chat} />

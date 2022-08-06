@@ -17,7 +17,10 @@ function MyApp({ Component, pageProps }) {
           primary: "#00bcd4",
           secondary: "#ff4081",
           error: "#f44336",
-          background: prefersDarkMode ? "red" : "rgb(226, 216, 226)",
+          background: prefersDarkMode
+            ? "rgb(58, 20, 58)"
+            : "rgb(226, 216, 226)",
+          background1: prefersDarkMode ? "rgb(46, 41, 41)" : "#ffff",
         },
       }),
     [prefersDarkMode]

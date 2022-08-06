@@ -30,7 +30,7 @@ const closedMixin = (theme) => ({
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
   justifyContent: "spaceBetween",
-  borderRadiusRight:"1px solid red"
+  backgroundColor: theme.colors.background,
 });
 
 const Drawer = styled(MuiDrawer, {
@@ -50,6 +50,7 @@ const Drawer = styled(MuiDrawer, {
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
+  
 }));
 
 export default function DrawerComponent({ signoutHandler, user }) {

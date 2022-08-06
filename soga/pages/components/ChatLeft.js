@@ -9,11 +9,11 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import "@fontsource/open-sans/500.css"; // Weight 500.
+import { useTheme } from "@mui/styles";
 
-import ProfileDialog from "../components/ProfileDialog";
 import Chats from "./Chats";
 import chatService from "../../services/chats";
-
+import { Avatar } from "@mui/material";
 
 const closedMixin = (theme) => ({
   //
@@ -28,7 +28,8 @@ const closedMixin = (theme) => ({
     marginLeft: theme.spacing(8),
   },
   justifyContent: "spaceBetween",
-  borderLeft: "1px solid #e0e0e0",
+  borderLeft: "1px solid white",
+  backgroundColor: theme.colors.background,
 });
 
 const Drawer = styled(MuiDrawer, {
@@ -36,10 +37,10 @@ const Drawer = styled(MuiDrawer, {
 })(({ theme, open }) => ({
   width: "15px",
   flexShrink: 0,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
-  
+
   ...(open && {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
@@ -52,6 +53,7 @@ const Drawer = styled(MuiDrawer, {
 
 function Tabs({ messages, loading }) {
   const [value, setValue] = React.useState("chats");
+  const theme = useTheme();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -66,6 +68,9 @@ function Tabs({ messages, loading }) {
             indicatorColor="secondary"
             onChange={handleChange}
             aria-label="lab API tabs example"
+            sx={{
+              backgroundColor: theme.colors.background1,
+            }}
           >
             <Tab
               label="Chats"
@@ -107,12 +112,14 @@ export default function ChatLeft({ user }) {
 
   React.useEffect(() => {
     if (token) {
-      chatService.getChats(token).then((res) => {
-        setMessages(res);
-      }).then(() => {
-        setLoading(false);
-      }
-      );
+      chatService
+        .getChats(token)
+        .then((res) => {
+          setMessages(res);
+        })
+        .then(() => {
+          setLoading(false);
+        });
     }
   }, [token]);
   return (
@@ -126,3 +133,41 @@ export default function ChatLeft({ user }) {
     </Box>
   );
 }
+
+const ProfileDialog = ({ user }) => {
+  const theme = useTheme();
+  return (
+    <Box sx={{ backgroundColor: theme.colors.background }}>
+    
+        <Box
+         
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              textAlign: "center",
+              backgroundColor: theme.colors.background1,
+              padding:"20px", 
+              borderTopLeftRadius: "5px",
+              borderTopRightRadius: "5px",
+            }}
+          >
+            <Box>
+              {" "}
+              <Avatar
+                alt="Remy Sharp"
+                src="https://material-ui.com/static/images/avatar/1.jpg"
+              >
+                {user && user.username[0]}
+              </Avatar>{" "}
+            </Box>
+            <Typography variant="h6" noWrap>
+              {user && user.username}
+            </Typography>
+          </Box>
+        </Box>
+     
+    </Box>
+  );
+};

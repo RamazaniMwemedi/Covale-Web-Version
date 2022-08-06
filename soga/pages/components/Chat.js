@@ -9,13 +9,19 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
+import {  useTheme } from "@mui/material/styles";
 
 export default function Chat({ message }) {
   const router = useRouter();
   const id = router.query.t;
+  const theme = useTheme()
 
   return (
-    <List>
+    <List
+      sx={{
+        backgroundColor: theme.colors.background,
+      }}
+    >
       {message && (
         <ListItem
           button
@@ -29,7 +35,7 @@ export default function Chat({ message }) {
             borderRadius: "0.5rem",
             boxShadow: message.chatId === id ? 1 : "unset",
             backgroundColor:
-              message.chatId === id ? "rgba(255, 255, 255, 0.08)" : "unset",
+              message.chatId === id ? "whitesmoke" : "lightgray",
             "&:hover": {
               backgroundColor: "whitesmoke",
               // boxShadow: 1,
