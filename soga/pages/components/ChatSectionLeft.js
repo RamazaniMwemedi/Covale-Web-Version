@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import PersonIcon from '@mui/icons-material/Person';
 import { useTheme } from "@mui/material";
 
 // import Picker from "emoji-picker-react";
@@ -22,6 +23,8 @@ const ChatSectionLeft = ({
   message,
   messages,
   friendUsername,
+  showRightHandler,
+  showRight,
 }) => {
   return (
     <Box
@@ -32,7 +35,11 @@ const ChatSectionLeft = ({
         flexDirection: "column",
       }}
     >
-      <TopBar friendUsername={friendUsername} />
+      <TopBar
+        friendUsername={friendUsername}
+        showRightHandler={showRightHandler}
+        showRight={showRight}
+      />
       <Box
         sx={{
           flex: "55%",
@@ -56,8 +63,8 @@ const ChatSectionLeft = ({
 
 export default ChatSectionLeft;
 
-const TopBar = ({ friendUsername }) => {
-  const theme = useTheme()
+const TopBar = ({ friendUsername, showRightHandler, showRight }) => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -78,7 +85,7 @@ const TopBar = ({ friendUsername }) => {
         top: "0px",
         borderBottom: "1px solid #e0e0e0",
         backgroundColor: theme.colors.background1,
-        borderTopRightRadius: "2px",
+        borderTopRightRadius: "8px",
       }}
     >
       {/* Left */}
@@ -143,6 +150,13 @@ const TopBar = ({ friendUsername }) => {
               );
             }}
           />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            showRightHandler();
+          }}
+        >
+          <PersonIcon color={showRight ? "secondary" : "action"} />
         </IconButton>
       </Box>
     </Box>

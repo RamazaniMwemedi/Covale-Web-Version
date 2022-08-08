@@ -14,6 +14,10 @@ const ChatSection = ({
   messages,
   friendUsername,
 }) => {
+  const [showRight, setShowRight] = React.useState(true)
+  const showRightHandler = () => { 
+    setShowRight(!showRight)
+   }
   return (
     <Box
       sx={{
@@ -28,8 +32,8 @@ const ChatSection = ({
           display: "flex",
           justifyContent: "flex-end",
           flexDirection: "column",
-          borderRight: "1px solid #e0e0e0",
-          borderBottom: "1px solid #e0e0e0",
+          borderRight: "1px solid #ffff",
+          borderBottom: "1px solid #ffff",
         }}
       >
         {/* ChatSectionLeft */}
@@ -42,16 +46,20 @@ const ChatSection = ({
           message={message}
           messages={messages}
           friendUsername={friendUsername}
+          showRightHandler={showRightHandler}
+          showRight={showRight}
         />
       </Box>
       {/* ChatSectionRight */}
-      <Box
-        sx={{
-          flex: "35%",
-        }}
-      >
-        <ChatSectionRight friendUsername={friendUsername} />
-      </Box>
+      {showRight && (
+        <Box
+          sx={{
+            flex: "35%",
+          }}
+        >
+          <ChatSectionRight friendUsername={friendUsername} />
+        </Box>
+      )}
     </Box>
   );
 };

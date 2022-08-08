@@ -29,6 +29,7 @@ const closedMixin = (theme) => ({
   },
   justifyContent: "spaceBetween",
   borderLeft: "1px solid white",
+  borderRight: "1px solid white",
   backgroundColor: theme.colors.background,
 });
 
@@ -149,8 +150,7 @@ const ProfileDialog = ({ user }) => {
               textAlign: "center",
               backgroundColor: theme.colors.background1,
               padding:"20px", 
-              borderTopLeftRadius: "5px",
-              borderTopRightRadius: "5px",
+              borderTopLeftRadius: "8px",
             }}
           >
             <Box>
