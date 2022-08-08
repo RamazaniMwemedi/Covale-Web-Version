@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { useTheme } from "@mui/styles";
 import React from "react";
 import ChatSectionLeft from "./ChatSectionLeft";
 import ChatSectionRight from "./ChatSectionRight";
@@ -18,6 +19,7 @@ const ChatSection = ({
   const showRightHandler = () => { 
     setShowRight(!showRight)
    }
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -32,8 +34,8 @@ const ChatSection = ({
           display: "flex",
           justifyContent: "flex-end",
           flexDirection: "column",
-          borderRight: "1px solid #ffff",
-          borderBottom: "1px solid #ffff",
+
+          borderBottom: `1px solid ${theme.colors.background1}`,
         }}
       >
         {/* ChatSectionLeft */}
@@ -55,6 +57,7 @@ const ChatSection = ({
         <Box
           sx={{
             flex: "35%",
+            borderLeft: `2px solid ${theme.colors.background1}`,
           }}
         >
           <ChatSectionRight friendUsername={friendUsername} />

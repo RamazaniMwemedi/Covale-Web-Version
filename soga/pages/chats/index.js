@@ -27,8 +27,6 @@ export default function Chat() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
- 
-
   useEffect(() => {
     if ((token, id)) {
       setLoading(true);
@@ -40,7 +38,6 @@ export default function Chat() {
     }
   }, [token, id]);
 
-  
   const friendUsername = chat.chat
     ? chat.chat.friend.id !== user.id
       ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
@@ -110,7 +107,7 @@ const ClickaChat = () => {
         alignItems: "center",
         textAlign: "center",
         justifyContent: "center",
-        margin:"200px"
+        margin: "200px",
       }}
     >
       <Typography variant="h1">Click a chat</Typography>

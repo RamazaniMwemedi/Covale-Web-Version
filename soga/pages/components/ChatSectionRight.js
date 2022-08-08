@@ -42,8 +42,6 @@ const ChatSectionRight = ({ friendUsername }) => {
             <Friend friendUsername={friendUsername} />
             <br />
           </Box>
-          <br />
-          <Box></Box>
         </Box>
       )}
     </>

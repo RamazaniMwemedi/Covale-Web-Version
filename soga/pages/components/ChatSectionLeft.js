@@ -26,6 +26,7 @@ const ChatSectionLeft = ({
   showRightHandler,
   showRight,
 }) => {
+  
   return (
     <Box
       sx={{
@@ -46,7 +47,7 @@ const ChatSectionLeft = ({
           display: "flex",
           justifyContent: "flex-end",
           flexDirection: "column",
-          borderRight: "1px solid #e0e0e0",
+         
           paddingBottom: "2px",
         }}
       >
@@ -79,11 +80,11 @@ const TopBar = ({ friendUsername, showRightHandler, showRight }) => {
         // z-index
         zIndex: "1",
         // border
-        borderRight: "1px solid #e0e0e0",
+        borderRight: `1px solid ${theme.colors.background1}`,
         webkitBackdropFilter: "blur(10px)",
         position: "sticky",
         top: "0px",
-        borderBottom: "1px solid #e0e0e0",
+        borderBottom: `1px solid ${theme.colors.background1}`,
         backgroundColor: theme.colors.background1,
         borderTopRightRadius: "8px",
       }}
@@ -295,7 +296,6 @@ const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
         height: "3rem",
         display: "flex",
         marginBottom: "4px",
-        borderRight: "1px solid #e0e0e0",
         // Be at the bottom of the page
         verticalAlign: "bottom",
       }}

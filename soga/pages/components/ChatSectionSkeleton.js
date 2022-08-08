@@ -3,6 +3,7 @@ import Skeleton from "@mui/material/Skeleton";
 import React from "react";
 import { Typography } from "@mui/material";
 import { Avatar, IconButton } from "@mui/material";
+import { useTheme } from "@mui/styles";
 
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
@@ -42,7 +43,7 @@ const ChatSectionSkeleton = () => {
       {/* ChatSectionRigth */}
       <Box
         sx={{
-          flex: "40%",
+          flex: "35%",
           display: "flex",
         }}
       >
@@ -55,11 +56,12 @@ const ChatSectionSkeleton = () => {
 export default ChatSectionSkeleton;
 
 const TopBar = () => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
         height: "4rem",
-        backgroundColor: "whitesmoke",
+        backgroundColor: theme.colors.background1,
         // centered
         display: "flex",
         flexDirection: "row",
@@ -317,85 +319,69 @@ const Left = () => {
 // Right
 const Right = () => {
   return (
-    <Box
-      sx={{
-        flex: "55%",
-        display: "flex",
-        justifyContent: "flex-start",
-        flexDirection: "column",
-        borderLeft: "1px solid #e0e0e0",
-        paddingBottom: "2px",
-        justifyContent: "space-between",
-      }}
-    >
-      {/* Top */}
-      <Friend />
-    </Box>
-  );
-};
-
-const Friend = ({ friendUsername }) => {
-  return (
-    <Box
-      sx={{
-        flex: "40%",
-        display: "flex",
-      }}
-    >
-      {/* Avatr  Name */}
-      <Skeleton variant="circular" width={90} height={90} animation="wave" />
-      <Box>
-        <Skeleton variant="text" width={"100%"} height={25} animation="wave" />
-        <Typography variant="body2">Mutual Team </Typography>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridGap: "5px",
-            alignItems: "center",
-            justifyContent: "center",
-
-            maxHeight: "100px",
-            overflowY: "scroll",
-          }}
-        >
-          {Array.from(["Veloci", "Covalent", "SIR"], (team, index) => {
-            return (
-              <Box
-                key={index}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "2px",
-                  cursor: "pointer",
-                  "&:hover": {
-                    backgroundColor: "whitesmoke",
-                    boxShadow: 1,
-                  },
-                  borderRadius: "5px",
-                  padding: "2px",
-                }}
-              >
-                <Avatar sx={{ width: "30px", height: "30px" }}>
-                  {team[0]}
-                </Avatar>
-                <Typography
-                  sx={{
-                    // Max width of the text
-                    maxWidth: "100px",
-                    // Text overflow
-                  }}
-                  color="secondary"
-                  variant="caption"
-                >
-                  {/* Max text 3 characters else add ...*/}
-                  {team.length > 3 ? team.substring(0, 3) + "..." : team}
-                </Typography>
-              </Box>
-            );
-          })}
-        </Box>
+    <Box>
+      <Skeleton
+        variant="circular"
+        sx={{
+          position: "fixed",
+          top: "1",
+          right: "0",
+        }}
+        width={30}
+        height={30}
+      />
+      <Box
+        sx={{
+          // Center this section
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          marginLeft: "120px",
+          // Padding
+        }}
+      >
+        <Friend />
       </Box>
     </Box>
   );
 };
+
+const Friend = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: "25px",
+      }}
+    >
+      <Skeleton variant="circular" sx={{ width: "120px", height: "120px" }} />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Skeleton
+          variant="text"
+          sx={{
+            paddingTop: "30px",
+          }}
+          width={120}
+          height={20}
+        />
+        {/* Status */}
+        <Skeleton
+          variant="text"
+          sx={{
+            paddingTop: "10px",
+          }}
+          width={50}
+          height={20}
+        />
+      </Box>
+    </Box>
+  );
+}

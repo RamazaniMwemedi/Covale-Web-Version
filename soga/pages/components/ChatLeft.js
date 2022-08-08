@@ -28,8 +28,8 @@ const closedMixin = (theme) => ({
     marginLeft: theme.spacing(8),
   },
   justifyContent: "spaceBetween",
-  borderLeft: "1px solid white",
-  borderRight: "1px solid white",
+  borderLeft: `2px solid ${theme.colors.background1}`,
+  borderRight: `2px solid ${theme.colors.background1}`,
   backgroundColor: theme.colors.background,
 });
 
