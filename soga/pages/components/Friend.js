@@ -7,11 +7,13 @@ import FormControl from "@mui/material/FormControl";
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import { useTheme } from "@mui/styles";
 
 // My modules
 import chatServices from "../../services/chats";
 
 const Friend = ({ friend, token }) => {
+  const theme = useTheme();
   const [messege, setMessege] = useState("");
 
   // onSubmit messege
@@ -43,6 +45,7 @@ const Friend = ({ friend, token }) => {
             borderStyle: "solid",
             borderWidth: "1px",
             borderColor: "lightgray",
+            backgroundColor: theme.colors.background1,
             "&:hover": {
               boxShadow: 4,
             },

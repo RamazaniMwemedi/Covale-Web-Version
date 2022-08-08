@@ -7,12 +7,13 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
-
+import { useTheme } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import userServices from "../../services/user";
 
 const PersonRequest = ({ user, token }) => {
+  const theme = useTheme();
   const [accepting, setAccepeting] = useState(false);
   const [showCommunication, setShowCommunication] = useState(false);
   return (
@@ -23,6 +24,7 @@ const PersonRequest = ({ user, token }) => {
             width: "300px",
             borderRadius: "15px",
             boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+            backgroundColor: theme.colors.background1
           }}
         >
           <br />

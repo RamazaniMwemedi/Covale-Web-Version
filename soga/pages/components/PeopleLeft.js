@@ -42,13 +42,14 @@ const closedMixin = (theme) => ({
     marginLeft: theme.spacing(8),
   },
   justifyContent: "spaceBetween",
+  backgroundColor: theme.colors.background,
 });
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   width: "15px",
   flexShrink: 0,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {
@@ -62,6 +63,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function PeopleLeft() {
+  const theme = useTheme();
   const classes = useStyles();
   const router = useRouter();
   const pathname = router.pathname;
@@ -95,8 +97,10 @@ export default function PeopleLeft() {
             display: "flex",
             alignItem: "center",
             textAlign: "center",
-            paddingTop: "8px",
+            paddingTop: "16px",
             paddingLeft: "8px",
+            backgroundColor: theme.colors.background1,
+            height: "70px",
           }}
         >
           <svg
@@ -123,8 +127,12 @@ export default function PeopleLeft() {
               borderBottomRightRadius: "16px",
               // if pathname is /friendrequests, background color is gray
               backgroundColor: pathname.includes("/friendrequests")
-                ? "rgba(255, 255, 255, 0.08)"
+                ? theme.colors.background1
                 : "unset",
+              "& :hover": {
+                borderTopRightRadius: "16px",
+                borderBottomRightRadius: "16px",
+              },
             }}
             disablePadding
           >
@@ -164,7 +172,13 @@ export default function PeopleLeft() {
               borderBottomRightRadius: "16px",
               marginTop: "5px",
               // if pathname is /friends, background color is gray
-              backgroundColor: pathname.includes("/friends") ? "gray" : "unset",
+              backgroundColor: pathname.includes("/friends")
+                ? theme.colors.background1
+                : "unset",
+              "& :hover": {
+                borderTopRightRadius: "16px",
+                borderBottomRightRadius: "16px",
+              },
             }}
             disablePadding
           >
@@ -201,7 +215,17 @@ export default function PeopleLeft() {
               borderTopRightRadius: "16px",
               borderBottomRightRadius: "16px",
               // if pathname is /explore, background color is gray
-              backgroundColor: pathname.includes("/explore") ? "gray" : "unset",
+              backgroundColor: pathname.includes("/explore")
+                ? theme.colors.background1
+                : "unset",
+              "& :hover": {
+                borderTopRightRadius: "16px",
+                borderBottomRightRadius: "16px",
+              },
+              "& :hover": {
+                borderTopRightRadius: "16px",
+                borderBottomRightRadius: "16px",
+              },
             }}
             disablePadding
           >

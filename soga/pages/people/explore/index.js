@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import * as React from "react";
 import { useRouter } from "next/router";
 import { Avatar, Button, Typography } from "@mui/material";
-
+import { useTheme } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 // My Modules
@@ -143,6 +143,7 @@ const NoDiscToShow = () => {
 };
 
 const Person = ({ user, logedinUser }) => {
+  const theme = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
   // User age
@@ -160,6 +161,7 @@ const Person = ({ user, logedinUser }) => {
           "&:hover": {
             boxShadow: 4,
           },
+          backgroundColor: theme.colors.background1,
         }}
       >
         <Box

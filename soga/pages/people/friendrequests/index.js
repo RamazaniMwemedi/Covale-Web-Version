@@ -63,8 +63,8 @@ export default function Explore() {
           marginLeft: "-3rem",
         }}
       >
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -91,7 +91,7 @@ export default function Explore() {
               Friend Request Sent
             </Typography>
           </div>
-        </div>
+        </Box>
         {loading ? (
           <Loader />
         ) : (
