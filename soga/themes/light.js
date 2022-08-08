@@ -12,5 +12,7 @@ module.exports = {
     textBackground: "rgb(255, 255, 255)",
     itemBackground: "whitesmoke",
     drawerBackground: "whitesmoke",
+    border: "rgb(226, 216, 226)",
+    hoverDate: "rgb(226, 216, 226)",
   },
 };

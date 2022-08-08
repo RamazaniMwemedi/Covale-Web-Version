@@ -22,6 +22,7 @@ const closedMixin = (theme) => ({
   },
   backgroundColor: "#fff",
   justifyContent: "spaceBetween",
+  backgroundColor: theme.colors.background,
 });
 
 const Drawer = styled(MuiDrawer, {
@@ -29,7 +30,7 @@ const Drawer = styled(MuiDrawer, {
 })(({ theme, open }) => ({
   width: "15px",
   flexShrink: 0,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {
@@ -45,7 +46,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function CalenderLeft({ user, value, handleChange }) {
   const token = user ? user.token : null;
-
+  const theme = useTheme();
   return (
     <Box>
       <CssBaseline />
@@ -55,10 +56,11 @@ export default function CalenderLeft({ user, value, handleChange }) {
             display: "flex",
             alignItem: "center",
             textAlign: "center",
-            backgroundColor: "white",
+            backgroundColor: theme.colors.background1,
             paddingTop: "8px",
             paddingLeft: "8px",
             position: "fixed",
+            height: "70px",
             width: "24%",
             zIndex: "1",
           }}

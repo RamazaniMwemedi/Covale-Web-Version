@@ -5,14 +5,20 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import { Box } from "@mui/system";
 import { Typography } from "@mui/material";
-
+import { useTheme } from "@mui/styles";
 export default function DatepickerForCalender({ value, handleChange }) {
+  const theme = useTheme();
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider
+      sx={{
+        backgroundColor: theme.colors.background1,
+      }}
+      dateAdapter={AdapterDateFns}
+    >
       <Box
         sx={{
           borderRadius: "15px",
-          border: "1px solid #e0e0e0 ",
+          border: `1px solid ${theme.colors.border}`,
           margin: "1px",
         }}
       >
@@ -23,7 +29,17 @@ export default function DatepickerForCalender({ value, handleChange }) {
           onChange={(value) => {
             handleChange(value);
           }}
-          renderInput={(params) => <TextField {...params} />}
+          sx={{
+            backgroundColor: theme.colors.background1,
+          }}
+          renderInput={(params) => (
+            <TextField
+              sx={{
+                backgroundColor: theme.colors.background1,
+              }}
+              {...params}
+            />
+          )}
         />
       </Box>
     </LocalizationProvider>

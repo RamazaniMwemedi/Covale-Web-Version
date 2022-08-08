@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Box, Typography } from "@mui/material";
 import AddEvent from "./AddEvent";
+import {useTheme} from "@mui/styles";
 
 function getDaysArray(year, month) {
   var numDaysInMonth, daysInWeek, daysIndex, index, i, l, daysArray;
@@ -35,6 +36,7 @@ function getDaysArray(year, month) {
 }
 
 export default function StaticDatePickerDemo({ value, handleChange }) {
+  const theme = useTheme();
   const [showAddEvent, setShowAddEvent] = React.useState(false);
   const [clickedDay, setClickedDay] = React.useState(null);
   const showAddEventHandler = () => {
@@ -60,7 +62,10 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
   const clickedYearDate = clickedDayDate.getFullYear();
 
   return (
-    <Box>
+    <Box sx={{
+                  backgroundColor: theme.colors.background1,
+
+    }}>
       {/* Table for days of a month */}
       {value && (
         <Box
@@ -68,7 +73,6 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
             flexDirection: "column",
             border: "1px solid #e0e0e0 ",
             margin: "1px",
-            backgroundColor: "white",
             height: "100%",
             padding: "12px",
             
@@ -124,7 +128,7 @@ export default function StaticDatePickerDemo({ value, handleChange }) {
                               clickedMonthDate + 1
                             } ${clickedYearDate}`
                               ? " rgba(221, 160, 221, 0.863)"
-                              : " #f5f5f5",
+                              : theme.colors.hoverDate,
                           color: "black",
                           fontWeight: "bold",
                         },

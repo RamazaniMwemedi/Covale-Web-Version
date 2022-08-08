@@ -3,13 +3,14 @@ import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
 
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/styles";
 // My Modules
 import DrawerComponent from "./components/DrawerComponent";
 import CalenderLeft from "./components/CalenderLeft";
 import CalenderSection from "./components/CalenderSection";
 
 export default function Calendar() {
+  const theme = useTheme();
   const [value, setValue] = React.useState(new Date());
   const handleChange = (newValue) => {
     setValue(newValue);
@@ -35,7 +36,7 @@ export default function Calendar() {
       <CssBaseline />
       <DrawerComponent user={user} />
       <CalenderLeft handleChange={handleChange} value={value} />
-      <Box component="main" sx={{ display: "flex", height: "100%" }}>
+      <Box component="main" sx={{ display: "flex", height: "100%",  }}>
         {/* App will start here */}
         <CalenderSection handleChange={handleChange} value={value} />
       </Box>
