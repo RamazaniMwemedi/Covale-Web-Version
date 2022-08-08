@@ -14,7 +14,6 @@ import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import Tooltip from "@mui/material/Tooltip";
 
-
 import NewMeet from "./NewMeet";
 
 import Signout from "./Signout";
@@ -50,11 +49,11 @@ const Drawer = styled(MuiDrawer, {
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
-  
 }));
 
 export default function DrawerComponent({ signoutHandler, user }) {
   const router = useRouter();
+  const theme = useTheme();
 
   const [open, setOpen] = useState(false);
   const [chatColor, setChatColor] = useState("gray");
@@ -76,7 +75,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setCalendar("gray");
       setMeet("gray");
       // Background color
-      setChatBackgroundColor("rgba(255, 255, 255, 0.08)");
+      setChatBackgroundColor(theme.colors.drawerBackground);
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
@@ -87,7 +86,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setMeet("gray");
       // Background color
       setChatBackgroundColor("");
-      setPeopleBackgroundColor("rgba(255, 255, 255, 0.08)");
+      setPeopleBackgroundColor(theme.colors.drawerBackground);
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
     } else if (pathname === "/calender") {
@@ -98,7 +97,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       // Background color
       setChatBackgroundColor("");
       setPeopleBackgroundColor("");
-      setCalenderBackgroundColor("rgba(255, 255, 255, 0.08)");
+      setCalenderBackgroundColor(theme.colors.drawerBackground);
       setMeetBackgroundColor("");
     } else if (pathname === "/meet") {
       setChatColor("gray");
@@ -109,7 +108,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setChatBackgroundColor("");
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
-      setMeetBackgroundColor("rgba(255, 255, 255, 0.08)");
+      setMeetBackgroundColor(theme.colors.drawerBackground);
     }
   }, [router.pathname]);
 
