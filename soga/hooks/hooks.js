@@ -1,4 +1,4 @@
-const { useEffect, useState } = require("react");
+const { useEffect, useState, useLayoutEffect } = require("react");
 const { useRouter } = require("next/router");
 
 const { getChatById } = require("../services/chats");
@@ -21,10 +21,10 @@ const useCheckLogedinUser = () => {
 
 const useGetChatById = (token, id) => {
   const [chat, setChat] = useState(null);
-const[loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   // Get chat by id and set it to chat
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     if ((token, id)) {
       getChatById(token, id).then((res) => {
         setChat(res);
@@ -35,7 +35,21 @@ const[loading, setLoading] = useState(true);
   return { chat, loading };
 };
 
+const useGetTheme = () => {
+  const [theme, setTheme] = useState("");
+  useEffect(() => {
+    const darkTheme = JSON.parse(localStorage.getItem("darkTheme"));
+    if (darkTheme) {
+      setTheme(darkTheme);
+    } else {
+      setTheme(false);
+    }
+  } , []);
+  return theme;
+}
+
 module.exports = {
   useCheckLogedinUser,
   useGetChatById,
+  useGetTheme,
 };

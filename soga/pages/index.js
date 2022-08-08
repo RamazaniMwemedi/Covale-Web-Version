@@ -11,6 +11,9 @@ import loginServices from "../services/login";
 import CreateAccount from "./components/CreateAccount";
 
 const LoginPage = () => {
+  useEffect(() => {
+    localStorage.setItem("darkTheme", JSON.stringify(false));
+  }, []);
   // User
   const [user, setUser] = useState(null);
   // Signin form states
@@ -57,7 +60,7 @@ const LoginPage = () => {
   const [signupGenderError, setSignupGenderError] = useState("");
   const [signupError, setSignupError] = useState("");
   const signupRef = useRef(null);
-  
+
   const theme = useTheme();
 
   // Signin Handlers
@@ -251,8 +254,6 @@ const LoginPage = () => {
   const signupGenderHandler = (e) => {
     setSignupGender(e.target.value);
   };
-
-
 
   return (
     <Box

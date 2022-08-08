@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { Box, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
 import { useTheme } from "@mui/material/styles";
 
 // My components
@@ -28,7 +27,7 @@ export default function Chat() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const socket = io.connect("http://localhost:3001");
+ 
 
   useEffect(() => {
     if ((token, id)) {
@@ -41,10 +40,7 @@ export default function Chat() {
     }
   }, [token, id]);
 
-  useEffect(() => {
-    socket.emit("chat message", "Hello");
-  }, []);
-
+  
   const friendUsername = chat.chat
     ? chat.chat.friend.id !== user.id
       ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`

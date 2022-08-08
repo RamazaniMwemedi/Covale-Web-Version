@@ -16,6 +16,7 @@ function MyApp({ Component, pageProps }) {
         prefersDarkMode
           ? darkTheme
           : lightTheme
+          
       ),
     [prefersDarkMode]
   );
