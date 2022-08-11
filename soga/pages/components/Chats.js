@@ -10,6 +10,10 @@ import {
 } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 // My components
 import AddMoreFriends from "./AddMoreFriends";
@@ -30,9 +34,44 @@ const Chats = ({ messages, loading }) => {
 
   return (
     <>
-      {loading ? (
+      <Box
+        sx={{
+          width: "100%",
+          // backgroundColor: "white",
+          borderRadius: "5px",
+          marginBottom: "10px",
+        }}
+      >
+        <FormControl sx={{ m: 1, width: "95%" }} variant="outlined">
+          <OutlinedInput
+            startAdornment={
+              <InputAdornment
+                sx={{
+                  marginLeft: "-15px",
+                }}
+                position="start"
+              >
+                <IconButton>
+                  <SearchRoundedIcon />
+                </IconButton>
+              </InputAdornment>
+            }
+            id="outlined-adornment-password"
+            type="text"
+            value=""
+            label="Sear"
+            onChange={() => {}}
+            sx={{
+              height: "35px",
+              borderRadius: "15px",
+            }}
+            color="secondary"
+          />
+        </FormControl>
+      </Box>
+      {!loading ? (
         <Stack spacing={1}>
-          {[...Array(8)].map((_, i) => (
+          {[...Array(80)].map((_, i) => (
             <ListItem
               key={i}
               sx={{

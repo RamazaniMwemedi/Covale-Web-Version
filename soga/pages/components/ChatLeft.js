@@ -52,16 +52,103 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function Tabs({ messages, loading }) {
-  const [value, setValue] = React.useState("chats");
+function Tabs({ messages, loading,  value }) {
   const theme = useTheme();
+
+  return (
+    <Box sx={{ width: "100%", typography: "body1" }}>
+      <TabContext value={value}>
+        <TabPanel value="chats">
+          <Box
+            sx={{
+              margin: "-20px",
+            }}
+          >
+            <Chats messages={messages} loading={loading} />
+          </Box>
+        </TabPanel>
+        <TabPanel value="team">Tam App will appear here</TabPanel>
+      </TabContext>
+    </Box>
+  );
+}
+
+export default function ChatLeft({ user }) {
+  const [messages, setMessages] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const token = user ? user.token : null;
+  const [value, setValue] = React.useState("chats");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  React.useEffect(() => {
+    if (token) {
+      chatService
+        .getChats(token)
+        .then((res) => {
+          setMessages(res);
+        })
+        .then(() => {
+          setLoading(false);
+        });
+    }
+  }, [token]);
   return (
-    <Box sx={{ width: "100%", typography: "body1" }}>
+      <Box>
+        <CssBaseline />
+        <Drawer variant="permanent">
+          <ProfileDialog handleChange={handleChange} value={value} user={user} />
+
+          <Tabs
+            messages={messages}
+            value={value}
+            handleChange={handleChange}
+            loading={loading}
+          />
+        </Drawer>
+      </Box>
+  );
+}
+
+const ProfileDialog = ({ user, handleChange, value }) => {
+  const theme = useTheme();
+  return (
+    <Box
+      sx={{
+        backgroundColor: theme.colors.background,
+        position: "sticky",
+        top: "0px",
+        zIndex: "1",
+      }}
+    >
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+            backgroundColor: theme.colors.background1,
+            padding: "20px",
+            borderTopLeftRadius: "8px",
+            gap: "10px",
+          }}
+        >
+          <Box>
+            {" "}
+            <Avatar
+              alt="Remy Sharp"
+              src="https://material-ui.com/static/images/avatar/1.jpg"
+            >
+              {user && user.username[0]}
+            </Avatar>{" "}
+          </Box>
+          <Typography variant="h6" noWrap>
+            {user && user.username}
+          </Typography>
+        </Box>
+      </Box>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList
@@ -71,6 +158,9 @@ function Tabs({ messages, loading }) {
             aria-label="lab API tabs example"
             sx={{
               backgroundColor: theme.colors.background1,
+              position: "sticky",
+              top: "10px",
+              zIndex: "1",
             }}
           >
             <Tab
@@ -91,83 +181,7 @@ function Tabs({ messages, loading }) {
             />
           </TabList>
         </Box>
-        <TabPanel value="chats">
-          <Box
-            sx={{
-              margin: "-20px",
-            }}
-          >
-            <Chats messages={messages} loading={loading} />
-          </Box>
-        </TabPanel>
-        <TabPanel value="team">Tam App will appear here</TabPanel>
       </TabContext>
-    </Box>
-  );
-}
-
-export default function ChatLeft({ user }) {
-  const [messages, setMessages] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  const token = user ? user.token : null;
-
-  React.useEffect(() => {
-    if (token) {
-      chatService
-        .getChats(token)
-        .then((res) => {
-          setMessages(res);
-        })
-        .then(() => {
-          setLoading(false);
-        });
-    }
-  }, [token]);
-  return (
-    <Box>
-      <CssBaseline />
-      <Drawer variant="permanent">
-        <ProfileDialog user={user} />
-
-        <Tabs messages={messages} loading={loading} />
-      </Drawer>
-    </Box>
-  );
-}
-
-const ProfileDialog = ({ user }) => {
-  const theme = useTheme();
-  return (
-    <Box sx={{ backgroundColor: theme.colors.background }}>
-    
-        <Box
-         
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              textAlign: "center",
-              backgroundColor: theme.colors.background1,
-              padding:"20px", 
-              borderTopLeftRadius: "8px",
-            }}
-          >
-            <Box>
-              {" "}
-              <Avatar
-                alt="Remy Sharp"
-                src="https://material-ui.com/static/images/avatar/1.jpg"
-              >
-                {user && user.username[0]}
-              </Avatar>{" "}
-            </Box>
-            <Typography variant="h6" noWrap>
-              {user && user.username}
-            </Typography>
-          </Box>
-        </Box>
-     
     </Box>
   );
 };
