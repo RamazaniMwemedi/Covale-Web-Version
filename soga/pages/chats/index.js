@@ -51,6 +51,14 @@ export default function Chat() {
     }
   }, [token, id]);
 
+  useEffect(()=>{
+    socket.on("messege_sent", (data) => {
+      console.log(data);
+      setMessages([...messages, data]);
+      setMessage("");
+    });
+  },[socket])
+
   const friendUsername = chat.chat
     ? chat.chat.friend.id !== user.id
       ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
@@ -71,14 +79,10 @@ export default function Chat() {
     if (message.length > 0) {
       const newMessage = {
         message: message,
-        sender: user.id,
       };
 
-      socket.emit("send_message", { newMessage, id });
-      sendMessageChatRoom(id, token, newMessage, ).then((res) => {
-        setMessages([...messages, res]);
-        setMessage("");
-      });
+      sendMessageChatRoom(id, token, newMessage, user.id);
+      
     }
   };
 
