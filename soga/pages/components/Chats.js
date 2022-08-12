@@ -7,6 +7,7 @@ import {
   Box,
   Typography,
   IconButton,
+  Icon,
 } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
@@ -139,14 +140,14 @@ const Chats = ({ messages, loading }) => {
                 <Typography variant="subtitle2" color="secondary">
                   Click the{" "}
                   {
-                    <Fab color="secondary" size="small" aria-label="add">
+                    <Icon>
                       <AddIcon
                         sx={{
                           width: "15px",
                           height: "15px",
                         }}
                       />
-                    </Fab>
+                    </Icon>
                   }{" "}
                   to add a friends
                 </Typography>

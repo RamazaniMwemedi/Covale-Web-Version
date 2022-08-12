@@ -14,5 +14,6 @@ module.exports = {
     drawerBackground: "whitesmoke",
     border: "rgb(226, 216, 226)",
     hoverDate: "rgb(226, 216, 226)",
+    background2: "lightgrey",
   },
 };

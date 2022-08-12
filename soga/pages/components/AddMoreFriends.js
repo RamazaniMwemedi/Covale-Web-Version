@@ -1,26 +1,76 @@
-import { Box } from "@mui/material";
+import { Box, Divider, IconButton, Typography } from "@mui/material";
 import React from "react";
+import { useTheme } from "@mui/system";
+import CloseIcon from "@mui/icons-material/Close";
+import { useGetFriends } from "../../hooks/hooks";
 
 const AddMoreFriends = ({ closeMorePeopleHandler }) => {
+  const friends = useGetFriends();
+  const theme = useTheme();
   return (
     <Box
       sx={{
         height: "400px",
-        width: "280px",
+        width: "271px",
         position: "fixed",
-        bottom: 0,
+        bottom: "0px",
         borderTopRightRadius: "10px",
         borderTopLeftRadius: "10px",
         blur: "5px",
+        backgroundColor: theme.colors.background1,
+        position: "fixed",
+        zIndex: "1",
       }}
     >
-      <button
-        onClick={() => {
-          closeMorePeopleHandler();
+      <Box
+        sx={{
+          padding: "3px",
+          position: "sticky",
+          top: "0px",
+          zIndex: "1",
         }}
       >
-        Close
-      </button>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h6">Friends</Typography>
+          <IconButton
+            sx={{
+              marginTop: "6px",
+              backgroundColor: theme.colors.itemBackground,
+              "&:hover": {
+                backgroundColor: theme.colors.background2,
+              },
+            }}
+            onClick={() => {
+              closeMorePeopleHandler();
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <Divider />
+      </Box>
+      {/* Friends */}
+      <Box
+        sx={{
+          overflow: "scroll",
+          height: "400px",
+        }}
+      >
+        {friends.loading ? (
+          <p>Loading</p>
+        ) : friends.friends.length > 0 ? (
+          friends.friends.map((friend, i) => {})
+        ) : (
+          <Typography variant="h6">No friends</Typography>
+        )}
+      </Box>
+      {/* End of friends */}
     </Box>
   );
 };

@@ -3,6 +3,7 @@ const { useRouter } = require("next/router");
 
 const { getChatById } = require("../services/chats");
 const { sendMessege } = require("../services/messages");
+const { myFriends } = require("../services/user");
 
 const useCheckLogedinUser = () => {
   const [logedInUser, setLogedInUser] = useState("");
@@ -44,12 +45,31 @@ const useGetTheme = () => {
     } else {
       setTheme(false);
     }
-  } , []);
+  }, []);
   return theme;
-}
+};
+
+const useGetFriends = () => {
+  const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
+ 
+
+  useEffect(() => {
+    setLoading(true);
+    if (signedInUser.token) {
+      myFriends(signedInUser.token).then((res) => {
+        setFriends(res);
+        setLoading(false);
+      });
+    }
+  }, [signedInUser.token]);
+  return { friends, loading };
+};
 
 module.exports = {
   useCheckLogedinUser,
   useGetChatById,
   useGetTheme,
+  useGetFriends,
 };
