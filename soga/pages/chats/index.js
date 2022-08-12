@@ -70,9 +70,9 @@ export default function Chat() {
   };
 
   const signoutHandler = () => {
-    router.push("/");
     localStorage.removeItem("logedinUser");
     user = null;
+    router.push("/");
   };
 
   const sendMessageHandle = () => {
