@@ -59,6 +59,7 @@ const LoginPage = () => {
   const [signupBirthdayError, setSignupBirthdayError] = useState("");
   const [signupGenderError, setSignupGenderError] = useState("");
   const [signupError, setSignupError] = useState("");
+  const [submiting, setSubmiting] = useState(false);
   const signupRef = useRef(null);
 
   const theme = useTheme();
@@ -187,6 +188,7 @@ const LoginPage = () => {
       }, 3000);
     } else {
       try {
+        setSubmiting(true);
         const response = await loginServices.signUp(data);
         router.push("/chats/");
         console.table(response);
@@ -336,6 +338,7 @@ const LoginPage = () => {
           // Signup Values
           signupBirthday={signupBirthday}
           signupGender={signupGender}
+          submiting={submiting}
         />
         <br />
       </Box>
@@ -438,6 +441,7 @@ const Signin = (props) => {
         // Signup Values
         signupBirthday={props.signupBirthday}
         singupGender={props.singupGender}
+        submiting={props.submiting}
       />
     </Box>
   );

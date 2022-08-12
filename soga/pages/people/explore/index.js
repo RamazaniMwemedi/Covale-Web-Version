@@ -70,12 +70,14 @@ const People = ({ users, loading, logedinUser }) => {
   const router = useRouter();
   return (
     <>
-      <div
-        style={{
+      <Box
+        sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           textAlign: "center",
+          position: "sticky",
+          top: "0",
         }}
       >
         <h1 style={{ color: "purple" }}>Discover new Friends</h1>
@@ -98,7 +100,7 @@ const People = ({ users, loading, logedinUser }) => {
             Friend Request Sent
           </Typography>
         </div>
-      </div>
+      </Box>
       <Box
         sx={{
           // Display Grid
@@ -109,7 +111,8 @@ const People = ({ users, loading, logedinUser }) => {
           marginTop: "30px",
         }}
       >
-        {loading ? (
+        <Loader />
+        {/* {loading ? (
           <Loader />
         ) : users.length < 1 ? (
           <NoDiscToShow />
@@ -119,7 +122,7 @@ const People = ({ users, loading, logedinUser }) => {
               <Person user={user} logedinUser={logedinUser} />
             </Box>
           ))
-        )}
+        )} */}
       </Box>
     </>
   );

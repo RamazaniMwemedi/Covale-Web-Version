@@ -16,14 +16,15 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useTheme } from "@mui/material/styles";
+import LoadingButton from "@mui/lab/LoadingButton";
 
+import SendIcon from "@mui/icons-material/Send";
 
-import DatePicker from "./DatePicker"
+import DatePicker from "./DatePicker";
 
 import styles from "../../styles/Login.module.css";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
     backgroundColor: theme.colors.background,
@@ -38,7 +39,10 @@ const BootstrapDialogTitle = (props) => {
   const theme = useTheme();
 
   return (
-    <DialogTitle sx={{ m: 0, p: 2, backgroundColor: theme.colors.background }} {...other}>
+    <DialogTitle
+      sx={{ m: 0, p: 2, backgroundColor: theme.colors.background }}
+      {...other}
+    >
       {children}
       {onClose ? (
         <IconButton
@@ -74,9 +78,9 @@ const CreateAccount = forwardRef((props, ref) => {
     setOpen(false);
   };
 
-   useImperativeHandle(ref, () => {
-     return { handleClose };
-   });
+  useImperativeHandle(ref, () => {
+    return { handleClose };
+  });
 
   return (
     <Box>
@@ -92,11 +96,12 @@ const CreateAccount = forwardRef((props, ref) => {
           id="customized-dialog-title"
           onClose={handleClose}
         >
-            <Typography variant="h5">Create an account</Typography>
-            
+          <Typography variant="h5">Create an account</Typography>
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <Typography variant="subtitle2" sx={{ color: "red" }}>{props.signupError}</Typography>
+          <Typography variant="subtitle2" sx={{ color: "red" }}>
+            {props.signupError}
+          </Typography>
           <Typography sx={{ color: "red" }}>
             {props.signupBirthdayError}
           </Typography>
@@ -167,7 +172,7 @@ const CreateAccount = forwardRef((props, ref) => {
                 signupBirthdayChangeHandler={props.signupBirthdayChangeHandler}
                 signupBirthday={props.signupBirthday}
               />
-              <FormControl color="secondary" >
+              <FormControl color="secondary">
                 <FormLabel id="demo-controlled-radio-buttons-group">
                   Gender
                 </FormLabel>
@@ -180,27 +185,38 @@ const CreateAccount = forwardRef((props, ref) => {
                   <FormControlLabel
                     color="secondary"
                     value="female"
-                    control={<Radio color="secondary"  />}
+                    control={<Radio color="secondary" />}
                     label="Female"
                   />
                   <FormControlLabel
                     color="secondary"
                     value="male"
-                    control={<Radio color="secondary"  />}
+                    control={<Radio color="secondary" />}
                     label="Male"
                   />
                 </RadioGroup>
               </FormControl>
             </Box>
             <DialogActions>
-              <Button
-                autoFocus
-                color="success"
-                type="submit"
-                variant="contained"
-              >
-                Create account
-              </Button>
+              {props.submiting ? (
+                <LoadingButton
+                  loading={props.submiting}
+                  endIcon={<SendIcon />}
+                  loadingPosition="end"
+                  variant="contained"
+                >
+                  Creating your account
+                </LoadingButton>
+              ) : (
+                <Button
+                  autoFocus
+                  color="success"
+                  type="submit"
+                  variant="contained"
+                >
+                  Create account
+                </Button>
+              )}
             </DialogActions>
           </form>
         </DialogContent>
