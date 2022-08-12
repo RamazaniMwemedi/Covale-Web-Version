@@ -14,6 +14,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { useTheme } from "@mui/system";
 
 // My components
 import AddMoreFriends from "./AddMoreFriends";
@@ -22,6 +23,7 @@ import Chat from "./Chat";
 const Chats = ({ messages, loading }) => {
   const [showMoreFriends, setShowMoreFriends] = useState(false);
   const [showButton, setShowButton] = useState(true);
+  const theme = useTheme()
 
   const buttonHandler = () => {
     setShowMoreFriends(true);
@@ -37,9 +39,12 @@ const Chats = ({ messages, loading }) => {
       <Box
         sx={{
           width: "100%",
-          // backgroundColor: "white",
+          backgroundColor: theme.colors.background1,
           borderRadius: "5px",
           marginBottom: "10px",
+          alignItems:"center",
+          textAlign:"center",
+          justiContent:"center",
         }}
       >
         <FormControl sx={{ m: 1, width: "95%" }} variant="outlined">
