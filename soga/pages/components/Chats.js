@@ -59,7 +59,7 @@ const Chats = ({ messages, loading }) => {
             id="outlined-adornment-password"
             type="text"
             value=""
-            label="Sear"
+            label="Search"
             onChange={() => {}}
             sx={{
               height: "35px",
@@ -69,7 +69,7 @@ const Chats = ({ messages, loading }) => {
           />
         </FormControl>
       </Box>
-      {!loading ? (
+      {loading ? (
         <Stack spacing={1}>
           {[...Array(80)].map((_, i) => (
             <ListItem

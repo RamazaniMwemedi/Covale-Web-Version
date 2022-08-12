@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
+import io from "socket.io-client";
 
 // My components
 import DrawerComponent from "../components/DrawerComponent";
@@ -16,6 +17,9 @@ import { sendMessageChatRoom } from "../../services/messages";
 import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
 import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
+// Socket.IO
+const socket = io.connect(`http://localhost:3001`);
+
 export default function Chat() {
   const theme = useTheme();
   var user = useCheckLogedinUser();
@@ -26,6 +30,14 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [messageSending, setMessageSending] = useState([]);
+
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+      console.log(data);
+      setMessages([...messages, data]);
+    });
+  }, [socket]);
 
   useEffect(() => {
     if ((token, id)) {
@@ -35,6 +47,7 @@ export default function Chat() {
         setMessages(res.chat.messege);
         setLoading(false);
       });
+      socket.emit("join_room", id);
     }
   }, [token, id]);
 
@@ -58,9 +71,11 @@ export default function Chat() {
     if (message.length > 0) {
       const newMessage = {
         message: message,
+        sender: user.id,
       };
 
-      sendMessageChatRoom(id, token, newMessage).then((res) => {
+      socket.emit("send_message", { newMessage, id });
+      sendMessageChatRoom(id, token, newMessage, ).then((res) => {
         setMessages([...messages, res]);
         setMessage("");
       });

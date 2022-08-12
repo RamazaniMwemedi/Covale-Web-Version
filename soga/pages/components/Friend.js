@@ -51,17 +51,7 @@ const Friend = ({ friend, token }) => {
             },
           }}
         >
-          {/* <Box
-            sx={{
-              backgroundImage: `linear-gradient(to right, purple, green)`,
-              width: "100%",
-              height: "80px",
-              display: "flex",
-              marginTop: "10px",
-              borderTopRightRadius: "5px",
-              borderTopLeftRadius: "5px",
-            }}
-          />{" "} */}
+          
           <Box
             sx={{
               marginTop: "25px",
