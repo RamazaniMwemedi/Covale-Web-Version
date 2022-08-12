@@ -4,6 +4,8 @@ import { TextField, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/material/styles";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SendIcon from "@mui/icons-material/Send";
 // CSS
 import styles from "../styles/Login.module.css";
 // My modules
@@ -60,6 +62,7 @@ const LoginPage = () => {
   const [signupGenderError, setSignupGenderError] = useState("");
   const [signupError, setSignupError] = useState("");
   const [submiting, setSubmiting] = useState(false);
+  const [signInSubmiting, setSignInSubmiting] = useState(false);
   const signupRef = useRef(null);
 
   const theme = useTheme();
@@ -91,6 +94,7 @@ const LoginPage = () => {
       }, 3000);
     } else {
       try {
+        setSignInSubmiting(true);
         const data = {
           email,
           password,
@@ -103,6 +107,7 @@ const LoginPage = () => {
           router.push(`/chats/`);
         }
       } catch (exception) {
+        setSignInSubmiting(false);
         setLoginError(exception.response.data.error);
         setTimeout(() => {
           setLoginError("");
@@ -194,6 +199,7 @@ const LoginPage = () => {
         console.table(response);
         window.localStorage.setItem("logedinUser", JSON.stringify(response));
       } catch (error) {
+        setSubmiting(false);
         setSignupError(error.response.data.error);
         console.log(error.response.data.error);
         setTimeout(() => {
@@ -308,6 +314,7 @@ const LoginPage = () => {
           error={error}
           signupRef={signupRef}
           loginError={loginError}
+          signInSubmiting={signInSubmiting}
           // Signup Change Handlers
           signupUsernameChangeHandler={signupUsernameChangeHandler}
           signupFirstnameChangeHandler={signupFirstnameChangeHandler}
@@ -405,9 +412,21 @@ const Signin = (props) => {
           {props.loginError}
         </p>
         {/* <br /> */}
-        <Button variant="contained" type="submit" color="secondary">
-          Signin
-        </Button>
+        {props.signInSubmiting ? (
+          <LoadingButton
+            loading={props.signInSubmiting}
+            endIcon={" "}
+            loadingPosition="end"
+            variant="contained"
+          >
+            Sign In
+          </LoadingButton>
+        ) : (
+          <Button variant="contained" type="submit" color="secondary">
+            Signin
+          </Button>
+        )}
+
         {/* <Link href="#/recover">
           <a>Forgot password?</a>
         </Link> */}
