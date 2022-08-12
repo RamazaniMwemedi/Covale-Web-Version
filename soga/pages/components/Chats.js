@@ -17,7 +17,6 @@ import FormControl from "@mui/material/FormControl";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { useTheme } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
 
 // My components
 import AddMoreFriends from "./AddMoreFriends";
@@ -79,7 +78,7 @@ const Chats = ({ messages, loading }) => {
       </Box>
       {loading ? (
         <Stack spacing={1}>
-          {[...Array(80)].map((_, i) => (
+          {[...Array(7)].map((_, i) => (
             <ListItem
               key={i}
               sx={{

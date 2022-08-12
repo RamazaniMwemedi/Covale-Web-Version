@@ -1,4 +1,4 @@
-import { Box, Divider, IconButton, Typography } from "@mui/material";
+import { Box, Divider, IconButton, ListItem, Skeleton, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
@@ -63,7 +63,47 @@ const AddMoreFriends = ({ closeMorePeopleHandler }) => {
         }}
       >
         {friends.loading ? (
-          <p>Loading</p>
+          <Stack spacing={1}>
+            {[...Array(5)].map((_, i) => (
+              <ListItem
+                key={i}
+                sx={{
+                  display: "flex",
+                  // border style
+                  borderStyle: " solid ",
+                  // border color
+                  borderColor: "lightgrey",
+                  // border width
+                  borderWidth: "2px",
+                  borderRadius: "0.5rem",
+                }}
+              >
+                {/* Avatar skeleton */}
+                <Skeleton
+                  variant="circle"
+                  width={40}
+                  height={40}
+                  style={{ borderRadius: "50%" }}
+                />
+                {/* Skeleton for user first and lastname */}
+                <Box sx={{}}>
+                  <Skeleton
+                    variant="rect"
+                    width={185}
+                    height={20}
+                    style={{ marginLeft: "10px" }}
+                  />
+                  <Skeleton
+                    variant="rect"
+                    width={185}
+                    height={8}
+                    style={{ marginLeft: "10px", marginTop: "8px" }}
+                  />
+                </Box>
+              </ListItem>
+            ))}
+            {/* A skeleton of ListItem skeleton for chat */}
+          </Stack>
         ) : friends.friends.length > 0 ? (
           friends.friends.map((friend, i) => {})
         ) : (
