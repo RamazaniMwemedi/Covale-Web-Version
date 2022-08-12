@@ -15,6 +15,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { useTheme } from "@mui/system";
+import AddIcon from "@mui/icons-material/Add";
+import Fab from "@mui/material/Fab";
 
 // My components
 import AddMoreFriends from "./AddMoreFriends";
@@ -23,7 +25,7 @@ import Chat from "./Chat";
 const Chats = ({ messages, loading }) => {
   const [showMoreFriends, setShowMoreFriends] = useState(false);
   const [showButton, setShowButton] = useState(true);
-  const theme = useTheme()
+  const theme = useTheme();
 
   const buttonHandler = () => {
     setShowMoreFriends(true);
@@ -42,9 +44,9 @@ const Chats = ({ messages, loading }) => {
           backgroundColor: theme.colors.background1,
           borderRadius: "5px",
           marginBottom: "10px",
-          alignItems:"center",
-          textAlign:"center",
-          justiContent:"center",
+          alignItems: "center",
+          textAlign: "center",
+          justiContent: "center",
         }}
       >
         <FormControl sx={{ m: 1, width: "95%" }} variant="outlined">
@@ -118,17 +120,38 @@ const Chats = ({ messages, loading }) => {
         </Stack>
       ) : (
         <>
-          {messages && (
-            <Box>
-              {messages.map((message) => {
-                return (
-                  <>
-                    <Chat message={message} />
-                  </>
-                );
-              })}
-            </Box>
-          )}
+          {messages &&
+            (messages.length > 0 ? (
+              <Box>
+                {messages.map((message) => {
+                  return (
+                    <>
+                      <Chat message={message} />
+                    </>
+                  );
+                })}
+              </Box>
+            ) : (
+              <Box sx={{ textAlign: "center", marginTop: "150px" }}>
+                <Typography variant="h5" color="secondary">
+                  No chats yet
+                </Typography>
+                <Typography variant="subtitle2" color="secondary">
+                  Click the{" "}
+                  {
+                    <Fab color="secondary" size="small" aria-label="add">
+                      <AddIcon
+                        sx={{
+                          width: "15px",
+                          height: "15px",
+                        }}
+                      />
+                    </Fab>
+                  }{" "}
+                  to add a friends
+                </Typography>
+              </Box>
+            ))}
         </>
       )}
       {showMoreFriends && (
