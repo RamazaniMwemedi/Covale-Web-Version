@@ -52,18 +52,26 @@ const useGetTheme = () => {
 const useGetFriends = () => {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
-  const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
- 
+  const [logedInUser, setLogedInUser] = useState("");
+  const router = useRouter();
+  useEffect(() => {
+    const signedInUser = localStorage.getItem("logedinUser");
+    if (signedInUser) {
+      setLogedInUser(JSON.parse(signedInUser));
+    } else {
+      router.push("/");
+    }
+  }, []);
 
   useEffect(() => {
     setLoading(true);
-    if (signedInUser.token) {
-      myFriends(signedInUser.token).then((res) => {
+    if (logedInUser.token) {
+      myFriends(logedInUser.token).then((res) => {
         setFriends(res);
         setLoading(false);
       });
     }
-  }, [signedInUser.token]);
+  }, [logedInUser.token]);
   return { friends, loading };
 };
 

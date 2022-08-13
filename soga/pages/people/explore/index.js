@@ -9,7 +9,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import userServices from "../../../services/user";
 import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
-import Loader from "../../components/Loader";
+import DiscoverPeopleSkeleton from "../../components/DiscoverPeopleSkeleton";
 
 export default function Explore() {
   const [users, setUsers] = React.useState([]);
@@ -111,9 +111,8 @@ const People = ({ users, loading, logedinUser }) => {
           marginTop: "30px",
         }}
       >
-        <Loader />
-        {/* {loading ? (
-          <Loader />
+        {loading ? (
+          <DiscoverPeopleSkeleton />
         ) : users.length < 1 ? (
           <NoDiscToShow />
         ) : (
@@ -122,7 +121,7 @@ const People = ({ users, loading, logedinUser }) => {
               <Person user={user} logedinUser={logedinUser} />
             </Box>
           ))
-        )} */}
+        )}
       </Box>
     </>
   );

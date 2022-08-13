@@ -8,7 +8,6 @@ import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
 import PersonRequest from "../../components/PersonRequest";
 import userServices from "../../../services/user";
-import Loader from "../../components/Loader";
 
 export default function Explore() {
   const [users, setUsers] = React.useState([]);
@@ -93,7 +92,7 @@ export default function Explore() {
           </div>
         </Box>
         {loading ? (
-          <Loader />
+          <p>Loadind</p>
         ) : (
           <>
             {users.length > 0 ? (

@@ -9,7 +9,6 @@ import { makeStyles } from "@mui/styles";
 import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
 import Friend from "../../components/Friend";
-import Loader from "../../components/Loader"
 
 import userServices from "../../../services/user";
 
@@ -102,7 +101,7 @@ export default function People() {
           </div>
         </div>
         {loading ? (
-          <Loader />
+          <p>Loading</p>
         ) : (
           <>
             {friends.length > 0 ? (

@@ -1,4 +1,12 @@
-import { Box, Divider, IconButton, ListItem, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  ListItem,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
@@ -60,6 +68,7 @@ const AddMoreFriends = ({ closeMorePeopleHandler }) => {
         sx={{
           overflow: "scroll",
           height: "400px",
+          padding: "3px",
         }}
       >
         {friends.loading ? (
@@ -105,7 +114,55 @@ const AddMoreFriends = ({ closeMorePeopleHandler }) => {
             {/* A skeleton of ListItem skeleton for chat */}
           </Stack>
         ) : friends.friends.length > 0 ? (
-          friends.friends.map((friend, i) => {})
+          friends.friends.map((friend, i) => {
+            console.log(friend);
+            return (
+              <>
+                {/* <ListItem
+                  button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push(`/chats/?t=${message.chatId}`, undefined, {
+                      shallow: true,
+                    });
+                  }}
+                  sx={{
+                    borderRadius: "0.5rem",
+
+                    "&:hover": {
+                      // backgroundColor: ,
+                      // boxShadow: 1,
+                    },
+                    // border style
+                    borderStyle: " solid ",
+                    // border color
+                    borderColor: "whitesmoke",
+                    // border width
+                    borderWidth: "1px",
+                    marginTop: "-8px",
+                  }}
+                >
+                  <Avatar
+                    alt={friend.firstName[0]}
+                    src="https://material-ui.com/static/images/avatar/1.jpg"
+                  >
+                    {friend.friendUsername[0]}
+                  </Avatar>
+                  <Box
+                    sx={{
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <Typography variant="subtitle1">
+                      {friend.friendUsername}
+                    </Typography>
+                  </Box>
+
+                  
+                </ListItem> */}
+              </>
+            );
+          })
         ) : (
           <Typography variant="h6">No friends</Typography>
         )}

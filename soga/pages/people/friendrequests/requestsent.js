@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 // My Modules
 import DrawerComponent from "../../components/DrawerComponent";
 import PeopleLeft from "../../components/PeopleLeft";
-import Loader from "../../components/Loader";
 import PersonRequestSent from "../../components/PersonRequestSent";
 import userServices from "../../../services/user";
 import { IconButton, Typography } from "@mui/material";
@@ -22,19 +21,21 @@ export default function Explore() {
   const removeUser = (id) => {
     const newReqSent = reqSent.filter((user) => user.id !== id);
     sentReqSent(newReqSent);
-  }
+  };
 
-
-  React.useEffect((router) => {
-    // Loged in user from localStorage
-    const signedInUser = localStorage.getItem("logedinUser");
-    if (!signedInUser) {
-      router.push("/");
-    }
-    if (user === null) {
-      setUser(JSON.parse(signedInUser));
-    }
-  }, [user]);
+  React.useEffect(
+    (router) => {
+      // Loged in user from localStorage
+      const signedInUser = localStorage.getItem("logedinUser");
+      if (!signedInUser) {
+        router.push("/");
+      }
+      if (user === null) {
+        setUser(JSON.parse(signedInUser));
+      }
+    },
+    [user]
+  );
 
   React.useEffect(() => {
     if (token) {
@@ -45,8 +46,6 @@ export default function Explore() {
       });
     }
   }, [token]);
-
-
 
   // Signout Handler
   const signoutHandler = () => {
@@ -95,7 +94,7 @@ export default function Explore() {
           <h1 style={{ color: "purple" }}>Friend Request Sents</h1>
         </div>
         {loading ? (
-          <Loader/>
+          <p>Loadind</p>
         ) : (
           <>
             {reqSent.length > 0 ? (
@@ -112,19 +111,19 @@ export default function Explore() {
 
 const People = ({ reqSent, token, removeUser }) => {
   return (
-    <Box sx={{
-      // backgroundColor: "dodgerblue",
-      // display:"flex",
-      // Items to be in grid
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr 1fr",
-      gridGap: "1rem",
-      // gridAutoRows: "minmax(200px, auto)",
-      // gridAutoFlow: "row dense",
-      // gridAutoColumns: "minmax(200px, auto)",
-
-
-    }} >
+    <Box
+      sx={{
+        // backgroundColor: "dodgerblue",
+        // display:"flex",
+        // Items to be in grid
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr 1fr",
+        gridGap: "1rem",
+        // gridAutoRows: "minmax(200px, auto)",
+        // gridAutoFlow: "row dense",
+        // gridAutoColumns: "minmax(200px, auto)",
+      }}
+    >
       {reqSent.map((user) => (
         <PersonRequestSent
           key={user.id}
