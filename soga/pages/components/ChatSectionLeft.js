@@ -10,7 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 import { useTheme } from "@mui/material";
 
 // import Picker from "emoji-picker-react";
@@ -26,7 +26,6 @@ const ChatSectionLeft = ({
   showRightHandler,
   showRight,
 }) => {
-  
   return (
     <Box
       sx={{
@@ -47,7 +46,7 @@ const ChatSectionLeft = ({
           display: "flex",
           justifyContent: "flex-end",
           flexDirection: "column",
-         
+
           paddingBottom: "2px",
         }}
       >
@@ -300,7 +299,7 @@ const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
         verticalAlign: "bottom",
       }}
     >
-      {showEmojiPeaker && (
+      {showEmojiPeaker === true && (
         <Box
           sx={{
             position: "absolute",
@@ -319,7 +318,7 @@ const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
               marginLeft: "250px",
             }}
             onClick={() => {
-              setShowEmojiPeaker(false);
+              setShowEmojiPeaker(!showEmojiPeaker);
             }}
           >
             <CloseRoundedIcon color="secondary" fontSize="small" />
@@ -393,5 +392,3 @@ const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
     </Box>
   );
 };
-
-

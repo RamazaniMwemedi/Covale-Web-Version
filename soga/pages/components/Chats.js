@@ -154,11 +154,7 @@ const Chats = ({ messages, loading }) => {
             ))}
         </>
       )}
-      {showMoreFriends && (
-        <AddMoreFriends closeMorePeopleHandler={closeMorePeopleHandler} />
-      )}
-
-      {showButton && <FloatingAButton buttonHandler={buttonHandler} />}
+      
     </>
   );
 };

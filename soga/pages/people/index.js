@@ -6,6 +6,7 @@ import * as React from "react";
 import DrawerComponent from "../components/DrawerComponent";
 import PeopleLeft from "../components/PeopleLeft";
 import router from "next/router";
+import { Typography } from "@mui/material";
 
 export default function People() {
   // user
@@ -38,7 +39,9 @@ export default function People() {
       <CssBaseline />
       <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <PeopleLeft />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}></Box>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft:"-5pc" }}>
+        <Typography variant="h1" color="secondary">Sugested People</Typography>
+      </Box>
     </Box>
   );
 }

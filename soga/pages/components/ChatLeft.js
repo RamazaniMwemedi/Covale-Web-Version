@@ -10,10 +10,13 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import "@fontsource/open-sans/500.css"; // Weight 500.
 import { useTheme } from "@mui/styles";
+import { Avatar } from "@mui/material";
 
 import Chats from "./Chats";
+import AddMoreFriends from "./AddMoreFriends";
+import FloatingAButton from "./FloatingAButton";
+
 import chatService from "../../services/chats";
-import { Avatar } from "@mui/material";
 
 const closedMixin = (theme) => ({
   //
@@ -52,7 +55,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function Tabs({ messages, loading,  value }) {
+function Tabs({ messages, loading, value }) {
   const theme = useTheme();
 
   return (
@@ -79,6 +82,36 @@ export default function ChatLeft({ user }) {
   const token = user ? user.token : null;
   const [value, setValue] = React.useState("chats");
 
+  const [showMoreFriends, setShowMoreFriends] = React.useState(false);
+  const [showButton, setShowButton] = React.useState(true);
+  const [message, setMessage] = React.useState("");
+  const [friendClicked, setFriendClicked] = React.useState(null);
+
+  const buttonHandler = () => {
+    setShowMoreFriends(true);
+    setShowButton(false);
+  };
+  const closeMorePeopleHandler = () => {
+    setShowMoreFriends(false);
+    setShowButton(true);
+  };
+
+  const messageChangeHandler = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const sendMessage = () => {
+    alert(`message: ${message} sent to ${friendClicked.username}`);
+  };
+
+  const clickFriendHandler = (friend) => {
+    setFriendClicked(friend);
+  };
+
+  const clearFriendHandler = () => {
+    setFriendClicked(null);
+  };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -96,19 +129,32 @@ export default function ChatLeft({ user }) {
     }
   }, [token]);
   return (
-      <Box>
-        <CssBaseline />
-        <Drawer variant="permanent">
-          <ProfileDialog handleChange={handleChange} value={value} user={user} />
-
-          <Tabs
-            messages={messages}
-            value={value}
-            handleChange={handleChange}
-            loading={loading}
+    <Box>
+      <CssBaseline />
+      <Drawer variant="permanent">
+        <ProfileDialog handleChange={handleChange} value={value} user={user} />
+        {showMoreFriends && (
+          <AddMoreFriends
+            closeMorePeopleHandler={closeMorePeopleHandler}
+            messageChangeHandler={messageChangeHandler}
+            sendMessage={sendMessage}
+            message={message}
+            clearFriendHandler={clearFriendHandler}
+            friendClicked={friendClicked}
+            clickFriendHandler={clickFriendHandler}
           />
-        </Drawer>
-      </Box>
+
+        )}
+
+        {showButton && <FloatingAButton buttonHandler={buttonHandler} />}
+        <Tabs
+          messages={messages}
+          value={value}
+          handleChange={handleChange}
+          loading={loading}
+        />
+      </Drawer>
+    </Box>
   );
 }
 
