@@ -29,7 +29,7 @@ export default function Chat({ message }) {
             e.preventDefault();
             router.push(
               `/chats/?t=${message.chatId}`,
-              `/chats/${message.chatId}`,
+              undefined,
               {
                 shallow: true,
               }

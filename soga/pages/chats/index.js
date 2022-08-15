@@ -11,14 +11,13 @@ import ChatLeft from "../components/ChatLeft";
 import ChatSection from "../components/ChatSection";
 
 import { getChatById } from "../../services/chats";
-import { sendMessageChatRoom } from "../../services/messages";
 
 // Hooks
 import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
 import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
 // Socket.IO
-const socket = io.connect(`http://localhost:3001`);
+const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
 export default function Chat() {
   const theme = useTheme();
@@ -30,11 +29,9 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [messageSending, setMessageSending] = useState([]);
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
-      console.log(data);
       setMessages([...messages, data]);
     });
   }, [socket]);
@@ -50,14 +47,6 @@ export default function Chat() {
       socket.emit("join_room", id);
     }
   }, [token, id]);
-
-  useEffect(()=>{
-    socket.on("messege_sent", (data) => {
-      console.log(data);
-      setMessages([...messages, data]);
-      setMessage("");
-    });
-  },[socket])
 
   const friendUsername = chat.chat
     ? chat.chat.friend.id !== user.id
@@ -76,13 +65,17 @@ export default function Chat() {
   };
 
   const sendMessageHandle = () => {
+    const userId = user ? user.id : null;
     if (message.length > 0) {
       const newMessage = {
         message: message,
       };
-
-      sendMessageChatRoom(id, token, newMessage, user.id);
-      
+      socket.emit("send_message", { newMessage, id, userId });
+      socket.on("messege_sent", (data) => {
+        console.log(data);
+        setMessages([...messages, data]);
+        setMessage("");
+      });
     }
   };
 
