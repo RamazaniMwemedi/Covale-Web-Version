@@ -11,7 +11,7 @@ import {
 import React from "react";
 import { useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
-import { useGetFriends } from "../../hooks/hooks";
+
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
@@ -33,11 +33,10 @@ const AddMoreFriends = ({
   friendClicked,
   clickFriendHandler,
   clearFriendHandler,
+  friends,
 }) => {
-  const friends = useGetFriends();
   const theme = useTheme();
 
-  
   return (
     <Box
       sx={{

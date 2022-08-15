@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
-import {  useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 export default function Chat({ message }) {
   const router = useRouter();
   const id = router.query.t;
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
     <List
@@ -27,9 +27,13 @@ export default function Chat({ message }) {
           button
           onClick={(e) => {
             e.preventDefault();
-            router.push(`/chats/?t=${message.chatId}`, undefined, {
-              shallow: true,
-            });
+            router.push(
+              `/chats/?t=${message.chatId}`,
+              `/chats/${message.chatId}`,
+              {
+                shallow: true,
+              }
+            );
           }}
           sx={{
             borderRadius: "0.5rem",

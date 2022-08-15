@@ -15,6 +15,7 @@ import { Avatar } from "@mui/material";
 import Chats from "./Chats";
 import AddMoreFriends from "./AddMoreFriends";
 import FloatingAButton from "./FloatingAButton";
+import { useGetFriends } from "../../hooks/hooks";
 
 import chatService from "../../services/chats";
 
@@ -82,6 +83,7 @@ export default function ChatLeft({ user }) {
   const token = user ? user.token : null;
   const [value, setValue] = React.useState("chats");
 
+  const friends = useGetFriends();
   const [showMoreFriends, setShowMoreFriends] = React.useState(false);
   const [showButton, setShowButton] = React.useState(true);
   const [message, setMessage] = React.useState("");
@@ -142,8 +144,8 @@ export default function ChatLeft({ user }) {
             clearFriendHandler={clearFriendHandler}
             friendClicked={friendClicked}
             clickFriendHandler={clickFriendHandler}
+            friends={friends}
           />
-
         )}
 
         {showButton && <FloatingAButton buttonHandler={buttonHandler} />}
