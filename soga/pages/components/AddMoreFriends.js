@@ -174,6 +174,7 @@ const FriendList = ({ friends, clickFriendHandler }) => {
       {friends.friends.map((friend, i) => {
         return (
           <Box
+          key={i}
             sx={{
               padding: "3px",
             }}
