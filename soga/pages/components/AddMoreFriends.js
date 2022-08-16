@@ -38,85 +38,89 @@ const AddMoreFriends = ({
   const theme = useTheme();
 
   return (
-    <Box
-      sx={{
-        height: "400px",
-        width: "271px",
-        position: "fixed",
-        bottom: "0px",
-        borderTopRightRadius: "10px",
-        borderTopLeftRadius: "10px",
-        blur: "5px",
-        backgroundColor: theme.colors.background1,
-        position: "fixed",
-        zIndex: "1",
-      }}
-    >
-      {!friendClicked && (
+    <>
+      {friends && (
         <Box
           sx={{
-            padding: "3px",
-            position: "sticky",
-            top: "0px",
+            height: "400px",
+            width: "271px",
+            position: "fixed",
+            bottom: "0px",
+            borderTopRightRadius: "10px",
+            borderTopLeftRadius: "10px",
+            blur: "5px",
+            backgroundColor: theme.colors.background1,
+            position: "fixed",
             zIndex: "1",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h6">Friends</Typography>
-            <IconButton
+          {!friendClicked && (
+            <Box
               sx={{
-                marginTop: "6px",
-                backgroundColor: theme.colors.itemBackground,
-                "&:hover": {
-                  backgroundColor: theme.colors.background2,
-                },
-              }}
-              onClick={() => {
-                closeMorePeopleHandler();
+                padding: "3px",
+                position: "sticky",
+                top: "0px",
+                zIndex: "1",
               }}
             >
-              <CloseIcon />
-            </IconButton>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6">Friends</Typography>
+                <IconButton
+                  sx={{
+                    marginTop: "6px",
+                    backgroundColor: theme.colors.itemBackground,
+                    "&:hover": {
+                      backgroundColor: theme.colors.background2,
+                    },
+                  }}
+                  onClick={() => {
+                    closeMorePeopleHandler();
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+              <Divider />
+            </Box>
+          )}
+
+          {/* Friends */}
+          <Box
+            sx={{
+              overflow: "scroll",
+              height: "400px",
+              padding: "3px",
+            }}
+          >
+            {friendClicked ? (
+              <FriendChat
+                friend={friendClicked}
+                clearFriendHandler={clearFriendHandler}
+                messageChangeHandler={messageChangeHandler}
+                message={message}
+                sendMessage={sendMessage}
+              />
+            ) : friends.loading ? (
+              <Loading />
+            ) : friends.friends.length > 0 ? (
+              <FriendList
+                friends={friends}
+                clickFriendHandler={clickFriendHandler}
+              />
+            ) : (
+              <Typography variant="h6">No friends</Typography>
+            )}
           </Box>
-          <Divider />
+          {/* End of friends */}
         </Box>
       )}
-
-      {/* Friends */}
-      <Box
-        sx={{
-          overflow: "scroll",
-          height: "400px",
-          padding: "3px",
-        }}
-      >
-        {friendClicked ? (
-          <FriendChat
-            friend={friendClicked}
-            clearFriendHandler={clearFriendHandler}
-            messageChangeHandler={messageChangeHandler}
-            message={message}
-            sendMessage={sendMessage}
-          />
-        ) : friends.loading ? (
-          <Loading />
-        ) : friends.friends.length > 0 ? (
-          <FriendList
-            friends={friends}
-            clickFriendHandler={clickFriendHandler}
-          />
-        ) : (
-          <Typography variant="h6">No friends</Typography>
-        )}
-      </Box>
-      {/* End of friends */}
-    </Box>
+    </>
   );
 };
 
@@ -174,7 +178,7 @@ const FriendList = ({ friends, clickFriendHandler }) => {
       {friends.friends.map((friend, i) => {
         return (
           <Box
-          key={i}
+            key={i}
             sx={{
               padding: "3px",
             }}

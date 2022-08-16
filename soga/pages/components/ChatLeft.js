@@ -135,7 +135,7 @@ export default function ChatLeft({ user }) {
       <CssBaseline />
       <Drawer variant="permanent">
         <ProfileDialog handleChange={handleChange} value={value} user={user} />
-        {showMoreFriends && (
+        {friends.loading && showMoreFriends && (
           <AddMoreFriends
             closeMorePeopleHandler={closeMorePeopleHandler}
             messageChangeHandler={messageChangeHandler}
