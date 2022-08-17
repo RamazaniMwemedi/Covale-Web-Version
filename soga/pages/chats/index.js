@@ -72,7 +72,6 @@ export default function Chat() {
       };
       socket.emit("send_message", { newMessage, id, userId });
       socket.on("messege_sent", (data) => {
-        console.log(data);
         setMessages([...messages, data]);
         setMessage("");
       });

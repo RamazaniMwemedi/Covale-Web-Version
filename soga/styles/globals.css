@@ -11,9 +11,9 @@ body {
     background-color: rgb(58, 20, 58);
   }
   ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px rgb(51, 48, 48);
-  border-radius: 0px;
-}
+    box-shadow: inset 0 0 5px rgb(51, 48, 48);
+    border-radius: 0px;
+  }
 }
 @media (prefers-color-scheme: light) {
   body {
@@ -107,14 +107,15 @@ hr {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px whitesmoke;
+  /* box-shadow: inset 0 0 5px white; */
   border-radius: 0px;
+  background-color: whitesmoke;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgb(161, 23, 161);
-  border-radius: 50px;
+  background: rgb(155, 154, 154);
+  border-radius: 20px;
 }
 
 /* Handle on hover */

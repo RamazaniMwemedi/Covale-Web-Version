@@ -1,6 +1,13 @@
-import React, { useState, forwardRef, useImperativeHandle } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box } from "@mui/system";
-import { Avatar, Typography, IconButton, Button, List } from "@mui/material";
+import {
+  Avatar,
+  Typography,
+  IconButton,
+  Button,
+  List,
+  ListItem,
+} from "@mui/material";
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import VideoFileIcon from "@mui/icons-material/VideoFile";
@@ -46,7 +53,6 @@ const ChatSectionLeft = ({
           display: "flex",
           justifyContent: "flex-end",
           flexDirection: "column",
-
           paddingBottom: "2px",
         }}
       >
@@ -164,30 +170,28 @@ const TopBar = ({ friendUsername, showRightHandler, showRight }) => {
 };
 
 const Mid = ({ user, messages }) => {
+  const toBottomWhenNewMessage = useRef(null);
+  useEffect(() => {
+    // 👇️ scroll to bottom every time messages change
+    toBottomWhenNewMessage.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <Box
       sx={{
         marginLeft: "5px",
         marginRight: "5px",
-        marginTop: "105px",
       }}
     >
       <List
         sx={{
-          // position: "relative",
-          maxHeight: "85vh",
+          maxHeight: "82.6vh",
           overflowY: "scroll",
           overflowX: "hidden",
           padding: "0px",
           margin: "0px",
-          // flexDirection: "column",
-          // justifyContent: "flex-end",
         }}
       >
-        {/* {Array.from({ length: 100 }, (_, index) => {
-          return <p>{index}</p>;
-        })} */}
-
         {messages.map((message) => {
           return message.sender === user.id ? (
             <UserMessage message={message} />
@@ -195,6 +199,7 @@ const Mid = ({ user, messages }) => {
             <FriendMessage message={message} />
           );
         })}
+        <ListItem ref={toBottomWhenNewMessage} />
       </List>
     </Box>
   );
