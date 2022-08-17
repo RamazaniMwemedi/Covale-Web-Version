@@ -36,7 +36,6 @@ const AddMoreFriends = ({
   friends,
 }) => {
   const theme = useTheme();
-
   return (
     <>
       {friends && (
@@ -106,9 +105,9 @@ const AddMoreFriends = ({
                 message={message}
                 sendMessage={sendMessage}
               />
-            ) : friends.loading ? (
+            ) : !friends ? (
               <Loading />
-            ) : friends.friends.length > 0 ? (
+            ) : friends.length > 0 ? (
               <FriendList
                 friends={friends}
                 clickFriendHandler={clickFriendHandler}
@@ -175,7 +174,7 @@ const Loading = () => {
 const FriendList = ({ friends, clickFriendHandler }) => {
   return (
     <>
-      {friends.friends.map((friend, i) => {
+      {friends.map((friend, i) => {
         return (
           <Box
             key={i}

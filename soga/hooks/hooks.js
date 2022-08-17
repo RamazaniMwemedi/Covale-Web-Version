@@ -51,7 +51,6 @@ const useGetTheme = () => {
 
 const useGetFriends = () => {
   const [friends, setFriends] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [logedInUser, setLogedInUser] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -64,15 +63,13 @@ const useGetFriends = () => {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     if (logedInUser.token) {
       myFriends(logedInUser.token).then((res) => {
         setFriends(res);
-        setLoading(false);
       });
     }
   }, [logedInUser.token]);
-  return { friends, loading };
+  return friends;
 };
 
 module.exports = {
