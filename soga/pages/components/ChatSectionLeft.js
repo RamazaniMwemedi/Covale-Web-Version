@@ -50,12 +50,11 @@ const ChatSectionLeft = ({
       <Box
         sx={
           {
-            // flex: "55%",
-            // display: "flex",
-            // justifyContent: "flex-end",
-            // flexDirection: "column",
-            // paddingBottom: "2px",
-            
+            flex: "55%",
+            display: "flex",
+            justifyContent: "flex-end",
+            flexDirection: "column",
+            paddingBottom: "2px",
           }
         }
       >

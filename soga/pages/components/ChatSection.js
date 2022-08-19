@@ -15,10 +15,10 @@ const ChatSection = ({
   messages,
   friendUsername,
 }) => {
-  const [showRight, setShowRight] = React.useState(true)
-  const showRightHandler = () => { 
-    setShowRight(!showRight)
-   }
+  const [showRight, setShowRight] = React.useState(true);
+  const showRightHandler = () => {
+    setShowRight(!showRight);
+  };
   const theme = useTheme();
   return (
     <Box
@@ -26,6 +26,7 @@ const ChatSection = ({
         display: "flex",
         flex: 1,
         marginLeft: "-65px",
+        overflowY: "hidden",
       }}
     >
       <Box

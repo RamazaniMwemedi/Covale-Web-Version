@@ -20,6 +20,9 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Image from "next/image";
+import VedeoOpen from "./VideoOpen";
+
+// import video from "../../assets/bien_inauma_official_audio_h264_32910.mp4";
 
 const ChatSectionRight = ({ friendUsername }) => {
   return (
@@ -28,7 +31,6 @@ const ChatSectionRight = ({ friendUsername }) => {
         <Box
           sx={{
             maxHeight: "10vh",
-            position: "fixed",
             maxHeight: "100vh",
             overflowY: "scroll",
             overflowX: "hidden",
@@ -57,8 +59,17 @@ const ChatSectionRight = ({ friendUsername }) => {
             <Friend friendUsername={friendUsername} />
             <br />
           </Box>
-
-          <Media />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              // Center this section
+              alignItems: "center",
+              // Padding
+            }}
+          >
+            <Media />
+          </Box>
         </Box>
       )}
     </>
@@ -127,7 +138,7 @@ const Media = () => {
       </Typography>
       <MediaPhotos />
       <MediaVideos />
-      <MediaDocuments/>
+      <MediaDocuments />
       <MediaLinks />
     </Box>
   );
@@ -186,14 +197,34 @@ const itemData = [
 ];
 
 const MediaVideos = () => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    alert("clicked");
+    // setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen((prev) => !prev);
+  };
+
   const theme = useTheme();
-const videos = [
-  "",
-  "",
-  "",
-];
+  const videos = ["", "", ""];
   return (
     <Box>
+      <div
+        style={{
+          height: "30px",
+          backgroundColor: "red",
+          width: "80px",
+        }}
+      ></div>
+      {open && (
+        <VedeoOpen
+          open={open}
+          handleClose={handleClose}
+          handleClickOpen={handleClickOpen}
+        />
+      )}
       <MediaName name="Videos" />
       {/* Videos */}
       <ImageList
@@ -203,26 +234,41 @@ const videos = [
           padding: "5px",
           borderRadius: "5px",
         }}
-        cols={3}
+        cols={2}
         rowHeight={80}
       >
-        {videos.map((item,i) => (
-
-        <ImageListItem key={i}>
-          <video
-            controls
-            style={{
-              backgroundColor: "black",
-              width: "110px",
-              height: "80px",
-              borderRadius: "3px",
-            }}
-            width="250"
-          >
-            <source src="https://youtu.be/DM5wq-GA4nQ" />
-            Sorry, your browser doesn't support embedded videos.
-          </video>
-        </ImageListItem>
+        {videos.map((item, i) => (
+          <Box key={i}>
+            <ImageListItem
+              sx={{
+                display: "flex",
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  cursor: "pointer",
+                  margin: "-2px",
+                  transform: "scale(1)",
+                },
+              }}
+            >
+              <video
+                // controls
+                autoPlay
+                onClick={() => {
+                  handleClose();
+                }}
+                style={{
+                  backgroundColor: "purple",
+                  width: "auto",
+                  height: "80px",
+                  borderRadius: "3px",
+                }}
+                width="250"
+              >
+                <source src="https://d234.d2mefast.net/tb/d/52/bien_inauma_official_audio_h264_51054.mp4?play" />
+                Sorry, your browser doesn't support embedded videos.
+              </video>
+            </ImageListItem>
+          </Box>
         ))}
       </ImageList>
     </Box>
@@ -251,7 +297,7 @@ const MediaLinks = () => {
     </Box>
   );
 };
-const MediaDocuments = () => { 
+const MediaDocuments = () => {
   const theme = useTheme();
 
   return (
@@ -272,8 +318,7 @@ const MediaDocuments = () => {
       </ImageList>
     </Box>
   );
- }
-
+};
 
 const MediaName = ({ name }) => {
   return (

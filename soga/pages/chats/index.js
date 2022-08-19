@@ -31,6 +31,7 @@ export default function Chat() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(`Message : ${messages}`);
     socket.on("receive_message", (data) => {
       setMessages([...messages, data]);
     });
