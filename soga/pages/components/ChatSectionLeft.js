@@ -48,13 +48,16 @@ const ChatSectionLeft = ({
         showRight={showRight}
       />
       <Box
-        sx={{
-          flex: "55%",
-          display: "flex",
-          justifyContent: "flex-end",
-          flexDirection: "column",
-          paddingBottom: "2px",
-        }}
+        sx={
+          {
+            // flex: "55%",
+            // display: "flex",
+            // justifyContent: "flex-end",
+            // flexDirection: "column",
+            // paddingBottom: "2px",
+            
+          }
+        }
       >
         {messages && <Mid user={user} messages={messages} />}
         <Bottom
