@@ -16,6 +16,9 @@ import { getChatById } from "../../services/chats";
 import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
 import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
+// Redux
+import userR from "../../Redux/user";
+
 // Socket.IO
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 

@@ -207,6 +207,8 @@ const Mid = ({ user, messages }) => {
   );
 };
 
+
+
 const UserMessage = ({ message }) => {
   return (
     <Box
@@ -254,7 +256,6 @@ const FriendMessage = ({ message }) => {
       sx={{
         display: "flex",
         // centerd
-        alignItems: "center",
         textAlign: "center",
         // FLoat right
         justifyContent: "flex-start",

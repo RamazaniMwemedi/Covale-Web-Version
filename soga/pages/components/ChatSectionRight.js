@@ -252,7 +252,6 @@ const MediaVideos = () => {
             >
               <video
                 // controls
-                autoPlay
                 onClick={() => {
                   handleClose();
                 }}
