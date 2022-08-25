@@ -22,20 +22,22 @@ import AddIcon from "@mui/icons-material/Add";
 import AddMoreFriends from "./AddMoreFriends";
 import Chat from "./Chat";
 
-const Chats = ({ messages, loading }) => {
-  const [showMoreFriends, setShowMoreFriends] = useState(false);
-  const [showButton, setShowButton] = useState(true);
+const Chats = ({
+  messages,
+  loading,
+  friends,
+  showMoreFriends,
+  showButton,
+  friendClicked,
+  buttonHandler,
+  closeMorePeopleHandler,
+  sendMessage,
+  clickFriendHandler,
+  clearFriendHandler,
+  messageChangeHandler,
+  
+}) => {
   const theme = useTheme();
-
-  const buttonHandler = () => {
-    setShowMoreFriends(true);
-    setShowButton(false);
-  };
-  const closeMorePeopleHandler = () => {
-    setShowMoreFriends(false);
-    setShowButton(true);
-  };
-
   return (
     <>
       <Box
@@ -123,6 +125,22 @@ const Chats = ({ messages, loading }) => {
           {messages &&
             (messages.length > 0 ? (
               <Box>
+                {showMoreFriends && (
+                  <AddMoreFriends
+                    closeMorePeopleHandler={closeMorePeopleHandler}
+                    messageChangeHandler={messageChangeHandler}
+                    sendMessage={sendMessage}
+                    // message={message}
+                    clearFriendHandler={clearFriendHandler}
+                    friendClicked={friendClicked}
+                    clickFriendHandler={clickFriendHandler}
+                    friends={friends}
+                  />
+                )}
+
+                {showButton && (
+                  <FloatingAButton buttonHandler={buttonHandler} />
+                )}
                 {messages.map((message) => {
                   return (
                     <>
@@ -154,7 +172,6 @@ const Chats = ({ messages, loading }) => {
             ))}
         </>
       )}
-      
     </>
   );
 };

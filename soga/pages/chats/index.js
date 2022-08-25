@@ -17,10 +17,30 @@ import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
 import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
 // Redux
-import userR from "../../Redux/user";
+const { createStore } = require("redux");
 
 // Socket.IO
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
+
+// Chat Reducer
+const initialState = [];
+
+const chatReducer = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case "ADD_ALL_MESSAGES":
+      return [...state, ...payload];
+    case "RECIEVE_MESSAGE":
+      return state.push(payload);
+    case "SENT_MESSAGE":
+      return [...state, payload];
+    case "CLEAR":
+      return [];
+    default:
+      return state;
+  }
+};
+
+const chatsStore = createStore(chatReducer);
 
 export default function Chat() {
   const theme = useTheme();
@@ -29,23 +49,32 @@ export default function Chat() {
   const id = router.query.t;
   const token = user ? user.token : null;
   const chat = useGetChatById(token, id);
-  const [messages, setMessages] = useState([]);
+  const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log(`Message : ${messages}`);
     socket.on("receive_message", (data) => {
-      setMessages([...messages, data]);
+      chatsStore.dispatch({
+        type: "RECIEVE_MESSAGE",
+        payload: data,
+      });
+      console.log(data);
     });
   }, [socket]);
 
   useEffect(() => {
     if ((token, id)) {
       setLoading(true);
-      setMessages([]);
+      chatsStore.dispatch({
+        type: "CLEAR",
+      });
       getChatById(token, id).then((res) => {
-        setMessages(res.chat.messege);
+        chatsStore.dispatch({
+          type: "ADD_ALL_MESSAGES",
+          payload: res.chat.messege,
+        });
         setLoading(false);
       });
       socket.emit("join_room", id);
@@ -76,7 +105,10 @@ export default function Chat() {
       };
       socket.emit("send_message", { newMessage, id, userId });
       socket.on("messege_sent", (data) => {
-        setMessages([...messages, data]);
+        chatsStore.dispatch({
+          type: "SENT_MESSAGE",
+          payload: data,
+        });
         setMessage("");
       });
     }

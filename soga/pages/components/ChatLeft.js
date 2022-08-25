@@ -56,7 +56,21 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function Tabs({ messages, loading, value }) {
+function Tabs({
+  messages,
+  loading,
+  value,
+  friends,
+  showMoreFriends,
+  showButton,
+  friendClicked,
+  buttonHandler,
+  closeMorePeopleHandler,
+  sendMessage,
+  clickFriendHandler,
+  clearFriendHandler,
+  messageChangeHandler,
+}) {
   const theme = useTheme();
 
   return (
@@ -68,7 +82,20 @@ function Tabs({ messages, loading, value }) {
               margin: "-20px",
             }}
           >
-            <Chats messages={messages} loading={loading} />
+            <Chats
+              messages={messages}
+              loading={loading}
+              friends={friends}
+              showMoreFriends={showMoreFriends}
+              showButton={showButton}
+              friendClicked={friendClicked}
+              buttonHandler={buttonHandler}
+              closeMorePeopleHandler={closeMorePeopleHandler}
+              messageChangeHandler={messageChangeHandler}
+              sendMessage={sendMessage}
+              clickFriendHandler={clickFriendHandler}
+              clearFriendHandler={clearFriendHandler}
+            />
           </Box>
         </TabPanel>
         <TabPanel value="team">Tam App will appear here</TabPanel>
@@ -135,25 +162,22 @@ export default function ChatLeft({ user }) {
       <CssBaseline />
       <Drawer variant="permanent">
         <ProfileDialog handleChange={handleChange} value={value} user={user} />
-        {showMoreFriends && (
-          <AddMoreFriends
-            closeMorePeopleHandler={closeMorePeopleHandler}
-            messageChangeHandler={messageChangeHandler}
-            sendMessage={sendMessage}
-            message={message}
-            clearFriendHandler={clearFriendHandler}
-            friendClicked={friendClicked}
-            clickFriendHandler={clickFriendHandler}
-            friends={friends}
-          />
-        )}
 
-        {showButton && <FloatingAButton buttonHandler={buttonHandler} />}
         <Tabs
           messages={messages}
           value={value}
           handleChange={handleChange}
           loading={loading}
+          friends={friends}
+          showMoreFriends={showMoreFriends}
+          showButton={showButton}
+          friendClicked={friendClicked}
+          buttonHandler={buttonHandler}
+          closeMorePeopleHandler={closeMorePeopleHandler}
+          messageChangeHandler={messageChangeHandler}
+          sendMessage={sendMessage}
+          clickFriendHandler={clickFriendHandler}
+          clearFriendHandler={clearFriendHandler}
         />
       </Drawer>
     </Box>
