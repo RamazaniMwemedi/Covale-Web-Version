@@ -30,7 +30,7 @@ const chatReducer = (state = initialState, { type, payload }) => {
     case "ADD_ALL_MESSAGES":
       return [...state, ...payload];
     case "RECIEVE_MESSAGE":
-      return state.push(payload);
+      return [...state, payload];
     case "SENT_MESSAGE":
       return [...state, payload];
     case "CLEAR":
@@ -38,6 +38,7 @@ const chatReducer = (state = initialState, { type, payload }) => {
     default:
       return state;
   }
+  // console.log(store);
 };
 
 const chatsStore = createStore(chatReducer);

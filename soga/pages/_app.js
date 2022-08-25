@@ -4,11 +4,13 @@ import Head from "next/head";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { useRouter } from "next/router";
 
 import darkTheme from "../themes/dark";
 import lightTheme from "../themes/light";
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const theme = React.useMemo(
@@ -28,7 +30,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <CssBaseline />
-      <Component {...pageProps} />
+      <Component key={router.asPath} {...pageProps} />
     </ThemeProvider>
   );
 }
