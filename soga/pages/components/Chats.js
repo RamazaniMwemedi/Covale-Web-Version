@@ -141,11 +141,11 @@ const Chats = ({
                 {showButton && (
                   <FloatingAButton buttonHandler={buttonHandler} />
                 )}
-                {messages.map((message,i) => {
+                {messages.map((message) => {
                   return (
-                    <Box key={i}>
+                    <>
                       <Chat message={message} />
-                    </Box>
+                    </>
                   );
                 })}
               </Box>

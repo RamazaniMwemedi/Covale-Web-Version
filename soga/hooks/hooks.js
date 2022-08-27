@@ -1,36 +1,23 @@
-const { useEffect, useState } = require("react");
+const { useEffect, useState, useLayoutEffect } = require("react");
 const { useRouter } = require("next/router");
 
-const userStore = require("../Redux/user");
 const { getChatById } = require("../services/chats");
-const { myFriends, logedinUser } = require("../services/user");
+const { sendMessege } = require("../services/messages");
+const { myFriends } = require("../services/user");
 
 const useCheckLogedinUser = () => {
-  const [userDetailsLocalStorage, setUserDetailsLocalStorage] = useState(null);
+  const [logedInUser, setLogedInUser] = useState("");
   const router = useRouter();
   useEffect(() => {
     const signedInUser = localStorage.getItem("logedinUser");
     if (signedInUser) {
-      setUserDetailsLocalStorage(JSON.parse(signedInUser));
+      setLogedInUser(JSON.parse(signedInUser));
     } else {
       router.push("/");
     }
   }, []);
-  if (userDetailsLocalStorage) {
-    logedinUser(userDetailsLocalStorage.id, userDetailsLocalStorage.token).then(
-      (res) => {
-        const user = res;
-        const token = userDetailsLocalStorage.token;
-        
-        const store = { user, token };
 
-        userStore.dispatch({
-          type: "LOGIN",
-          payload: store,
-        });
-      }
-    );
-  }
+  return logedInUser;
 };
 
 const useGetChatById = (token, id) => {

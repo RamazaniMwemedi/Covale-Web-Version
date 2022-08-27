@@ -1,15 +1,6 @@
 import axios from "axios";
 const baseUrl = "https://covalnt.herokuapp.com";
 
-const logedinUser = async (id, token) => {
-  const response = await axios.get(`${baseUrl}/api/users/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
-
 const allUsers = async (token) => {
   const response = await axios.get(
     `${baseUrl}/api/authorizeduser/friend/explore`,
@@ -37,6 +28,7 @@ const addFriendById = async (id, token) => {
 };
 
 const myFriends = async (token) => {
+  console.log("Token from api", token);
   const response = await axios.get(
     `${baseUrl}/api/authorizeduser/friend/myFriends`,
     {
@@ -63,7 +55,7 @@ const friendReqRecieved = async (token) => {
 
 // Friend Requests Sent
 const friendReqSent = async (token) => {
-  console.log("friendReqRecieved ");
+  console.log("friendReqRecieved ")
   const response = await axios.get(
     `${baseUrl}/api/authorizeduser/friend/friendReqSent`,
     {
@@ -72,8 +64,8 @@ const friendReqSent = async (token) => {
       },
     }
   );
-  console.log("friendReqRecieved data ");
-  console.log(response.data);
+    console.log("friendReqRecieved data ");
+    console.log(response.data);
 
   return response.data;
 };
@@ -118,7 +110,8 @@ const cancelFriendRequest = async (id, token) => {
     }
   );
   return response.status;
-};
+}
+
 
 module.exports = {
   allUsers,
@@ -129,5 +122,4 @@ module.exports = {
   acceptFriendRequest,
   removeFriendRequest,
   cancelFriendRequest,
-  logedinUser,
 };

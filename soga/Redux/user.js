@@ -1,5 +1,7 @@
 const { createStore } = require("redux");
-const initialState = null;
+const initialState = {
+    username:"Username"
+};
 
 const userReducer = (state = initialState, { type, payload }) => {
   switch (type) {

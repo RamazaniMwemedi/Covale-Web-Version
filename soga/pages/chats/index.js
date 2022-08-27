@@ -13,15 +13,11 @@ import ChatSection from "../components/ChatSection";
 import { getChatById } from "../../services/chats";
 
 // Hooks
-import { useGetChatById, useCheckLogedinUser } from "../../hooks/hooks";
-
+import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
 import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
 // Redux
 const { createStore } = require("redux");
-
-// Redux Store
-import userStore from "../../Redux/user";
 
 // Socket.IO
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
@@ -49,23 +45,17 @@ const chatsStore = createStore(chatReducer);
 
 export default function Chat() {
   const theme = useTheme();
-  const [userState, setUserState] = useState(null);
-  const user = userState ? userState.user : null;
+  var user = useCheckLogedinUser();
   const router = useRouter();
   const id = router.query.t;
-  const token = userState ? userState.token : null;
+  const token = user ? user.token : null;
   const chat = useGetChatById(token, id);
   const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setUserState(userStore.getState());
-    }, 5000);
-
-  }, []);
 
   useEffect(() => {
+    console.log(`Message : ${messages}`);
     socket.on("receive_message", (data) => {
       chatsStore.dispatch({
         type: "RECIEVE_MESSAGE",
@@ -134,31 +124,25 @@ export default function Chat() {
       }}
     >
       <CssBaseline />
-      {user ? (
-        <>
-          <DrawerComponent signoutHandler={signoutHandler} user={user} />
-          <ChatLeft user={user} token={token} chat={chat} />
-          {id ? (
-            loading ? (
-              <ChatSectionSkeleton />
-            ) : (
-              <ChatSection
-                id={id}
-                user={user}
-                chat={chat.chat}
-                messageChangeHandler={messageChangeHandler}
-                message={message}
-                messages={messages}
-                sendNewMessage={sendMessageHandle}
-                friendUsername={friendUsername}
-              />
-            )
-          ) : (
-            <ClickaChat />
-          )}
-        </>
+      <DrawerComponent signoutHandler={signoutHandler} user={user} />
+      <ChatLeft user={user} chat={chat} />
+      {id ? (
+        loading ? (
+          <ChatSectionSkeleton />
+        ) : (
+          <ChatSection
+            id={id}
+            user={user}
+            chat={chat.chat}
+            messageChangeHandler={messageChangeHandler}
+            message={message}
+            messages={messages}
+            sendNewMessage={sendMessageHandle}
+            friendUsername={friendUsername}
+          />
+        )
       ) : (
-        <h1>Loading</h1>
+        <ClickaChat />
       )}
     </Box>
   );

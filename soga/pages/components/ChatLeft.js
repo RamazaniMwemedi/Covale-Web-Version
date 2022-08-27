@@ -104,9 +104,10 @@ function Tabs({
   );
 }
 
-export default function ChatLeft({ user, token }) {
+export default function ChatLeft({ user }) {
   const [messages, setMessages] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const token = user ? user.token : null;
   const [value, setValue] = React.useState("chats");
 
   const friends = useGetFriends();
@@ -209,7 +210,7 @@ const ProfileDialog = ({ user, handleChange, value }) => {
           <Box>
             {" "}
             <Avatar
-              alt={user && user.username}
+              alt="Remy Sharp"
               src="https://material-ui.com/static/images/avatar/1.jpg"
             >
               {user && user.username[0]}

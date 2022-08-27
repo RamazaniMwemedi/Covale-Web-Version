@@ -5,17 +5,14 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useRouter } from "next/router";
-// import { Provider } from "react-redux";
 
 import darkTheme from "../themes/dark";
 import lightTheme from "../themes/light";
 
-import {useCheckLogedinUser} from "../hooks/hooks"
-
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  useCheckLogedinUser()
+
   const theme = React.useMemo(
     () =>
       createTheme(
