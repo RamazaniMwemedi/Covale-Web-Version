@@ -6,15 +6,15 @@ import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
 
 // My components
-import DrawerComponent from "../components/DrawerComponent";
-import ChatLeft from "../components/ChatLeft";
-import ChatSection from "../components/ChatSection";
+import DrawerComponent from "../../components/DrawerComponent";
+import ChatLeft from "../../components/ChatLeft";
+import ChatSection from "../../components/ChatSection";
 
-import { getChatById } from "../../services/chats";
+import { getChatById } from "../../../services/chats";
 
 // Hooks
-import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
-import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
+import { useCheckLogedinUser, useGetChatById } from "../../../hooks/hooks";
+import ChatSectionSkeleton from "../../components/ChatSectionSkeleton";
 
 // Redux
 const { createStore } = require("redux");
@@ -23,22 +23,22 @@ const { createStore } = require("redux");
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
 // Chat Reducer
-const initialState = [];
 
-const chatReducer = (state = initialState, { type, payload }) => {
+const chatReducer = (state = [], { type, payload }) => {
   switch (type) {
     case "ADD_ALL_MESSAGES":
-      return [...state, ...payload];
+      return [state, payload];
     case "RECIEVE_MESSAGE":
-      return [...state, payload];
+    //   return [...state, payload];
     case "SENT_MESSAGE":
       return [...state, payload];
     case "CLEAR":
-      return [];
+      return (state = []);
+    case "LOG":
+
     default:
       return state;
   }
-  // console.log(store);
 };
 
 const chatsStore = createStore(chatReducer);
@@ -53,11 +53,12 @@ export default function Chat() {
   const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-
   const socketEffect = useRef(false);
 
   useEffect(() => {
-    if (socketEffect.current === false) {
+    socketEffect.current = true;
+
+    if (socketEffect.current === true) {
       console.log("Rendered ");
       //   socket.on("receive_message", (data) => {
       //     if (data) {
@@ -70,7 +71,7 @@ export default function Chat() {
     }
     return () => {
       console.log("Unmounted");
-      socketEffect.current = true;
+      socketEffect.current = false;
     };
   }, [socket]);
 
