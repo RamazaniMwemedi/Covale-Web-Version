@@ -104,10 +104,9 @@ function Tabs({
   );
 }
 
-export default function ChatLeft({ user }) {
+export default function ChatLeft({ user, token }) {
   const [messages, setMessages] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const token = user ? user.token : null;
   const [value, setValue] = React.useState("chats");
 
   const friends = useGetFriends();
@@ -185,7 +184,6 @@ export default function ChatLeft({ user }) {
 }
 
 const ProfileDialog = ({ user, handleChange, value }) => {
-  
   const theme = useTheme();
   return (
     <Box

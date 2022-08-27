@@ -58,15 +58,11 @@ export default function Chat() {
   const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  console.log(userState);
   useEffect(() => {
     setTimeout(() => {
       setUserState(userStore.getState());
-    }, 4000);
+    }, 5000);
 
-    return () => {
-      setUserState({});
-    };
   }, []);
 
   useEffect(() => {
@@ -141,7 +137,7 @@ export default function Chat() {
       {user ? (
         <>
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
-          <ChatLeft user={user} chat={chat} />
+          <ChatLeft user={user} token={token} chat={chat} />
           {id ? (
             loading ? (
               <ChatSectionSkeleton />

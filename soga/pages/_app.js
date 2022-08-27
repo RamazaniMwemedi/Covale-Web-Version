@@ -5,6 +5,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useRouter } from "next/router";
+// import { Provider } from "react-redux";
 
 import darkTheme from "../themes/dark";
 import lightTheme from "../themes/light";
