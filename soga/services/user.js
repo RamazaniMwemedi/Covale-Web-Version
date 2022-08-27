@@ -1,8 +1,8 @@
 import axios from "axios";
 const baseUrl = "https://covalnt.herokuapp.com";
-// /api/user/:id
+
 const logedinUser = async (id, token) => {
-  const response = await axios.get(`${baseUrl}/api/user/${id}`, {
+  const response = await axios.get(`${baseUrl}/api/users/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -37,7 +37,6 @@ const addFriendById = async (id, token) => {
 };
 
 const myFriends = async (token) => {
-  console.log("Token from api", token);
   const response = await axios.get(
     `${baseUrl}/api/authorizeduser/friend/myFriends`,
     {

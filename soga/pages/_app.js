@@ -9,10 +9,12 @@ import { useRouter } from "next/router";
 import darkTheme from "../themes/dark";
 import lightTheme from "../themes/light";
 
+import {useCheckLogedinUser} from "../hooks/hooks"
+
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
+  useCheckLogedinUser()
   const theme = React.useMemo(
     () =>
       createTheme(

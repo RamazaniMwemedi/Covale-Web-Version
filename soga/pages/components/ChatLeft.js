@@ -185,6 +185,7 @@ export default function ChatLeft({ user }) {
 }
 
 const ProfileDialog = ({ user, handleChange, value }) => {
+  
   const theme = useTheme();
   return (
     <Box
@@ -210,7 +211,7 @@ const ProfileDialog = ({ user, handleChange, value }) => {
           <Box>
             {" "}
             <Avatar
-              alt="Remy Sharp"
+              alt={user && user.username}
               src="https://material-ui.com/static/images/avatar/1.jpg"
             >
               {user && user.username[0]}
