@@ -28,7 +28,7 @@ const initialState = [];
 const chatReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case "ADD_ALL_MESSAGES":
-      return [...state, ...payload];
+      return (state = payload);
     case "RECIEVE_MESSAGE":
       return [...state, payload];
     case "SENT_MESSAGE":
@@ -54,24 +54,15 @@ export default function Chat() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const socketEffect = useRef(false);
-
   useEffect(() => {
-    if (socketEffect.current === false) {
-      console.log("Rendered ");
-      //   socket.on("receive_message", (data) => {
-      //     if (data) {
-      //       chatsStore.dispatch({
-      //         type: "RECIEVE_MESSAGE",
-      //         payload: data,
-      //       });
-      //     }
-      //   });
-    }
-    return () => {
-      console.log("Unmounted");
-      socketEffect.current = true;
-    };
+    socket.on("receive_message", (data) => {
+      if (data) {
+        chatsStore.dispatch({
+          type: "RECIEVE_MESSAGE",
+          payload: data,
+        });
+      }
+    });
   }, [socket]);
 
   useEffect(() => {
