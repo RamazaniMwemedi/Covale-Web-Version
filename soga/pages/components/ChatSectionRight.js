@@ -22,7 +22,6 @@ import ImageListItem from "@mui/material/ImageListItem";
 import Image from "next/image";
 import VedeoOpen from "./VideoOpen";
 
-// import video from "../../assets/bien_inauma_official_audio_h264_32910.mp4";
 
 const ChatSectionRight = ({ friendUsername }) => {
   return (
