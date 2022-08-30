@@ -26,12 +26,11 @@ function MyApp({ Component, pageProps }) {
   return (
     <ThemeProvider theme={theme}>
       <Head>
-        <title>Covale </title>
+        <title>Covalent</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link rel="apple-touch-icon" href="./assets/logo.svg" />
       </Head>
       <CssBaseline />
-      <Component {...pageProps} />
+      <Component  {...pageProps} />
     </ThemeProvider>
   );
 }

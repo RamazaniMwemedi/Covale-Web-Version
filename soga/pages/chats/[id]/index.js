@@ -1,12 +1,9 @@
 import { useRouter } from "next/router";
-import { Box, LinearProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
-
-// Logo
-import Logo from "../../../assets/Logo";
 
 // My components
 import DrawerComponent from "../../components/DrawerComponent";
@@ -137,34 +134,26 @@ export default function Chat() {
       }}
     >
       <CssBaseline />
-      <Box>
-        {user ? (
-          <>
-            <DrawerComponent signoutHandler={signoutHandler} user={user} />
-            <ChatLeft user={user} chat={chat} />
-            {id ? (
-              loading ? (
-                <ChatSectionSkeleton />
-              ) : (
-                <ChatSection
-                  id={id}
-                  user={user}
-                  chat={chat.chat}
-                  messageChangeHandler={messageChangeHandler}
-                  message={message}
-                  messages={messages}
-                  sendNewMessage={sendMessageHandle}
-                  friendUsername={friendUsername}
-                />
-              )
-            ) : (
-              <ClickaChat />
-            )}
-          </>
+      <DrawerComponent signoutHandler={signoutHandler} user={user} />
+      <ChatLeft user={user} chat={chat} />
+      {id ? (
+        loading ? (
+          <ChatSectionSkeleton />
         ) : (
-          <Loading/>
-        )}
-      </Box>
+          <ChatSection
+            id={id}
+            user={user}
+            chat={chat.chat}
+            messageChangeHandler={messageChangeHandler}
+            message={message}
+            messages={messages}
+            sendNewMessage={sendMessageHandle}
+            friendUsername={friendUsername}
+          />
+        )
+      ) : (
+        <ClickaChat />
+      )}
     </Box>
   );
 }
@@ -183,18 +172,3 @@ const ClickaChat = () => {
     </Box>
   );
 };
-
-const Loading = () => { 
-  return (
-    <Box
-      sx={{
-        position: "absolute",
-        left: "39%",
-        top: "20%",
-      }}
-    >
-      <Logo width={300} height={300} />
-      <LinearProgress color="secondary" />
-    </Box>
-  );
- }

@@ -15,8 +15,8 @@ import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import Tooltip from "@mui/material/Tooltip";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
-import Logo from "../../assets/Logo"
 import NewMeet from "./NewMeet";
+
 import Signout from "./Signout";
 
 const closedMixin = (theme) => ({
@@ -132,13 +132,15 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   height: "45px",
                   borderRadius: "10px",
                   marginLeft: "10px",
-                  backgroundColor: theme.colors.drawerBackground,
+                  backgroundColor: "  rgb(180, 17, 180) ",
                   justifyContent: "center",
                   alignItem: "center",
                   textAlign: "center",
                 }}
               >
-                <Logo width={50} height={50} />
+                <Typography variant="h4" sx={{ color: "white" }}>
+                  c
+                </Typography>
               </Box>
               <br />
               <Tooltip title="Chats" placement="right-start">
