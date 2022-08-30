@@ -28,9 +28,10 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Covalent</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <link rel="apple-touch-icon" href="./assets/logo.svg" />
       </Head>
       <CssBaseline />
-      <Component  {...pageProps} />
+      <Component {...pageProps} />
     </ThemeProvider>
   );
 }
