@@ -20,7 +20,14 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import { useTheme } from "@mui/material";
 
-// import Picker from "emoji-picker-react";
+import dynamic from "next/dynamic";
+
+const Picker = dynamic(
+  () => {
+    return import("emoji-picker-react");
+  },
+  { ssr: false }
+);
 
 const ChatSectionLeft = ({
   id,
@@ -32,6 +39,7 @@ const ChatSectionLeft = ({
   friendUsername,
   showRightHandler,
   showRight,
+  onEmojiClick,
 }) => {
   return (
     <Box
@@ -48,21 +56,20 @@ const ChatSectionLeft = ({
         showRight={showRight}
       />
       <Box
-        sx={
-          {
-            flex: "55%",
-            display: "flex",
-            justifyContent: "flex-end",
-            flexDirection: "column",
-            paddingBottom: "2px",
-          }
-        }
+        sx={{
+          flex: "55%",
+          display: "flex",
+          justifyContent: "flex-end",
+          flexDirection: "column",
+          paddingBottom: "2px",
+        }}
       >
         {messages && <Mid user={user} messages={messages} />}
         <Bottom
           messageChangeHandler={messageChangeHandler}
           sendNewMessage={sendNewMessage}
           message={message}
+          onEmojiClick={onEmojiClick}
         />
       </Box>
     </Box>
@@ -207,8 +214,6 @@ const Mid = ({ user, messages }) => {
   );
 };
 
-
-
 const UserMessage = ({ message }) => {
   return (
     <Box
@@ -294,7 +299,12 @@ const FriendMessage = ({ message }) => {
   );
 };
 
-const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
+const Bottom = ({
+  messageChangeHandler,
+  sendNewMessage,
+  message,
+  onEmojiClick,
+}) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
 
   return (
@@ -331,7 +341,7 @@ const Bottom = ({ messageChangeHandler, sendNewMessage, message }) => {
           >
             <CloseRoundedIcon color="secondary" fontSize="small" />
           </IconButton>
-          <Typography variant="h6">Emoji</Typography>
+          <Picker native={true} onEmojiClick={onEmojiClick} />
         </Box>
       )}
 

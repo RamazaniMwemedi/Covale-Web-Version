@@ -111,6 +111,10 @@ export default function Chat() {
     router.push("/");
   };
 
+  const onEmojiClick = (event, emojiObject) => {
+    setMessage(message + emojiObject.emoji)
+  };
+
   const sendMessageHandle = () => {
     const userId = user ? user.id : null;
     if (message.length > 0) {
@@ -137,32 +141,33 @@ export default function Chat() {
       }}
     >
       <CssBaseline />
-        {user ? (
-          <>
-            <DrawerComponent signoutHandler={signoutHandler} user={user} />
-            <ChatLeft user={user} chat={chat} />
-            {id ? (
-              loading ? (
-                <ChatSectionSkeleton />
-              ) : (
-                <ChatSection
-                  id={id}
-                  user={user}
-                  chat={chat.chat}
-                  messageChangeHandler={messageChangeHandler}
-                  message={message}
-                  messages={messages}
-                  sendNewMessage={sendMessageHandle}
-                  friendUsername={friendUsername}
-                />
-              )
+      {user ? (
+        <>
+          <DrawerComponent signoutHandler={signoutHandler} user={user} />
+          <ChatLeft user={user} chat={chat} />
+          {id ? (
+            loading ? (
+              <ChatSectionSkeleton />
             ) : (
-              <ClickaChat />
-            )}
-          </>
-        ) : (
-          <Loading />
-        )}
+              <ChatSection
+                id={id}
+                user={user}
+                chat={chat.chat}
+                messageChangeHandler={messageChangeHandler}
+                message={message}
+                messages={messages}
+                sendNewMessage={sendMessageHandle}
+                friendUsername={friendUsername}
+                onEmojiClick={onEmojiClick}
+              />
+            )
+          ) : (
+            <ClickaChat />
+          )}
+        </>
+      ) : (
+        <Loading />
+      )}
     </Box>
   );
 }

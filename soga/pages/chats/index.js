@@ -56,22 +56,10 @@ export default function Chat() {
   const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [isDocument, setIsDocument] = useState(false);
-  const [chosenEmoji, setChosenEmoji] = useState(null);
 
-  const onEmojiClick = (event, emojiObject) => {
-    setChosenEmoji(emojiObject);
-  };
-
-  useEffect(() => {
-    if (document) {
-      setIsDocument(true);
-    }
-
-    return () => {
-      setIsDocument(false);
-    };
-  }, []);
+ const onEmojiClick = (event, emojiObject) => {
+   setMessage(message + emojiObject.emoji);
+ };
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -143,7 +131,7 @@ export default function Chat() {
       }}
     >
       <CssBaseline />
-      {user && isDocument ? (
+      {user ? (
         <>
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
           <ChatLeft user={user} chat={chat} />
