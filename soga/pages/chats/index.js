@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Box, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
@@ -14,10 +14,14 @@ import ChatLeft from "../components/ChatLeft";
 import ChatSection from "../components/ChatSection";
 
 import { getChatById } from "../../services/chats";
+import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
 // Hooks
-import { useCheckLogedinUser, useGetChatById } from "../../hooks/hooks";
-import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
+import {
+  useCheckLogedinUser,
+  useGetChatById,
+  useAudio,
+} from "../../hooks/hooks";
 
 // Redux
 const { createStore } = require("redux");
@@ -57,9 +61,26 @@ export default function Chat() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
- const onEmojiClick = (event, emojiObject) => {
-   setMessage(message + emojiObject.emoji);
- };
+  //Audio test
+  const [playing, setPlaying] = useState(false);
+
+  const [audioUrl, setAudioUrl] = useState("http://localhost:5500/sent.mp3");
+  useEffect(() => {
+    const audio = new Audio(audioUrl);
+    playing ? audio.play() : audio.pause();
+
+    audio.addEventListener("ended", () => setPlaying(false));
+    return () => {
+      audio.removeEventListener("ended", () => setPlaying(false));
+    };
+  }, [playing]);
+
+  const play = () => {
+    setPlaying(!playing);
+  };
+  const onEmojiClick = (event, emojiObject) => {
+    setMessage(message + emojiObject.emoji);
+  };
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -152,7 +173,7 @@ export default function Chat() {
               />
             )
           ) : (
-            <ClickaChat />
+            <ClickaChat play={play} />
           )}
         </>
       ) : (
@@ -162,7 +183,7 @@ export default function Chat() {
   );
 }
 
-const ClickaChat = () => {
+const ClickaChat = ({ play }) => {
   return (
     <Box
       sx={{
@@ -172,6 +193,13 @@ const ClickaChat = () => {
         margin: "200px",
       }}
     >
+      <Button
+        onClick={() => {
+          play();
+        }}
+      >
+        ▶️
+      </Button>
       <Typography variant="h1">Click a chat</Typography>
     </Box>
   );

@@ -89,6 +89,7 @@ export default function AccountMenu({ user,signoutHandler }) {
                   zIndex: 0,
                 },
                 backgroundColor: theme.colors.itemBackground,
+                borderRadius: "10px",
               },
             }}
             transformOrigin={{ horizontal: "right", vertical: "top" }}
@@ -105,7 +106,11 @@ export default function AccountMenu({ user,signoutHandler }) {
               Add another account
             </MenuItem>
 
-            <MenuItem onClick={()=>{signoutHandler()}}>
+            <MenuItem
+              onClick={() => {
+                signoutHandler();
+              }}
+            >
               <ListItemIcon>
                 <Logout fontSize="small" />
               </ListItemIcon>

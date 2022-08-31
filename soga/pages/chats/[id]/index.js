@@ -56,26 +56,16 @@ export default function Chat() {
   const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const socketEffect = useRef(false);
 
   useEffect(() => {
-    socketEffect.current = true;
-
-    if (socketEffect.current === true) {
-      console.log("Rendered ");
-      //   socket.on("receive_message", (data) => {
-      //     if (data) {
-      //       chatsStore.dispatch({
-      //         type: "RECIEVE_MESSAGE",
-      //         payload: data,
-      //       });
-      //     }
-      //   });
-    }
-    return () => {
-      console.log("Unmounted");
-      socketEffect.current = false;
-    };
+    socket.on("receive_message", (data) => {
+      if (data) {
+        chatsStore.dispatch({
+          type: "RECIEVE_MESSAGE",
+          payload: data,
+        });
+      }
+    });
   }, [socket]);
 
   useEffect(() => {
@@ -112,7 +102,7 @@ export default function Chat() {
   };
 
   const onEmojiClick = (event, emojiObject) => {
-    setMessage(message + emojiObject.emoji)
+    setMessage(message + emojiObject.emoji);
   };
 
   const sendMessageHandle = () => {
@@ -145,6 +135,7 @@ export default function Chat() {
         <>
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
           <ChatLeft user={user} chat={chat} />
+
           {id ? (
             loading ? (
               <ChatSectionSkeleton />
