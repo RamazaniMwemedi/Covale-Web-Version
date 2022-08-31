@@ -210,13 +210,7 @@ const MediaVideos = () => {
   const videos = ["", "", ""];
   return (
     <Box>
-      <div
-        style={{
-          height: "30px",
-          backgroundColor: "red",
-          width: "80px",
-        }}
-      ></div>
+
       {open && (
         <VedeoOpen
           open={open}

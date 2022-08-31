@@ -56,6 +56,22 @@ export default function Chat() {
   const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isDocument, setIsDocument] = useState(false);
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+
+  const onEmojiClick = (event, emojiObject) => {
+    setChosenEmoji(emojiObject);
+  };
+
+  useEffect(() => {
+    if (document) {
+      setIsDocument(true);
+    }
+
+    return () => {
+      setIsDocument(false);
+    };
+  }, []);
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -127,32 +143,33 @@ export default function Chat() {
       }}
     >
       <CssBaseline />
-        {user ? (
-          <>
-            <DrawerComponent signoutHandler={signoutHandler} user={user} />
-            <ChatLeft user={user} chat={chat} />
-            {id ? (
-              loading ? (
-                <ChatSectionSkeleton />
-              ) : (
-                <ChatSection
-                  id={id}
-                  user={user}
-                  chat={chat.chat}
-                  messageChangeHandler={messageChangeHandler}
-                  message={message}
-                  messages={messages}
-                  sendNewMessage={sendMessageHandle}
-                  friendUsername={friendUsername}
-                />
-              )
+      {user && isDocument ? (
+        <>
+          <DrawerComponent signoutHandler={signoutHandler} user={user} />
+          <ChatLeft user={user} chat={chat} />
+          {id ? (
+            loading ? (
+              <ChatSectionSkeleton />
             ) : (
-              <ClickaChat />
-            )}
-          </>
-        ) : (
-          <Loading />
-        )}
+              <ChatSection
+                id={id}
+                user={user}
+                chat={chat.chat}
+                messageChangeHandler={messageChangeHandler}
+                message={message}
+                messages={messages}
+                sendNewMessage={sendMessageHandle}
+                friendUsername={friendUsername}
+                onEmojiClick={onEmojiClick}
+              />
+            )
+          ) : (
+            <ClickaChat />
+          )}
+        </>
+      ) : (
+        <Loading />
+      )}
     </Box>
   );
 }

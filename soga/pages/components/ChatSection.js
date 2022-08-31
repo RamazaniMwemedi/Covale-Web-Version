@@ -14,6 +14,7 @@ const ChatSection = ({
   sendNewMessage,
   messages,
   friendUsername,
+  onEmojiClick,
 }) => {
   const [showRight, setShowRight] = React.useState(true);
   const showRightHandler = () => {
@@ -51,6 +52,7 @@ const ChatSection = ({
           friendUsername={friendUsername}
           showRightHandler={showRightHandler}
           showRight={showRight}
+          onEmojiClick={onEmojiClick}
         />
       </Box>
       {/* ChatSectionRight */}
