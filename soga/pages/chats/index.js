@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
 
@@ -52,15 +52,19 @@ const chatReducer = (state = initialState, { type, payload }) => {
 const chatsStore = createStore(chatReducer);
 
 export default function Chat() {
+  const [messages, dispatch] = useReducer(chatReducer, initialState);
   const theme = useTheme();
   var user = useCheckLogedinUser();
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
   const chat = useGetChatById(token, id);
-  const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+
+  // Bools
+  const [boolForSent, setBoolForSent] = useState(false);
+  const [boolForReceive, setBoolForReceive] = useState(false);
 
   //Audio
   const [playing, setPlaying] = useState(false);
@@ -81,15 +85,21 @@ export default function Chat() {
   };
 
   useEffect(() => {
+    setBoolForReceive(true);
     socket.on("receive_message", (data) => {
-      if (data) {
-        setAudioUrl("https://ramazanimwemedi.github.io/sounds/recieve.mp3");
-        setPlaying(true);
-
-        chatsStore.dispatch({
-          type: "RECIEVE_MESSAGE",
-          payload: data,
-        });
+      if (boolForReceive) {
+        if (data) {
+          console.log(data);
+          if (data.sender != user.id) {
+            setAudioUrl("https://ramazanimwemedi.github.io/sounds/recieve.mp3");
+            setPlaying(true);
+            setBoolForReceive(false);
+            dispatch({
+              type: "RECIEVE_MESSAGE",
+              payload: data,
+            });
+          }
+        }
       }
     });
   }, [socket]);
@@ -134,15 +144,17 @@ export default function Chat() {
         message: message,
       };
       socket.emit("send_message", { newMessage, id, userId });
-      socket.on("messege_sent", (data) => {
-        setAudioUrl("https://ramazanimwemedi.github.io/sounds/sent.mp3");
-        setPlaying(true);
-        chatsStore.dispatch({
-          type: "SENT_MESSAGE",
-          payload: data,
+      setBoolForSent(true);
+      if (boolForSent) {
+        socket.on("messege_sent", (data) => {
+          setBoolForSent(false);
+          dispatch({
+            type: "SENT_MESSAGE",
+            payload: data,
+          });
+          setMessage("");
         });
-        setMessage("");
-      });
+      }
     }
   };
 

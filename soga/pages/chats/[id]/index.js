@@ -63,6 +63,7 @@ export default function Chat() {
   const [playing, setPlaying] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState(null);
+  
   useEffect(() => {
     const audio = audioUrl ? new Audio(audioUrl) : null;
     audio && (playing ? audio.play() : audio.pause());
