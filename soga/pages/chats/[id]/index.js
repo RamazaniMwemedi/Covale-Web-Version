@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Box, LinearProgress, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
 
@@ -18,6 +18,7 @@ import { getChatById } from "../../../services/chats";
 // Hooks
 import { useCheckLogedinUser, useGetChatById } from "../../../hooks/hooks";
 import ChatSectionSkeleton from "../../components/ChatSectionSkeleton";
+import LoadingLogo from "../../components/LoadingLogo";
 
 // Redux
 const { createStore } = require("redux");
@@ -26,44 +27,68 @@ const { createStore } = require("redux");
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
 // Chat Reducer
+const initialState = [];
 
-const chatReducer = (state = [], { type, payload }) => {
+const chatReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case "ADD_ALL_MESSAGES":
-      return [state, payload];
+      return (state = payload);
     case "RECIEVE_MESSAGE":
-    //   return [...state, payload];
+      return [...state, payload];
     case "SENT_MESSAGE":
       return [...state, payload];
     case "CLEAR":
-      return (state = []);
-    case "LOG":
-
+      return [];
     default:
       return state;
   }
+  // console.log(store);
 };
 
-const chatsStore = createStore(chatReducer);
-
 export default function Chat() {
+  const [messages, dispatch] = useReducer(chatReducer, initialState);
   const theme = useTheme();
   var user = useCheckLogedinUser();
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
   const chat = useGetChatById(token, id);
-  const messages = chatsStore.getState();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Bools
+  const [boolForSent, setBoolForSent] = useState(false);
+  const [boolForReceive, setBoolForReceive] = useState(false);
+  //Audio
+  const [playing, setPlaying] = useState(false);
+
+  const [audioUrl, setAudioUrl] = useState(null);
   useEffect(() => {
+    const audio = audioUrl ? new Audio(audioUrl) : null;
+    audio && (playing ? audio.play() : audio.pause());
+
+    audio && audio.addEventListener("ended", () => setPlaying(false));
+    return () => {
+      audio && audio.addEventListener("ended", () => setPlaying(false));
+    };
+  }, [playing, audioUrl]);
+
+  useEffect(() => {
+    setBoolForReceive(true);
     socket.on("receive_message", (data) => {
-      if (data) {
-        chatsStore.dispatch({
-          type: "RECIEVE_MESSAGE",
-          payload: data,
-        });
+      if (boolForReceive) {
+        if (data) {
+          console.log(data);
+          if (data.sender != user.id) {
+            setAudioUrl("https://ramazanimwemedi.github.io/sounds/recieve.mp3");
+            setPlaying(true);
+            setBoolForReceive(false);
+            dispatch({
+              type: "RECIEVE_MESSAGE",
+              payload: data,
+            });
+          }
+        }
       }
     });
   }, [socket]);
@@ -71,11 +96,11 @@ export default function Chat() {
   useEffect(() => {
     if ((token, id)) {
       setLoading(true);
-      chatsStore.dispatch({
+      dispatch({
         type: "CLEAR",
       });
       getChatById(token, id).then((res) => {
-        chatsStore.dispatch({
+        dispatch({
           type: "ADD_ALL_MESSAGES",
           payload: res.chat.messege,
         });
@@ -112,13 +137,17 @@ export default function Chat() {
         message: message,
       };
       socket.emit("send_message", { newMessage, id, userId });
-      socket.on("messege_sent", (data) => {
-        chatsStore.dispatch({
-          type: "SENT_MESSAGE",
-          payload: data,
+      setBoolForSent(true);
+      if (boolForSent) {
+        socket.on("messege_sent", (data) => {
+          setBoolForSent(false);
+          dispatch({
+            type: "SENT_MESSAGE",
+            payload: data,
+          });
+          setMessage("");
         });
-        setMessage("");
-      });
+      }
     }
   };
 
@@ -157,7 +186,7 @@ export default function Chat() {
           )}
         </>
       ) : (
-        <Loading />
+        <LoadingLogo />
       )}
     </Box>
   );
@@ -174,21 +203,6 @@ const ClickaChat = () => {
       }}
     >
       <Typography variant="h1">Click a chat</Typography>
-    </Box>
-  );
-};
-
-const Loading = () => {
-  return (
-    <Box
-      sx={{
-        position: "absolute",
-        left: "39%",
-        top: "20%",
-      }}
-    >
-      <Logo width={300} height={300} />
-      <LinearProgress color="secondary" />
     </Box>
   );
 };

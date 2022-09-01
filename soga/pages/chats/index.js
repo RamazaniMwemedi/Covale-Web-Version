@@ -22,6 +22,7 @@ import {
   useGetChatById,
   useAudio,
 } from "../../hooks/hooks";
+import LoadingLogo from "../components/LoadingLogo";
 
 // Redux
 const { createStore } = require("redux");
@@ -61,7 +62,7 @@ export default function Chat() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
-  //Audio test
+  //Audio
   const [playing, setPlaying] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState(null);
@@ -179,7 +180,7 @@ export default function Chat() {
           )}
         </>
       ) : (
-        <Loading />
+        <LoadingLogo />
       )}
     </Box>
   );
@@ -196,21 +197,6 @@ const ClickaChat = () => {
       }}
     >
       <Typography variant="h1">Click a chat</Typography>
-    </Box>
-  );
-};
-
-const Loading = () => {
-  return (
-    <Box
-      sx={{
-        position: "absolute",
-        left: "39%",
-        top: "20%",
-      }}
-    >
-      <Logo width={300} height={300} />
-      <LinearProgress color="secondary" />
     </Box>
   );
 };

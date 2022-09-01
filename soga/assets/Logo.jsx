@@ -30,7 +30,7 @@ const Logo = ({ width, height }) => {
 };
 
 Logo.propTypes = {
-  windth: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
 };
 
