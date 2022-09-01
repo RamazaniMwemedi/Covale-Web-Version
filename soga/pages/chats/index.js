@@ -64,20 +64,17 @@ export default function Chat() {
   //Audio test
   const [playing, setPlaying] = useState(false);
 
-  const [audioUrl, setAudioUrl] = useState("http://localhost:5500/sent.mp3");
+  const [audioUrl, setAudioUrl] = useState(null);
   useEffect(() => {
-    const audio = new Audio(audioUrl);
-    playing ? audio.play() : audio.pause();
+    const audio = audioUrl ? new Audio(audioUrl) : null;
+    audio && (playing ? audio.play() : audio.pause());
 
-    audio.addEventListener("ended", () => setPlaying(false));
+    audio && audio.addEventListener("ended", () => setPlaying(false));
     return () => {
-      audio.removeEventListener("ended", () => setPlaying(false));
+      audio && audio.addEventListener("ended", () => setPlaying(false));
     };
-  }, [playing]);
+  }, [playing, audioUrl]);
 
-  const play = () => {
-    setPlaying(!playing);
-  };
   const onEmojiClick = (event, emojiObject) => {
     setMessage(message + emojiObject.emoji);
   };
@@ -85,6 +82,9 @@ export default function Chat() {
   useEffect(() => {
     socket.on("receive_message", (data) => {
       if (data) {
+        setAudioUrl("https://ramazanimwemedi.github.io/sounds/recieve.mp3");
+        setPlaying(true);
+
         chatsStore.dispatch({
           type: "RECIEVE_MESSAGE",
           payload: data,
@@ -134,6 +134,8 @@ export default function Chat() {
       };
       socket.emit("send_message", { newMessage, id, userId });
       socket.on("messege_sent", (data) => {
+        setAudioUrl("https://ramazanimwemedi.github.io/sounds/sent.mp3");
+        setPlaying(true);
         chatsStore.dispatch({
           type: "SENT_MESSAGE",
           payload: data,
@@ -173,7 +175,7 @@ export default function Chat() {
               />
             )
           ) : (
-            <ClickaChat play={play} />
+            <ClickaChat />
           )}
         </>
       ) : (
@@ -183,7 +185,7 @@ export default function Chat() {
   );
 }
 
-const ClickaChat = ({ play }) => {
+const ClickaChat = () => {
   return (
     <Box
       sx={{
@@ -193,13 +195,6 @@ const ClickaChat = ({ play }) => {
         margin: "200px",
       }}
     >
-      <Button
-        onClick={() => {
-          play();
-        }}
-      >
-        ▶️
-      </Button>
       <Typography variant="h1">Click a chat</Typography>
     </Box>
   );
