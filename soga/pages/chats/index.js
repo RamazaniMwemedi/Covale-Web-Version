@@ -107,11 +107,11 @@ export default function Chat() {
   useEffect(() => {
     if ((token, id)) {
       setLoading(true);
-      chatsStore.dispatch({
+      dispatch({
         type: "CLEAR",
       });
       getChatById(token, id).then((res) => {
-        chatsStore.dispatch({
+        dispatch({
           type: "ADD_ALL_MESSAGES",
           payload: res.chat.messege,
         });
@@ -146,13 +146,15 @@ export default function Chat() {
       socket.emit("send_message", { newMessage, id, userId });
       setBoolForSent(true);
       if (boolForSent) {
+        setMessage("");
+        setAudioUrl("https://ramazanimwemedi.github.io/sounds/sent.mp3");
         socket.on("messege_sent", (data) => {
-          setBoolForSent(false);
+          setPlaying(true);
           dispatch({
             type: "SENT_MESSAGE",
             payload: data,
           });
-          setMessage("");
+          setBoolForSent(false);
         });
       }
     }

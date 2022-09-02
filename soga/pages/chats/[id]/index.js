@@ -20,9 +20,6 @@ import { useCheckLogedinUser, useGetChatById } from "../../../hooks/hooks";
 import ChatSectionSkeleton from "../../components/ChatSectionSkeleton";
 import LoadingLogo from "../../components/LoadingLogo";
 
-// Redux
-const { createStore } = require("redux");
-
 // Socket.IO
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
@@ -63,7 +60,7 @@ export default function Chat() {
   const [playing, setPlaying] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState(null);
-  
+
   useEffect(() => {
     const audio = audioUrl ? new Audio(audioUrl) : null;
     audio && (playing ? audio.play() : audio.pause());
@@ -79,7 +76,6 @@ export default function Chat() {
     socket.on("receive_message", (data) => {
       if (boolForReceive) {
         if (data) {
-          console.log(data);
           if (data.sender != user.id) {
             setAudioUrl("https://ramazanimwemedi.github.io/sounds/recieve.mp3");
             setPlaying(true);
@@ -140,18 +136,19 @@ export default function Chat() {
       socket.emit("send_message", { newMessage, id, userId });
       setBoolForSent(true);
       if (boolForSent) {
+        setMessage("");
+        setAudioUrl("https://ramazanimwemedi.github.io/sounds/sent.mp3");
         socket.on("messege_sent", (data) => {
-          setBoolForSent(false);
+          setPlaying(true);
           dispatch({
             type: "SENT_MESSAGE",
             payload: data,
           });
-          setMessage("");
+          setBoolForSent(false);
         });
       }
     }
   };
-
   return (
     <Box
       sx={{
