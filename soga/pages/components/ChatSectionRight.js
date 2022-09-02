@@ -22,7 +22,6 @@ import ImageListItem from "@mui/material/ImageListItem";
 import Image from "next/image";
 import VedeoOpen from "./VideoOpen";
 
-
 const ChatSectionRight = ({ friendUsername }) => {
   return (
     <>
@@ -106,16 +105,6 @@ const Friend = ({ friendUsername }) => {
         >
           {friendUsername}
         </Typography>
-        {/* Status */}
-        <Typography
-          sx={{
-            fontSize: "0.8rem",
-            paddingTop: "5px",
-            color: "lightgreen",
-          }}
-        >
-          Online
-        </Typography>
       </Box>
     </Box>
   );
@@ -197,26 +186,28 @@ const itemData = [
 
 const MediaVideos = () => {
   const [open, setOpen] = React.useState(false);
+  const [videoUrl, setVideoUrl] = React.useState(null);
 
-  const handleClickOpen = () => {
-    alert("clicked");
-    // setOpen(true);
+  const handleClickOpen = (url) => {
+    setVideoUrl(url);
+    setOpen(true);
   };
   const handleClose = () => {
     setOpen((prev) => !prev);
   };
 
+  
+
   const theme = useTheme();
-  const videos = ["", "", ""];
+  const videos = [
+    "https://d290.d2mefast.net/tb/9/8f/sauti_sol_kuliko_jana_featuring_redfourth_chorus_upper_hill_school_h264_44600.mp4?play",
+    "ih",
+    "fev",
+  ];
   return (
     <Box>
-
       {open && (
-        <VedeoOpen
-          open={open}
-          handleClose={handleClose}
-          handleClickOpen={handleClickOpen}
-        />
+        <VedeoOpen videoUrl={videoUrl} open={open} handleClose={handleClose} />
       )}
       <MediaName name="Videos" />
       {/* Videos */}
@@ -245,18 +236,16 @@ const MediaVideos = () => {
             >
               <video
                 // controls
-                onClick={() => {
-                  handleClose();
-                }}
+                onClick={() => handleClickOpen(item)}
                 style={{
-                  backgroundColor: "purple",
+                  backgroundColor: "black",
                   width: "auto",
                   height: "80px",
                   borderRadius: "3px",
                 }}
                 width="250"
               >
-                <source src="https://d234.d2mefast.net/tb/d/52/bien_inauma_official_audio_h264_51054.mp4?play" />
+                <source src={item} />
                 Sorry, your browser doesn't support embedded videos.
               </video>
             </ImageListItem>

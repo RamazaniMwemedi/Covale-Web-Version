@@ -8,6 +8,7 @@ import {
   Typography,
   IconButton,
   Icon,
+  InputLabel,
 } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
@@ -35,7 +36,6 @@ const Chats = ({
   clickFriendHandler,
   clearFriendHandler,
   messageChangeHandler,
-  
 }) => {
   const theme = useTheme();
   return (
@@ -52,6 +52,8 @@ const Chats = ({
         }}
       >
         <FormControl sx={{ m: 1, width: "95%" }} variant="outlined">
+          <InputLabel color="secondary" >Search</InputLabel>
+
           <OutlinedInput
             startAdornment={
               <InputAdornment
