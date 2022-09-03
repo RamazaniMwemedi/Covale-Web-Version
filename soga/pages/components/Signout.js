@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -6,33 +6,38 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { styled, useTheme } from "@mui/material/styles";
-import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { ListItemText } from "@mui/material";
-// MUI Switching
+import { useTheme } from "@mui/material/styles";
 
+import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
 
-
-
-export default function AccountMenu({ user,signoutHandler }) {
+export default function AccountMenu({ user, signoutHandler }) {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const [themeAnchor, setThemeAnchor] = useState(null);
+  const themeOpen = Boolean(themeAnchor);
+
+  const themeHandleClick = (event) => {
+    setThemeAnchor(event.currentTarget);
+  };
+  const themeHandleClose = () => {
+    setThemeAnchor(null);
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const changeTheme = () => {
-    
+  const changeTheme = (mode) => {
+    theme.themeChengeHandler(mode);
   };
   return (
     <>
@@ -99,13 +104,18 @@ export default function AccountMenu({ user,signoutHandler }) {
               <Avatar>{user.username[0]}</Avatar> {user.username}
             </MenuItem>
             <Divider />
-            <MenuItem>
+            <MenuItem
+              id="basic-button"
+              aria-controls={open ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={themeHandleClick}
+            >
               <ListItemIcon>
-                <PersonAdd fontSize="small" />
+                <Brightness4Icon />
               </ListItemIcon>
-              Add another account
+              Theme
             </MenuItem>
-
             <MenuItem
               onClick={() => {
                 signoutHandler();
@@ -115,6 +125,62 @@ export default function AccountMenu({ user,signoutHandler }) {
                 <Logout fontSize="small" />
               </ListItemIcon>
               Logout
+            </MenuItem>
+          </Menu>
+          <Menu
+            id="basic-menu"
+            anchorEl={themeAnchor}
+            open={themeOpen}
+            onClose={themeHandleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                backgroundColor: theme.colors.itemBackground,
+                borderRadius: "10px",
+                marginLeft: "20px",
+              },
+            }}
+            transformOrigin={{ horizontal: "left", vertical: "bottom" }}
+            anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+          >
+            <MenuItem
+              onClick={() => {
+                changeTheme("dark-mode");
+                themeHandleClose();
+              }}
+            >
+              {" "}
+              <ListItemIcon>
+                <DarkModeIcon />
+              </ListItemIcon>{" "}
+              Dark Mode
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                changeTheme("light-mode");
+                themeHandleClose();
+              }}
+            >
+              {" "}
+              <ListItemIcon>
+                <LightModeIcon />
+              </ListItemIcon>
+              Light Mode
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                changeTheme("system-mode");
+                themeHandleClose();
+              }}
+            >
+              {" "}
+              <ListItemIcon>
+                <SettingsBrightnessIcon />
+              </ListItemIcon>{" "}
+              System
             </MenuItem>
           </Menu>
         </Box>

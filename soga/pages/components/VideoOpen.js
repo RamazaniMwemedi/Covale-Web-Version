@@ -8,7 +8,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Typography } from "@mui/material";
 
-export default function MaxWidthDialog({ open, handleClose, handleClickOpen, videoUrl }) {
+export default function MaxWidthDialog({
+  open,
+  handleClose,
+  handleClickOpen,
+  videoUrl,
+}) {
   const fullWidth = true;
   const maxWidth = "xl";
 
@@ -26,14 +31,16 @@ export default function MaxWidthDialog({ open, handleClose, handleClickOpen, vid
             display: "flex",
             margin: 0,
             padding: 0,
+            backgroundColor: "#ffffff",
+            border: "1px solid black",
+            opacity: 0.6,
           }}
         >
           {/* Right */}
-          <Box
-            sx={{
+          <div
+            style={{
               flex: 0.7,
               display: "flex",
-              backgroundColor: "gray",
               alignItems: "center",
               textAlign: "center",
               justifyContent: "center",
@@ -51,7 +58,7 @@ export default function MaxWidthDialog({ open, handleClose, handleClickOpen, vid
               <source src={videoUrl} />
               Sorry, your browser doesn't support embedded videos.
             </video>{" "}
-          </Box>
+          </div>
           {/* Left */}
           <Box
             sx={{
