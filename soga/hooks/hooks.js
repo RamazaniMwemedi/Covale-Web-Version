@@ -13,7 +13,7 @@ const useCheckLogedinUser = () => {
     if (signedInUser) {
       setLogedInUser(JSON.parse(signedInUser));
     } else {
-      router.push("/");
+      router.push("/login");
     }
   }, []);
 
@@ -58,7 +58,7 @@ const useGetFriends = () => {
     if (signedInUser) {
       setLogedInUser(JSON.parse(signedInUser));
     } else {
-      router.push("/");
+      router.push("/login");
     }
   }, []);
 
