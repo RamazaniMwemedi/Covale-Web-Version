@@ -462,9 +462,9 @@ const Signin = (props) => {
           </Button>
         )}
 
-        <Link href="#/recover">
+        {/* <Link href="#/recover">
           <a>Forgot password?</a>
-        </Link>
+        </Link> */}
         <hr />
       </form>
       <CreateAccount

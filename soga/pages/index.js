@@ -68,7 +68,7 @@ function Index(props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar sx={{ backgroundColor: "dodgerblue"}} component="nav">
+      <AppBar sx={{ backgroundColor: "dodgerblue" }} component="nav">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -88,8 +88,7 @@ function Index(props) {
           >
             <Logo height={50} width={50} />
             <Typography
-              sx={{ marginTop: "10px" }}
-              color="secondary"
+              sx={{ marginTop: "10px",  }}
               variant="h6"
             >
               Covale
