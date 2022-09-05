@@ -306,6 +306,7 @@ const Bottom = ({
   onEmojiClick,
 }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
+  const theme = useTheme();
 
   return (
     <Box
@@ -323,9 +324,9 @@ const Bottom = ({
             position: "absolute",
             bottom: "53px",
             marginLeft: "30px",
-            backgroundColor: "white",
+            backgroundColor: theme.colors.textBackground,
             borderRadius: "15px",
-            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
@@ -341,7 +342,17 @@ const Bottom = ({
           >
             <CloseRoundedIcon color="secondary" fontSize="small" />
           </IconButton>
-          <Picker native={true} onEmojiClick={onEmojiClick} />
+          <Picker
+            native={true}
+            preload={true}
+            searchPlaceholder={"Search emojie"}
+            onEmojiClick={onEmojiClick}
+            pickerStyle={{
+              backgroundColor: theme.colors.textBackground,
+              boxShadow: "none",
+              border: `1px solid ${theme.colors.textBackground}`,
+            }}
+          />
         </Box>
       )}
 

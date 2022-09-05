@@ -65,40 +65,51 @@ export default function Chat() {
   // Bools
   const [boolForSent, setBoolForSent] = useState(false);
   const [boolForReceive, setBoolForReceive] = useState(false);
-
   //Audio
   const [playing, setPlaying] = useState(false);
+  const [sentAudioPlay, setSentAudioPlay] = useState(false);
+  const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState(null);
+
   useEffect(() => {
-    const audio = audioUrl ? new Audio(audioUrl) : null;
-    audio && (playing ? audio.play() : audio.pause());
+    const audio = new Audio(
+      "https://ramazanimwemedi.github.io/sounds/recieve.mp3"
+    );
+    receiveAudioPlay ? audio.play() : audio.pause();
 
-    audio && audio.addEventListener("ended", () => setPlaying(false));
+    audio.addEventListener("ended", () => setReceiveAudioPlay(false));
     return () => {
-      audio && audio.addEventListener("ended", () => setPlaying(false));
+      audio.addEventListener("ended", () => setReceiveAudioPlay(false));
     };
-  }, [playing, audioUrl]);
+  }, [receiveAudioPlay]);
 
-  const onEmojiClick = (event, emojiObject) => {
-    setMessage(message + emojiObject.emoji);
-  };
+  useEffect(() => {
+    const audio = new Audio(
+      "https://ramazanimwemedi.github.io/sounds/sent.mp3"
+    );
+
+    sentAudioPlay ? audio.play() : audio.pause();
+    audio.addEventListener("ended", () => setSentAudioPlay(true));
+    return () => {
+      audio.addEventListener("ended", () => setSentAudioPlay(true));
+    };
+  }, [sentAudioPlay]);
 
   useEffect(() => {
     setBoolForReceive(true);
     socket.on("receive_message", (data) => {
       if (boolForReceive) {
         if (data) {
-          console.log(data);
           if (data.sender != user.id) {
-            setAudioUrl("https://ramazanimwemedi.github.io/sounds/recieve.mp3");
-            setPlaying(true);
+            setReceiveAudioPlay(true);
             setBoolForReceive(false);
             dispatch({
               type: "RECIEVE_MESSAGE",
               payload: data,
             });
           }
+          setReceiveAudioPlay(false);
         }
       }
     });
@@ -144,11 +155,11 @@ export default function Chat() {
         message: message,
       };
       socket.emit("send_message", { newMessage, id, userId });
+      setMessage("");
       setBoolForSent(true);
       if (boolForSent) {
-        setMessage("");
-        setAudioUrl("https://ramazanimwemedi.github.io/sounds/sent.mp3");
         socket.on("messege_sent", (data) => {
+          setSentAudioPlay(true);
           setPlaying(true);
           dispatch({
             type: "SENT_MESSAGE",
