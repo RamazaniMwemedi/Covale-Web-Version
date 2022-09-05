@@ -72,10 +72,23 @@ const useGetFriends = () => {
   return friends;
 };
 
+const useWindow = () => {
+  const [myWindow, setMyWindow] = useState(null);
+  useLayoutEffect(() => {
+    if (window) {
+      setMyWindow(window);
+    }
+    return () => {
+      setMyWindow(null);
+    };
+  }, []);
+  return myWindow;
+};
+
 module.exports = {
   useCheckLogedinUser,
   useGetChatById,
   useGetTheme,
   useGetFriends,
-  
+  useWindow,
 };
