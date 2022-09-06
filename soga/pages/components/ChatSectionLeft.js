@@ -54,6 +54,7 @@ const ChatSectionLeft = ({
         friendUsername={friendUsername}
         showRightHandler={showRightHandler}
         showRight={showRight}
+        id={id}
       />
       <Box
         sx={{
@@ -78,7 +79,7 @@ const ChatSectionLeft = ({
 
 export default ChatSectionLeft;
 
-const TopBar = ({ friendUsername, showRightHandler, showRight }) => {
+const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
   const theme = useTheme();
   return (
     <Box
@@ -142,8 +143,8 @@ const TopBar = ({ friendUsername, showRightHandler, showRight }) => {
             onClick={() => {
               // Open a new window with a adio call
               window.open(
-                //  adio call api gmeet.net/join/{roomId}
-                "https://meet.google.com/join/",
+                
+                `http://localhost:3000/meet/room/${id}`,
                 "_blank",
                 "toolbar=no,scrollbars=yes,resizable=yes,top=100,left=300,width=1000,height=500"
               );
@@ -159,7 +160,7 @@ const TopBar = ({ friendUsername, showRightHandler, showRight }) => {
             onClick={() => {
               // Open a new window with a video call
               window.open(
-                "https://meet.google.com/join/",
+                `http://localhost:3000/meet/room/${id}`,
                 "_blank",
                 "toolbar=no,scrollbars=yes,resizable=yes,top=100,left=300,width=1000,height=500"
               );

@@ -28,8 +28,8 @@ export default function Chat({ message }) {
           onClick={(e) => {
             e.preventDefault();
             router.push(
-              `/chats/?id=${message.chatId}`,
-              `/chats/${message.chatId}`,
+              `/chats/c/?id=${message.chatId}`,
+              `/chats/c/${message.chatId}`,
               {
                 shallow: true,
               }

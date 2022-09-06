@@ -11,6 +11,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import "@fontsource/open-sans/500.css"; // Weight 500.
 import { useTheme } from "@mui/styles";
 import { Avatar } from "@mui/material";
+import { useRouter } from "next/router";
 
 import Chats from "./Chats";
 import AddMoreFriends from "./AddMoreFriends";
@@ -73,6 +74,7 @@ function Tabs({
 }) {
   const theme = useTheme();
 
+
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
@@ -105,6 +107,15 @@ function Tabs({
 }
 
 export default function ChatLeft({ user }) {
+  const router = useRouter()
+   const pathname = router.pathname
+  React.useEffect(()=>{
+    if ( pathname.includes("/chat/c")) {
+      setValue("chats")
+    } else if(pathname.includes("/chat/t")){
+      setValue("Team")
+    }
+  },[])
   const [messages, setMessages] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const token = user ? user.token : null;

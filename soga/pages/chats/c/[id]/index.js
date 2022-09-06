@@ -6,19 +6,19 @@ import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
 
 // Logo
-import Logo from "../../../assets/Logo";
+import Logo from "../../../../assets/Logo";
 
 // My components
-import DrawerComponent from "../../components/DrawerComponent";
-import ChatLeft from "../../components/ChatLeft";
-import ChatSection from "../../components/ChatSection";
+import DrawerComponent from "../../../components/DrawerComponent";
+import ChatLeft from "../../../components/ChatLeft";
+import ChatSection from "../../../components/ChatSection";
 
-import { getChatById } from "../../../services/chats";
+import { getChatById } from "../../../../services/chats";
 
 // Hooks
-import { useCheckLogedinUser, useGetChatById } from "../../../hooks/hooks";
-import ChatSectionSkeleton from "../../components/ChatSectionSkeleton";
-import LoadingLogo from "../../components/LoadingLogo";
+import { useCheckLogedinUser, useGetChatById } from "../../../../hooks/hooks";
+import ChatSectionSkeleton from "../../../components/ChatSectionSkeleton";
+import LoadingLogo from "../../../components/LoadingLogo";
 
 // Socket.IO
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
