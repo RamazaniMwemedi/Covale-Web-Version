@@ -22,14 +22,14 @@ export default function Team({ message }) {
         backgroundColor: theme.colors.background,
       }}
     >
-      {message && (
+      {!message && (
         <ListItem
           button
           onClick={(e) => {
             e.preventDefault();
             router.push(
-              `/chats/t/?id=${message.chatId}`,
-              `/chats/t/${message.chatId}`,
+              `/chats/t/?id=${1}`,
+              `/chats/t/${1}`,
               {
                 shallow: true,
               }
@@ -37,9 +37,9 @@ export default function Team({ message }) {
           }}
           sx={{
             borderRadius: "0.5rem",
-            boxShadow: message.chatId === id ? 1 : "unset",
-            backgroundColor:
-              message.chatId === id ? theme.colors.itemBackground : "unset",
+            // boxShadow: message.chatId === id ? 1 : "unset",
+            // backgroundColor:
+            //   message.chatId === id ? theme.colors.itemBackground : "unset",
             "&:hover": {
               // backgroundColor: ,
               // boxShadow: 1,

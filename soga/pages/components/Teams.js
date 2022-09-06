@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FloatingAButton from "../components/FloatingAButton";
+import FloatingAButton from "./FloatingAButton";
 import {
   Avatar,
   List,
@@ -21,14 +21,14 @@ import AddIcon from "@mui/icons-material/Add";
 
 // My components
 import AddMoreFriends from "./AddMoreFriends";
-import Chat from "./Chat";
+import Team from "./Team";
 
 const Teams = ({
   messages,
   loading,
   friends,
   showMoreFriends,
-  showButton,
+  showButton ,
   friendClicked,
   buttonHandler,
   closeMorePeopleHandler,
@@ -145,7 +145,7 @@ const Teams = ({
                   <FloatingAButton buttonHandler={buttonHandler} />
                 )}
                 {Array.from({ length: 10 }, () => {
-                  return <Typography>Team</Typography>;
+                  return <Team />;
                 })}
               </Box>
             ) : (
