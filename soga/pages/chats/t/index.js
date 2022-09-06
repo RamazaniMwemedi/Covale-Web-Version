@@ -11,6 +11,7 @@ import Logo from "../../../assets/Logo";
 // My components
 import DrawerComponent from "../../components/DrawerComponent";
 import TeamLeft from "../../components/TeamLeft";
+import TeamSection from "../../components/TeamSection";
 
 import { getChatById } from "../../../services/chats";
 
@@ -183,13 +184,14 @@ export default function Chat() {
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
           <TeamLeft user={user} chat={chat} />
           {id ? (
-            loading ? (
-              //Team Sketelton
-              <Typography>Team Sketelton</Typography>
-            ) : (
-              // Team Section
-              <Typography>Team Section</Typography>
-            )
+            <TeamSection/>
+            // loading ? (
+            //   //Team Sketelton
+            //   <Typography>Team Sketelton</Typography>
+            // ) : (
+            //   // Team Section
+            //   <Typography>Team Section</Typography>
+            // )
           ) : (
             <ClickTeam />
           )}
