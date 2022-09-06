@@ -124,8 +124,9 @@ const Teams = ({
         </Stack>
       ) : (
         <>
-          {messages &&
-            (messages.length > 0 ? (
+          {!messages &&
+            //   If teams are greater than 0
+            (!messages ? (
               <Box>
                 {showMoreFriends && (
                   <AddMoreFriends
@@ -143,12 +144,8 @@ const Teams = ({
                 {showButton && (
                   <FloatingAButton buttonHandler={buttonHandler} />
                 )}
-                {messages.map((message) => {
-                  return (
-                    <>
-                      <Chat message={message} />
-                    </>
-                  );
+                {Array.from({ length: 10 }, () => {
+                  return <Typography>Team</Typography>;
                 })}
               </Box>
             ) : (
