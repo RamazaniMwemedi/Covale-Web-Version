@@ -28,7 +28,6 @@ const addFriendById = async (id, token) => {
 };
 
 const myFriends = async (token) => {
-  console.log("Token from api", token);
   const response = await axios.get(
     `${baseUrl}/api/authorizeduser/friend/myFriends`,
     {
@@ -55,7 +54,6 @@ const friendReqRecieved = async (token) => {
 
 // Friend Requests Sent
 const friendReqSent = async (token) => {
-  console.log("friendReqRecieved ")
   const response = await axios.get(
     `${baseUrl}/api/authorizeduser/friend/friendReqSent`,
     {
@@ -64,8 +62,6 @@ const friendReqSent = async (token) => {
       },
     }
   );
-    console.log("friendReqRecieved data ");
-    console.log(response.data);
 
   return response.data;
 };
@@ -110,8 +106,7 @@ const cancelFriendRequest = async (id, token) => {
     }
   );
   return response.status;
-}
-
+};
 
 module.exports = {
   allUsers,

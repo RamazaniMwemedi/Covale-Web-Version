@@ -102,12 +102,11 @@ function Tabs({
   );
 }
 
-export default function ChatLeft({ user }) {
-
+export default function TeamLeft({ user }) {
   const [messages, setMessages] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const token = user ? user.token : null;
-  const [value, setValue] = React.useState("chats");
+  const [value, setValue] = React.useState("team");
   const friends = useGetFriends();
   const [showMoreFriends, setShowMoreFriends] = React.useState(false);
   const [showButton, setShowButton] = React.useState(true);
