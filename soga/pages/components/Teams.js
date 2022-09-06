@@ -23,7 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 import AddMoreFriends from "./AddMoreFriends";
 import Chat from "./Chat";
 
-const Chats = ({
+const Teams = ({
   messages,
   loading,
   friends,
@@ -52,7 +52,7 @@ const Chats = ({
         }}
       >
         <FormControl sx={{ m: 1, width: "95%" }} variant="outlined">
-          <InputLabel color="secondary" >Chats</InputLabel>
+          <InputLabel color="secondary">Teams</InputLabel>
 
           <OutlinedInput
             startAdornment={
@@ -70,7 +70,7 @@ const Chats = ({
             id="outlined-adornment-password"
             type="text"
             value=""
-            label="Chats"
+            label="Team"
             onChange={() => {}}
             sx={{
               height: "35px",
@@ -154,7 +154,7 @@ const Chats = ({
             ) : (
               <Box sx={{ textAlign: "center", marginTop: "150px" }}>
                 <Typography variant="h5" color="secondary">
-                  No chats yet
+                  No Team yet
                 </Typography>
                 <Typography variant="subtitle2" color="secondary">
                   Click the{" "}
@@ -168,7 +168,7 @@ const Chats = ({
                       />
                     </Icon>
                   }{" "}
-                  to add a friends
+                  to start a team
                 </Typography>
               </Box>
             ))}
@@ -178,4 +178,4 @@ const Chats = ({
   );
 };
 
-export default Chats;
+export default Teams;

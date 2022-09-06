@@ -13,6 +13,7 @@ import { useTheme } from "@mui/styles";
 import { Avatar } from "@mui/material";
 
 import Chats from "./Chats";
+import Teams from "./Teams";
 import { useGetFriends } from "../../hooks/hooks";
 
 import chatService from "../../services/chats";
@@ -96,7 +97,16 @@ function Tabs({
             />
           </Box>
         </TabPanel>
-        <TabPanel value="team">Tam App will appear here</TabPanel>
+        <TabPanel value="team">
+          {" "}
+          <Box
+            sx={{
+              margin: "-20px",
+            }}
+          >
+            <Teams />
+          </Box>
+        </TabPanel>
       </TabContext>
     </Box>
   );
