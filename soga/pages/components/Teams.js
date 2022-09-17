@@ -24,11 +24,11 @@ import AddMoreFriends from "./AddMoreFriends";
 import Team from "./Team";
 
 const Teams = ({
-  messages,
+  teams,
   loading,
   friends,
   showMoreFriends,
-  showButton ,
+  showButton,
   friendClicked,
   buttonHandler,
   closeMorePeopleHandler,
@@ -124,9 +124,9 @@ const Teams = ({
         </Stack>
       ) : (
         <>
-          {!messages &&
+          {teams &&
             //   If teams are greater than 0
-            (!messages ? (
+            (teams.length > 0 ? (
               <Box>
                 {showMoreFriends && (
                   <AddMoreFriends
@@ -144,8 +144,8 @@ const Teams = ({
                 {showButton && (
                   <FloatingAButton buttonHandler={buttonHandler} />
                 )}
-                {Array.from({ length: 10 }, () => {
-                  return <Team />;
+                {teams.map((team) => {
+                  return <Team team={team} />;
                 })}
               </Box>
             ) : (

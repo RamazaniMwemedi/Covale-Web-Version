@@ -73,7 +73,6 @@ function Tabs({
   messageChangeHandler,
 }) {
   const theme = useTheme();
-
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
@@ -172,6 +171,7 @@ export default function TeamLeft({ user }) {
   React.useEffect(() => {
     getChatsTeams(token);
   }, [token]);
+
   return (
     <Box>
       <CssBaseline />

@@ -11,7 +11,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 
-export default function Team({ teams }) {
+export default function Team({ team }) {
   const router = useRouter();
   const id = router.query.t;
   const theme = useTheme();
@@ -22,18 +22,14 @@ export default function Team({ teams }) {
         backgroundColor: theme.colors.background,
       }}
     >
-      {teams && (
+      {team && (
         <ListItem
           button
           onClick={(e) => {
             e.preventDefault();
-            router.push(
-              `/chats/t/?id=${1}`,
-              `/chats/t/${1}`,
-              {
-                shallow: true,
-              }
-            );
+            router.push(`/chats/t/?id=${1}`, `/chats/t/${1}`, {
+              shallow: true,
+            });
           }}
           sx={{
             borderRadius: "0.5rem",

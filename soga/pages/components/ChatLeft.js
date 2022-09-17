@@ -18,6 +18,7 @@ import { useGetFriends } from "../../hooks/hooks";
 import chatService from "../../services/chats";
 import { getTeams } from "../../services/teams";
 import Team from "./Team";
+import Teams from "./Teams";
 
 const closedMixin = (theme) => ({
   //
@@ -100,7 +101,14 @@ function Tabs({
           </Box>
         </TabPanel>
         <TabPanel value="team">
-          <Team teams={teams} />
+          {" "}
+          <Box
+            sx={{
+              margin: "-20px",
+            }}
+          >
+            <Teams teams={teams} />
+          </Box>
         </TabPanel>
       </TabContext>
     </Box>
@@ -174,6 +182,7 @@ export default function ChatLeft({ user }) {
         <ProfileDialog handleChange={handleChange} value={value} user={user} />
 
         <Tabs
+          teams={teams}
           messages={messages}
           value={value}
           handleChange={handleChange}
