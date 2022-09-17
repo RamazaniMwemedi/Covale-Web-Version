@@ -37,6 +37,7 @@ export default function AccountMenu({ user, signoutHandler }) {
     setAnchorEl(null);
   };
   const changeTheme = (mode) => {
+    localStorage.setItem("theme", mode);
     theme.themeChengeHandler(mode);
   };
   return (

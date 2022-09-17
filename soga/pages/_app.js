@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
   const [lightMode, setLightMode] = React.useState("light-mode");
   const [darkMode, setDarkMode] = React.useState("dark-mode");
   const [systemTheme, setSystemTheme] = React.useState("system-mode");
-  const [preferedTheme, setPreferedTheme] = React.useState(lightMode);
+  const [preferedTheme, setPreferedTheme] = React.useState("light-mode");
 
   const themeChengeHandler = (theme) => {
     setPreferedTheme(theme);
@@ -59,6 +59,14 @@ function MyApp({ Component, pageProps }) {
     themeChengeHandler: themeChengeHandler,
   };
   // End of Theme
+
+  React.useEffect(() => {
+    // Get theme from localStorage
+    const theme = localStorage.getItem("theme");
+    return () => {
+      setPreferedTheme(theme);
+    };
+  }, []);
 
   const theme = React.useMemo(() => {
     if (preferedTheme == lightMode) {

@@ -104,6 +104,7 @@ const LoginPage = () => {
         console.log(response);
         if (response) {
           window.localStorage.setItem("logedinUser", JSON.stringify(response));
+          window.localStorage.setItem("theme", "light-mode");
           router.push(`/chats/`);
         }
       } catch (exception) {
@@ -198,6 +199,7 @@ const LoginPage = () => {
         router.push("/chats/");
         console.table(response);
         window.localStorage.setItem("logedinUser", JSON.stringify(response));
+        window.localStorage.setItem("theme", "light-mode");
       } catch (error) {
         setSubmiting(false);
         setSignupError(error.response.data.error);
