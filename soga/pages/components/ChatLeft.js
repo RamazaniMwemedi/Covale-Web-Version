@@ -16,6 +16,8 @@ import Chats from "./Chats";
 import { useGetFriends } from "../../hooks/hooks";
 
 import chatService from "../../services/chats";
+import { getTeams } from "../../services/teams";
+import Team from "./Team";
 
 const closedMixin = (theme) => ({
   //
@@ -56,6 +58,7 @@ const Drawer = styled(MuiDrawer, {
 
 function Tabs({
   messages,
+  teams,
   loading,
   value,
   friends,
@@ -96,14 +99,15 @@ function Tabs({
             />
           </Box>
         </TabPanel>
-        <TabPanel value="team">Tam App will appear here</TabPanel>
+        <TabPanel value="team">
+          <Team teams={teams} />
+        </TabPanel>
       </TabContext>
     </Box>
   );
 }
 
 export default function ChatLeft({ user }) {
-
   const [messages, setMessages] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const token = user ? user.token : null;
@@ -113,6 +117,7 @@ export default function ChatLeft({ user }) {
   const [showButton, setShowButton] = React.useState(true);
   const [message, setMessage] = React.useState("");
   const [friendClicked, setFriendClicked] = React.useState(null);
+  const [teams, setTeams] = React.useState([]);
 
   const buttonHandler = () => {
     setShowMoreFriends(true);
@@ -143,18 +148,25 @@ export default function ChatLeft({ user }) {
     setValue(newValue);
   };
 
-  React.useEffect(() => {
+  const getChatsTeams = async (token) => {
     if (token) {
-      chatService
-        .getChats(token)
-        .then((res) => {
-          setMessages(res);
-        })
-        .then(() => {
-          setLoading(false);
-        });
+      const chatsRes = await chatService.getChats(token);
+      if (chatsRes) {
+        setMessages(chatsRes);
+        setLoading(false);
+      }
+
+      const teamsRes = await getTeams(token);
+      if (teamsRes) {
+        setTeams(teamsRes);
+      }
     }
+  };
+
+  React.useEffect(() => {
+    getChatsTeams(token);
   }, [token]);
+
   return (
     <Box>
       <CssBaseline />

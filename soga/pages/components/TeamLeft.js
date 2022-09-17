@@ -17,6 +17,7 @@ import Teams from "./Teams";
 import { useGetFriends } from "../../hooks/hooks";
 
 import chatService from "../../services/chats";
+import { getTeams } from "../../services/teams";
 
 const closedMixin = (theme) => ({
   //
@@ -57,6 +58,7 @@ const Drawer = styled(MuiDrawer, {
 
 function Tabs({
   messages,
+  teams,
   loading,
   value,
   friends,
@@ -104,7 +106,7 @@ function Tabs({
               margin: "-20px",
             }}
           >
-            <Teams />
+            <Teams teams={teams} />
           </Box>
         </TabPanel>
       </TabContext>
@@ -122,7 +124,7 @@ export default function TeamLeft({ user }) {
   const [showButton, setShowButton] = React.useState(true);
   const [message, setMessage] = React.useState("");
   const [friendClicked, setFriendClicked] = React.useState(null);
-
+  const [teams, setTeams] = React.useState([]);
   const buttonHandler = () => {
     setShowMoreFriends(true);
     setShowButton(false);
@@ -152,17 +154,23 @@ export default function TeamLeft({ user }) {
     setValue(newValue);
   };
 
-  React.useEffect(() => {
+  const getChatsTeams = async (token) => {
     if (token) {
-      chatService
-        .getChats(token)
-        .then((res) => {
-          setMessages(res);
-        })
-        .then(() => {
-          setLoading(false);
-        });
+      const chatsRes = await chatService.getChats(token);
+      if (chatsRes) {
+        setMessages(chatsRes);
+        setLoading(false);
+      }
+
+      const teamsRes = await getTeams(token);
+      if (teamsRes) {
+        setTeams(teamsRes);
+      }
     }
+  };
+
+  React.useEffect(() => {
+    getChatsTeams(token);
   }, [token]);
   return (
     <Box>
@@ -172,6 +180,7 @@ export default function TeamLeft({ user }) {
 
         <Tabs
           messages={messages}
+          teams={teams}
           value={value}
           handleChange={handleChange}
           loading={loading}

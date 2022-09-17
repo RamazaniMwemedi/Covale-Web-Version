@@ -11,7 +11,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 
-export default function Team({ message }) {
+export default function Team({ teams }) {
   const router = useRouter();
   const id = router.query.t;
   const theme = useTheme();
@@ -22,7 +22,7 @@ export default function Team({ message }) {
         backgroundColor: theme.colors.background,
       }}
     >
-      {!message && (
+      {teams && (
         <ListItem
           button
           onClick={(e) => {
