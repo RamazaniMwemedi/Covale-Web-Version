@@ -15,7 +15,7 @@ export default function Team({ team }) {
   const router = useRouter();
   const id = router.query.t;
   const theme = useTheme();
-
+  console.log(team);
   return (
     <List
       sx={{

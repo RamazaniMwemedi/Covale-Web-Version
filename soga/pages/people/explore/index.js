@@ -41,9 +41,8 @@ export default function Explore() {
 
   // Signout Handler
   const signoutHandler = () => {
-    setUser(null);
     localStorage.removeItem("logedinUser");
-    router.push("/");
+    router.push("/login");
   };
 
   return (

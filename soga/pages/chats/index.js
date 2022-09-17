@@ -145,7 +145,7 @@ export default function Chat() {
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
     user = null;
-    router.push("/");
+    router.push("/login");
   };
 
   const sendMessageHandle = () => {

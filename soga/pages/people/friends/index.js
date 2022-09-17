@@ -53,8 +53,8 @@ export default function People() {
   const signoutHandler = () => {
     setUser(null);
     window.localStorage.removeItem("logedinUser");
-    router.push("/");
-  }
+    router.push("/login");
+  };
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       <CssBaseline />
