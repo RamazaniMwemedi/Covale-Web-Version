@@ -72,6 +72,9 @@ function Tabs({
   clickFriendHandler,
   clearFriendHandler,
   messageChangeHandler,
+  toggleShowTeam,
+  openCreateTeam,
+  teamLoading,
 }) {
   const theme = useTheme();
 
@@ -107,7 +110,12 @@ function Tabs({
               margin: "-20px",
             }}
           >
-            <Teams teams={teams} />
+            <Teams
+              toggleShowTeam={toggleShowTeam}
+              teams={teams}
+              openCreateTeam={openCreateTeam}
+              teamLoading={teamLoading}
+            />
           </Box>
         </TabPanel>
       </TabContext>
@@ -125,7 +133,10 @@ export default function ChatLeft({ user }) {
   const [showButton, setShowButton] = React.useState(true);
   const [message, setMessage] = React.useState("");
   const [friendClicked, setFriendClicked] = React.useState(null);
+  // Team States
+  const [openCreateTeam, setOpenCreateTeam] = React.useState(false);
   const [teams, setTeams] = React.useState([]);
+  const [teamLoading, setTeamLoading] = React.useState(true);
 
   const buttonHandler = () => {
     setShowMoreFriends(true);
@@ -156,6 +167,11 @@ export default function ChatLeft({ user }) {
     setValue(newValue);
   };
 
+  // Team Handler
+  const toggleShowTeam = () => {
+    setOpenCreateTeam((prev) => !prev);
+  };
+
   const getChatsTeams = async (token) => {
     if (token) {
       const chatsRes = await chatService.getChats(token);
@@ -167,6 +183,7 @@ export default function ChatLeft({ user }) {
       const teamsRes = await getTeams(token);
       if (teamsRes) {
         setTeams(teamsRes);
+        setTeamLoading(false);
       }
     }
   };
@@ -182,7 +199,6 @@ export default function ChatLeft({ user }) {
         <ProfileDialog handleChange={handleChange} value={value} user={user} />
 
         <Tabs
-          teams={teams}
           messages={messages}
           value={value}
           handleChange={handleChange}
@@ -197,6 +213,11 @@ export default function ChatLeft({ user }) {
           sendMessage={sendMessage}
           clickFriendHandler={clickFriendHandler}
           clearFriendHandler={clearFriendHandler}
+          // Teams
+          teams={teams}
+          toggleShowTeam={toggleShowTeam}
+          openCreateTeam={openCreateTeam}
+          teamLoading={teamLoading}
         />
       </Drawer>
     </Box>

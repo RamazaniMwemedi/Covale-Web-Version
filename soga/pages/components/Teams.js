@@ -23,21 +23,9 @@ import AddIcon from "@mui/icons-material/Add";
 import AddMoreFriends from "./AddMoreFriends";
 import Team from "./Team";
 import FloatingATeamB from "./FloatingATeamB";
+import CreateTeam from "./CreateTeam";
 
-const Teams = ({
-  teams,
-  loading,
-  friends,
-  showMoreFriends,
-  showButton,
-  friendClicked,
-  buttonHandler,
-  closeMorePeopleHandler,
-  sendMessage,
-  clickFriendHandler,
-  clearFriendHandler,
-  messageChangeHandler,
-}) => {
+const Teams = ({ teams, openCreateTeam, toggleShowTeam, teamLoading }) => {
   const theme = useTheme();
   return (
     <>
@@ -81,7 +69,7 @@ const Teams = ({
           />
         </FormControl>
       </Box>
-      {loading ? (
+      {teamLoading ? (
         <Stack spacing={1}>
           {[...Array(7)].map((_, i) => (
             <ListItem
@@ -129,21 +117,12 @@ const Teams = ({
             //   If teams are greater than 0
             (teams.length > 0 ? (
               <Box>
-                {showMoreFriends && (
-                  <AddMoreFriends
-                    closeMorePeopleHandler={closeMorePeopleHandler}
-                    messageChangeHandler={messageChangeHandler}
-                    sendMessage={sendMessage}
-                    // message={message}
-                    clearFriendHandler={clearFriendHandler}
-                    friendClicked={friendClicked}
-                    clickFriendHandler={clickFriendHandler}
-                    friends={friends}
-                  />
+                {openCreateTeam && (
+                  <CreateTeam toggleShowTeam={toggleShowTeam} />
                 )}
 
-                {showButton && (
-                  <FloatingATeamB buttonHandler={buttonHandler} />
+                {!openCreateTeam && (
+                  <FloatingATeamB toggleShowTeam={toggleShowTeam} />
                 )}
                 {teams.map((team) => {
                   return <Team team={team} />;

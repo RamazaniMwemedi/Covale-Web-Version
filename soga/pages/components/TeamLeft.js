@@ -71,6 +71,9 @@ function Tabs({
   clickFriendHandler,
   clearFriendHandler,
   messageChangeHandler,
+  toggleShowTeam,
+  openCreateTeam,
+  teamLoading,
 }) {
   const theme = useTheme();
   return (
@@ -106,19 +109,10 @@ function Tabs({
             }}
           >
             <Teams
-              messages={messages}
-              loading={loading}
-              friends={friends}
-              showMoreFriends={showMoreFriends}
-              showButton={showButton}
-              friendClicked={friendClicked}
-              buttonHandler={buttonHandler}
-              closeMorePeopleHandler={closeMorePeopleHandler}
-              messageChangeHandler={messageChangeHandler}
-              sendMessage={sendMessage}
-              clickFriendHandler={clickFriendHandler}
-              clearFriendHandler={clearFriendHandler}
+              toggleShowTeam={toggleShowTeam}
               teams={teams}
+              openCreateTeam={openCreateTeam}
+              teamLoading={teamLoading}
             />
           </Box>
         </TabPanel>
@@ -132,12 +126,19 @@ export default function TeamLeft({ user }) {
   const [loading, setLoading] = React.useState(true);
   const token = user ? user.token : null;
   const [value, setValue] = React.useState("team");
+  // Chats States
   const friends = useGetFriends();
   const [showMoreFriends, setShowMoreFriends] = React.useState(false);
   const [showButton, setShowButton] = React.useState(true);
   const [message, setMessage] = React.useState("");
   const [friendClicked, setFriendClicked] = React.useState(null);
+  // Team States
+  const [openCreateTeam, setOpenCreateTeam] = React.useState(false);
   const [teams, setTeams] = React.useState([]);
+  const [teamLoading, setTeamLoading] = React.useState(true);
+
+  // Chats Handlers
+
   const buttonHandler = () => {
     setShowMoreFriends(true);
     setShowButton(false);
@@ -167,6 +168,11 @@ export default function TeamLeft({ user }) {
     setValue(newValue);
   };
 
+  // Team Handler
+  const toggleShowTeam = () => {
+    setOpenCreateTeam((prev) => !prev);
+  };
+
   const getChatsTeams = async (token) => {
     if (token) {
       const chatsRes = await chatService.getChats(token);
@@ -178,6 +184,7 @@ export default function TeamLeft({ user }) {
       const teamsRes = await getTeams(token);
       if (teamsRes) {
         setTeams(teamsRes);
+        setTeamLoading(false);
       }
     }
   };
@@ -194,7 +201,6 @@ export default function TeamLeft({ user }) {
 
         <Tabs
           messages={messages}
-          teams={teams}
           value={value}
           handleChange={handleChange}
           loading={loading}
@@ -208,6 +214,11 @@ export default function TeamLeft({ user }) {
           sendMessage={sendMessage}
           clickFriendHandler={clickFriendHandler}
           clearFriendHandler={clearFriendHandler}
+          // Teams
+          teams={teams}
+          toggleShowTeam={toggleShowTeam}
+          openCreateTeam={openCreateTeam}
+          teamLoading={teamLoading}
         />
       </Drawer>
     </Box>

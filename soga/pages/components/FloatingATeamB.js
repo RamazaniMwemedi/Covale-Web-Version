@@ -3,7 +3,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 
-export default function FloatingATeamB({ buttonHandler }) {
+export default function FloatingATeamB({ toggleShowTeam }) {
   return (
     <Box
       sx={{
@@ -13,7 +13,7 @@ export default function FloatingATeamB({ buttonHandler }) {
         left: 270,
       }}
       onClick={() => {
-        buttonHandler();
+        toggleShowTeam();
       }}
     >
       <Fab color="secondary" aria-label="add">
