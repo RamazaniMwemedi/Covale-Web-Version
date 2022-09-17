@@ -22,6 +22,7 @@ import AddIcon from "@mui/icons-material/Add";
 // My components
 import AddMoreFriends from "./AddMoreFriends";
 import Team from "./Team";
+import FloatingATeamB from "./FloatingATeamB";
 
 const Teams = ({
   teams,
@@ -142,7 +143,7 @@ const Teams = ({
                 )}
 
                 {showButton && (
-                  <FloatingAButton buttonHandler={buttonHandler} />
+                  <FloatingATeamB buttonHandler={buttonHandler} />
                 )}
                 {teams.map((team) => {
                   return <Team team={team} />;

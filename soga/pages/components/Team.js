@@ -27,15 +27,15 @@ export default function Team({ team }) {
           button
           onClick={(e) => {
             e.preventDefault();
-            router.push(`/chats/t/?id=${1}`, `/chats/t/${1}`, {
+            router.push(`/chats/t/?id=${team.id}`, `/chats/t/${team.id}`, {
               shallow: true,
             });
           }}
           sx={{
             borderRadius: "0.5rem",
-            // boxShadow: message.chatId === id ? 1 : "unset",
-            // backgroundColor:
-            //   message.chatId === id ? theme.colors.itemBackground : "unset",
+            boxShadow: team.id === id ? 1 : "unset",
+            backgroundColor:
+              team.id === id ? theme.colors.itemBackground : "unset",
             "&:hover": {
               // backgroundColor: ,
               // boxShadow: 1,
@@ -60,7 +60,7 @@ export default function Team({ team }) {
               marginLeft: "5px",
             }}
           >
-            <Typography variant="subtitle1">Team name </Typography>
+            <Typography variant="subtitle1">{team.teamName} </Typography>
             {/* Show the first 25 characters only else add ... */}
             <Typography variant="body2">
               Last message

@@ -105,7 +105,21 @@ function Tabs({
               margin: "-20px",
             }}
           >
-            <Teams teams={teams} />
+            <Teams
+              messages={messages}
+              loading={loading}
+              friends={friends}
+              showMoreFriends={showMoreFriends}
+              showButton={showButton}
+              friendClicked={friendClicked}
+              buttonHandler={buttonHandler}
+              closeMorePeopleHandler={closeMorePeopleHandler}
+              messageChangeHandler={messageChangeHandler}
+              sendMessage={sendMessage}
+              clickFriendHandler={clickFriendHandler}
+              clearFriendHandler={clearFriendHandler}
+              teams={teams}
+            />
           </Box>
         </TabPanel>
       </TabContext>

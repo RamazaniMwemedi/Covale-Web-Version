@@ -52,7 +52,7 @@ const Chats = ({
         }}
       >
         <FormControl sx={{ m: 1, width: "95%" }} variant="outlined">
-          <InputLabel color="secondary" >Chats</InputLabel>
+          <InputLabel color="secondary">Chats</InputLabel>
 
           <OutlinedInput
             startAdornment={
@@ -153,6 +153,22 @@ const Chats = ({
               </Box>
             ) : (
               <Box sx={{ textAlign: "center", marginTop: "150px" }}>
+                {showMoreFriends && (
+                  <AddMoreFriends
+                    closeMorePeopleHandler={closeMorePeopleHandler}
+                    messageChangeHandler={messageChangeHandler}
+                    sendMessage={sendMessage}
+                    // message={message}
+                    clearFriendHandler={clearFriendHandler}
+                    friendClicked={friendClicked}
+                    clickFriendHandler={clickFriendHandler}
+                    friends={friends}
+                  />
+                )}
+
+                {showButton && (
+                  <FloatingAButton buttonHandler={buttonHandler} />
+                )}
                 <Typography variant="h5" color="secondary">
                   No chats yet
                 </Typography>
