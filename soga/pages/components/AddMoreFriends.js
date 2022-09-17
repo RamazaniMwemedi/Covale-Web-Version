@@ -13,7 +13,7 @@ import { useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
 
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
-// import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
+import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
