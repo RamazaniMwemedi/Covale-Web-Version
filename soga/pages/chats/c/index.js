@@ -148,6 +148,10 @@ export default function Chat() {
     router.push("/");
   };
 
+  const onEmojiClick = (event, emojiObject) => {
+    setMessage(message + emojiObject.emoji);
+  };
+  
   const sendMessageHandle = () => {
     const userId = user ? user.id : null;
     if (message.length > 0) {

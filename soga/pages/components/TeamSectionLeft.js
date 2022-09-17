@@ -19,8 +19,6 @@ import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelec
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import { useTheme } from "@mui/material";
-// import Groups2RoundedIcon from "@mui/icons-material/Groups2Rounded";
-// import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 
 import dynamic from "next/dynamic";
 
