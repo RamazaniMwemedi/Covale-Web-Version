@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Box } from "@mui/system";
-import { IconButton, Typography, useTheme } from "@mui/material";
+import { IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import MicRoundedIcon from "@mui/icons-material/MicRounded";
 import MicOffRoundedIcon from "@mui/icons-material/MicOffRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
@@ -278,76 +278,100 @@ const BottomMid = ({
 }) => {
   return (
     <Box>
-      <Button
-        size="small"
-        sx={{
-          backgroundColor: "#d32f2f",
-          borderRadius: "15px",
-          marginRight: "40px",
-        }}
+      <Tooltip title="Hang up" placement="top">
+        <Button
+          size="small"
+          sx={{
+            backgroundColor: "#d32f2f",
+            borderRadius: "15px",
+            marginRight: "40px",
+          }}
+        >
+          <CallEndRoundedIcon fontSize="large" color="action" />
+        </Button>
+      </Tooltip>
+      <Tooltip
+        title={showMic ? "Turn off  microphone" : "Turn on microphone"}
+        placement="top"
       >
-        <CallEndRoundedIcon fontSize="large" color="action" />
-      </Button>
-
-      <IconButton
-        onClick={() => {
-          toggleMic();
-        }}
-        sx={{
-          backgroundColor: showMic ? "#9c27b0" : "#d32f2f",
-          borderRadius: "15px",
-        }}
+        <IconButton
+          onClick={() => {
+            toggleMic();
+          }}
+          sx={{
+            backgroundColor: showMic ? "#9c27b0" : "#d32f2f",
+            borderRadius: "15px",
+          }}
+        >
+          {showMic ? (
+            <MicRoundedIcon fontSize="medium" color="action" />
+          ) : (
+            <MicOffRoundedIcon fontSize="medium" color="action" />
+          )}
+        </IconButton>
+      </Tooltip>
+      <Tooltip
+        title={showCamera ? "Turn off  camera" : "Turn on camera"}
+        placement="top"
       >
-        {showMic ? (
-          <MicRoundedIcon fontSize="medium" color="action" />
-        ) : (
-          <MicOffRoundedIcon fontSize="medium" color="action" />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={() => {
-          toggleCamera();
-        }}
-        sx={{
-          backgroundColor: showCamera ? "#9c27b0" : "#d32f2f",
-          borderRadius: "15px",
-          marginLeft: "7px",
-        }}
+        <IconButton
+          onClick={() => {
+            toggleCamera();
+          }}
+          sx={{
+            backgroundColor: showCamera ? "#9c27b0" : "#d32f2f",
+            borderRadius: "15px",
+            marginLeft: "7px",
+          }}
+        >
+          {showCamera ? (
+            <VideocamRoundedIcon fontSize="medium" color="action" />
+          ) : (
+            <VideocamOffIcon fontSize="medium" color="action" />
+          )}
+        </IconButton>
+      </Tooltip>
+      <Tooltip
+        title={viewCaption ? "Turn off  caption" : "Turn on caption"}
+        placement="top"
       >
-        {showCamera ? (
-          <VideocamRoundedIcon fontSize="medium" color="action" />
-        ) : (
-          <VideocamOffIcon fontSize="medium" color="action" />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={() => {
-          captionHandler();
-        }}
-        sx={{
-          backgroundColor: viewCaption ? "#9c27b0" : "#d32f2f",
-          borderRadius: "15px",
-          marginLeft: "7px",
-        }}
+        <IconButton
+          onClick={() => {
+            captionHandler();
+          }}
+          sx={{
+            backgroundColor: viewCaption ? "#9c27b0" : "#d32f2f",
+            borderRadius: "15px",
+            marginLeft: "7px",
+          }}
+        >
+          {viewCaption ? (
+            <ClosedCaptionOffRoundedIcon fontSize="medium" color="action" />
+          ) : (
+            <ClosedCaptionDisabledRoundedIcon
+              fontSize="medium"
+              color="action"
+            />
+          )}
+        </IconButton>
+      </Tooltip>
+      <Tooltip
+        title={!shareScreen ? "Present Now" : "Stop Present Now"}
+        placement="top"
       >
-        {viewCaption ? (
-          <ClosedCaptionOffRoundedIcon fontSize="medium" color="action" />
-        ) : (
-          <ClosedCaptionDisabledRoundedIcon fontSize="medium" color="action" />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={() => {
-          shareScreenHandler();
-        }}
-        sx={{
-          backgroundColor: shareScreen ? "#2e7d32" : "#9c27b0",
-          borderRadius: "15px",
-          marginLeft: "7px",
-        }}
-      >
-        <PresentToAllRoundedIcon fontSize="medium" color="action" />
-      </IconButton>
+        <IconButton
+          onClick={() => {
+            shareScreenHandler();
+          }}
+          sx={{
+            backgroundColor: shareScreen ? "#2e7d32" : "#9c27b0",
+            borderRadius: "15px",
+            marginLeft: "7px",
+          }}
+        >
+          <PresentToAllRoundedIcon fontSize="medium" color="action" />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };
