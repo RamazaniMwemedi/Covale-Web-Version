@@ -13,6 +13,7 @@ import ClosedCaptionDisabledRoundedIcon from "@mui/icons-material/ClosedCaptionD
 import Button from "@mui/material/Button";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { alpha } from "@mui/system";
 
 const Id = () => {
@@ -199,6 +200,7 @@ const BottomLeft = () => {
           "@media (hover: none)": {
             backgroundColor: "transparent",
           },
+          marginLeft: "7px",
         }}
       >
         <MoreVertRoundedIcon color="action" />
@@ -215,9 +217,27 @@ const BottomLeft = () => {
           "@media (hover: none)": {
             backgroundColor: "transparent",
           },
+          marginLeft: "7px",
         }}
       >
         <InfoOutlinedIcon color="action" />
+      </IconButton>
+      <IconButton
+        sx={{
+          backgroundColor: "gray",
+          borderRadius: "15px",
+          backgroundColor: alpha(
+            theme.palette.action.active,
+            theme.palette.action.hoverOpacity
+          ),
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            backgroundColor: "transparent",
+          },
+          marginLeft: "7px",
+        }}
+      >
+        <SettingsOutlinedIcon color="action" />
       </IconButton>
     </Box>
   );
