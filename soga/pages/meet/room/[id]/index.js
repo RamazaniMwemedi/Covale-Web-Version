@@ -193,74 +193,82 @@ const BottomLeft = () => {
       <Typography variant="subtitle2" sx={{ paddingTop: "10px" }}>
         {timeHours}:{timeMinutes}
       </Typography>
-      <IconButton
-        sx={{
-          backgroundColor: "gray",
-          borderRadius: "15px",
-          backgroundColor: alpha(
-            theme.palette.action.active,
-            theme.palette.action.hoverOpacity
-          ),
-          // Reset on touch devices, it doesn't add specificity
-          "@media (hover: none)": {
-            backgroundColor: "transparent",
-          },
-          marginLeft: "7px",
-        }}
-      >
-        <MoreVertRoundedIcon color="action" />
-      </IconButton>
-      <IconButton
-        sx={{
-          backgroundColor: "gray",
-          borderRadius: "15px",
-          backgroundColor: alpha(
-            theme.palette.action.active,
-            theme.palette.action.hoverOpacity
-          ),
-          // Reset on touch devices, it doesn't add specificity
-          "@media (hover: none)": {
-            backgroundColor: "transparent",
-          },
-          marginLeft: "7px",
-        }}
-      >
-        <InfoOutlinedIcon color="action" />
-      </IconButton>
-      <IconButton
-        sx={{
-          backgroundColor: "gray",
-          borderRadius: "15px",
-          backgroundColor: alpha(
-            theme.palette.action.active,
-            theme.palette.action.hoverOpacity
-          ),
-          // Reset on touch devices, it doesn't add specificity
-          "@media (hover: none)": {
-            backgroundColor: "transparent",
-          },
-          marginLeft: "7px",
-        }}
-      >
-        <SettingsOutlinedIcon color="action" />
-      </IconButton>
-      <IconButton
-        sx={{
-          backgroundColor: "gray",
-          borderRadius: "15px",
-          backgroundColor: alpha(
-            theme.palette.action.active,
-            theme.palette.action.hoverOpacity
-          ),
-          // Reset on touch devices, it doesn't add specificity
-          "@media (hover: none)": {
-            backgroundColor: "transparent",
-          },
-          marginLeft: "7px",
-        }}
-      >
-        <KeyboardArrowUpRoundedIcon color="action" />
-      </IconButton>
+      <Tooltip title="More options" placement="top">
+        <IconButton
+          sx={{
+            backgroundColor: "gray",
+            borderRadius: "15px",
+            backgroundColor: alpha(
+              theme.palette.action.active,
+              theme.palette.action.hoverOpacity
+            ),
+            // Reset on touch devices, it doesn't add specificity
+            "@media (hover: none)": {
+              backgroundColor: "transparent",
+            },
+            marginLeft: "7px",
+          }}
+        >
+          <MoreVertRoundedIcon color="action" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Meeting Info" placement="top">
+        <IconButton
+          sx={{
+            backgroundColor: "gray",
+            borderRadius: "15px",
+            backgroundColor: alpha(
+              theme.palette.action.active,
+              theme.palette.action.hoverOpacity
+            ),
+            // Reset on touch devices, it doesn't add specificity
+            "@media (hover: none)": {
+              backgroundColor: "transparent",
+            },
+            marginLeft: "7px",
+          }}
+        >
+          <InfoOutlinedIcon color="action" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Host Control" placement="top">
+        <IconButton
+          sx={{
+            backgroundColor: "gray",
+            borderRadius: "15px",
+            backgroundColor: alpha(
+              theme.palette.action.active,
+              theme.palette.action.hoverOpacity
+            ),
+            // Reset on touch devices, it doesn't add specificity
+            "@media (hover: none)": {
+              backgroundColor: "transparent",
+            },
+            marginLeft: "7px",
+          }}
+        >
+          <SettingsOutlinedIcon color="action" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Meeting Info" placement="top">
+        <IconButton
+          sx={{
+            backgroundColor: "gray",
+            borderRadius: "15px",
+            backgroundColor: alpha(
+              theme.palette.action.active,
+              theme.palette.action.hoverOpacity
+            ),
+            // Reset on touch devices, it doesn't add specificity
+            "@media (hover: none)": {
+              backgroundColor: "transparent",
+            },
+            marginLeft: "7px",
+          }}
+        >
+          <KeyboardArrowUpRoundedIcon color="action" />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };
@@ -278,7 +286,7 @@ const BottomMid = ({
 }) => {
   return (
     <Box>
-      <Tooltip title="Hang up" placement="top">
+      <Tooltip title="Leave Meeting" placement="top">
         <Button
           size="small"
           sx={{
