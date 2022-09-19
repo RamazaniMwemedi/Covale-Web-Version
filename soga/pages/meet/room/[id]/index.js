@@ -14,6 +14,10 @@ import Button from "@mui/material/Button";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import PeopleAltTwoToneIcon from "@mui/icons-material/PeopleAltTwoTone";
+import MessageTwoToneIcon from "@mui/icons-material/MessageTwoTone";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import GroupWorkOutlinedIcon from "@mui/icons-material/GroupWorkOutlined";
 import { alpha } from "@mui/system";
 
 const Id = () => {
@@ -35,7 +39,7 @@ const Id = () => {
     try {
       setVideoElemnt(document.querySelector("video#localVideo"));
 
-      const constraints = { video: true, audio: { echoCancellation: true } };
+      const constraints = { video: true };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       setMyCameraSrcObject(stream);
       setShowMic(true);
@@ -81,6 +85,7 @@ const Id = () => {
   const captionHandler = () => {
     setViewCaption((p) => !p);
   };
+
   return (
     <Box
       sx={{
@@ -184,8 +189,8 @@ const BottomLeft = () => {
 
   const theme = useTheme();
   return (
-    <Box sx={{}}>
-      <Typography variant="caption">
+    <Box sx={{ display: "flex" }}>
+      <Typography variant="subtitle2" sx={{ paddingTop: "10px" }}>
         {timeHours}:{timeMinutes}
       </Typography>
       <IconButton
@@ -238,6 +243,23 @@ const BottomLeft = () => {
         }}
       >
         <SettingsOutlinedIcon color="action" />
+      </IconButton>
+      <IconButton
+        sx={{
+          backgroundColor: "gray",
+          borderRadius: "15px",
+          backgroundColor: alpha(
+            theme.palette.action.active,
+            theme.palette.action.hoverOpacity
+          ),
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            backgroundColor: "transparent",
+          },
+          marginLeft: "7px",
+        }}
+      >
+        <KeyboardArrowUpRoundedIcon color="action" />
       </IconButton>
     </Box>
   );
@@ -332,9 +354,60 @@ const BottomMid = ({
 
 // Bottom Right
 const BottomRight = () => {
+  const theme = useTheme();
   return (
     <Box>
-      <Typography variant="caption">Right</Typography>
+      <IconButton
+        sx={{
+          backgroundColor: "gray",
+          borderRadius: "15px",
+          backgroundColor: alpha(
+            theme.palette.action.active,
+            theme.palette.action.hoverOpacity
+          ),
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            backgroundColor: "transparent",
+          },
+          marginLeft: "7px",
+        }}
+      >
+        <PeopleAltTwoToneIcon fontSize="medium" color="action" />
+      </IconButton>
+      <IconButton
+        sx={{
+          backgroundColor: "gray",
+          borderRadius: "15px",
+          backgroundColor: alpha(
+            theme.palette.action.active,
+            theme.palette.action.hoverOpacity
+          ),
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            backgroundColor: "transparent",
+          },
+          marginLeft: "7px",
+        }}
+      >
+        <MessageTwoToneIcon fontSize="medium" color="action" />
+      </IconButton>
+      <IconButton
+        sx={{
+          backgroundColor: "gray",
+          borderRadius: "15px",
+          backgroundColor: alpha(
+            theme.palette.action.active,
+            theme.palette.action.hoverOpacity
+          ),
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            backgroundColor: "transparent",
+          },
+          marginLeft: "7px",
+        }}
+      >
+        <GroupWorkOutlinedIcon fontSize="medium" color="action" />
+      </IconButton>
     </Box>
   );
 };
