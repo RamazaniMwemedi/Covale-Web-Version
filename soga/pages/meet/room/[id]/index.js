@@ -15,8 +15,8 @@ import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PeopleAltTwoToneIcon from "@mui/icons-material/PeopleAltTwoTone";
-import MessageTwoToneIcon from "@mui/icons-material/MessageTwoTone";
-import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import GroupWorkOutlinedIcon from "@mui/icons-material/GroupWorkOutlined";
 import { alpha } from "@mui/system";
 
@@ -35,11 +35,14 @@ const Id = () => {
   const [shareScreen, setShareScreen] = useState(false);
   const [viewCaption, setViewCaption] = useState(false);
 
+  // Bottom Left States
+  const [expand, setExpand] = useState(true);
+
   async function playVideoFromCamera() {
     try {
       setVideoElemnt(document.querySelector("video#localVideo"));
 
-      const constraints = { video: true };
+      const constraints = { video: true, audio: true };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       setMyCameraSrcObject(stream);
       setShowMic(true);
@@ -53,7 +56,7 @@ const Id = () => {
     return () => {};
   }, [videoElement]);
 
-  // Handlers
+  //Bottom Mid Handlers
   const toggleCamera = () => {
     const videoTrack = myCameraSrcObject
       .getTracks()
@@ -86,6 +89,11 @@ const Id = () => {
     setViewCaption((p) => !p);
   };
 
+  // Bottom Left Handdler
+  const expandHandler = () => {
+    setExpand((prev) => !prev);
+  };
+
   return (
     <Box
       sx={{
@@ -107,11 +115,15 @@ const Id = () => {
             objectFit: "fill",
             position: "absolute",
             height: "100vh",
-            width: "90vw",
             overflow: "hidden",
+            paddingTop: "15px",
+            transform: "rotateY(180deg)",
+            webkitTransform: "rotateY(180deg)",
+            mozTransform: "rotateY(180deg)",
           }}
           id="localVideo"
           autoPlay={true}
+          muted
         />
 
         {/* Bottom */}
@@ -124,6 +136,8 @@ const Id = () => {
           shareScreenHandler={shareScreenHandler}
           viewCaption={viewCaption}
           captionHandler={captionHandler}
+          expandHandler={expandHandler}
+          expand={expand}
         />
       </Box>
     </Box>
@@ -141,41 +155,75 @@ const Bottom = ({
   shareScreenHandler,
   viewCaption,
   captionHandler,
+  expandHandler,
+  expand,
 }) => {
   const theme = useTheme();
   return (
-    <Box
-      sx={{
-        position: "absolute",
-        bottom: 0,
-        backgroundColor: theme.colors.border,
-        borderTopLeftRadius: "10px",
-        borderTopRightRadius: "10px",
-        width: "100%",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      {/* Left */}
-      <BottomLeft />
-      {/* Mid */}
-      <BottomMid
-        toggleCamera={toggleCamera}
-        showCamera={showCamera}
-        showMic={showMic}
-        toggleMic={toggleMic}
-        shareScreen={shareScreen}
-        shareScreenHandler={shareScreenHandler}
-        viewCaption={viewCaption}
-        captionHandler={captionHandler}
-      />
-      {/* Right */}
-      <BottomRight />{" "}
-    </Box>
+    <>
+      {expand ? (
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            backgroundColor: theme.colors.border,
+            borderTopLeftRadius: "10px",
+            borderTopRightRadius: "10px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "5px",
+          }}
+        >
+          {/* Left */}
+          <BottomLeft expandHandler={expandHandler} expand={expand} />
+          {/* Mid */}
+          <BottomMid
+            toggleCamera={toggleCamera}
+            showCamera={showCamera}
+            showMic={showMic}
+            toggleMic={toggleMic}
+            shareScreen={shareScreen}
+            shareScreenHandler={shareScreenHandler}
+            viewCaption={viewCaption}
+            captionHandler={captionHandler}
+          />
+          {/* Right */}
+          <BottomRight />{" "}
+        </Box>
+      ) : (
+        <Tooltip title="Shrink" placement="top">
+          <IconButton
+            onClick={() => {
+              expandHandler();
+            }}
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              backgroundColor: theme.colors.border,
+              backgroundColor: "gray",
+              borderRadius: "15px",
+              backgroundColor: alpha(
+                theme.palette.action.active,
+                theme.palette.action.hoverOpacity
+              ),
+              // Reset on touch devices, it doesn't add specificity
+              "@media (hover: none)": {
+                backgroundColor: "transparent",
+              },
+              marginLeft: "7px",
+            }}
+          >
+            <KeyboardArrowUpIcon color="action" />
+          </IconButton>
+        </Tooltip>
+      )}
+    </>
   );
 };
 // Bottom Left
-const BottomLeft = () => {
+const BottomLeft = ({ expandHandler }) => {
   const [timeIn, setTimeIn] = useState(0);
   const date = new Date();
   console.log(date);
@@ -191,7 +239,7 @@ const BottomLeft = () => {
   return (
     <Box sx={{ display: "flex" }}>
       <Typography variant="subtitle2" sx={{ paddingTop: "10px" }}>
-        {timeHours}:{timeMinutes}
+        {timeHours}:{timeMinutes < 10 ? `0${timeMinutes}` : timeMinutes}
       </Typography>
       <Tooltip title="More options" placement="top">
         <IconButton
@@ -250,8 +298,11 @@ const BottomLeft = () => {
           <SettingsOutlinedIcon color="action" />
         </IconButton>
       </Tooltip>
-      <Tooltip title="Meeting Info" placement="top">
+      <Tooltip title="Shrink" placement="top">
         <IconButton
+          onClick={() => {
+            expandHandler();
+          }}
           sx={{
             backgroundColor: "gray",
             borderRadius: "15px",
@@ -266,7 +317,7 @@ const BottomLeft = () => {
             marginLeft: "7px",
           }}
         >
-          <KeyboardArrowUpRoundedIcon color="action" />
+          <KeyboardArrowDownIcon color="action" />
         </IconButton>
       </Tooltip>
     </Box>
@@ -348,7 +399,7 @@ const BottomMid = ({
             captionHandler();
           }}
           sx={{
-            backgroundColor: viewCaption ? "#9c27b0" : "#d32f2f",
+            backgroundColor: viewCaption ? "#9c27b0" : "#1565c0",
             borderRadius: "15px",
             marginLeft: "7px",
           }}
@@ -389,57 +440,73 @@ const BottomRight = () => {
   const theme = useTheme();
   return (
     <Box>
-      <IconButton
-        sx={{
-          backgroundColor: "gray",
-          borderRadius: "15px",
-          backgroundColor: alpha(
-            theme.palette.action.active,
-            theme.palette.action.hoverOpacity
-          ),
-          // Reset on touch devices, it doesn't add specificity
-          "@media (hover: none)": {
-            backgroundColor: "transparent",
-          },
-          marginLeft: "7px",
-        }}
-      >
-        <PeopleAltTwoToneIcon fontSize="medium" color="action" />
-      </IconButton>
-      <IconButton
-        sx={{
-          backgroundColor: "gray",
-          borderRadius: "15px",
-          backgroundColor: alpha(
-            theme.palette.action.active,
-            theme.palette.action.hoverOpacity
-          ),
-          // Reset on touch devices, it doesn't add specificity
-          "@media (hover: none)": {
-            backgroundColor: "transparent",
-          },
-          marginLeft: "7px",
-        }}
-      >
-        <MessageTwoToneIcon fontSize="medium" color="action" />
-      </IconButton>
-      <IconButton
-        sx={{
-          backgroundColor: "gray",
-          borderRadius: "15px",
-          backgroundColor: alpha(
-            theme.palette.action.active,
-            theme.palette.action.hoverOpacity
-          ),
-          // Reset on touch devices, it doesn't add specificity
-          "@media (hover: none)": {
-            backgroundColor: "transparent",
-          },
-          marginLeft: "7px",
-        }}
-      >
-        <GroupWorkOutlinedIcon fontSize="medium" color="action" />
-      </IconButton>
+      <Tooltip title="Participants" placement="top">
+        <IconButton
+          sx={{
+            backgroundColor: "gray",
+            borderRadius: "15px",
+            backgroundColor: alpha(
+              theme.palette.action.active,
+              theme.palette.action.hoverOpacity
+            ),
+            // Reset on touch devices, it doesn't add specificity
+            "@media (hover: none)": {
+              backgroundColor: "transparent",
+            },
+            marginLeft: "7px",
+          }}
+        >
+          <PeopleAltTwoToneIcon fontSize="medium" color="action" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Chats" placement="top">
+        <IconButton
+          sx={{
+            backgroundColor: "gray",
+            borderRadius: "15px",
+            backgroundColor: alpha(
+              theme.palette.action.active,
+              theme.palette.action.hoverOpacity
+            ),
+            // Reset on touch devices, it doesn't add specificity
+            "@media (hover: none)": {
+              backgroundColor: "transparent",
+            },
+            marginLeft: "7px",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="23"
+            height="23"
+            fill="whitesmoke"
+            // class="bi bi-chat-dots"
+            viewBox="0 0 16 16"
+          >
+            <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+            <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z" />
+          </svg>
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Tools" placement="top">
+        <IconButton
+          sx={{
+            backgroundColor: "gray",
+            borderRadius: "15px",
+            backgroundColor: alpha(
+              theme.palette.action.active,
+              theme.palette.action.hoverOpacity
+            ),
+            // Reset on touch devices, it doesn't add specificity
+            "@media (hover: none)": {
+              backgroundColor: "transparent",
+            },
+            marginLeft: "7px",
+          }}
+        >
+          <GroupWorkOutlinedIcon fontSize="medium" color="action" />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };
