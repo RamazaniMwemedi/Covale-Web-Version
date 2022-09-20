@@ -34,6 +34,7 @@ function MyApp({ Component, pageProps }) {
       border: "rgb(46, 41, 41)",
       hoverDate: "rgb(129, 96, 129)",
       background2: "rgb(255, 255, 255)",
+      meetBackground: "rgb(46, 41, 41)",
     },
     themeChengeHandler: themeChengeHandler,
   };
@@ -55,6 +56,7 @@ function MyApp({ Component, pageProps }) {
       border: "rgb(226, 216, 226)",
       hoverDate: "rgb(226, 216, 226)",
       background2: "lightgrey",
+      meetBackground: "rgb(46, 41, 41)",
     },
     themeChengeHandler: themeChengeHandler,
   };

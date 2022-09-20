@@ -97,7 +97,7 @@ const Id = () => {
   return (
     <Box
       sx={{
-        backgroundColor: theme.colors.border,
+        backgroundColor: theme.colors.meetBackground,
         width: "100vw",
         height: "100vh",
       }}
@@ -114,7 +114,7 @@ const Id = () => {
           style={{
             objectFit: "fill",
             position: "absolute",
-            height: "100vh",
+            height: "98vh",
             overflow: "hidden",
             paddingTop: "15px",
             transform: "rotateY(180deg)",
@@ -166,7 +166,7 @@ const Bottom = ({
           sx={{
             position: "absolute",
             bottom: 0,
-            backgroundColor: theme.colors.border,
+            backgroundColor: theme.colors.meetBackground,
             borderTopLeftRadius: "10px",
             borderTopRightRadius: "10px",
             width: "100%",
@@ -201,7 +201,7 @@ const Bottom = ({
               position: "absolute",
               bottom: 0,
               left: 0,
-              backgroundColor: theme.colors.border,
+              backgroundColor: theme.colors.meetBackground,
               backgroundColor: "gray",
               borderRadius: "15px",
               backgroundColor: alpha(
