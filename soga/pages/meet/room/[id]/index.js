@@ -35,6 +35,9 @@ const Id = () => {
   const [shareScreen, setShareScreen] = useState(false);
   const [viewCaption, setViewCaption] = useState(false);
 
+  // Meet states
+  const [meetRightOn, setMeetRightOn] = useState(false);
+
   // Bottom Left States
   const [expand, setExpand] = useState(true);
 
@@ -55,6 +58,11 @@ const Id = () => {
     playVideoFromCamera();
     return () => {};
   }, [videoElement]);
+
+  // Meet Handlers
+  const toggleMeetLeftHandler = () => {
+    setMeetRightOn((prev) => !prev);
+  };
 
   //Bottom Mid Handlers
   const toggleCamera = () => {
@@ -103,29 +111,15 @@ const Id = () => {
       }}
     >
       <Box
-        sx={{
-          display: "flex",
-          alignItem: "center",
-          justifyContent: "center",
-          textAlign: "center",
-        }}
+        sx={
+          meetRightOn && {
+            display: "flex",
+            justifyContent: "space-between",
+          }
+        }
       >
-        <video
-          style={{
-            objectFit: "fill",
-            position: "absolute",
-            height: "98vh",
-            overflow: "hidden",
-            paddingTop: "15px",
-            transform: "rotateY(180deg)",
-            webkitTransform: "rotateY(180deg)",
-            mozTransform: "rotateY(180deg)",
-          }}
-          id="localVideo"
-          autoPlay={true}
-          muted
-        />
-
+        <MeetLeft />
+        {meetRightOn && <MeetRight />}
         {/* Bottom */}
         <Bottom
           toggleCamera={toggleCamera}
@@ -138,6 +132,7 @@ const Id = () => {
           captionHandler={captionHandler}
           expandHandler={expandHandler}
           expand={expand}
+          toggleMeetLeftHandler={toggleMeetLeftHandler}
         />
       </Box>
     </Box>
@@ -145,6 +140,40 @@ const Id = () => {
 };
 
 export default Id;
+
+const MeetLeft = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItem: "center",
+        justifyContent: "center",
+        textAlign: "center",
+      }}
+    >
+      <video
+        style={{
+          width: "70vw",
+          height: "98vh",
+          overflow: "hidden",
+          paddingTop: "15px",
+          transform: "rotateY(180deg)",
+          webkitTransform: "rotateY(180deg)",
+          mozTransform: "rotateY(180deg)",
+          marginLeft: "15px",
+        }}
+        id="localVideo"
+        autoPlay={true}
+        muted
+      />
+    </Box>
+  );
+};
+const MeetRight = () => {
+  return (
+    <Box sx={{ height: "100vh", width: "20vw", backgroundColor: "red" }}></Box>
+  );
+};
 
 const Bottom = ({
   toggleCamera,
@@ -157,6 +186,7 @@ const Bottom = ({
   captionHandler,
   expandHandler,
   expand,
+  toggleMeetLeftHandler,
 }) => {
   const theme = useTheme();
   return (
@@ -189,7 +219,7 @@ const Bottom = ({
             captionHandler={captionHandler}
           />
           {/* Right */}
-          <BottomRight />{" "}
+          <BottomRight toggleMeetLeftHandler={toggleMeetLeftHandler} />{" "}
         </Box>
       ) : (
         <Tooltip title="Shrink" placement="top">
@@ -226,7 +256,6 @@ const Bottom = ({
 const BottomLeft = ({ expandHandler }) => {
   const [timeIn, setTimeIn] = useState(0);
   const date = new Date();
-  console.log(date);
   const timeHours = date.getHours();
   const timeMinutes = date.getMinutes();
   useEffect(() => {
@@ -436,12 +465,15 @@ const BottomMid = ({
 };
 
 // Bottom Right
-const BottomRight = () => {
+const BottomRight = ({ toggleMeetLeftHandler }) => {
   const theme = useTheme();
   return (
     <Box>
       <Tooltip title="Participants" placement="top">
         <IconButton
+          onClick={() => {
+            toggleMeetLeftHandler();
+          }}
           sx={{
             backgroundColor: "gray",
             borderRadius: "15px",
