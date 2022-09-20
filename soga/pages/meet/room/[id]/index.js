@@ -37,6 +37,9 @@ const Id = () => {
 
   // Meet states
   const [meetRightOn, setMeetRightOn] = useState(false);
+  const [schowParticipants, setSchowParticipants] = useState(false);
+  const [showChats, setShowChats] = useState(false);
+  const [showActivities, setShowActivities] = useState(false);
 
   // Bottom Left States
   const [expand, setExpand] = useState(true);
@@ -61,6 +64,8 @@ const Id = () => {
 
   // Meet Handlers
   const toggleMeetLeftHandler = () => {
+    console.log(schowParticipants, showChats, showActivities);
+
     setMeetRightOn((prev) => !prev);
   };
 
@@ -119,7 +124,13 @@ const Id = () => {
         }
       >
         <MeetLeft />
-        {meetRightOn && <MeetRight />}
+        {meetRightOn && (
+          <MeetRight
+            schowParticipants={schowParticipants}
+            showChats={showChats}
+            showActivities={showActivities}
+          />
+        )}
         {/* Bottom */}
         <Bottom
           toggleCamera={toggleCamera}
@@ -133,6 +144,15 @@ const Id = () => {
           expandHandler={expandHandler}
           expand={expand}
           toggleMeetLeftHandler={toggleMeetLeftHandler}
+          //
+          setSchowParticipants={setSchowParticipants}
+          setShowChats={setShowChats}
+          setShowActivities={setShowActivities}
+          meetRightOn={meetRightOn}
+          //
+          schowParticipants={schowParticipants}
+          showChats={showChats}
+          showActivities={showActivities}
         />
       </Box>
     </Box>
@@ -169,10 +189,70 @@ const MeetLeft = () => {
     </Box>
   );
 };
-const MeetRight = () => {
-  return (
-    <Box sx={{ height: "100vh", width: "20vw", backgroundColor: "red" }}></Box>
-  );
+const MeetRight = ({ schowParticipants, showChats, showActivities }) => {
+  if (schowParticipants) {
+    return (
+      <Box
+        sx={{
+          height: "90vh",
+          width: "40vw",
+          backgroundColor: "red",
+          marginRight: "10px",
+          marginTop: "10px",
+          borderRadius: "5px",
+        }}
+      >
+        <Participant />
+      </Box>
+    );
+  } else if (showChats) {
+    return (
+      <Box
+        sx={{
+          height: "90vh",
+          width: "40vw",
+          backgroundColor: "red",
+          marginRight: "10px",
+          marginTop: "10px",
+          borderRadius: "5px",
+        }}
+      >
+        <MeetChats />
+      </Box>
+    );
+  } else if (showActivities) {
+    return (
+      <Box
+        sx={{
+          height: "90vh",
+          width: "40vw",
+          backgroundColor: "red",
+          marginRight: "10px",
+          marginTop: "10px",
+          borderRadius: "5px",
+        }}
+      >
+        <Activities />
+      </Box>
+    );
+  } else {
+    return (
+      <Box
+        sx={{
+          height: "90vh",
+          width: "40vw",
+          backgroundColor: "red",
+          marginRight: "10px",
+          marginTop: "10px",
+          borderRadius: "5px",
+        }}
+      >
+        {schowParticipants}
+        {showChats}
+        {showActivities}
+      </Box>
+    );
+  }
 };
 
 const Bottom = ({
@@ -187,6 +267,13 @@ const Bottom = ({
   expandHandler,
   expand,
   toggleMeetLeftHandler,
+  setSchowParticipants,
+  setShowChats,
+  setShowActivities,
+  meetRightOn,
+  schowParticipants,
+  showChats,
+  showActivities,
 }) => {
   const theme = useTheme();
   return (
@@ -219,7 +306,17 @@ const Bottom = ({
             captionHandler={captionHandler}
           />
           {/* Right */}
-          <BottomRight toggleMeetLeftHandler={toggleMeetLeftHandler} />{" "}
+          <BottomRight
+            toggleMeetLeftHandler={toggleMeetLeftHandler}
+            setSchowParticipants={setSchowParticipants}
+            setShowChats={setShowChats}
+            setShowActivities={setShowActivities}
+            meetRightOn={meetRightOn}
+            //
+            schowParticipants={schowParticipants}
+            showChats={showChats}
+            showActivities={showActivities}
+          />{" "}
         </Box>
       ) : (
         <Tooltip title="Shrink" placement="top">
@@ -465,7 +562,16 @@ const BottomMid = ({
 };
 
 // Bottom Right
-const BottomRight = ({ toggleMeetLeftHandler }) => {
+const BottomRight = ({
+  toggleMeetLeftHandler,
+  setSchowParticipants,
+  setShowChats,
+  setShowActivities,
+  meetRightOn,
+  schowParticipants,
+  showChats,
+  showActivities,
+}) => {
   const theme = useTheme();
   return (
     <Box>
@@ -473,6 +579,11 @@ const BottomRight = ({ toggleMeetLeftHandler }) => {
         <IconButton
           onClick={() => {
             toggleMeetLeftHandler();
+            if (meetRightOn) {
+              setSchowParticipants(true);
+              setShowChats(false);
+              setShowActivities(false);
+            }
           }}
           sx={{
             backgroundColor: "gray",
@@ -493,6 +604,14 @@ const BottomRight = ({ toggleMeetLeftHandler }) => {
       </Tooltip>
       <Tooltip title="Chats" placement="top">
         <IconButton
+          onClick={() => {
+            toggleMeetLeftHandler();
+            if (meetRightOn) {
+              setShowChats(true);
+              setSchowParticipants(false);
+              setShowActivities(false);
+            }
+          }}
           sx={{
             backgroundColor: "gray",
             borderRadius: "15px",
@@ -522,6 +641,14 @@ const BottomRight = ({ toggleMeetLeftHandler }) => {
       </Tooltip>
       <Tooltip title="Tools" placement="top">
         <IconButton
+          onClick={() => {
+            toggleMeetLeftHandler();
+            if (meetRightOn) {
+              setShowActivities(true);
+              setShowChats(false);
+              setSchowParticipants(false);
+            }
+          }}
           sx={{
             backgroundColor: "gray",
             borderRadius: "15px",
@@ -539,6 +666,32 @@ const BottomRight = ({ toggleMeetLeftHandler }) => {
           <GroupWorkOutlinedIcon fontSize="medium" color="action" />
         </IconButton>
       </Tooltip>
+    </Box>
+  );
+};
+
+// Participant
+const Participant = () => {
+  return (
+    <Box>
+      <Typography variant="body1">Participant</Typography>
+    </Box>
+  );
+};
+
+// MeetChats
+const MeetChats = () => {
+  return (
+    <Box>
+      <Typography variant="body1">MeetChats</Typography>
+    </Box>
+  );
+};
+// Activities
+const Activities = () => {
+  return (
+    <Box>
+      <Typography variant="body1">Activities</Typography>
     </Box>
   );
 };
