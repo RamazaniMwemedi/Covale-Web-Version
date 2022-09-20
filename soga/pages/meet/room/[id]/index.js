@@ -578,7 +578,9 @@ const BottomRight = ({
       <Tooltip title="Participants" placement="top">
         <IconButton
           onClick={() => {
-            toggleMeetLeftHandler();
+            if (schowParticipants) {
+              toggleMeetLeftHandler();
+            }
             if (meetRightOn) {
               setSchowParticipants(true);
               setShowChats(false);
@@ -605,7 +607,9 @@ const BottomRight = ({
       <Tooltip title="Chats" placement="top">
         <IconButton
           onClick={() => {
-            toggleMeetLeftHandler();
+            if (showChats) {
+              toggleMeetLeftHandler();
+            }
             if (meetRightOn) {
               setShowChats(true);
               setSchowParticipants(false);
@@ -639,10 +643,12 @@ const BottomRight = ({
           </svg>
         </IconButton>
       </Tooltip>
-      <Tooltip title="Tools" placement="top">
+      <Tooltip title="Activities" placement="top">
         <IconButton
           onClick={() => {
-            toggleMeetLeftHandler();
+            if (showActivities) {
+              toggleMeetLeftHandler();
+            }
             if (meetRightOn) {
               setShowActivities(true);
               setShowChats(false);
