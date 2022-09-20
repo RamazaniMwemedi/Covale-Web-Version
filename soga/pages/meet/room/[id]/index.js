@@ -120,6 +120,7 @@ const Id = () => {
           meetRightOn && {
             display: "flex",
             justifyContent: "space-between",
+            gap: "10px",
           }
         }
       >
@@ -129,6 +130,7 @@ const Id = () => {
             schowParticipants={schowParticipants}
             showChats={showChats}
             showActivities={showActivities}
+            expand={expand}
           />
         )}
         {/* Bottom */}
@@ -189,12 +191,17 @@ const MeetLeft = () => {
     </Box>
   );
 };
-const MeetRight = ({ schowParticipants, showChats, showActivities }) => {
+const MeetRight = ({
+  schowParticipants,
+  showChats,
+  showActivities,
+  expand,
+}) => {
   if (schowParticipants) {
     return (
       <Box
         sx={{
-          height: "90vh",
+          height: expand ? "90vh" : "97vh",
           width: "40vw",
           backgroundColor: "red",
           marginRight: "10px",
@@ -209,7 +216,7 @@ const MeetRight = ({ schowParticipants, showChats, showActivities }) => {
     return (
       <Box
         sx={{
-          height: "90vh",
+          height: expand ? "90vh" : "97vh",
           width: "40vw",
           backgroundColor: "red",
           marginRight: "10px",
@@ -224,7 +231,7 @@ const MeetRight = ({ schowParticipants, showChats, showActivities }) => {
     return (
       <Box
         sx={{
-          height: "90vh",
+          height: expand ? "90vh" : "97vh",
           width: "40vw",
           backgroundColor: "red",
           marginRight: "10px",
@@ -580,6 +587,8 @@ const BottomRight = ({
           onClick={() => {
             if (schowParticipants) {
               toggleMeetLeftHandler();
+            } else {
+              toggleMeetLeftHandler();
             }
             if (meetRightOn) {
               setSchowParticipants(true);
@@ -608,6 +617,8 @@ const BottomRight = ({
         <IconButton
           onClick={() => {
             if (showChats) {
+              toggleMeetLeftHandler();
+            } else {
               toggleMeetLeftHandler();
             }
             if (meetRightOn) {
@@ -647,6 +658,8 @@ const BottomRight = ({
         <IconButton
           onClick={() => {
             if (showActivities) {
+              toggleMeetLeftHandler();
+            } else {
               toggleMeetLeftHandler();
             }
             if (meetRightOn) {
