@@ -122,3 +122,76 @@ hr {
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(194, 21, 194);
 }
+
+.animated {
+  font-feature-settings: "rlig" 1, "calt" 0;
+  --content: "Develop.";
+  --padding: 0.05em;
+ --start-color: dodgerblue;
+  --end-color: blue;
+  box-sizing: border-box;
+  animation: 2s infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--start-color),
+    var(--end-color)
+  );
+  position: relative;
+  z-index: 1;
+}
+.animated1 {
+  font-feature-settings: "rlig" 1, "calt" 0;
+  --content: "Develop.";
+  --padding: 0.05em;
+  --start-color: dodgerblue;
+  --end-color: blue;
+  box-sizing: border-box;
+  animation: 2s infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--start-color),
+    var(--end-color)
+  );
+  position: relative;
+  z-index: 1;
+}
+.animated2 {
+  font-feature-settings: "rlig" 1, "calt" 0;
+  --content: "Develop.";
+  --padding: 0.05em;
+  --start-color: #ff4d4d;
+  --end-color: #f9cb28;
+  box-sizing: border-box;
+  animation: 2s infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--start-color),
+    var(--end-color)
+  );
+  position: relative;
+  z-index: 1;
+}
+.animated3 {
+  font-feature-settings: "rlig" 1, "calt" 0;
+  --content: "Develop.";
+  --padding: 0.05em;
+  --start-color: #ff4d4d;
+  --end-color: #f9cb28;
+  box-sizing: border-box;
+  animation: 2s infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--start-color),
+    var(--end-color)
+  );
+  position: relative;
+  z-index: 1;
+}

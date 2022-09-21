@@ -19,7 +19,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const CreateTeam = ({ toggleShowTeam }) => {
-
   return (
     <div>
       <Dialog
@@ -45,7 +44,49 @@ const CreateTeam = ({ toggleShowTeam }) => {
         </AppBar>
         {/* Body */}
         <Box>
-            
+          {/* Left */}
+          <Box
+            sx={{
+              padding: "30px",
+              paddingTop: "80px",
+            }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: "90px",
+                color: "linear-gradient(-90deg, red, yellow)",
+              }}
+            >
+              <span className="animated">Create New</span>
+            </Typography>
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: "90px",
+              }}
+            >
+              <span className="animated1">Awsome and</span>
+            </Typography>
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: "90px",
+              }}
+            >
+              <span className="animated2">Productive</span>
+            </Typography>
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: "90px",
+              }}
+            >
+              <span className="animated3">Team</span>
+            </Typography>
+          </Box>
+          {/* Right */}
+          <Box></Box>
         </Box>
       </Dialog>
     </div>
