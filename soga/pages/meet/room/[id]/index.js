@@ -24,10 +24,20 @@ const Id = () => {
   const theme = useTheme();
   const router = useRouter();
   const id = router.query.id;
-  const [myCameraSrcObject, setMyCameraSrcObject] = useState(null);
-  const [videoElement, setVideoElemnt] = useState(null);
-  if (videoElement) {
-    videoElement.srcObject = myCameraSrcObject;
+  // Streams
+  const [localStream, setLocalStream] = useState(null);
+  const [remoteStream, setRemoteStream] = useState(null);
+
+  // Video Elements
+  const [localVideoElement, setLocalVideoElemnt] = useState(null);
+  const [remoteVideoElement, setRemoteVideoElement] = useState(null);
+
+  // const [peerConnection, setPeerConnection] = useState(null);
+  if (localVideoElement) {
+    localVideoElement.srcObject = localStream;
+  }
+  if (remoteVideoElement) {
+    remoteVideoElement.srcObject = remoteStream;
   }
   // Toggle states
   const [showCamera, setShowCamera] = useState(true);
@@ -44,15 +54,44 @@ const Id = () => {
   // Bottom Left States
   const [expand, setExpand] = useState(true);
 
+  // Create an offer
+  const createOffer = async () => {
+    // Get the remote video element
+
+    setRemoteVideoElement(document.querySelector("video#remoteVideo1"));
+
+    // RTCPeerConections
+    const configuration = {
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    };
+    const peerConnection = new RTCPeerConnection(configuration);
+    setRemoteStream(new MediaStream());
+
+    // Creating Offer
+    if (peerConnection) {
+      let offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(offer);
+    }
+
+    // Tracks
+    if (localStream) {
+      localStream.getTracks().forEach((track) => {
+        peerConnection.addTrack(track, localStream);
+      });
+    }
+  };
+
   async function playVideoFromCamera() {
     try {
-      setVideoElemnt(document.querySelector("video#localVideo"));
+      setLocalVideoElemnt(document.querySelector("video#localVideo"));
 
       const constraints = { video: true, audio: true };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      setMyCameraSrcObject(stream);
+      setLocalStream(stream);
       setShowMic(true);
       setShowCamera(true);
+
+      createOffer();
     } catch (error) {
       console.error("Error opening video camera.", error);
     }
@@ -60,7 +99,7 @@ const Id = () => {
   useEffect(() => {
     playVideoFromCamera();
     return () => {};
-  }, [videoElement]);
+  }, [localVideoElement]);
 
   // Meet Handlers
   const toggleMeetLeftHandler = () => {
@@ -71,7 +110,7 @@ const Id = () => {
 
   //Bottom Mid Handlers
   const toggleCamera = () => {
-    const videoTrack = myCameraSrcObject
+    const videoTrack = localStream
       .getTracks()
       .find((track) => track.kind === "video");
     if (videoTrack.enabled) {
@@ -83,7 +122,7 @@ const Id = () => {
     }
   };
   const toggleMic = () => {
-    const audioTrack = myCameraSrcObject
+    const audioTrack = localStream
       .getTracks()
       .find((track) => track.kind === "audio");
     if (audioTrack.enabled) {
@@ -188,6 +227,22 @@ const MeetLeft = () => {
         autoPlay={true}
         muted
       />
+      {/* <video
+        style={{
+          width: "70vw",
+          height: "98vh",
+          overflow: "hidden",
+          paddingTop: "15px",
+          transform: "rotateY(180deg)",
+          webkitTransform: "rotateY(180deg)",
+          mozTransform: "rotateY(180deg)",
+          marginLeft: "15px",
+          backgroundColor: "red",
+        }}
+        id="remoteVideo1"
+        autoPlay={true}
+        muted
+      /> */}
     </Box>
   );
 };
