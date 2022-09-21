@@ -2348,6 +2348,11 @@
   dependencies:
     "loose-envify" "^1.1.0"
 
+"sdp@^3.0.2":
+  "integrity" "sha512-8EkfckS+XZQaPLyChu4ey7PghrdcraCVNpJe2Gfdi2ON1ylQ7OasuKX+b37R9slnRChwIAiQgt+oj8xXGD8x+A=="
+  "resolved" "https://registry.npmjs.org/sdp/-/sdp-3.0.3.tgz"
+  "version" "3.0.3"
+
 "semver@^6.3.0":
   "integrity" "sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw=="
   "resolved" "https://registry.npmjs.org/semver/-/semver-6.3.0.tgz"
@@ -2582,6 +2587,13 @@
   "integrity" "sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA=="
   "resolved" "https://registry.npmjs.org/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz"
   "version" "2.3.0"
+
+"webrtc-adapter@^8.1.2":
+  "integrity" "sha512-j1tsxKR/NmNgqrlLTL5jsNmFBrsIdTvBWZ2I1UAs/J37M1s1chLy1Fp7RfQHflHk3KoSNAxp/4y6ictHJ8prSw=="
+  "resolved" "https://registry.npmjs.org/webrtc-adapter/-/webrtc-adapter-8.1.2.tgz"
+  "version" "8.1.2"
+  dependencies:
+    "sdp" "^3.0.2"
 
 "which-boxed-primitive@^1.0.2":
   "integrity" "sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg=="

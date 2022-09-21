@@ -21,6 +21,7 @@ import GroupWorkOutlinedIcon from "@mui/icons-material/GroupWorkOutlined";
 import { alpha } from "@mui/system";
 
 const Id = () => {
+
   const theme = useTheme();
   const router = useRouter();
   const id = router.query.id;
@@ -103,8 +104,6 @@ const Id = () => {
 
   // Meet Handlers
   const toggleMeetLeftHandler = () => {
-    console.log(schowParticipants, showChats, showActivities);
-
     setMeetRightOn((prev) => !prev);
   };
 
@@ -252,7 +251,7 @@ const MeetRight = ({
   showActivities,
   expand,
 }) => {
-  if (schowParticipants) {
+  if (schowParticipants && expand) {
     return (
       <Box
         sx={{
@@ -267,7 +266,7 @@ const MeetRight = ({
         <Participant />
       </Box>
     );
-  } else if (showChats) {
+  } else if (showChats && expand) {
     return (
       <Box
         sx={{
@@ -282,7 +281,7 @@ const MeetRight = ({
         <MeetChats />
       </Box>
     );
-  } else if (showActivities) {
+  } else if (showActivities && expand) {
     return (
       <Box
         sx={{
@@ -295,23 +294,6 @@ const MeetRight = ({
         }}
       >
         <Activities />
-      </Box>
-    );
-  } else {
-    return (
-      <Box
-        sx={{
-          height: "90vh",
-          width: "40vw",
-          backgroundColor: "red",
-          marginRight: "10px",
-          marginTop: "10px",
-          borderRadius: "5px",
-        }}
-      >
-        {schowParticipants}
-        {showChats}
-        {showActivities}
       </Box>
     );
   }
@@ -378,6 +360,7 @@ const Bottom = ({
             schowParticipants={schowParticipants}
             showChats={showChats}
             showActivities={showActivities}
+            expand={expand}
           />{" "}
         </Box>
       ) : (
@@ -633,6 +616,7 @@ const BottomRight = ({
   schowParticipants,
   showChats,
   showActivities,
+  expand,
 }) => {
   const theme = useTheme();
   return (
@@ -640,7 +624,7 @@ const BottomRight = ({
       <Tooltip title="Participants" placement="top">
         <IconButton
           onClick={() => {
-            if (schowParticipants) {
+            if (meetRightOn === false) {
               toggleMeetLeftHandler();
             } else {
               toggleMeetLeftHandler();
@@ -671,7 +655,7 @@ const BottomRight = ({
       <Tooltip title="Chats" placement="top">
         <IconButton
           onClick={() => {
-            if (showChats) {
+            if (meetRightOn === false) {
               toggleMeetLeftHandler();
             } else {
               toggleMeetLeftHandler();
@@ -712,7 +696,7 @@ const BottomRight = ({
       <Tooltip title="Activities" placement="top">
         <IconButton
           onClick={() => {
-            if (showActivities) {
+            if (meetRightOn === false) {
               toggleMeetLeftHandler();
             } else {
               toggleMeetLeftHandler();
