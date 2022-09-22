@@ -21,7 +21,6 @@ import GroupWorkOutlinedIcon from "@mui/icons-material/GroupWorkOutlined";
 import { alpha } from "@mui/system";
 
 const Id = () => {
-
   const theme = useTheme();
   const router = useRouter();
   const id = router.query.id;
@@ -52,39 +51,109 @@ const Id = () => {
   const [showChats, setShowChats] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
 
+  // WebRTC
+  const [offer, setOffer] = useState(null);
+  const [answer, setAnswer] = useState(null);
+
   // Bottom Left States
   const [expand, setExpand] = useState(true);
 
-  // Create an offer
   const createOffer = async () => {
-    // Get the remote video element
-
-    setRemoteVideoElement(document.querySelector("video#remoteVideo1"));
-
     // RTCPeerConections
     const configuration = {
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     };
     const peerConnection = new RTCPeerConnection(configuration);
-    setRemoteStream(new MediaStream());
 
-    // Creating Offer
-    if (peerConnection) {
-      let offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
-    }
-
-    // Tracks
+    // Add LocalStream to peerConnection
     if (localStream) {
       localStream.getTracks().forEach((track) => {
         peerConnection.addTrack(track, localStream);
       });
     }
+
+    // Get remote tracks to peerConnetion
+    peerConnection.ontrack = async (event) => {
+      console.log("Event :", event);
+      event.streams[0].getTracks().forEach((track) => {
+        console.log("Remote Track :", track);
+        remoteStream.addTrack(track);
+      });
+    };
+
+    //getting new offer with an ICE canditade from peerConnection
+    peerConnection.onicecandidate = async (event) => {
+      if (event.candidate) {
+        setOffer(peerConnection.localDescription);
+      }
+    };
+
+    // Create an offer
+    setOffer(await peerConnection.createOffer());
+    if (offer) {
+      document.getElementById("offer-sdp").value = JSON.stringify(offer);
+      await peerConnection.setLocalDescription(offer);
+      return offer;
+    }
+  };
+
+  let createAnswer = async () => {
+    // RTCPeerConections
+    const configuration = {
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    };
+    const peerConnection = new RTCPeerConnection(configuration);
+
+    // Add LocalStream to peerConnection
+    if (localStream) {
+      localStream.getTracks().forEach((track) => {
+        peerConnection.addTrack(track, localStream);
+      });
+    }
+
+    // Get remote tracks to peerConnetion
+    peerConnection.ontrack = async (event) => {
+      event.streams[0].getTracks().forEach((track) => {
+        remoteStream.addTrack(track);
+      });
+    };
+
+    //getting new offer with an ICE canditade from peerConnection
+    peerConnection.onicecandidate = async (event) => {
+      if (event.candidate) {
+        setOffer(peerConnection.localDescription);
+      }
+    };
+
+    if (!offer) return alert("Retrieve offer from peer first...");
+
+    await peerConnection.setRemoteDescription(offer);
+
+    setAnswer(await peerConnection.createAnswer());
+    if (answer) {
+      document.getElementById("answer-sdp").value = JSON.stringify(answer);
+      await peerConnection.setLocalDescription(answer);
+    }
+  };
+
+  let addAnswer = async () => {
+    const leAnswer = (document.getElementById("answer-sdp").value =
+      JSON.parse(answer));
+
+    console.log("leAnswer :", leAnswer);
+    // if (!leAnswer) return alert("Retrieve answer from peer first...");
+
+    // if (!peerConnection.currentRemoteDescription) {
+    //   peerConnection.setRemoteDescription(leAnswer);
+    // }
   };
 
   async function playVideoFromCamera() {
     try {
+      setRemoteStream(new MediaStream());
+
       setLocalVideoElemnt(document.querySelector("video#localVideo"));
+      setRemoteVideoElement(document.querySelector("video#remoteVideo"));
 
       const constraints = { video: true, audio: true };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -153,6 +222,26 @@ const Id = () => {
         height: "100vh",
       }}
     >
+      <Button
+        onClick={() => {
+          createAnswer();
+        }}
+      >
+        Generate Answer
+      </Button>
+      <Button
+        onClick={() => {
+          addAnswer();
+        }}
+      >
+        Add Answer
+      </Button>
+      <br />
+      <label>SDP Answer</label>
+      <textarea id="answer-sdp"></textarea>
+      <br />
+      <label>SDP Offer</label>
+      <textarea id="offer-sdp"></textarea>
       <Box
         sx={
           meetRightOn && {
@@ -226,7 +315,7 @@ const MeetLeft = () => {
         autoPlay={true}
         muted
       />
-      {/* <video
+      <video
         style={{
           width: "70vw",
           height: "98vh",
@@ -236,12 +325,12 @@ const MeetLeft = () => {
           webkitTransform: "rotateY(180deg)",
           mozTransform: "rotateY(180deg)",
           marginLeft: "15px",
-          backgroundColor: "red",
+          display: "none",
         }}
         id="remoteVideo1"
         autoPlay={true}
-        muted
-      /> */}
+        // muted
+      />
     </Box>
   );
 };
