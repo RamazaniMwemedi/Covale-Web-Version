@@ -20,12 +20,15 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import GroupWorkOutlinedIcon from "@mui/icons-material/GroupWorkOutlined";
 import { alpha } from "@mui/system";
 
+// My Hooks
+import { useGetUserMedia } from "../../../../hooks/webrtc";
+
 const Id = () => {
   const theme = useTheme();
   const router = useRouter();
   const id = router.query.id;
   // Streams
-  const [localStream, setLocalStream] = useState(null);
+  const localStream = useGetUserMedia();
   const [remoteStream, setRemoteStream] = useState(null);
 
   // Video Elements
