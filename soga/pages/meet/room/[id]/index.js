@@ -21,7 +21,7 @@ import GroupWorkOutlinedIcon from "@mui/icons-material/GroupWorkOutlined";
 import { alpha } from "@mui/system";
 
 // My Hooks
-import { useGetUserMedia } from "../../../../hooks/webrtc";
+import { useCreateOffer, useGetUserMedia } from "../../../../hooks/webrtc";
 
 const Id = () => {
   const theme = useTheme();
@@ -36,7 +36,7 @@ const Id = () => {
   const [remoteVideoElement, setRemoteVideoElement] = useState(null);
 
   // const [peerConnection, setPeerConnection] = useState(null);
-  if (localVideoElement) {
+  if (localVideoElement && localStream) {
     localVideoElement.srcObject = localStream;
   }
   if (remoteVideoElement) {
@@ -55,50 +55,13 @@ const Id = () => {
   const [showActivities, setShowActivities] = useState(false);
 
   // WebRTC
+  const theOffer = useCreateOffer(localStream);
+  console.log("theOffer :", theOffer);
   const [offer, setOffer] = useState(null);
   const [answer, setAnswer] = useState(null);
 
   // Bottom Left States
   const [expand, setExpand] = useState(true);
-
-  const createOffer = async () => {
-    // RTCPeerConections
-    const configuration = {
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    };
-    const peerConnection = new RTCPeerConnection(configuration);
-
-    // Add LocalStream to peerConnection
-    if (localStream) {
-      localStream.getTracks().forEach((track) => {
-        peerConnection.addTrack(track, localStream);
-      });
-    }
-
-    // Get remote tracks to peerConnetion
-    peerConnection.ontrack = async (event) => {
-      console.log("Event :", event);
-      event.streams[0].getTracks().forEach((track) => {
-        console.log("Remote Track :", track);
-        remoteStream.addTrack(track);
-      });
-    };
-
-    //getting new offer with an ICE canditade from peerConnection
-    peerConnection.onicecandidate = async (event) => {
-      if (event.candidate) {
-        setOffer(peerConnection.localDescription);
-      }
-    };
-
-    // Create an offer
-    setOffer(await peerConnection.createOffer());
-    if (offer) {
-      document.getElementById("offer-sdp").value = JSON.stringify(offer);
-      await peerConnection.setLocalDescription(offer);
-      return offer;
-    }
-  };
 
   let createAnswer = async () => {
     // RTCPeerConections
@@ -160,11 +123,8 @@ const Id = () => {
 
       const constraints = { video: true, audio: true };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      setLocalStream(stream);
       setShowMic(true);
       setShowCamera(true);
-
-      createOffer();
     } catch (error) {
       console.error("Error opening video camera.", error);
     }

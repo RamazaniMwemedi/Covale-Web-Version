@@ -1,4 +1,6 @@
 const { useState, useEffect } = require("react");
+const { createOffer } = require("../services/webrtc");
+
 const useGetUserMedia = () => {
   const [localStream, setLocalStream] = useState(null);
   const constraints = { video: true, audio: true };
@@ -16,4 +18,18 @@ const useGetUserMedia = () => {
   if (localStream) return localStream;
 };
 
-module.exports = { useGetUserMedia };
+const useCreateOffer = (localStream) => {
+  const [offer, setOffer] = useState(null);
+  useEffect(() => {
+    createOffer(localStream).then((newOffer) => {
+      setOffer(newOffer);
+    });
+    return () => {
+      setOffer(null);
+    };
+  }, [localStream]);
+
+  if (offer) return offer;
+};
+
+module.exports = { useGetUserMedia, useCreateOffer };
