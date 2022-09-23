@@ -55,8 +55,8 @@ const Id = () => {
   const [showActivities, setShowActivities] = useState(false);
 
   // WebRTC
-  const theOffer = useCreateOffer(localStream);
-  console.log("theOffer :", theOffer);
+  const myLocalOffer = useCreateOffer(localStream);
+  console.log("theOffer :", myLocalOffer);
   const [offer, setOffer] = useState(null);
   const [answer, setAnswer] = useState(null);
 
@@ -114,29 +114,29 @@ const Id = () => {
     // }
   };
 
-  async function playVideoFromCamera() {
-    try {
-      setRemoteStream(new MediaStream());
+  async function getVideoELements() {
+    setRemoteStream(new MediaStream());
 
-      setLocalVideoElemnt(document.querySelector("video#localVideo"));
-      setRemoteVideoElement(document.querySelector("video#remoteVideo"));
+    setLocalVideoElemnt(document.querySelector("video#localVideo"));
+    setRemoteVideoElement(document.querySelector("video#remoteVideo"));
 
-      const constraints = { video: true, audio: true };
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      setShowMic(true);
-      setShowCamera(true);
-    } catch (error) {
-      console.error("Error opening video camera.", error);
-    }
+    setShowMic(true);
+    setShowCamera(true);
   }
   useEffect(() => {
-    playVideoFromCamera();
-    return () => {};
-  }, [localVideoElement]);
+    getVideoELements();
+  }, []);
 
   // Meet Handlers
   const toggleMeetLeftHandler = () => {
     setMeetRightOn((prev) => !prev);
+  };
+
+  const getingOfferHandler = (event) => {
+    console.log("Offer changed",event.target.value);
+  };
+  const getingAnswerHandler = (event) => {
+    console.log("Answer changed",event.target.value);
   };
 
   //Bottom Mid Handlers
@@ -201,10 +201,20 @@ const Id = () => {
       </Button>
       <br />
       <label>SDP Answer</label>
-      <textarea id="answer-sdp"></textarea>
+      <textarea
+        onChange={(e) => {
+          getingAnswerHandler(e);
+        }}
+        id="answer-sdp"
+      ></textarea>
       <br />
       <label>SDP Offer</label>
-      <textarea id="offer-sdp"></textarea>
+      <textarea
+        onChange={(e) => {
+          getingOfferHandler(e);
+        }}
+        id="offer-sdp"
+      ></textarea>
       <Box
         sx={
           meetRightOn && {

@@ -26,7 +26,7 @@ const createOffer = async (localStream) => {
     //getting new offer with an ICE canditade from peerConnection
     peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
-        console.log("event.candidate :",  event.candidate);
+        console.log("event.candidate :", event.candidate);
         offer = peerConnection.localDescription;
       }
     };
@@ -44,5 +44,44 @@ const createOffer = async (localStream) => {
     }
   }
 };
+const createAnswer = async (localStream, remoteStream) => {
+  var offer;
+  var answer;
+  // RTCPeerConections
+  const configuration = {
+    iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  };
+  const peerConnection = new RTCPeerConnection(configuration);
 
-module.exports = { createOffer };
+  // Add LocalStream to peerConnection
+  if (localStream) {
+    localStream.getTracks().forEach((track) => {
+      peerConnection.addTrack(track, localStream);
+    });
+  }
+
+  // Get remote tracks to peerConnetion
+  peerConnection.ontrack = async (event) => {
+    event.streams[0].getTracks().forEach((track) => {
+      remoteStream.addTrack(track);
+    });
+  };
+
+  //getting new offer with an ICE canditade from peerConnection
+  peerConnection.onicecandidate = async (event) => {
+    if (event.candidate) {
+      offer =peerConnection.localDescription;
+    }
+  };
+
+  if (!offer) return alert("Retrieve offer from peer first...");
+
+  await peerConnection.setRemoteDescription(offer);
+
+  answer =await peerConnection.createAnswer();
+  if (answer) {
+    document.getElementById("answer-sdp").value = JSON.stringify(answer);
+    await peerConnection.setLocalDescription(answer);
+  }
+};
+module.exports = { createOffer, createAnswer };
