@@ -1,6 +1,6 @@
-const createOffer = async (localStream) => {
+const createOffer = async (localStream, remoteStream) => {
   var offer;
-  if (localStream) {
+  if (localStream && remoteStream) {
     // RTCPeerConections
     const configuration = {
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -26,7 +26,6 @@ const createOffer = async (localStream) => {
     //getting new offer with an ICE canditade from peerConnection
     peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
-        console.log("event.candidate :", event.candidate);
         offer = peerConnection.localDescription;
       }
     };
@@ -39,14 +38,14 @@ const createOffer = async (localStream) => {
       return offer;
     } else {
       console.error(
-        "LocalStream is not provided. Please provide the localSteam object first"
+        "LocalStream is not provided. Please provide the localSteam object first  and the remoteStream"
       );
     }
   }
 };
-const createAnswer = async (localStream, remoteStream) => {
-  var offer;
+const createAnswer = async (localStream, remoteStream, offer) => {
   var answer;
+  console.log(offer);
   // RTCPeerConections
   const configuration = {
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -70,7 +69,7 @@ const createAnswer = async (localStream, remoteStream) => {
   //getting new offer with an ICE canditade from peerConnection
   peerConnection.onicecandidate = async (event) => {
     if (event.candidate) {
-      offer =peerConnection.localDescription;
+      offer = peerConnection.localDescription;
     }
   };
 
@@ -78,10 +77,12 @@ const createAnswer = async (localStream, remoteStream) => {
 
   await peerConnection.setRemoteDescription(offer);
 
-  answer =await peerConnection.createAnswer();
+  answer = await peerConnection.createAnswer();
   if (answer) {
-    document.getElementById("answer-sdp").value = JSON.stringify(answer);
     await peerConnection.setLocalDescription(answer);
+          document.getElementById("answer-sdp").value = JSON.stringify(answer);
+
+    return answer;
   }
 };
 module.exports = { createOffer, createAnswer };

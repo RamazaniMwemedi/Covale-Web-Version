@@ -23,6 +23,8 @@ import { alpha } from "@mui/system";
 // My Hooks
 import { useCreateOffer, useGetUserMedia } from "../../../../hooks/webrtc";
 
+import { createAnswer } from "../../../../services/webrtc";
+
 const Id = () => {
   const theme = useTheme();
   const router = useRouter();
@@ -55,62 +57,43 @@ const Id = () => {
   const [showActivities, setShowActivities] = useState(false);
 
   // WebRTC
-  const myLocalOffer = useCreateOffer(localStream);
-  console.log("theOffer :", myLocalOffer);
+  var myLocalOffer = useCreateOffer(localStream, remoteStream);
+  // const answer = useCreateAnswer(localStream,);
   const [offer, setOffer] = useState(null);
   const [answer, setAnswer] = useState(null);
 
   // Bottom Left States
   const [expand, setExpand] = useState(true);
-
-  let createAnswer = async () => {
-    // RTCPeerConections
-    const configuration = {
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    };
-    const peerConnection = new RTCPeerConnection(configuration);
-
-    // Add LocalStream to peerConnection
-    if (localStream) {
-      localStream.getTracks().forEach((track) => {
-        peerConnection.addTrack(track, localStream);
-      });
-    }
-
-    // Get remote tracks to peerConnetion
-    peerConnection.ontrack = async (event) => {
-      event.streams[0].getTracks().forEach((track) => {
-        remoteStream.addTrack(track);
-      });
-    };
-
-    //getting new offer with an ICE canditade from peerConnection
-    peerConnection.onicecandidate = async (event) => {
-      if (event.candidate) {
-        setOffer(peerConnection.localDescription);
+  const generateAnswer = async () => {
+    let responseAnswer;
+    if (localStream && remoteStream && offer) {
+      responseAnswer = await createAnswer(
+        localStream,
+        remoteStream,
+        JSON.parse(offer)
+      );
+      if (responseAnswer) {
+        setAnswer(responseAnswer);
       }
-    };
-
-    if (!offer) return alert("Retrieve offer from peer first...");
-
-    await peerConnection.setRemoteDescription(offer);
-
-    setAnswer(await peerConnection.createAnswer());
-    if (answer) {
-      document.getElementById("answer-sdp").value = JSON.stringify(answer);
-      await peerConnection.setLocalDescription(answer);
+    } else {
+      console.error(
+        "LocalStream , remoteStream and myLocalOffer ...",
+        "LocalStream :",
+        localStream,
+        "remoteStream :",
+        remoteStream,
+        "offer :",
+        offer
+      );
     }
   };
 
   let addAnswer = async () => {
-    const leAnswer = (document.getElementById("answer-sdp").value =
-      JSON.parse(answer));
-
-    console.log("leAnswer :", leAnswer);
-    // if (!leAnswer) return alert("Retrieve answer from peer first...");
+    console.log("Answer :", answer);
+    // if (!answer) return alert("Retrieve answer from peer first...");
 
     // if (!peerConnection.currentRemoteDescription) {
-    //   peerConnection.setRemoteDescription(leAnswer);
+    //   peerConnection.setRemoteDescription(answer);
     // }
   };
 
@@ -127,16 +110,25 @@ const Id = () => {
     getVideoELements();
   }, []);
 
+  useEffect(() => {
+    setOffer(JSON.stringify(myLocalOffer));
+
+    return () => {
+      setOffer(null);
+    };
+  }, [myLocalOffer]);
+
   // Meet Handlers
   const toggleMeetLeftHandler = () => {
     setMeetRightOn((prev) => !prev);
   };
 
   const getingOfferHandler = (event) => {
-    console.log("Offer changed",event.target.value);
+    setOffer(event.target.value);
+    console.log("Offer changed", event.target.value);
   };
   const getingAnswerHandler = (event) => {
-    console.log("Answer changed",event.target.value);
+    console.log("Answer changed", event.target.value);
   };
 
   //Bottom Mid Handlers
@@ -185,36 +177,39 @@ const Id = () => {
         height: "100vh",
       }}
     >
-      <Button
-        onClick={() => {
-          createAnswer();
-        }}
-      >
-        Generate Answer
-      </Button>
-      <Button
-        onClick={() => {
-          addAnswer();
-        }}
-      >
-        Add Answer
-      </Button>
-      <br />
-      <label>SDP Answer</label>
-      <textarea
-        onChange={(e) => {
-          getingAnswerHandler(e);
-        }}
-        id="answer-sdp"
-      ></textarea>
-      <br />
-      <label>SDP Offer</label>
-      <textarea
-        onChange={(e) => {
-          getingOfferHandler(e);
-        }}
-        id="offer-sdp"
-      ></textarea>
+      <Box>
+        <Button
+          onClick={() => {
+            generateAnswer();
+          }}
+        >
+          Generate Answer
+        </Button>
+        <Button
+          onClick={() => {
+            addAnswer();
+          }}
+        >
+          Add Answer
+        </Button>
+        <br />
+        <label>SDP Answer</label>
+        <textarea
+          onChange={(e) => {
+            getingAnswerHandler(e);
+          }}
+          id="answer-sdp"
+        ></textarea>
+        <br />
+        <label>SDP Offer</label>
+        <textarea
+          onChange={(e) => {
+            getingOfferHandler(e);
+          }}
+          value={offer}
+          id="offer-sdp"
+        ></textarea>
+      </Box>
       <Box
         sx={
           meetRightOn && {
@@ -275,7 +270,7 @@ const MeetLeft = () => {
     >
       <video
         style={{
-          width: "70vw",
+          // width: "70vw",
           height: "98vh",
           overflow: "hidden",
           paddingTop: "15px",
