@@ -43,19 +43,20 @@ const CreateTeam = ({ toggleShowTeam }) => {
           </Toolbar>
         </AppBar>
         {/* Body */}
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+
+            margin: "30px",
+          }}
+        >
           {/* Left */}
-          <Box
-            sx={{
-              padding: "30px",
-              paddingTop: "80px",
-            }}
-          >
+          <Box>
             <Typography
               variant="h2"
               sx={{
                 fontSize: "90px",
-                color: "linear-gradient(-90deg, red, yellow)",
               }}
             >
               <span className="animated">Create New</span>
@@ -86,7 +87,15 @@ const CreateTeam = ({ toggleShowTeam }) => {
             </Typography>
           </Box>
           {/* Right */}
-          <Box></Box>
+          <Box
+            sx={{
+              height: "550px",
+              width: "400px",
+              backgroundColor: "red",
+              borderRadius: "10px",
+              marginRight:"50px"
+            }}
+          ></Box>
         </Box>
       </Dialog>
     </div>
