@@ -13,12 +13,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import PropTypes from "prop-types";
 import { Box } from "@mui/system";
+import { lightBlue, purple } from "@mui/material/colors";
+
+import { Checkbox, Paper, TextField } from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
 const CreateTeam = ({ toggleShowTeam }) => {
+  const theme = useTheme();
   return (
     <div>
       <Dialog
@@ -43,12 +48,16 @@ const CreateTeam = ({ toggleShowTeam }) => {
           </Toolbar>
         </AppBar>
         {/* Body */}
+
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
-
-            margin: "30px",
+            backgroundColor: theme.colors.background,
+            height: "100vh",
+            width: "100vw",
+            margin: "0px",
+            padding: "20px",
           }}
         >
           {/* Left */}
@@ -87,15 +96,31 @@ const CreateTeam = ({ toggleShowTeam }) => {
             </Typography>
           </Box>
           {/* Right */}
-          <Box
+          <Paper
             sx={{
               height: "550px",
               width: "400px",
-              backgroundColor: "red",
               borderRadius: "10px",
-              marginRight:"50px"
+              marginRight: "50px",
+              padding: "35px",
             }}
-          ></Box>
+            elevation={3}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                width: "fit-content",
+                margin: "10px",
+                gap: "10px",
+              }}
+            >
+              <Step number={1} passed={true} />
+              <Step number={2} passed={false} />
+              <Step number={3} passed={false} />
+              <Step number={4} passed={false} />
+            </Box>
+            <TeamMissionVission />
+          </Paper>
         </Box>
       </Dialog>
     </div>
@@ -104,3 +129,124 @@ const CreateTeam = ({ toggleShowTeam }) => {
 CreateTeam.propTypes = {};
 
 export default CreateTeam;
+
+const TeamNamingForm = ({ teamNameChangeHAndler }) => {
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
+  return (
+    <Box>
+      <Typography variant="h6">How would you like to name your team</Typography>
+      <br />
+      <TextField
+        id="outlined-basic"
+        color="secondary"
+        label="Team Name"
+        variant="outlined"
+        sx={{
+          borderRadius: "10px",
+        }}
+      />
+      <br />
+      <br />
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography variant="h6">Would you like it to be private ?</Typography>
+        <Checkbox {...label} defaultChecked color="secondary" />
+      </Box>
+      <br />
+      <Typography variant="subtitle2">
+        By Private, we mean it won't be visible by people whom are not members
+        or not invited
+      </Typography>
+      <br />
+      <br />
+      <Box sx={{}}>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{
+            borderRadius: "10px",
+          }}
+        >
+          Next
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
+const TeamMissionVission = () => {
+  return (
+    <Box>
+      <Typography variant="h5">
+        A greate Team deserve Mission and Vission
+      </Typography>
+      <br />
+      <Typography variant="h6">What is your Team Mission </Typography>
+      <TextField
+        id="outlined-basic"
+        color="secondary"
+        label="Team Mission"
+        variant="outlined"
+        sx={{
+          borderRadius: "10px",
+        }}
+      />
+      <br />
+      <br />
+      <Typography variant="h6">What is your Team Vission </Typography>
+      <TextField
+        id="outlined-basic"
+        color="secondary"
+        label="Team Vission"
+        variant="outlined"
+        sx={{
+          borderRadius: "10px",
+        }}
+      />
+      <br />
+      <br />
+      <Typography variant="subtitle2">
+        The Team Mission and Vission will be display in your Team so to motivate
+        your Team members. You may skip if you aren't ready now.
+      </Typography>
+      <br />
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            borderRadius: "10px",
+          }}
+        >
+          Skip
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{
+            borderRadius: "10px",
+          }}
+        >
+          Next
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
+const Step = ({ number, passed }) => {
+  return (
+    <Box
+      sx={{
+        backgroundColor: passed ? "#ab47bc" : "#e91e63",
+        borderRadius: "30px",
+        padding: "5px",
+        paddingLeft: "10px",
+        color: "white",
+        width: 30,
+        height: 30,
+      }}
+    >
+      <Typography>{number}</Typography>
+    </Box>
+  );
+};
