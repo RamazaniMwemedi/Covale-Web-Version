@@ -14,9 +14,18 @@ import Slide from "@mui/material/Slide";
 import PropTypes from "prop-types";
 import { Box } from "@mui/system";
 import { lightBlue, purple } from "@mui/material/colors";
+import CircularProgress from "@mui/material/CircularProgress";
 
-import { Checkbox, Paper, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Avatar,
+  Checkbox,
+  Paper,
+  TextField,
+} from "@mui/material";
 import { useTheme } from "@emotion/react";
+import { useGetFriends } from "../../hooks/hooks";
+import { useState } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -24,6 +33,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const CreateTeam = ({ toggleShowTeam }) => {
   const theme = useTheme();
+  const friends = useGetFriends();
+  const [number, setNumber] = useState(1);
+
+  const numberHandle = () => {
+    setNumber((prev) => prev + 1);
+  };
+
   return (
     <div>
       <Dialog
@@ -32,21 +48,24 @@ const CreateTeam = ({ toggleShowTeam }) => {
         onClose={toggleShowTeam}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative" }}>
-          <Toolbar>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Create Your Greate Team
-            </Typography>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={toggleShowTeam}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
+        <IconButton
+          color="error"
+          onClick={() => {
+            toggleShowTeam();
+          }}
+          aria-label="close"
+          sx={{
+            position: "absolute",
+            top: "5px",
+            right: "5px",
+            backgroundColor: theme.colors.itemBackground,
+            "&:hover": {
+              backgroundColor: theme.colors.background2,
+            },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         {/* Body */}
 
         <Box
@@ -57,11 +76,15 @@ const CreateTeam = ({ toggleShowTeam }) => {
             height: "100vh",
             width: "100vw",
             margin: "0px",
-            padding: "20px",
+            padding: "50px",
           }}
         >
           {/* Left */}
-          <Box>
+          <Box
+            sx={{
+              paddingTop: "40px",
+            }}
+          >
             <Typography
               variant="h2"
               sx={{
@@ -106,20 +129,12 @@ const CreateTeam = ({ toggleShowTeam }) => {
             }}
             elevation={3}
           >
-            <Box
-              sx={{
-                display: "flex",
-                width: "fit-content",
-                margin: "10px",
-                gap: "10px",
-              }}
-            >
-              <Step number={1} passed={true} />
-              <Step number={2} passed={false} />
-              <Step number={3} passed={false} />
-              <Step number={4} passed={false} />
-            </Box>
-            <TeamMissionVission />
+            <Steps number={number} />
+            <BodyRight
+              number={number}
+              numberHandle={numberHandle}
+              friends={friends}
+            />
           </Paper>
         </Box>
       </Dialog>
@@ -130,7 +145,20 @@ CreateTeam.propTypes = {};
 
 export default CreateTeam;
 
-const TeamNamingForm = ({ teamNameChangeHAndler }) => {
+const BodyRight = ({ number, friends, numberHandle }) => {
+  switch (number) {
+    case 1:
+      return <TeamNamingForm numberHandle={numberHandle} />;
+    case 2:
+      return <TeamMissionVission numberHandle={numberHandle} />;
+    case 3:
+      return <AddPeopleInTeam friends={friends} numberHandle={numberHandle} />;
+    default:
+      <TeamNamingForm numberHandle={numberHandle} />;
+  }
+};
+
+const TeamNamingForm = ({ numberHandle }) => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
     <Box>
@@ -158,12 +186,15 @@ const TeamNamingForm = ({ teamNameChangeHAndler }) => {
       </Typography>
       <br />
       <br />
-      <Box sx={{}}>
+      <Box>
         <Button
           variant="contained"
           color="secondary"
           sx={{
             borderRadius: "10px",
+          }}
+          onClick={() => {
+            numberHandle();
           }}
         >
           Next
@@ -173,7 +204,7 @@ const TeamNamingForm = ({ teamNameChangeHAndler }) => {
   );
 };
 
-const TeamMissionVission = () => {
+const TeamMissionVission = ({ numberHandle }) => {
   return (
     <Box>
       <Typography variant="h5">
@@ -225,10 +256,89 @@ const TeamMissionVission = () => {
           sx={{
             borderRadius: "10px",
           }}
+          onClick={() => {
+            numberHandle();
+          }}
         >
           Next
         </Button>
       </Box>
+    </Box>
+  );
+};
+
+const AddPeopleInTeam = ({ friends }) => {
+  return (
+    <Box>
+      {" "}
+      <Typography variant="h5">Invite your Team members</Typography>
+      <br />
+      <Box
+        sx={{
+          height: "320px",
+          display: "block",
+        }}
+      >
+        {friends ? (
+          <>
+            <Autocomplete
+              multiple
+              limitTags={2}
+              id="multiple-limit-tags"
+              options={friends}
+              getOptionLabel={(person) => <PersonOption person={person} />}
+              defaultValue={[friends[0]]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Friends"
+                  placeholder="Search a friend"
+                />
+              )}
+              sx={{ width: "auto", maxHeight: "200px" }}
+            />
+          </>
+        ) : (
+          <Box
+            sx={{
+              // marginTop: "100px",
+              // marginLeft: "130px",
+              padding: "145px",
+            }}
+          >
+            <CircularProgress color="secondary" />
+          </Box>
+        )}
+      </Box>
+      <br />
+      {friends && (
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{
+            borderRadius: "10px",
+          }}
+        >
+          Create
+        </Button>
+      )}
+    </Box>
+  );
+};
+
+const Steps = ({ number }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        width: "fit-content",
+        margin: "10px",
+        gap: "10px",
+      }}
+    >
+      <Step number={1} passed={number < 1 ? false : true} />
+      <Step number={2} passed={number < 2 ? false : true} />
+      <Step number={3} passed={number < 3 ? false : true} />
     </Box>
   );
 };
@@ -247,6 +357,15 @@ const Step = ({ number, passed }) => {
       }}
     >
       <Typography>{number}</Typography>
+    </Box>
+  );
+};
+
+const PersonOption = ({ person }) => {
+  return (
+    <Box sx={{ display: "flex", gap: "15px" }}>
+      <Avatar sx={{ height: "20px", width: "20px" }} />
+      {person.username}
     </Box>
   );
 };

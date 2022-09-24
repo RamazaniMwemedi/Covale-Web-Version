@@ -50,7 +50,7 @@ const useGetTheme = () => {
 };
 
 const useGetFriends = () => {
-  const [friends, setFriends] = useState([]);
+  const [friends, setFriends] = useState(null);
   const [logedInUser, setLogedInUser] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -69,6 +69,7 @@ const useGetFriends = () => {
       });
     }
   }, [logedInUser.token]);
+
   return friends;
 };
 
