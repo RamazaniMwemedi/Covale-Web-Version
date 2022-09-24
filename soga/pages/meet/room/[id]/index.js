@@ -29,19 +29,28 @@ const Id = () => {
   const theme = useTheme();
   const router = useRouter();
   const id = router.query.id;
+
+  // WebRTC
+
   // Streams
   const localStream = useGetUserMedia();
   const [remoteStream, setRemoteStream] = useState(null);
+
+  const [peerConnection, setPeerConnection] = useState(null);
+  let myLocalOffer = useCreateOffer(peerConnection, localStream, remoteStream);
+  // const answer = useCreateAnswer(localStream,);
+  const [offer, setOffer] = useState(null);
+  const [answer, setAnswer] = useState(null);
 
   // Video Elements
   const [localVideoElement, setLocalVideoElemnt] = useState(null);
   const [remoteVideoElement, setRemoteVideoElement] = useState(null);
 
-  // const [peerConnection, setPeerConnection] = useState(null);
   if (localVideoElement && localStream) {
     localVideoElement.srcObject = localStream;
   }
   if (remoteVideoElement) {
+    console.log(remoteStream);
     remoteVideoElement.srcObject = remoteStream;
   }
   // Toggle states
@@ -56,18 +65,13 @@ const Id = () => {
   const [showChats, setShowChats] = useState(false);
   const [showActivities, setShowActivities] = useState(false);
 
-  // WebRTC
-  var myLocalOffer = useCreateOffer(localStream, remoteStream);
-  // const answer = useCreateAnswer(localStream,);
-  const [offer, setOffer] = useState(null);
-  const [answer, setAnswer] = useState(null);
-
   // Bottom Left States
   const [expand, setExpand] = useState(true);
   const generateAnswer = async () => {
     let responseAnswer;
     if (localStream && remoteStream && offer) {
       responseAnswer = await createAnswer(
+        peerConnection,
         localStream,
         remoteStream,
         JSON.parse(offer)
@@ -90,14 +94,19 @@ const Id = () => {
 
   let addAnswer = async () => {
     console.log("Answer :", answer);
-    // if (!answer) return alert("Retrieve answer from peer first...");
+    if (!answer) return alert("Retrieve answer from peer first...");
 
-    // if (!peerConnection.currentRemoteDescription) {
-    //   peerConnection.setRemoteDescription(answer);
-    // }
+    if (!peerConnection.currentRemoteDescription) {
+      peerConnection.setRemoteDescription(answer);
+    }
   };
 
   async function getVideoELements() {
+    // RTCPeerConections
+    const configuration = {
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    };
+    setPeerConnection(new RTCPeerConnection(configuration));
     setRemoteStream(new MediaStream());
 
     setLocalVideoElemnt(document.querySelector("video#localVideo"));
@@ -118,6 +127,8 @@ const Id = () => {
     };
   }, [myLocalOffer]);
 
+  console.log("remoteStream :", remoteStream, "localStream :", localStream);
+
   // Meet Handlers
   const toggleMeetLeftHandler = () => {
     setMeetRightOn((prev) => !prev);
@@ -128,7 +139,7 @@ const Id = () => {
     console.log("Offer changed", event.target.value);
   };
   const getingAnswerHandler = (event) => {
-    console.log("Answer changed", event.target.value);
+    setAnswer(JSON.parse(event.target.value));
   };
 
   //Bottom Mid Handlers
@@ -293,7 +304,6 @@ const MeetLeft = () => {
           webkitTransform: "rotateY(180deg)",
           mozTransform: "rotateY(180deg)",
           marginLeft: "15px",
-          display: "none",
         }}
         id="remoteVideo1"
         autoPlay={true}

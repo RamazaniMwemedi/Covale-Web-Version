@@ -18,12 +18,16 @@ const useGetUserMedia = () => {
   if (localStream) return localStream;
 };
 
-const useCreateOffer = (localStream, remoteStream) => {
+const useCreateOffer = (peerConnection, localStream, remoteStream) => {
   const [offer, setOffer] = useState(null);
   useEffect(() => {
-    createOffer(localStream, remoteStream).then((newOffer) => {
-      setOffer(newOffer);
-    });
+    if (localStream && remoteStream && peerConnection) {
+      createOffer(peerConnection, localStream, remoteStream).then(
+        (newOffer) => {
+          setOffer(newOffer);
+        }
+      );
+    }
     return () => {
       setOffer(null);
     };

@@ -1,12 +1,6 @@
-const createOffer = async (localStream, remoteStream) => {
+const createOffer = async (peerConnection, localStream, remoteStream) => {
   var offer;
-  if (localStream && remoteStream) {
-    // RTCPeerConections
-    const configuration = {
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    };
-    const peerConnection = new RTCPeerConnection(configuration);
-
+  if (localStream && remoteStream && peerConnection) {
     // Add LocalStream to peerConnection
     if (localStream) {
       localStream.getTracks().forEach((track) => {
@@ -41,19 +35,27 @@ const createOffer = async (localStream, remoteStream) => {
         "LocalStream is not provided. Please provide the localSteam object first  and the remoteStream"
       );
     }
+  } else {
+    console.error(
+      "peerConnection: ",
+      peerConnection,
+      "localStream :",
+      localStream,
+      "remoteStream :",
+      remoteStream
+    );
   }
 };
-const createAnswer = async (localStream, remoteStream, offer) => {
+const createAnswer = async (
+  peerConnection,
+  localStream,
+  remoteStream,
+  offer
+) => {
   var answer;
-  console.log(offer);
-  // RTCPeerConections
-  const configuration = {
-    iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-  };
-  const peerConnection = new RTCPeerConnection(configuration);
 
   // Add LocalStream to peerConnection
-  if (localStream) {
+  if (!localStream) {
     localStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, localStream);
     });
@@ -80,7 +82,7 @@ const createAnswer = async (localStream, remoteStream, offer) => {
   answer = await peerConnection.createAnswer();
   if (answer) {
     await peerConnection.setLocalDescription(answer);
-          document.getElementById("answer-sdp").value = JSON.stringify(answer);
+    document.getElementById("answer-sdp").value = JSON.stringify(answer);
 
     return answer;
   }
