@@ -36,6 +36,18 @@ const CreateTeam = ({ toggleShowTeam }) => {
   const friends = useGetFriends();
   const [number, setNumber] = useState(1);
 
+  // Step 1
+  const [teamName, setTeamName] = useState(null);
+  const [inPrivate, setInPrivate] = useState(null);
+
+  // Step 2
+  const [teamMission, setTeamMission] = useState(null);
+  const [teamVission, setTeamVission] = useState(null);
+
+  // Step 3
+  const [selectedFriends, setSelectedFriends] = useState(null);
+  
+
   const numberHandle = () => {
     setNumber((prev) => prev + 1);
   };
