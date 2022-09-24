@@ -38,7 +38,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
 
   // Step 1
   const [teamName, setTeamName] = useState(null);
-  const [inPrivate, setInPrivate] = useState(null);
+  const [isPrivate, setIsPrivate] = useState(null);
 
   // Step 2
   const [teamMission, setTeamMission] = useState(null);
@@ -46,7 +46,29 @@ const CreateTeam = ({ toggleShowTeam }) => {
 
   // Step 3
   const [selectedFriends, setSelectedFriends] = useState(null);
-  
+
+  // Step 1 Change Handlers
+  const teamNameChangeHandler = (event) => {
+    setTeamName(event.target.value);
+  };
+
+  const isPrivateChangeHandle = (event) => {
+    setIsPrivate(event.target.value);
+  };
+
+  // Step 2 Change Handler
+  const teamMissionChangeHandler = (event) => {
+    setTeamMission(event.target.value);
+  };
+
+  const teamVissionChangeHandler = (event) => {
+    setTeamVission(event.target.value);
+  };
+
+  // Step 3 Change Handler
+  const selectedFriendsChangeHandler = (event) => {
+    
+  };
 
   const numberHandle = () => {
     setNumber((prev) => prev + 1);
