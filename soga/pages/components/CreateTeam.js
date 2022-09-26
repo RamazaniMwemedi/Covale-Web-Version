@@ -37,15 +37,17 @@ const CreateTeam = ({ toggleShowTeam }) => {
   const [number, setNumber] = useState(1);
 
   // Step 1
-  const [teamName, setTeamName] = useState(null);
-  const [isPrivate, setIsPrivate] = useState(null);
+  const [teamName, setTeamName] = useState("");
+  const [teamNameErrorMessage, setTeamNameErrorMessage] = useState("")
+  const[teamNameErrorBoolean, setTeamNameErrorBoolean ] = useState(false)
+  const [isPrivate, setIsPrivate] = useState(false);
 
   // Step 2
-  const [teamMission, setTeamMission] = useState(null);
-  const [teamVission, setTeamVission] = useState(null);
+  const [teamMission, setTeamMission] = useState("");
+  const [teamVission, setTeamVission] = useState("");
 
   // Step 3
-  const [selectedFriends, setSelectedFriends] = useState(null);
+  const [selectedFriends, setSelectedFriends] = useState([]);
 
   // Step 1 Change Handlers
   const teamNameChangeHandler = (event) => {
@@ -53,7 +55,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
   };
 
   const isPrivateChangeHandle = (event) => {
-    setIsPrivate(event.target.value);
+    setIsPrivate(prev=>!prev);
   };
 
   // Step 2 Change Handler
@@ -66,9 +68,22 @@ const CreateTeam = ({ toggleShowTeam }) => {
   };
 
   // Step 3 Change Handler
-  const selectedFriendsChangeHandler = (event) => {
-    
-  };
+  const selectedFriendsChangeHandler = (event) => {};
+
+  const stepOneNextHanlder = () => { 
+    if(teamName.length  <1){
+      setTeamNameErrorMessage("Team name can't be empty")
+      setTeamNameErrorBoolean(true)
+      setTimeout(() => {
+        setTeamNameErrorBoolean(false)
+        setTeamNameErrorMessage("")
+      }, 3000);
+    }
+    else{
+
+      setNumber((prev) => prev + 1);
+    }
+   }
 
   const numberHandle = () => {
     setNumber((prev) => prev + 1);
@@ -166,8 +181,28 @@ const CreateTeam = ({ toggleShowTeam }) => {
             <Steps number={number} />
             <BodyRight
               number={number}
-              numberHandle={numberHandle}
+              stepOneNextHanlder={stepOneNextHanlder}
               friends={friends}
+              // Steps
+              // Step 1
+              teamName={teamName}
+              isPrivate={isPrivate}
+              teamNameErrorMessage={teamNameErrorMessage}
+              teamNameErrorBoolean={teamNameErrorBoolean}
+              // Step 2
+              teamMission={teamMission}
+              teamVission={teamVission}
+              // Step 3
+              selectedFriends={selectedFriends}
+              // Steps
+              // Step 1 Change Handlers
+              teamNameChangeHandler={teamNameChangeHandler}
+              isPrivateChangeHandle={isPrivateChangeHandle}
+              // Step 2 Change Handlers
+              teamMissionChangeHandler={teamMissionChangeHandler}
+              teamVissionChangeHandler={teamVissionChangeHandler}
+              // Step 3 Change Handler
+              selectedFriendsChangeHandler={selectedFriendsChangeHandler}
             />
           </Paper>
         </Box>
@@ -179,20 +214,77 @@ CreateTeam.propTypes = {};
 
 export default CreateTeam;
 
-const BodyRight = ({ number, friends, numberHandle }) => {
+const BodyRight = ({
+  number,
+  friends,
+  stepOneNextHanlder,
+  numberHandle,
+  teamName,
+  isPrivate,
+  teamNameErrorMessage,
+  teamNameErrorBoolean,
+  teamMission,
+  teamVission,
+  selectedFriends,
+  teamNameChangeHandler,
+  isPrivateChangeHandle,
+  teamMissionChangeHandler,
+  teamVissionChangeHandler,
+  selectedFriendsChangeHandler,
+
+}) => {
   switch (number) {
     case 1:
-      return <TeamNamingForm numberHandle={numberHandle} />;
+      return (
+        <TeamNamingForm
+          stepOneNextHanlder={stepOneNextHanlder}
+          teamName={teamName}
+          isPrivate={isPrivate}
+           teamNameErrorMessage={teamNameErrorMessage}
+              teamNameErrorBoolean={teamNameErrorBoolean}
+          teamNameChangeHandler={teamNameChangeHandler}
+          isPrivateChangeHandle={isPrivateChangeHandle}
+        />
+      );
     case 2:
-      return <TeamMissionVission numberHandle={numberHandle} />;
+      return (
+        <TeamMissionVission
+          numberHandle={numberHandle}
+          teamMission={teamMission}
+          teamVission={teamVission}
+          teamMissionChangeHandler={teamMissionChangeHandler}
+          teamVissionChangeHandler={teamVissionChangeHandler}
+        />
+      );
     case 3:
-      return <AddPeopleInTeam friends={friends} numberHandle={numberHandle} />;
+      return (
+        <AddPeopleInTeam
+          friends={friends}
+          numberHandle={numberHandle}
+          selectedFriends={selectedFriends}
+          selectedFriendsChangeHandler={selectedFriendsChangeHandler}
+        />
+      );
     default:
-      <TeamNamingForm numberHandle={numberHandle} />;
+      <TeamMissionVission
+        numberHandle={numberHandle}
+        teamMission={teamMission}
+        teamVission={teamVission}
+        teamMissionChangeHandler={teamMissionChangeHandler}
+        teamVissionChangeHandler={teamVissionChangeHandler}
+      />;
   }
 };
 
-const TeamNamingForm = ({ numberHandle }) => {
+const TeamNamingForm = ({
+  stepOneNextHanlder,
+  teamName,
+  teamNameErrorMessage,
+  teamNameErrorBoolean,
+  isPrivate,
+  teamNameChangeHandler,
+  isPrivateChangeHandle,
+}) => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
     <Box>
@@ -203,6 +295,12 @@ const TeamNamingForm = ({ numberHandle }) => {
         color="secondary"
         label="Team Name"
         variant="outlined"
+        value={teamName}
+        helperText={teamNameErrorMessage}
+        error={teamNameErrorBoolean}
+        onChange={(e) => {
+          teamNameChangeHandler(e);
+        }}
         sx={{
           borderRadius: "10px",
         }}
@@ -211,7 +309,15 @@ const TeamNamingForm = ({ numberHandle }) => {
       <br />
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6">Would you like it to be private ?</Typography>
-        <Checkbox {...label} defaultChecked color="secondary" />
+        <Checkbox
+          {...label}
+          value={isPrivate}
+          onChange={() => {
+            isPrivateChangeHandle();
+          }}
+          // defaultChecked
+          color="secondary"
+        />
       </Box>
       <br />
       <Typography variant="subtitle2">
@@ -228,7 +334,7 @@ const TeamNamingForm = ({ numberHandle }) => {
             borderRadius: "10px",
           }}
           onClick={() => {
-            numberHandle();
+            stepOneNextHanlder();
           }}
         >
           Next
@@ -238,7 +344,13 @@ const TeamNamingForm = ({ numberHandle }) => {
   );
 };
 
-const TeamMissionVission = ({ numberHandle }) => {
+const TeamMissionVission = ({
+  numberHandle,
+  teamMission,
+  teamVission,
+  teamMissionChangeHandler,
+  teamVissionChangeHandler,
+}) => {
   return (
     <Box>
       <Typography variant="h5">
@@ -254,6 +366,10 @@ const TeamMissionVission = ({ numberHandle }) => {
         sx={{
           borderRadius: "10px",
         }}
+        value={teamMission}
+        onChange={(e) => {
+          teamMissionChangeHandler(e);
+        }}
       />
       <br />
       <br />
@@ -265,6 +381,10 @@ const TeamMissionVission = ({ numberHandle }) => {
         variant="outlined"
         sx={{
           borderRadius: "10px",
+        }}
+        value={teamVission}
+        onChange={(e) => {
+          teamVissionChangeHandler(e);
         }}
       />
       <br />
@@ -294,14 +414,18 @@ const TeamMissionVission = ({ numberHandle }) => {
             numberHandle();
           }}
         >
-          Next
+          Create
         </Button>
       </Box>
     </Box>
   );
 };
 
-const AddPeopleInTeam = ({ friends }) => {
+const AddPeopleInTeam = ({
+  friends,
+  selectedFriends,
+  selectedFriendsChangeHandler,
+}) => {
   return (
     <Box>
       {" "}
@@ -353,7 +477,7 @@ const AddPeopleInTeam = ({ friends }) => {
             borderRadius: "10px",
           }}
         >
-          Create
+          Invite
         </Button>
       )}
     </Box>
