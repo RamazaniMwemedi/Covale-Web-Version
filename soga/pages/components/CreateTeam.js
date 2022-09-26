@@ -24,7 +24,8 @@ import {
   TextField,
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { useGetFriends } from "../../hooks/hooks";
+import { useGetFriends, useCheckLogedinUserToken} from "../../hooks/hooks";
+import {createNewTeam} from "../../services/teams"
 import { useState } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -34,7 +35,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const CreateTeam = ({ toggleShowTeam }) => {
   const theme = useTheme();
   const friends = useGetFriends();
+  const token = useCheckLogedinUserToken()
   const [number, setNumber] = useState(1);
+// New Team
+  const [createdTeamId, setCreatedTeamId] = useState("")
 
   // Step 1
   const [teamName, setTeamName] = useState("");
@@ -70,6 +74,8 @@ const CreateTeam = ({ toggleShowTeam }) => {
   // Step 3 Change Handler
   const selectedFriendsChangeHandler = (event) => {};
 
+  // Next Steps Handlers
+  // Step 1
   const stepOneNextHanlder = () => { 
     if(teamName.length  <1){
       setTeamNameErrorMessage("Team name can't be empty")
@@ -85,8 +91,14 @@ const CreateTeam = ({ toggleShowTeam }) => {
     }
    }
 
-  const numberHandle = () => {
-    setNumber((prev) => prev + 1);
+  const createTeam = async() => {
+      
+if(token){
+  const response= await  createNewTeam(token, teamName, isPrivate,teamMission,teamVission)
+  if( typeof response == "string"){
+setCreatedTeamId(response)
+  }
+}
   };
 
   return (
@@ -203,6 +215,10 @@ const CreateTeam = ({ toggleShowTeam }) => {
               teamVissionChangeHandler={teamVissionChangeHandler}
               // Step 3 Change Handler
               selectedFriendsChangeHandler={selectedFriendsChangeHandler}
+
+              // Create Net Team handler
+              createTeam={createTeam}
+              
             />
           </Paper>
         </Box>
@@ -218,7 +234,6 @@ const BodyRight = ({
   number,
   friends,
   stepOneNextHanlder,
-  numberHandle,
   teamName,
   isPrivate,
   teamNameErrorMessage,
@@ -231,7 +246,7 @@ const BodyRight = ({
   teamMissionChangeHandler,
   teamVissionChangeHandler,
   selectedFriendsChangeHandler,
-
+ createTeam
 }) => {
   switch (number) {
     case 1:
@@ -249,25 +264,24 @@ const BodyRight = ({
     case 2:
       return (
         <TeamMissionVission
-          numberHandle={numberHandle}
           teamMission={teamMission}
           teamVission={teamVission}
           teamMissionChangeHandler={teamMissionChangeHandler}
           teamVissionChangeHandler={teamVissionChangeHandler}
+          createTeam={createTeam}
+
         />
       );
     case 3:
       return (
         <AddPeopleInTeam
           friends={friends}
-          numberHandle={numberHandle}
           selectedFriends={selectedFriends}
           selectedFriendsChangeHandler={selectedFriendsChangeHandler}
         />
       );
     default:
       <TeamMissionVission
-        numberHandle={numberHandle}
         teamMission={teamMission}
         teamVission={teamVission}
         teamMissionChangeHandler={teamMissionChangeHandler}
@@ -283,7 +297,7 @@ const TeamNamingForm = ({
   teamNameErrorBoolean,
   isPrivate,
   teamNameChangeHandler,
-  isPrivateChangeHandle,
+  isPrivateChangeHandle, 
 }) => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
@@ -345,11 +359,10 @@ const TeamNamingForm = ({
 };
 
 const TeamMissionVission = ({
-  numberHandle,
   teamMission,
   teamVission,
   teamMissionChangeHandler,
-  teamVissionChangeHandler,
+  teamVissionChangeHandler, createTeam
 }) => {
   return (
     <Box>
@@ -395,15 +408,7 @@ const TeamMissionVission = ({
       </Typography>
       <br />
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            borderRadius: "10px",
-          }}
-        >
-          Skip
-        </Button>
+      
         <Button
           variant="contained"
           color="secondary"
@@ -411,7 +416,8 @@ const TeamMissionVission = ({
             borderRadius: "10px",
           }}
           onClick={() => {
-            numberHandle();
+            // Creacte account junction
+            createTeam()
           }}
         >
           Create

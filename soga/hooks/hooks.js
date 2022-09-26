@@ -19,6 +19,24 @@ const useCheckLogedinUser = () => {
 
   return logedInUser;
 };
+const useCheckLogedinUserToken = () => {
+    const [logedInUser, setLogedInUser] = useState("");
+  const [logedInUserToken, setLogedInUserToken] = useState("");
+  const router = useRouter();
+  useEffect(() => {
+    const signedInUser = localStorage.getItem("logedinUser");
+    if (signedInUser) {
+      setLogedInUser(JSON.parse(signedInUser));
+      if (logedInUser) {
+        setLogedInUserToken(logedInUser.token)
+      }
+    } else {
+      router.push("/login");
+    }
+  }, [logedInUser]);
+
+  return logedInUserToken;
+};
 
 const useGetChatById = (token, id) => {
   const [chat, setChat] = useState(null);
@@ -88,6 +106,7 @@ const useWindow = () => {
 
 module.exports = {
   useCheckLogedinUser,
+  useCheckLogedinUserToken,
   useGetChatById,
   useGetTheme,
   useGetFriends,
