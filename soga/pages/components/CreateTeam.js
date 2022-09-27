@@ -24,8 +24,8 @@ import {
   TextField,
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { useGetFriends, useCheckLogedinUserToken} from "../../hooks/hooks";
-import {createNewTeam} from "../../services/teams"
+import { useGetFriends, useCheckLogedinUserToken } from "../../hooks/hooks";
+import { createNewTeam } from "../../services/teams";
 import { useState } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -35,15 +35,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const CreateTeam = ({ toggleShowTeam }) => {
   const theme = useTheme();
   const friends = useGetFriends();
-  const token = useCheckLogedinUserToken()
-  const [number, setNumber] = useState(1);
-// New Team
-  const [createdTeamId, setCreatedTeamId] = useState("")
+  const token = useCheckLogedinUserToken();
+  const [number, setNumber] = useState(3);
+  // New Team
+  const [createdTeamId, setCreatedTeamId] = useState("");
 
   // Step 1
   const [teamName, setTeamName] = useState("");
-  const [teamNameErrorMessage, setTeamNameErrorMessage] = useState("")
-  const[teamNameErrorBoolean, setTeamNameErrorBoolean ] = useState(false)
+  const [teamNameErrorMessage, setTeamNameErrorMessage] = useState("");
+  const [teamNameErrorBoolean, setTeamNameErrorBoolean] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
 
   // Step 2
@@ -59,7 +59,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
   };
 
   const isPrivateChangeHandle = (event) => {
-    setIsPrivate(prev=>!prev);
+    setIsPrivate((prev) => !prev);
   };
 
   // Step 2 Change Handler
@@ -72,33 +72,42 @@ const CreateTeam = ({ toggleShowTeam }) => {
   };
 
   // Step 3 Change Handler
-  const selectedFriendsChangeHandler = (event) => {};
+  const selectedFriendsChangeHandler = (values) => {
+    const friendsIds = values.map((value) => {
+      return value.id;
+    });
+    setSelectedFriends(friendsIds);
+  };
 
   // Next Steps Handlers
   // Step 1
-  const stepOneNextHanlder = () => { 
-    if(teamName.length  <1){
-      setTeamNameErrorMessage("Team name can't be empty")
-      setTeamNameErrorBoolean(true)
+  const stepOneNextHanlder = () => {
+    if (teamName.length < 1) {
+      setTeamNameErrorMessage("Team name can't be empty");
+      setTeamNameErrorBoolean(true);
       setTimeout(() => {
-        setTeamNameErrorBoolean(false)
-        setTeamNameErrorMessage("")
+        setTeamNameErrorBoolean(false);
+        setTeamNameErrorMessage("");
       }, 3000);
-    }
-    else{
-
+    } else {
       setNumber((prev) => prev + 1);
     }
-   }
+  };
 
-  const createTeam = async() => {
-      
-if(token){
-  const response= await  createNewTeam(token, teamName, isPrivate,teamMission,teamVission)
-  if( typeof response == "string"){
-setCreatedTeamId(response)
-  }
-}
+  const createTeam = async () => {
+    if (token) {
+      const response = await createNewTeam(
+        token,
+        teamName,
+        isPrivate,
+        teamMission,
+        teamVission
+      );
+      if (typeof response == "string") {
+        setCreatedTeamId(response);
+        setNumber((prev) => prev + 1);
+      }
+    }
   };
 
   return (
@@ -215,10 +224,8 @@ setCreatedTeamId(response)
               teamVissionChangeHandler={teamVissionChangeHandler}
               // Step 3 Change Handler
               selectedFriendsChangeHandler={selectedFriendsChangeHandler}
-
               // Create Net Team handler
               createTeam={createTeam}
-              
             />
           </Paper>
         </Box>
@@ -246,7 +253,7 @@ const BodyRight = ({
   teamMissionChangeHandler,
   teamVissionChangeHandler,
   selectedFriendsChangeHandler,
- createTeam
+  createTeam,
 }) => {
   switch (number) {
     case 1:
@@ -255,8 +262,8 @@ const BodyRight = ({
           stepOneNextHanlder={stepOneNextHanlder}
           teamName={teamName}
           isPrivate={isPrivate}
-           teamNameErrorMessage={teamNameErrorMessage}
-              teamNameErrorBoolean={teamNameErrorBoolean}
+          teamNameErrorMessage={teamNameErrorMessage}
+          teamNameErrorBoolean={teamNameErrorBoolean}
           teamNameChangeHandler={teamNameChangeHandler}
           isPrivateChangeHandle={isPrivateChangeHandle}
         />
@@ -269,7 +276,6 @@ const BodyRight = ({
           teamMissionChangeHandler={teamMissionChangeHandler}
           teamVissionChangeHandler={teamVissionChangeHandler}
           createTeam={createTeam}
-
         />
       );
     case 3:
@@ -297,7 +303,7 @@ const TeamNamingForm = ({
   teamNameErrorBoolean,
   isPrivate,
   teamNameChangeHandler,
-  isPrivateChangeHandle, 
+  isPrivateChangeHandle,
 }) => {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
@@ -362,7 +368,8 @@ const TeamMissionVission = ({
   teamMission,
   teamVission,
   teamMissionChangeHandler,
-  teamVissionChangeHandler, createTeam
+  teamVissionChangeHandler,
+  createTeam,
 }) => {
   return (
     <Box>
@@ -408,7 +415,6 @@ const TeamMissionVission = ({
       </Typography>
       <br />
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-      
         <Button
           variant="contained"
           color="secondary"
@@ -417,7 +423,7 @@ const TeamMissionVission = ({
           }}
           onClick={() => {
             // Creacte account junction
-            createTeam()
+            createTeam();
           }}
         >
           Create
@@ -450,7 +456,10 @@ const AddPeopleInTeam = ({
               limitTags={2}
               id="multiple-limit-tags"
               options={friends}
-              getOptionLabel={(person) => <PersonOption person={person} />}
+              getOptionLabel={
+                (person) => person.username
+                // <PersonOption person={person} />
+              }
               defaultValue={[friends[0]]}
               renderInput={(params) => (
                 <TextField
@@ -460,6 +469,7 @@ const AddPeopleInTeam = ({
                 />
               )}
               sx={{ width: "auto", maxHeight: "200px" }}
+              onChange={(event, value) => selectedFriendsChangeHandler(value)}
             />
           </>
         ) : (

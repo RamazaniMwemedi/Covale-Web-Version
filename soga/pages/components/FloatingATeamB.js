@@ -11,6 +11,7 @@ export default function FloatingATeamB({ toggleShowTeam }) {
         position: "fixed",
         bottom: 10,
         left: 270,
+        zIndex: 1,
       }}
       onClick={() => {
         toggleShowTeam();

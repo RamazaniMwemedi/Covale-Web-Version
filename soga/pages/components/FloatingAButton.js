@@ -11,8 +11,11 @@ export default function FloatingActionButtonSize({ buttonHandler }) {
         position: "fixed",
         bottom: 10,
         left: 270,
+        zIndex: 1,
       }}
-      onClick={()=>{buttonHandler()}}
+      onClick={() => {
+        buttonHandler();
+      }}
     >
       <Fab color="secondary" aria-label="add">
         <AddIcon
