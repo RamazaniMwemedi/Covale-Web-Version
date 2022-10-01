@@ -1,8 +1,8 @@
 import axios from "axios";
 const baseUrl = "https://covalnt.herokuapp.com";
-const baseUrlDev= "http://localhost:5005"
+const baseUrlDev = "http://localhost:5005";
 const getTeams = async (token) => {
-   const response = await axios.get(`${baseUrl}/api/team`, {
+  const response = await axios.get(`${baseUrl}/api/team`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -10,20 +10,48 @@ const getTeams = async (token) => {
   return response.data;
 };
 
-const createNewTeam =async (token, teamName, isPrivate,teamMission,teamVission) => { 
+const createNewTeam = async (
+  token,
+  teamName,
+  isPrivate,
+  teamMission,
+  teamVission
+) => {
   if (token) {
-
-    if (teamName,isPrivate, teamMission,teamVission) {
-      const response = await axios.post(`${baseUrl}/api/team`,{ teamName, isPrivate,teamMission,teamVission }, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+    if ((teamName, isPrivate, teamMission, teamVission)) {
+      const response = await axios.post(
+        `${baseUrl}/api/team`,
+        { teamName, isPrivate, teamMission, teamVission },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
     }
-  } 
- }
+  }
+};
+const inviteFriends = async (token, teamId, friends) => {
+  console.log("Token is :", token);
+  if (token) {
+    if (friends.length > 0) {
+      const response = await axios.post(
+        `${baseUrlDev}/api/team/invite`,
+        { teamId, friends },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.status;
+    }
+  }
+};
 
 module.exports = {
-    getTeams,createNewTeam
-}
+  getTeams,
+  createNewTeam,
+  inviteFriends,
+};

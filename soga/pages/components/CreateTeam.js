@@ -25,7 +25,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { useGetFriends, useCheckLogedinUserToken } from "../../hooks/hooks";
-import { createNewTeam } from "../../services/teams";
+import { createNewTeam, inviteFriends } from "../../services/teams";
 import { useState } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -91,6 +91,21 @@ const CreateTeam = ({ toggleShowTeam }) => {
       }, 3000);
     } else {
       setNumber((prev) => prev + 1);
+    }
+  };
+
+  const sendInvitation = async () => {
+    if (token && selectedFriends.length > 0) {
+      console.log("Token :", token, "selectedFriends :", selectedFriends);
+      const res = await inviteFriends(
+        token,
+        "6332e17b40e5b58aaa0d3da5",
+        selectedFriends
+      );
+      console.log(res);
+      if(res == 200){
+        
+      }
     }
   };
 
@@ -224,6 +239,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
               teamVissionChangeHandler={teamVissionChangeHandler}
               // Step 3 Change Handler
               selectedFriendsChangeHandler={selectedFriendsChangeHandler}
+              sendInvitation={sendInvitation}
               // Create Net Team handler
               createTeam={createTeam}
             />
@@ -253,6 +269,7 @@ const BodyRight = ({
   teamMissionChangeHandler,
   teamVissionChangeHandler,
   selectedFriendsChangeHandler,
+  sendInvitation,
   createTeam,
 }) => {
   switch (number) {
@@ -284,6 +301,7 @@ const BodyRight = ({
           friends={friends}
           selectedFriends={selectedFriends}
           selectedFriendsChangeHandler={selectedFriendsChangeHandler}
+          sendInvitation={sendInvitation}
         />
       );
     default:
@@ -437,6 +455,7 @@ const AddPeopleInTeam = ({
   friends,
   selectedFriends,
   selectedFriendsChangeHandler,
+  sendInvitation,
 }) => {
   return (
     <Box>
@@ -457,10 +476,9 @@ const AddPeopleInTeam = ({
               id="multiple-limit-tags"
               options={friends}
               getOptionLabel={
-                (person) => person.username
+                (person) => `${person.firstname} ${person.lastname}`
                 // <PersonOption person={person} />
               }
-              defaultValue={[friends[0]]}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -491,6 +509,9 @@ const AddPeopleInTeam = ({
           color="secondary"
           sx={{
             borderRadius: "10px",
+          }}
+          onClick={() => {
+            sendInvitation();
           }}
         >
           Invite
