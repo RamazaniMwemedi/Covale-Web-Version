@@ -10,6 +10,15 @@ const getTeams = async (token) => {
   return response.data;
 };
 
+const getTeamById = async (token, id) => {
+  const response = await axios.get(`${baseUrl}/api/team/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 const createNewTeam = async (
   token,
   teamName,
@@ -53,5 +62,6 @@ const inviteFriends = async (token, teamId, friends) => {
 module.exports = {
   getTeams,
   createNewTeam,
+  getTeamById,
   inviteFriends,
 };

@@ -2,6 +2,7 @@ const { useEffect, useState, useLayoutEffect } = require("react");
 const { useRouter } = require("next/router");
 
 const { getChatById } = require("../services/chats");
+const { getTeamById } = require("../services/teams");
 const { sendMessege } = require("../services/messages");
 const { myFriends } = require("../services/user");
 
@@ -52,6 +53,21 @@ const useGetChatById = (token, id) => {
     }
   }, [token, id]);
   return { chat, loading };
+};
+const useGetTeamById = (token, id) => {
+  const [team, setTeam] = useState(null)
+  const [loading, setLoading] = useState(true);
+  // Get chat by id and set it to chat
+  useEffect(() => {
+    setLoading(true);
+    if ((token, id)) {
+      getTeamById(token, id).then((res) => {
+        setTeam(res);
+        setLoading(false);
+      });
+    }
+  }, [token, id]);
+  return { team, loading };
 };
 
 const useGetTheme = () => {
@@ -108,6 +124,7 @@ module.exports = {
   useCheckLogedinUser,
   useCheckLogedinUserToken,
   useGetChatById,
+  useGetTeamById,
   useGetTheme,
   useGetFriends,
   useWindow,

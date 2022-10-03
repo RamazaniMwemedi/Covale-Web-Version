@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useEffect, useState,  useReducer } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
 
@@ -20,6 +20,7 @@ import {
   useCheckLogedinUser,
   useGetChatById,
   useAudio,
+  useGetTeamById,
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
 
@@ -57,7 +58,13 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
-  const chat = useGetChatById(token, id);
+  const chat = router.pathname.includes("chats/c")
+    ? useGetChatById(token, id)
+    : null;
+  const team = router.pathname.includes("chats/t")
+    ? useGetTeamById(token, id)
+    : null;
+  console.log(team);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -114,24 +121,29 @@ export default function Chat() {
     });
   }, [socket]);
 
-  useEffect(() => {
-    if ((token, id)) {
-      setLoading(true);
-      dispatch({
-        type: "CLEAR",
-      });
-      getChatById(token, id).then((res) => {
-        dispatch({
-          type: "ADD_ALL_MESSAGES",
-          payload: res.chat.messege,
-        });
-        setLoading(false);
-      });
-      socket.emit("join_room", id);
-    }
-  }, [token, id]);
+  // useEffect(() => {
+  //   if ((token, id)) {
+  //     setLoading(true);
+  //     dispatch({
+  //       type: "CLEAR",
+  //     });
+  //     console.log()
+  //     if (router.pathname.includes("chats/c")) {
+  //       // getChatById(token, id).then((res) => {
+  //       //   dispatch({
+  //       //     type: "ADD_ALL_MESSAGES",
+  //       //     payload: res.chat.messege,
+  //       //   });
+  //       //   setLoading(false);
+  //       // });
+  //       // socket.emit("join_room", id);
+  //     } else if(router.pathname.includes("chats/t")){
 
-  const friendUsername = chat.chat
+  //     }
+  //   }
+  // }, [token, id]);
+
+  const friendUsername = chat
     ? chat.chat.friend.id !== user.id
       ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
       : ""
@@ -184,7 +196,8 @@ export default function Chat() {
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
           <TeamLeft user={user} chat={chat} />
           {id ? (
-            <TeamSection/>
+            <TeamSection />
+          ) : (
             // loading ? (
             //   //Team Sketelton
             //   <Typography>Team Sketelton</Typography>
@@ -192,7 +205,6 @@ export default function Chat() {
             //   // Team Section
             //   <Typography>Team Section</Typography>
             // )
-          ) : (
             <ClickTeam />
           )}
         </>

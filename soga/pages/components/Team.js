@@ -13,7 +13,7 @@ import { useTheme } from "@mui/material/styles";
 
 export default function Team({ team }) {
   const router = useRouter();
-  const id = router.query.t;
+  const id = router.query.id;
   const theme = useTheme();
   return (
     <List
@@ -34,7 +34,7 @@ export default function Team({ team }) {
             borderRadius: "0.5rem",
             boxShadow: team.id === id ? 1 : "unset",
             backgroundColor:
-              team.id === id ? theme.colors.itemBackground : "unset",
+              team.id === id ? theme.colors.itemBackground : "lightgray",
             "&:hover": {
               // backgroundColor: ,
               // boxShadow: 1,
