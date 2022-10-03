@@ -37,7 +37,7 @@ const inviteFriends = async (token, teamId, friends) => {
   if (token) {
     if (friends.length > 0) {
       const response = await axios.post(
-        `${baseUrlDev}/api/team/invite`,
+        `${baseUrl}/api/team/invite`,
         { teamId, friends },
         {
           headers: {

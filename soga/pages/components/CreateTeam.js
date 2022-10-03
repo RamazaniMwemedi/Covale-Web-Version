@@ -27,6 +27,8 @@ import { useTheme } from "@emotion/react";
 import { useGetFriends, useCheckLogedinUserToken } from "../../hooks/hooks";
 import { createNewTeam, inviteFriends } from "../../services/teams";
 import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import SaveIcon from "@mui/icons-material/Save";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -36,7 +38,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
   const theme = useTheme();
   const friends = useGetFriends();
   const token = useCheckLogedinUserToken();
-  const [number, setNumber] = useState(3);
+  const [number, setNumber] = useState(1);
   // New Team
   const [createdTeamId, setCreatedTeamId] = useState("");
 
@@ -49,9 +51,11 @@ const CreateTeam = ({ toggleShowTeam }) => {
   // Step 2
   const [teamMission, setTeamMission] = useState("");
   const [teamVission, setTeamVission] = useState("");
+  const [creatingTeamBool, setCreatingTeamBool] = useState(false);
 
   // Step 3
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [invitingBool, setInvitingBool] = useState(false);
 
   // Step 1 Change Handlers
   const teamNameChangeHandler = (event) => {
@@ -95,22 +99,20 @@ const CreateTeam = ({ toggleShowTeam }) => {
   };
 
   const sendInvitation = async () => {
-    if (token && selectedFriends.length > 0) {
-      console.log("Token :", token, "selectedFriends :", selectedFriends);
-      const res = await inviteFriends(
-        token,
-        "6332e17b40e5b58aaa0d3da5",
-        selectedFriends
-      );
+    if (token && selectedFriends.length > 0 && createdTeamId) {
+      setInvitingBool(true);
+      const res = await inviteFriends(token, createdTeamId, selectedFriends);
       console.log(res);
-      if(res == 200){
-        
+      if (res == 200 && createdTeamId) {
+        setInvitingBool(false);
+        window.location.href = `http://localhost:3000/chats/t/${createdTeamId}`;
       }
     }
   };
 
   const createTeam = async () => {
     if (token) {
+      setCreatingTeamBool(true);
       const response = await createNewTeam(
         token,
         teamName,
@@ -119,6 +121,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
         teamVission
       );
       if (typeof response == "string") {
+        setCreatingTeamBool(false);
         setCreatedTeamId(response);
         setNumber((prev) => prev + 1);
       }
@@ -228,6 +231,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
               // Step 2
               teamMission={teamMission}
               teamVission={teamVission}
+              creatingTeamBool={creatingTeamBool}
               // Step 3
               selectedFriends={selectedFriends}
               // Steps
@@ -242,6 +246,8 @@ const CreateTeam = ({ toggleShowTeam }) => {
               sendInvitation={sendInvitation}
               // Create Net Team handler
               createTeam={createTeam}
+              invitingBool={invitingBool}
+              createdTeamId={createdTeamId}
             />
           </Paper>
         </Box>
@@ -249,6 +255,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
     </div>
   );
 };
+
 CreateTeam.propTypes = {};
 
 export default CreateTeam;
@@ -263,6 +270,7 @@ const BodyRight = ({
   teamNameErrorBoolean,
   teamMission,
   teamVission,
+  creatingTeamBool,
   selectedFriends,
   teamNameChangeHandler,
   isPrivateChangeHandle,
@@ -270,7 +278,9 @@ const BodyRight = ({
   teamVissionChangeHandler,
   selectedFriendsChangeHandler,
   sendInvitation,
+  invitingBool,
   createTeam,
+  createdTeamId,
 }) => {
   switch (number) {
     case 1:
@@ -292,6 +302,7 @@ const BodyRight = ({
           teamVission={teamVission}
           teamMissionChangeHandler={teamMissionChangeHandler}
           teamVissionChangeHandler={teamVissionChangeHandler}
+          creatingTeamBool={creatingTeamBool}
           createTeam={createTeam}
         />
       );
@@ -302,6 +313,8 @@ const BodyRight = ({
           selectedFriends={selectedFriends}
           selectedFriendsChangeHandler={selectedFriendsChangeHandler}
           sendInvitation={sendInvitation}
+          invitingBool={invitingBool}
+          createdTeamId={createdTeamId}
         />
       );
     default:
@@ -385,6 +398,7 @@ const TeamNamingForm = ({
 const TeamMissionVission = ({
   teamMission,
   teamVission,
+  creatingTeamBool,
   teamMissionChangeHandler,
   teamVissionChangeHandler,
   createTeam,
@@ -433,19 +447,30 @@ const TeamMissionVission = ({
       </Typography>
       <br />
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Button
-          variant="contained"
-          color="secondary"
-          sx={{
-            borderRadius: "10px",
-          }}
-          onClick={() => {
-            // Creacte account junction
-            createTeam();
-          }}
-        >
-          Create
-        </Button>
+        {creatingTeamBool ? (
+          <LoadingButton
+            loading
+            startIcon={<SaveIcon />}
+            loadingPosition="start"
+            variant="contained"
+          >
+            Creating
+          </LoadingButton>
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{
+              borderRadius: "10px",
+            }}
+            onClick={() => {
+              // Creacte account junction
+              createTeam();
+            }}
+          >
+            Create
+          </Button>
+        )}
       </Box>
     </Box>
   );
@@ -456,6 +481,8 @@ const AddPeopleInTeam = ({
   selectedFriends,
   selectedFriendsChangeHandler,
   sendInvitation,
+  invitingBool,
+  createdTeamId,
 }) => {
   return (
     <Box>
@@ -503,20 +530,49 @@ const AddPeopleInTeam = ({
         )}
       </Box>
       <br />
-      {friends && (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        {friends &&
+          (invitingBool ? (
+            <LoadingButton
+              loading
+              startIcon={<SaveIcon />}
+              loadingPosition="start"
+              variant="contained"
+            >
+              Inviting
+            </LoadingButton>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                borderRadius: "10px",
+              }}
+              onClick={() => {
+                sendInvitation();
+              }}
+            >
+              Invite
+            </Button>
+          ))}
         <Button
           variant="contained"
-          color="secondary"
+          color="primary"
           sx={{
             borderRadius: "10px",
           }}
           onClick={() => {
-            sendInvitation();
+            window.location.href = `http://localhost:3000/chats/t/${createdTeamId}`;
           }}
         >
-          Invite
+          Skip
         </Button>
-      )}
+      </Box>
     </Box>
   );
 };

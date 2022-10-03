@@ -197,7 +197,6 @@ const LoginPage = () => {
         setSubmiting(true);
         const response = await loginServices.signUp(data);
         router.push("/chats/");
-        console.table(response);
         window.localStorage.setItem("logedinUser", JSON.stringify(response));
         window.localStorage.setItem("theme", "light-mode");
       } catch (error) {

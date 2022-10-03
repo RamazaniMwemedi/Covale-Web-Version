@@ -14,6 +14,8 @@ import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import Tooltip from "@mui/material/Tooltip";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import InsightsSharpIcon from "@mui/icons-material/InsightsSharp";
+import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 
 import Logo from "../../assets/Logo";
 import NewMeet from "./NewMeet";
@@ -62,6 +64,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
   const [calendar, setCalendar] = useState("gray");
   const [meet, setMeet] = useState("gray");
   // Background color
+  const [notificationBackground, setNotificationBackground] = useState("")
   const [chatBackgroundColor, setChatBackgroundColor] = useState("");
   const [peopleBackgroundColor, setPeopleBackgroundColor] = useState("");
   const [calenderBackgroundColor, setCalenderBackgroundColor] = useState("");
@@ -111,7 +114,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setCalenderBackgroundColor("");
       setMeetBackgroundColor(theme.colors.drawerBackground);
     }
-  }, [router.pathname]);
+  }, [router.pathname,theme]);
 
   return (
     <>
@@ -141,6 +144,25 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 <Logo width={50} height={50} />
               </Box>
               <br />
+              <Tooltip title="Notifications" placement="right-start">
+                <ListItemButton
+                  button
+                  onClick={() => {
+                    router.push("/notifications");
+                  }}
+                  sx={{
+                    borderRadius: "10px",
+                    margin: "5px",
+                    backgroundColor: notificationBackground,
+                  }}
+                >
+                  <ListItemIcon>
+                    <NotificationsActiveRoundedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Chats" />
+                  <Typography variant="caption">Chat</Typography>
+                </ListItemButton>
+              </Tooltip>
               <Tooltip title="Chats" placement="right-start">
                 <ListItemButton
                   button
@@ -167,7 +189,6 @@ export default function DrawerComponent({ signoutHandler, user }) {
                     </svg>
                   </ListItemIcon>
                   <ListItemText primary="Chats" />
-                  <Typography variant="caption">Chat</Typography>
                 </ListItemButton>
               </Tooltip>
               <Tooltip title="People" placement="right-start">
@@ -184,6 +205,24 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 >
                   <ListItemIcon>
                     <PeopleAltIcon color={peopleColor} />
+                  </ListItemIcon>
+                  <ListItemText primary="People" />
+                </ListItemButton>
+              </Tooltip>
+              <Tooltip title="Insight" placement="right-start">
+                <ListItemButton
+                  button
+                  onClick={() => {
+                    router.push("/people");
+                  }}
+                  sx={{
+                    borderRadius: "10px",
+                    margin: "5px",
+                    backgroundColor: peopleBackgroundColor,
+                  }}
+                >
+                  <ListItemIcon>
+                    <InsightsSharpIcon color={peopleColor} />
                   </ListItemIcon>
                   <ListItemText primary="People" />
                 </ListItemButton>
