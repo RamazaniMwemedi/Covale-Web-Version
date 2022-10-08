@@ -124,8 +124,8 @@ const Teams = ({ teams, openCreateTeam, toggleShowTeam, teamLoading }) => {
                 {!openCreateTeam && (
                   <FloatingATeamB toggleShowTeam={toggleShowTeam} />
                 )}
-                {teams.map((team) => {
-                  return <Team team={team} />;
+                {teams.map((team,i) => {
+                  return <Team key={i} team={team} />;
                 })}
               </Box>
             ) : (

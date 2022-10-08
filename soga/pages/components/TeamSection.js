@@ -41,7 +41,10 @@ const TeamSection = ({
         }}
       >
         {/* Team Section Left */}
-        <TeamSectionLeft/>
+        <TeamSectionLeft
+          showRight={showRight}
+          showRightHandler={showRightHandler}
+        />
       </Box>
       {/* Team Section Right */}
       {showRight && (

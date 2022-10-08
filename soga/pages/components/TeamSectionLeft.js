@@ -79,7 +79,7 @@ const TeamSectionLeft = ({
 
 export default TeamSectionLeft;
 
-const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
+const TopBar = ({ showRightHandler, showRight }) => {
   const theme = useTheme();
   return (
     <Box
@@ -114,14 +114,14 @@ const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
           textAlign: "center",
         }}
       >
-        <Avatar alt={friendUsername} sx={{ width: 45, height: 45 }} />
+        <Avatar alt={"Team NAme"} sx={{ width: 45, height: 45 }} />
         <Typography
           variant="h6"
           sx={{
             paddingLeft: "10px",
           }}
         >
-          {friendUsername}
+          Team Name
         </Typography>
       </Box>
       {/* Right */}

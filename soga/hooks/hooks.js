@@ -3,8 +3,16 @@ const { useRouter } = require("next/router");
 
 const { getChatById } = require("../services/chats");
 const { getTeamById } = require("../services/teams");
-const { sendMessege } = require("../services/messages");
 const { myFriends } = require("../services/user");
+
+// React-Redux hooks
+const { useDispatch } = require("react-redux");
+
+// Reducers
+const { teamAdd, teamReset } = require("../Redux/slices/team");
+const { chatAdd, chatReset } = require("../Redux/slices/chat");
+
+//    Team Reducer
 
 const useCheckLogedinUser = () => {
   const [logedInUser, setLogedInUser] = useState("");
@@ -21,7 +29,7 @@ const useCheckLogedinUser = () => {
   return logedInUser;
 };
 const useCheckLogedinUserToken = () => {
-    const [logedInUser, setLogedInUser] = useState("");
+  const [logedInUser, setLogedInUser] = useState("");
   const [logedInUserToken, setLogedInUserToken] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -29,7 +37,7 @@ const useCheckLogedinUserToken = () => {
     if (signedInUser) {
       setLogedInUser(JSON.parse(signedInUser));
       if (logedInUser) {
-        setLogedInUserToken(logedInUser.token)
+        setLogedInUserToken(logedInUser.token);
       }
     } else {
       router.push("/login");
@@ -42,24 +50,36 @@ const useCheckLogedinUserToken = () => {
 const useGetChatById = (token, id) => {
   const [chat, setChat] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const dispatch = useDispatch();
+
   // Get chat by id and set it to chat
   useEffect(() => {
     setLoading(true);
+    // Clear Chat Store
+    dispatch(chatReset);
     if ((token, id)) {
       getChatById(token, id).then((res) => {
         setChat(res);
         setLoading(false);
       });
     }
+    if (chat) {
+      dispatch(chatAdd(chat));
+    }
   }, [token, id]);
   return { chat, loading };
 };
 const useGetTeamById = (token, id) => {
-  const [team, setTeam] = useState(null)
+  const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
   // Get chat by id and set it to chat
   useEffect(() => {
     setLoading(true);
+    // Clear Team store
+    dispatch(teamReset());
     if ((token, id)) {
       getTeamById(token, id).then((res) => {
         setTeam(res);
@@ -67,6 +87,9 @@ const useGetTeamById = (token, id) => {
       });
     }
   }, [token, id]);
+  if (team) {
+    dispatch(teamAdd(team));
+  }
   return { team, loading };
 };
 

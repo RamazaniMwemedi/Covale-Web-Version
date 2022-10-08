@@ -4,6 +4,8 @@ import Head from "next/head";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { Provider } from "react-redux";
+import store from "../Redux/store";
 
 function MyApp({ Component, pageProps }) {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -87,18 +89,23 @@ function MyApp({ Component, pageProps }) {
   }, [preferedTheme]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Head>
-        <title>Covale</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link
-          rel="icon"
-          href="https://ramazanimwemedi.github.io/sounds/covalogo.png"
-        />
-      </Head>
-      <CssBaseline />
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Head>
+          <title>Covale</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+          <link
+            rel="icon"
+            href="https://ramazanimwemedi.github.io/sounds/covalogo.png"
+          />
+        </Head>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </Provider>
   );
 }
 

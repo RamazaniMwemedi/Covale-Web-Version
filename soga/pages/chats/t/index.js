@@ -24,47 +24,28 @@ import {
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
 
-// Redux
-const { createStore } = require("redux");
+// Redux Hooks
+import { useSelector, useDispatch } from "react-redux";
 
 // Socket.IO
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
-// Chat Reducer
-const initialState = [];
-
-const chatReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case "ADD_ALL_MESSAGES":
-      return (state = payload);
-    case "RECIEVE_MESSAGE":
-      return [...state, payload];
-    case "SENT_MESSAGE":
-      return [...state, payload];
-    case "CLEAR":
-      return [];
-    default:
-      return state;
-  }
-  // console.log(store);
-};
-
-const chatsStore = createStore(chatReducer);
-
 export default function Chat() {
-  const [messages, dispatch] = useReducer(chatReducer, initialState);
+  console.log(useSelector((state) => state.team));
   const theme = useTheme();
   var user = useCheckLogedinUser();
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
-  const chat = router.pathname.includes("chats/c")
-    ? useGetChatById(token, id)
-    : null;
-  const team = router.pathname.includes("chats/t")
-    ? useGetTeamById(token, id)
-    : null;
-  console.log(team);
+
+  // Getting Chat by it's ID
+  router.pathname.includes("chats/c") && useGetChatById(token, id);
+
+  // Getting Team by it's ID
+  router.pathname.includes("chats/t") && useGetTeamById(token, id);
+
+  // Saving Team into a redux state
+
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -143,11 +124,11 @@ export default function Chat() {
   //   }
   // }, [token, id]);
 
-  const friendUsername = chat
-    ? chat.chat.friend.id !== user.id
-      ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
-      : ""
-    : "";
+  // const friendUsername = chat
+  //   ? chat.chat.friend.id !== user.id
+  //     ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
+  //     : ""
+  //   : "";
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -194,7 +175,7 @@ export default function Chat() {
       {user ? (
         <>
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
-          <TeamLeft user={user} chat={chat} />
+          <TeamLeft user={user} />
           {id ? (
             <TeamSection />
           ) : (
