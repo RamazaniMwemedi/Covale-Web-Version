@@ -68,7 +68,7 @@ const useGetChatById = (token, id) => {
       dispatch(chatAdd(chat));
     }
   }, [token, id]);
-  return { chat, loading };
+  return  loading ;
 };
 const useGetTeamById = (token, id) => {
   const [team, setTeam] = useState(null);
@@ -90,7 +90,7 @@ const useGetTeamById = (token, id) => {
   if (team) {
     dispatch(teamAdd(team));
   }
-  return { team, loading };
+  return loading;
 };
 
 const useGetTheme = () => {

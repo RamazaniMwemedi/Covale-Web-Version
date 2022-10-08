@@ -8,17 +8,17 @@ import {
   List,
   ListItem,
 } from "@mui/material";
-import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
-import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
-import VideoFileIcon from "@mui/icons-material/VideoFile";
+import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import PersonIcon from "@mui/icons-material/Person";
+import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { useTheme } from "@mui/material";
+import { useCheckLogedinUser } from "../../hooks/hooks";
 
 import dynamic from "next/dynamic";
 
@@ -30,17 +30,17 @@ const Picker = dynamic(
 );
 
 const TeamSectionLeft = ({
-  id,
-  user,
+  team,
+  showRightHandler,
+  message,
+  showRight,
   messageChangeHandler,
   sendNewMessage,
-  message,
-  messages,
-  friendUsername,
-  showRightHandler,
-  showRight,
   onEmojiClick,
 }) => {
+  const user = useCheckLogedinUser();
+  const teamName = team.teamName;
+  const messages = team.messages;
   return (
     <Box
       sx={{
@@ -51,10 +51,9 @@ const TeamSectionLeft = ({
       }}
     >
       <TopBar
-        friendUsername={friendUsername}
+        teamName={teamName}
         showRightHandler={showRightHandler}
         showRight={showRight}
-        id={id}
       />
       <Box
         sx={{
@@ -79,7 +78,7 @@ const TeamSectionLeft = ({
 
 export default TeamSectionLeft;
 
-const TopBar = ({ showRightHandler, showRight }) => {
+const TopBar = ({ showRightHandler, showRight, teamName }) => {
   const theme = useTheme();
   return (
     <Box
@@ -121,7 +120,7 @@ const TopBar = ({ showRightHandler, showRight }) => {
             paddingLeft: "10px",
           }}
         >
-          Team Name
+          {teamName}
         </Typography>
       </Box>
       {/* Right */}
@@ -134,44 +133,19 @@ const TopBar = ({ showRightHandler, showRight }) => {
           textAlign: "center",
         }}
       >
-        <IconButton>
-          <AddIcCallRoundedIcon
-            color="secondary"
-            sx={{
-              fontSize: 25,
-            }}
-            onClick={() => {
-              // Open a new window with a adio call
-              window.open(
-                `http://localhost:3000/meet/room/${id}`,
-                "_blank",
-                "toolbar=no,scrollbars=yes,resizable=yes,top=100,left=300,width=1000,height=500"
-              );
-            }}
-          />
-        </IconButton>
-        <IconButton>
-          <VideoCallRoundedIcon
-            color="secondary"
-            sx={{
-              fontSize: 25,
-            }}
-            onClick={() => {
-              // Open a new window with a video call
-              window.open(
-                `http://localhost:3000/meet/room/${id}`,
-                "_blank",
-                "toolbar=no,scrollbars=yes,resizable=yes,top=100,left=300,width=1000,height=500"
-              );
-            }}
-          />
+        <IconButton
+          onClick={() => {
+            showRightHandler();
+          }}
+        >
+          <GroupsRoundedIcon color={showRight ? "secondary" : "action"} />
         </IconButton>
         <IconButton
           onClick={() => {
             showRightHandler();
           }}
         >
-          <PersonIcon color={showRight ? "secondary" : "action"} />
+          <MenuRoundedIcon color={showRight ? "secondary" : "action"} />
         </IconButton>
       </Box>
     </Box>
@@ -195,6 +169,7 @@ const Mid = ({ user, messages }) => {
       <List
         sx={{
           maxHeight: "82.6vh",
+          minHeight: "82.5vh",
           overflowY: "scroll",
           overflowX: "hidden",
           padding: "0px",
@@ -357,7 +332,7 @@ const Bottom = ({
       )}
 
       <IconButton>
-        <VideoFileIcon color="secondary" />
+        <ControlPointRoundedIcon color="secondary" />
       </IconButton>
       <IconButton>
         <PhotoSizeSelectActualRoundedIcon color="secondary" />

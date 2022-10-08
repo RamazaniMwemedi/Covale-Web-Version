@@ -42,7 +42,6 @@ const createNewTeam = async (
   }
 };
 const inviteFriends = async (token, teamId, friends) => {
-  console.log("Token is :", token);
   if (token) {
     if (friends.length > 0) {
       const response = await axios.post(

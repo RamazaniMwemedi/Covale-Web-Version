@@ -7,11 +7,10 @@ const teamSlice = createSlice({
   initialState: initialState,
   reducers: {
     teamAdd(state, { payload }) {
-      console.log("state :", state);
-      state = payload;
+      state.team = payload;
     },
     teamReset(state) {
-      state = initialState;
+      state.team = initialState;
     },
   },
 });

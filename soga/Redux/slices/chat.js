@@ -7,10 +7,10 @@ const chatSlice = createSlice({
   initialState: initialState,
   reducers: {
     chatAdd(state, { payload }) {
-      state = payload;
+      state.chat = payload;
     },
     chatReset() {
-      state = initialState;
+      state.chat = initialState;
     },
   },
 });

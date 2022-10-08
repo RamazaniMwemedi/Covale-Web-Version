@@ -2,20 +2,24 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/styles";
 import React from "react";
+// Redux Hooks
+import { useSelector } from "react-redux";
 
 import TeamSectionLeft from "./TeamSectionLeft";
 
 const TeamSection = ({
-  id,
-  user,
-  chat,
-  messageChangeHandler,
-  message,
   sendNewMessage,
-  messages,
-  friendUsername,
+  message,
   onEmojiClick,
+  messageChangeHandler,
 }) => {
+  const team = useSelector((state) => {
+    if (state.team) {
+      return state.team.team;
+    } else {
+      return null;
+    }
+  });
   const [showRight, setShowRight] = React.useState(true);
   const showRightHandler = () => {
     setShowRight(!showRight);
@@ -42,8 +46,13 @@ const TeamSection = ({
       >
         {/* Team Section Left */}
         <TeamSectionLeft
+          team={team}
           showRight={showRight}
           showRightHandler={showRightHandler}
+          messageChangeHandler={messageChangeHandler}
+          sendNewMessage={sendNewMessage}
+          message={message}
+          onEmojiClick={onEmojiClick}
         />
       </Box>
       {/* Team Section Right */}

@@ -31,7 +31,6 @@ import { useSelector, useDispatch } from "react-redux";
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
 export default function Chat() {
-  console.log(useSelector((state) => state.team));
   const theme = useTheme();
   var user = useCheckLogedinUser();
   const router = useRouter();
@@ -163,6 +162,10 @@ export default function Chat() {
     }
   };
 
+   const onEmojiClick = (event, emojiObject) => {
+     setMessage(message + emojiObject.emoji);
+   };
+
   return (
     <Box
       sx={{
@@ -177,7 +180,12 @@ export default function Chat() {
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
           <TeamLeft user={user} />
           {id ? (
-            <TeamSection />
+            <TeamSection
+              messageChangeHandler={messageChangeHandler}
+              sendNewMessage={sendMessageHandle}
+              message={message}
+              onEmojiClick={onEmojiClick}
+            />
           ) : (
             // loading ? (
             //   //Team Sketelton
