@@ -50,7 +50,6 @@ const Id = () => {
     localVideoElement.srcObject = localStream;
   }
   if (remoteVideoElement) {
-    console.log(remoteStream);
     remoteVideoElement.srcObject = remoteStream;
   }
   // Toggle states
@@ -79,21 +78,10 @@ const Id = () => {
       if (responseAnswer) {
         setAnswer(responseAnswer);
       }
-    } else {
-      console.error(
-        "LocalStream , remoteStream and myLocalOffer ...",
-        "LocalStream :",
-        localStream,
-        "remoteStream :",
-        remoteStream,
-        "offer :",
-        offer
-      );
     }
   };
 
   let addAnswer = async () => {
-    console.log("Answer :", answer);
     if (!answer) return alert("Retrieve answer from peer first...");
 
     if (!peerConnection.currentRemoteDescription) {
@@ -127,8 +115,6 @@ const Id = () => {
     };
   }, [myLocalOffer]);
 
-  console.log("remoteStream :", remoteStream, "localStream :", localStream);
-
   // Meet Handlers
   const toggleMeetLeftHandler = () => {
     setMeetRightOn((prev) => !prev);
@@ -136,7 +122,6 @@ const Id = () => {
 
   const getingOfferHandler = (event) => {
     setOffer(event.target.value);
-    console.log("Offer changed", event.target.value);
   };
   const getingAnswerHandler = (event) => {
     setAnswer(JSON.parse(event.target.value));

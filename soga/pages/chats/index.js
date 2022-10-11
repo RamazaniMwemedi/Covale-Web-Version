@@ -23,6 +23,7 @@ import {
   useAudio,
 } from "../../hooks/hooks";
 import LoadingLogo from "../components/LoadingLogo";
+import { useSelector } from "react-redux";
 
 // Redux
 const { createStore } = require("redux");
@@ -46,7 +47,6 @@ const chatReducer = (state = initialState, { type, payload }) => {
     default:
       return state;
   }
-  // console.log(store);
 };
 
 const chatsStore = createStore(chatReducer);
@@ -58,7 +58,7 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
-  const chat = useGetChatById(token, id);
+  const chat = useSelector((state) => state.chat.chat);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -132,9 +132,9 @@ export default function Chat() {
     }
   }, [token, id]);
 
-  const friendUsername = chat.chat
-    ? chat.chat.friend.id !== user.id
-      ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
+  const friendUsername = chat
+    ? chat.friend.id !== user.id
+      ? `${chat.friend.firstname}  ${chat.friend.lastname}`
       : ""
     : "";
 

@@ -41,42 +41,46 @@ const TeamSectionLeft = ({
   showMenu,
 }) => {
   const user = useCheckLogedinUser();
-  const teamName = team.teamName;
-  const messages = team.messages;
+  const teamName = team ? team.teamName : "";
+  const messages = team ? team.messages : [];
   return (
-    <Box
-      sx={{
-        flex: "65%",
-        display: "flex",
-        justifyContent: "flex-end",
-        flexDirection: "column",
-      }}
-    >
-      <TopBar
-        teamName={teamName}
-        showRightHandler={showRightHandler}
-        showRight={showRight}
-        showMenu={showMenu}
-        showParticipant={showParticipant}
-      />
-      <Box
-        sx={{
-          flex: "55%",
-          display: "flex",
-          justifyContent: "flex-end",
-          flexDirection: "column",
-          paddingBottom: "2px",
-        }}
-      >
-        {messages && <Mid user={user} messages={messages} />}
-        <Bottom
-          messageChangeHandler={messageChangeHandler}
-          sendNewMessage={sendNewMessage}
-          message={message}
-          onEmojiClick={onEmojiClick}
-        />
-      </Box>
-    </Box>
+    <>
+      {team && (
+        <Box
+          sx={{
+            flex: "65%",
+            display: "flex",
+            justifyContent: "flex-end",
+            flexDirection: "column",
+          }}
+        >
+          <TopBar
+            teamName={teamName}
+            showRightHandler={showRightHandler}
+            showRight={showRight}
+            showMenu={showMenu}
+            showParticipant={showParticipant}
+          />
+          <Box
+            sx={{
+              flex: "55%",
+              display: "flex",
+              justifyContent: "flex-end",
+              flexDirection: "column",
+              paddingBottom: "2px",
+            }}
+          >
+            {messages && <Mid user={user} messages={messages} />}
+            <Bottom
+              messageChangeHandler={messageChangeHandler}
+              sendNewMessage={sendNewMessage}
+              message={message}
+              onEmojiClick={onEmojiClick}
+            />
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
@@ -124,14 +128,16 @@ const TopBar = ({
         }}
       >
         <Avatar alt={"Team Name"} sx={{ width: 45, height: 45 }} />
-        <Typography
-          variant="h6"
-          sx={{
-            paddingLeft: "10px",
-          }}
-        >
-          {teamName}
-        </Typography>
+        {teamName && (
+          <Typography
+            variant="h6"
+            sx={{
+              paddingLeft: "10px",
+            }}
+          >
+            {teamName}
+          </Typography>
+        )}
       </Box>
       {/* Right */}
       <Box

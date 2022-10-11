@@ -38,10 +38,10 @@ export default function Chat() {
   const token = user ? user.token : null;
 
   // Getting Chat by it's ID
-  router.pathname.includes("chats/c") && useGetChatById(token, id);
+  useGetChatById(token, id);
 
   // Getting Team by it's ID
-  router.pathname.includes("chats/t") && useGetTeamById(token, id);
+  useGetTeamById(token, id);
 
   // Saving Team into a redux state
 
@@ -107,7 +107,6 @@ export default function Chat() {
   //     dispatch({
   //       type: "CLEAR",
   //     });
-  //     console.log()
   //     if (router.pathname.includes("chats/c")) {
   //       // getChatById(token, id).then((res) => {
   //       //   dispatch({
@@ -162,9 +161,9 @@ export default function Chat() {
     }
   };
 
-   const onEmojiClick = (event, emojiObject) => {
-     setMessage(message + emojiObject.emoji);
-   };
+  const onEmojiClick = (event, emojiObject) => {
+    setMessage(message + emojiObject.emoji);
+  };
 
   return (
     <Box

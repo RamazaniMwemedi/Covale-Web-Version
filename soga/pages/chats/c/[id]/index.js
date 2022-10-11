@@ -16,7 +16,11 @@ import ChatSection from "../../../components/ChatSection";
 import { getChatById } from "../../../../services/chats";
 
 // Hooks
-import { useCheckLogedinUser, useGetChatById } from "../../../../hooks/hooks";
+import {
+  useCheckLogedinUser,
+  useGetChatById,
+  useGetTeamById,
+} from "../../../../hooks/hooks";
 import ChatSectionSkeleton from "../../../components/ChatSectionSkeleton";
 import LoadingLogo from "../../../components/LoadingLogo";
 import { useSelector } from "react-redux";
@@ -40,7 +44,6 @@ const chatReducer = (state = initialState, { type, payload }) => {
     default:
       return state;
   }
-  // console.log(store);
 };
 
 export default function Chat() {
@@ -71,10 +74,10 @@ export default function Chat() {
   const [audioUrl, setAudioUrl] = useState(null);
 
   // Getting Chat by it's ID
-  router.pathname.includes("chats/c") && useGetChatById(token, id);
+  useGetChatById(token, id);
 
   // Getting Team by it's ID
-  router.pathname.includes("chats/t") && useGetTeamById(token, id);
+  useGetTeamById(token, id);
 
   useEffect(() => {
     const audio = new Audio(
@@ -119,7 +122,6 @@ export default function Chat() {
     });
   }, [socket]);
 
-  console.log(chat);
   const friendUsername = chat
     ? chat.friend.id !== user.id
       ? `${chat.friend.firstname}  ${chat.friend.lastname}`

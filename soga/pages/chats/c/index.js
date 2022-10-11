@@ -21,6 +21,7 @@ import {
   useCheckLogedinUser,
   useGetChatById,
   useAudio,
+  useGetTeamById,
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
 import { useSelector } from "react-redux";
@@ -47,7 +48,6 @@ const chatReducer = (state = initialState, { type, payload }) => {
     default:
       return state;
   }
-  // console.log(store);
 };
 
 const chatsStore = createStore(chatReducer);
@@ -78,11 +78,11 @@ export default function Chat() {
 
   const [audioUrl, setAudioUrl] = useState(null);
 
-  // Getting Chat by it's ID
-  router.pathname.includes("chats/c") && useGetChatById(token, id);
+  // Getting Chchatat by it's ID
+  useGetChatById(token, id);
 
   // Getting Team by it's ID
-  router.pathname.includes("chats/t") && useGetTeamById(token, id);
+   useGetTeamById(token, id);
 
   useEffect(() => {
     const audio = new Audio(

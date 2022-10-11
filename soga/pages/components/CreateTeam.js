@@ -102,7 +102,6 @@ const CreateTeam = ({ toggleShowTeam }) => {
     if (token && selectedFriends.length > 0 && createdTeamId) {
       setInvitingBool(true);
       const res = await inviteFriends(token, createdTeamId, selectedFriends);
-      console.log(res);
       if (res == 200 && createdTeamId) {
         setInvitingBool(false);
         window.location.href = `http://localhost:3000/chats/t/${createdTeamId}`;

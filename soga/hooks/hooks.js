@@ -50,47 +50,47 @@ const useCheckLogedinUserToken = () => {
 const useGetChatById = (token, id) => {
   const [chat, setChat] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const dispatch = useDispatch();
-  console.log(
-    "Chat State :",
-    useSelector((state) => state)
-  );
 
   // Get chat by id and set it to chat
   useEffect(() => {
     setLoading(true);
     // Clear Chat Store
     dispatch(chatReset);
-    if ((token, id)) {
-      getChatById(token, id).then((res) => {
-        setChat(res);
-        setLoading(false);
-      });
+    if (router.pathname.includes("chats/c")) {
+      if ((token, id)) {
+        getChatById(token, id).then((res) => {
+          setChat(res);
+          setLoading(false);
+        });
+      }
     }
 
     if (chat) {
       dispatch(chatAdd(chat));
-      console.log("Chat  :", chat);
     }
   }, [token, id]);
-  return loading;
 };
 const useGetTeamById = (token, id) => {
   const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   // Get chat by id and set it to chat
   useEffect(() => {
     setLoading(true);
     // Clear Team store
     dispatch(teamReset());
-    if ((token, id)) {
-      getTeamById(token, id).then((res) => {
-        setTeam(res);
-        setLoading(false);
-      });
+    if (router.pathname.includes("chats/t")) {
+      if ((token, id)) {
+        getTeamById(token, id).then((res) => {
+          setTeam(res);
+          setLoading(false);
+        });
+      }
     }
   }, [token, id]);
   if (team) {

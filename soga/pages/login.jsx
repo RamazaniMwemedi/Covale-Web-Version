@@ -101,7 +101,6 @@ const LoginPage = () => {
         };
         const response = await loginServices.signIn(data);
 
-        console.log(response);
         if (response) {
           window.localStorage.setItem("logedinUser", JSON.stringify(response));
           window.localStorage.setItem("theme", "light-mode");
@@ -202,7 +201,6 @@ const LoginPage = () => {
       } catch (error) {
         setSubmiting(false);
         setSignupError(error.response.data.error);
-        console.log(error.response.data.error);
         setTimeout(() => {
           setSignupError("");
         }, 6000);
@@ -237,7 +235,6 @@ const LoginPage = () => {
   // Signup Change birthday handler
   const signupBirthdayChangeHandler = (value) => {
     setSignupBirthday(value);
-    console.log("value is: ", value);
   };
 
   const signupUsernameChangeHandler = (e) => {

@@ -21,7 +21,6 @@ export default function Explore() {
     (router, user) => {
       // Loged in user from localStorage
       const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
-      console.log("signedInUser", signedInUser);
       if (!signedInUser) {
         router.push("/");
       } else {
@@ -30,10 +29,8 @@ export default function Explore() {
     },
     [user]
   );
-  console.log("user", user);
 
   React.useEffect(() => {
-    console.log("token", token);
     if (token) {
       userServices.friendReqRecieved(token).then((res) => {
         setUsers(res);

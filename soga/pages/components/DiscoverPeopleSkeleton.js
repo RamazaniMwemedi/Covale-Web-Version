@@ -15,7 +15,6 @@ const friends = Array.from({ length: 9 }, (v, k) => k)
   .reverse();
 
 export default function DiscoverPeopleSkeleton() {
-  console.log(friends);
   return (
     <Box
       sx={{

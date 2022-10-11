@@ -51,48 +51,52 @@ const TeamSection = ({
 
   const theme = useTheme();
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flex: 1,
-        marginLeft: "-65px",
-        overflowY: "hidden",
-      }}
-    >
-      <Box
-        sx={{
-          flex: "65%",
-          display: "flex",
-          justifyContent: "flex-end",
-          flexDirection: "column",
-
-          borderBottom: `1px solid ${theme.colors.background1}`,
-        }}
-      >
-        {/* Team Section Left */}
-        <TeamSectionLeft
-          team={team}
-          showRight={showRight}
-          messageChangeHandler={messageChangeHandler}
-          sendNewMessage={sendNewMessage}
-          message={message}
-          onEmojiClick={onEmojiClick}
-          showMenu={showMenu}
-          showParticipant={showParticipant}
-        />
-      </Box>
-      {/* Team Section Right */}
-      {showRight && (
+    <>
+      {team && (
         <Box
           sx={{
-            flex: "35%",
-            borderLeft: `2px solid ${theme.colors.background1}`,
+            display: "flex",
+            flex: 1,
+            marginLeft: "-65px",
+            overflowY: "hidden",
           }}
         >
-          <TeamSectionRight option={option} showRight={showRight} />
+          <Box
+            sx={{
+              flex: "65%",
+              display: "flex",
+              justifyContent: "flex-end",
+              flexDirection: "column",
+
+              borderBottom: `1px solid ${theme.colors.background1}`,
+            }}
+          >
+            {/* Team Section Left */}
+            <TeamSectionLeft
+              team={team}
+              showRight={showRight}
+              messageChangeHandler={messageChangeHandler}
+              sendNewMessage={sendNewMessage}
+              message={message}
+              onEmojiClick={onEmojiClick}
+              showMenu={showMenu}
+              showParticipant={showParticipant}
+            />
+          </Box>
+          {/* Team Section Right */}
+          {showRight && (
+            <Box
+              sx={{
+                flex: "35%",
+                borderLeft: `2px solid ${theme.colors.background1}`,
+              }}
+            >
+              <TeamSectionRight option={option} showRight={showRight} />
+            </Box>
+          )}
         </Box>
       )}
-    </Box>
+    </>
   );
 };
 
