@@ -36,7 +36,7 @@ const Participant = () => {
         padding: "5px",
         backgroundColor: theme.colors.background1,
         height: "100vh",
-        borderTopRightRadius:  "8px",
+        borderTopRightRadius: "8px",
       }}
     >
       <Box
@@ -46,7 +46,7 @@ const Participant = () => {
           padding: "2px",
         }}
       >
-        <Typography variant="h3">Participant</Typography>
+        <Typography variant="h5">Participant</Typography>
       </Box>
       <br />
       <Directors />
@@ -72,7 +72,7 @@ const Menu = () => {
           padding: "2px",
         }}
       >
-        <Typography variant="h3">Menu</Typography>
+        <Typography variant="h5">Menu</Typography>
         <IconButton
           sx={{
             position: "fixed",
@@ -110,7 +110,7 @@ const Media = () => {
           padding: "10px",
         }}
       >
-        <Typography variant="h5">Media</Typography>
+        <Typography variant="subtitle1">Media</Typography>
       </Box>
       <Box>
         {/* Photos */}
@@ -136,7 +136,7 @@ const Events = () => {
         padding: "10px",
       }}
     >
-      <Typography variant="h5">Events</Typography>
+      <Typography variant="subtitle1">Events</Typography>
     </Box>
   );
 };
@@ -155,10 +155,10 @@ const Photos = ({ photos }) => {
       }}
     >
       <Box sx={{ display: "flex", gap: "10px" }}>
-        <Typography color="secondary" variant="h6">
+        <Typography color="secondary" variant="body1">
           Photos{"  "}
         </Typography>
-        <Typography color="action" variant="subtitle2">
+        <Typography color="action" variant="body2">
           {photos.length}
         </Typography>
       </Box>
@@ -186,10 +186,10 @@ const Videos = ({ videos }) => {
       }}
     >
       <Box sx={{ display: "flex", gap: "10px" }}>
-        <Typography color="secondary" variant="h6">
+        <Typography color="secondary" variant="body1">
           Videos{"  "}
         </Typography>
-        <Typography color="action" variant="subtitle2">
+        <Typography color="action" variant="body2">
           {videos.length}
         </Typography>
       </Box>
@@ -216,7 +216,7 @@ const Links = () => {
         padding: "10px",
       }}
     >
-      <Typography color="secondary" variant="h6">
+      <Typography color="secondary" variant="body1">
         Links
       </Typography>
       <IconButton
@@ -242,7 +242,7 @@ const Documents = () => {
         padding: "10px",
       }}
     >
-      <Typography color="secondary" variant="h6">
+      <Typography color="secondary" variant="body2">
         Documents
       </Typography>
       <IconButton
@@ -272,8 +272,8 @@ const Directors = () => {
           textAlign: "center",
         }}
       >
-        <Typography variant="h5">Directors</Typography>
-        <Typography variant="subtitle1">{directors.length}</Typography>
+        <Typography variant="subtitle1">Directors</Typography>
+        <Typography variant="subtitle2">{directors.length}</Typography>
       </Box>
 
       <List>
@@ -300,8 +300,8 @@ const AllMembers = () => {
           textAlign: "center",
         }}
       >
-        <Typography variant="h5">Members</Typography>
-        <Typography variant="subtitle1">{members.length}</Typography>
+        <Typography variant="subtitle1">Members</Typography>
+        <Typography variant="subtitle2">{members.length}</Typography>
       </Box>
       <List>
         {members.map((member) => (
@@ -332,10 +332,15 @@ const ParticipantItem = ({ participant }) => {
         },
       }}
     >
-      <Avatar>{`${participant.firstname[0]}${participant.lastname[0]}`}</Avatar>
+      <Avatar
+        sx={{
+          height: "24px",
+          width: "24px",
+        }}
+      >{`${participant.firstname[0]}`}</Avatar>
       <Box sx={{ display: "flex", gap: "10px" }}>
-        <Typography vatiant="subtitle1">{participant.firstname}</Typography>
-        <Typography vatiant="subtitle1">{participant.lastname}</Typography>
+        <Typography variant="body2">{participant.firstname}</Typography>
+        <Typography variant="body2">{participant.lastname}</Typography>
       </Box>
     </ListItemButton>
   );
