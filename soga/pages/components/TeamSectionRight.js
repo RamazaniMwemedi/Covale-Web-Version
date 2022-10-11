@@ -36,6 +36,7 @@ const Participant = () => {
         padding: "5px",
         backgroundColor: theme.colors.background1,
         height: "100vh",
+        borderTopRightRadius:  "8px",
       }}
     >
       <Box
@@ -61,6 +62,7 @@ const Menu = () => {
         padding: "5px",
         backgroundColor: theme.colors.background1,
         height: "100vh",
+        borderTopRightRadius: "8px",
       }}
     >
       <Box

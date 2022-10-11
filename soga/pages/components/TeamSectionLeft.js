@@ -38,7 +38,7 @@ const TeamSectionLeft = ({
   sendNewMessage,
   onEmojiClick,
   showParticipant,
-  showMenu
+  showMenu,
 }) => {
   const user = useCheckLogedinUser();
   const teamName = team.teamName;
@@ -110,7 +110,7 @@ const TopBar = ({
         top: "0px",
         borderBottom: `1px solid ${theme.colors.background1}`,
         backgroundColor: theme.colors.background1,
-        borderTopRightRadius: "8px",
+        borderTopRightRadius: showRight ? "unset" : "8px",
       }}
     >
       {/* Left */}
@@ -145,7 +145,7 @@ const TopBar = ({
       >
         <IconButton
           onClick={() => {
-            showParticipant()
+            showParticipant();
           }}
         >
           <GroupsRoundedIcon color={showRight ? "secondary" : "action"} />

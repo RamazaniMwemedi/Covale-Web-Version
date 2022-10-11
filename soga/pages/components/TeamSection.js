@@ -89,7 +89,7 @@ const TeamSection = ({
             borderLeft: `2px solid ${theme.colors.background1}`,
           }}
         >
-          <TeamSectionRight option={option} />
+          <TeamSectionRight option={option} showRight={showRight} />
         </Box>
       )}
     </Box>
