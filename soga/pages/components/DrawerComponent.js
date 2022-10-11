@@ -156,8 +156,9 @@ export default function DrawerComponent({ signoutHandler, user }) {
                     backgroundColor: notificationBackground,
                   }}
                 >
-                  <ListItemIcon>
-                    <NotificationsActiveRoundedIcon />
+                  <ListItemIcon
+                  >
+                    <NotificationsActiveRoundedIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="Chats" />
                   <Typography variant="caption">Chat</Typography>
@@ -178,8 +179,8 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   <ListItemIcon>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="26"
-                      height="26"
+                      width="20"
+                      height="20"
                       fill={chatColor}
                       // class="bi bi-chat-dots"
                       viewBox="0 0 16 16"
@@ -204,7 +205,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <PeopleAltIcon color={peopleColor} />
+                    <PeopleAltIcon fontSize="small" color={peopleColor} />
                   </ListItemIcon>
                   <ListItemText primary="People" />
                 </ListItemButton>
@@ -222,7 +223,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <InsightsSharpIcon color={peopleColor} />
+                    <InsightsSharpIcon fontSize="small" color={peopleColor} />
                   </ListItemIcon>
                   <ListItemText primary="People" />
                 </ListItemButton>
@@ -240,7 +241,10 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <CalendarMonthRoundedIcon color={calendar} />
+                    <CalendarMonthRoundedIcon
+                      fontSize="small"
+                      color={calendar}
+                    />
                   </ListItemIcon>
                   <ListItemText primary="Calender" />
                 </ListItemButton>
@@ -259,7 +263,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <VideocamRoundedIcon color={meet} />
+                    <VideocamRoundedIcon fontSize="small" color={meet} />
                   </ListItemIcon>
                   <ListItemText primary="Calender" />
                 </ListItemButton>

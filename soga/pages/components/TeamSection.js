@@ -6,6 +6,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import TeamSectionLeft from "./TeamSectionLeft";
+import TeamSectionRight from "./TeamSectionRight";
+import { useState } from "react";
 
 const TeamSection = ({
   sendNewMessage,
@@ -13,6 +15,7 @@ const TeamSection = ({
   onEmojiClick,
   messageChangeHandler,
 }) => {
+  const [option, setOption] = useState("");
   const team = useSelector((state) => {
     if (state.team) {
       return state.team.team;
@@ -20,10 +23,32 @@ const TeamSection = ({
       return null;
     }
   });
-  const [showRight, setShowRight] = React.useState(true);
-  const showRightHandler = () => {
-    setShowRight(!showRight);
+
+  const [showRight, setShowRight] = React.useState(false);
+
+  const showMenu = () => {
+    if (showRight) {
+      setOption("MENU");
+    } else {
+      setShowRight(!showRight);
+      setOption("MENU");
+    }
+    if (option === "MENU") {
+      setShowRight(!showRight);
+    }
   };
+  const showParticipant = () => {
+    if (showRight) {
+      setOption("PARTICIPANT");
+    } else {
+      setShowRight(!showRight);
+      setOption("PARTICIPANT");
+    }
+    if (option === "PARTICIPANT") {
+      setShowRight(!showRight);
+    }
+  };
+
   const theme = useTheme();
   return (
     <Box
@@ -48,11 +73,12 @@ const TeamSection = ({
         <TeamSectionLeft
           team={team}
           showRight={showRight}
-          showRightHandler={showRightHandler}
           messageChangeHandler={messageChangeHandler}
           sendNewMessage={sendNewMessage}
           message={message}
           onEmojiClick={onEmojiClick}
+          showMenu={showMenu}
+          showParticipant={showParticipant}
         />
       </Box>
       {/* Team Section Right */}
@@ -63,7 +89,7 @@ const TeamSection = ({
             borderLeft: `2px solid ${theme.colors.background1}`,
           }}
         >
-          <Typography>Team Right</Typography>
+          <TeamSectionRight option={option} />
         </Box>
       )}
     </Box>

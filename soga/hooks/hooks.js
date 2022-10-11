@@ -6,7 +6,7 @@ const { getTeamById } = require("../services/teams");
 const { myFriends } = require("../services/user");
 
 // React-Redux hooks
-const { useDispatch } = require("react-redux");
+const { useDispatch, useSelector } = require("react-redux");
 
 // Reducers
 const { teamAdd, teamReset } = require("../Redux/slices/team");
@@ -52,6 +52,10 @@ const useGetChatById = (token, id) => {
   const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
+  console.log(
+    "Chat State :",
+    useSelector((state) => state)
+  );
 
   // Get chat by id and set it to chat
   useEffect(() => {
@@ -64,11 +68,13 @@ const useGetChatById = (token, id) => {
         setLoading(false);
       });
     }
+
     if (chat) {
       dispatch(chatAdd(chat));
+      console.log("Chat  :", chat);
     }
   }, [token, id]);
-  return  loading ;
+  return loading;
 };
 const useGetTeamById = (token, id) => {
   const [team, setTeam] = useState(null);

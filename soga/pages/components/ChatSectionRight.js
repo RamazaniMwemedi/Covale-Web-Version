@@ -2,20 +2,8 @@ import React from "react";
 import { Avatar, Button, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/styles";
-
-import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
-import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
-import SearchIcon from "@mui/icons-material/Search";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import InsertPhotoRoundedIcon from "@mui/icons-material/InsertPhotoRounded";
-import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
-import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
-import TabPanel from "@mui/lab/TabPanel";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -195,8 +183,6 @@ const MediaVideos = () => {
   const handleClose = () => {
     setOpen((prev) => !prev);
   };
-
-  
 
   const theme = useTheme();
   const videos = [

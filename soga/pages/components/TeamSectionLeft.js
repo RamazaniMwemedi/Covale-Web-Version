@@ -37,6 +37,8 @@ const TeamSectionLeft = ({
   messageChangeHandler,
   sendNewMessage,
   onEmojiClick,
+  showParticipant,
+  showMenu
 }) => {
   const user = useCheckLogedinUser();
   const teamName = team.teamName;
@@ -54,6 +56,8 @@ const TeamSectionLeft = ({
         teamName={teamName}
         showRightHandler={showRightHandler}
         showRight={showRight}
+        showMenu={showMenu}
+        showParticipant={showParticipant}
       />
       <Box
         sx={{
@@ -78,7 +82,13 @@ const TeamSectionLeft = ({
 
 export default TeamSectionLeft;
 
-const TopBar = ({ showRightHandler, showRight, teamName }) => {
+const TopBar = ({
+  showRightHandler,
+  showRight,
+  teamName,
+  showParticipant,
+  showMenu,
+}) => {
   const theme = useTheme();
   return (
     <Box
@@ -135,14 +145,14 @@ const TopBar = ({ showRightHandler, showRight, teamName }) => {
       >
         <IconButton
           onClick={() => {
-            showRightHandler();
+            showParticipant()
           }}
         >
           <GroupsRoundedIcon color={showRight ? "secondary" : "action"} />
         </IconButton>
         <IconButton
           onClick={() => {
-            showRightHandler();
+            showMenu();
           }}
         >
           <MenuRoundedIcon color={showRight ? "secondary" : "action"} />
@@ -291,6 +301,9 @@ const Bottom = ({
         marginBottom: "4px",
         // Be at the bottom of the page
         verticalAlign: "bottom",
+        backgroundColor: theme.colors.background1,
+        borderBottomRightRadius: "5px",
+        borderBottomLeftRadius: "5px",
       }}
     >
       {showEmojiPeaker === true && (

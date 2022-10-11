@@ -16,7 +16,7 @@ const ChatSection = ({
   friendUsername,
   onEmojiClick,
 }) => {
-  const [showRight, setShowRight] = React.useState(true);
+  const [showRight, setShowRight] = React.useState(false);
   const showRightHandler = () => {
     setShowRight(!showRight);
   };

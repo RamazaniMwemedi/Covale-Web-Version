@@ -23,6 +23,7 @@ import {
   useAudio,
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
+import { useSelector } from "react-redux";
 
 // Redux
 const { createStore } = require("redux");
@@ -52,15 +53,20 @@ const chatReducer = (state = initialState, { type, payload }) => {
 const chatsStore = createStore(chatReducer);
 
 export default function Chat() {
-  const [messages, dispatch] = useReducer(chatReducer, initialState);
   const theme = useTheme();
   var user = useCheckLogedinUser();
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
-  const chat = useGetChatById(token, id);
+  const chat = useSelector((state) => {
+    if (state.chat.chat) {
+      return state.chat.chat;
+    } else {
+      return null;
+    }
+  });
+  const messages = chat ? chat.messages : [];
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
 
   // Bools
   const [boolForSent, setBoolForSent] = useState(false);
@@ -71,6 +77,12 @@ export default function Chat() {
   const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState(null);
+
+  // Getting Chat by it's ID
+  router.pathname.includes("chats/c") && useGetChatById(token, id);
+
+  // Getting Team by it's ID
+  router.pathname.includes("chats/t") && useGetTeamById(token, id);
 
   useEffect(() => {
     const audio = new Audio(
@@ -115,26 +127,9 @@ export default function Chat() {
     });
   }, [socket]);
 
-  useEffect(() => {
-    if ((token, id)) {
-      setLoading(true);
-      dispatch({
-        type: "CLEAR",
-      });
-      getChatById(token, id).then((res) => {
-        dispatch({
-          type: "ADD_ALL_MESSAGES",
-          payload: res.chat.messege,
-        });
-        setLoading(false);
-      });
-      socket.emit("join_room", id);
-    }
-  }, [token, id]);
-
-  const friendUsername = chat.chat
-    ? chat.chat.friend.id !== user.id
-      ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
+  const friendUsername = chat
+    ? chat.friend.id !== user.id
+      ? `${chat.friend.firstname}  ${chat.friend.lastname}`
       : ""
     : "";
 
@@ -151,7 +146,7 @@ export default function Chat() {
   const onEmojiClick = (event, emojiObject) => {
     setMessage(message + emojiObject.emoji);
   };
-  
+
   const sendMessageHandle = () => {
     const userId = user ? user.id : null;
     if (message.length > 0) {
@@ -189,13 +184,13 @@ export default function Chat() {
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
           <ChatLeft user={user} chat={chat} />
           {id ? (
-            loading ? (
+            !messages ? (
               <ChatSectionSkeleton />
             ) : (
               <ChatSection
                 id={id}
                 user={user}
-                chat={chat.chat}
+                chat={chat}
                 messageChangeHandler={messageChangeHandler}
                 message={message}
                 messages={messages}
