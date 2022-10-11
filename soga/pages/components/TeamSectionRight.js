@@ -141,7 +141,7 @@ const Events = () => {
   );
 };
 
-// Sub Component
+// Sub Components
 
 // Media components
 const Photos = ({ photos }) => {
