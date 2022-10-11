@@ -1,4 +1,11 @@
-import { Button, IconButton, Typography } from "@mui/material";
+import {
+  Avatar,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/material";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
@@ -11,7 +18,6 @@ const TeamSectionRight = ({ option }) => {
   switch (option) {
     case "PARTICIPANT":
       return <Participant />;
-      break;
     case "MENU":
       return <Menu />;
     default:
@@ -22,9 +28,28 @@ const TeamSectionRight = ({ option }) => {
 export default TeamSectionRight;
 
 const Participant = () => {
+  const theme = useTheme();
+
   return (
-    <Box>
-      <Typography variant="h3">Participant</Typography>
+    <Box
+      sx={{
+        padding: "5px",
+        backgroundColor: theme.colors.background1,
+        height: "100vh",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "2px",
+        }}
+      >
+        <Typography variant="h3">Participant</Typography>
+      </Box>
+      <br />
+      <Directors />
+      <AllMembers />
     </Box>
   );
 };
@@ -38,23 +63,30 @@ const Menu = () => {
         height: "100vh",
       }}
     >
-      <IconButton
+      <Box
         sx={{
-          position: "fixed",
-          top: "1",
-          right: "0",
-          margin: "5px",
-          backgroundColor: theme.colors.itemBackground,
-          "&:hover": {
-            backgroundColor: theme.colors.background2,
-          },
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "2px",
         }}
       >
-        <MoreHorizIcon color="secondary" />
-      </IconButton>
+        <Typography variant="h3">Menu</Typography>
+        <IconButton
+          sx={{
+            position: "fixed",
+            top: "1",
+            right: "0",
+            margin: "5px",
+            backgroundColor: theme.colors.itemBackground,
+            "&:hover": {
+              backgroundColor: theme.colors.background2,
+            },
+          }}
+        >
+          <MoreHorizIcon color="secondary" />
+        </IconButton>
+      </Box>
       <Box>
-        <br />
-        <br />
         <br />
       </Box>
       <Media />
@@ -76,7 +108,7 @@ const Media = () => {
           padding: "10px",
         }}
       >
-        <Typography variant="h4">Media</Typography>
+        <Typography variant="h5">Media</Typography>
       </Box>
       <Box>
         {/* Photos */}
@@ -102,10 +134,12 @@ const Events = () => {
         padding: "10px",
       }}
     >
-      <Typography variant="h4">Events</Typography>
+      <Typography variant="h5">Events</Typography>
     </Box>
   );
 };
+
+// Sub Component
 
 // Media components
 const Photos = ({ photos }) => {
@@ -119,10 +153,10 @@ const Photos = ({ photos }) => {
       }}
     >
       <Box sx={{ display: "flex", gap: "10px" }}>
-        <Typography color="secondary" variant="h5">
+        <Typography color="secondary" variant="h6">
           Photos{"  "}
         </Typography>
-        <Typography color="action" variant="subtitle1">
+        <Typography color="action" variant="subtitle2">
           {photos.length}
         </Typography>
       </Box>
@@ -150,10 +184,10 @@ const Videos = ({ videos }) => {
       }}
     >
       <Box sx={{ display: "flex", gap: "10px" }}>
-        <Typography color="secondary" variant="h5">
+        <Typography color="secondary" variant="h6">
           Videos{"  "}
         </Typography>
-        <Typography color="action" variant="subtitle1">
+        <Typography color="action" variant="subtitle2">
           {videos.length}
         </Typography>
       </Box>
@@ -180,7 +214,7 @@ const Links = () => {
         padding: "10px",
       }}
     >
-      <Typography color="secondary" variant="h5">
+      <Typography color="secondary" variant="h6">
         Links
       </Typography>
       <IconButton
@@ -206,7 +240,7 @@ const Documents = () => {
         padding: "10px",
       }}
     >
-      <Typography color="secondary" variant="h5">
+      <Typography color="secondary" variant="h6">
         Documents
       </Typography>
       <IconButton
@@ -220,5 +254,87 @@ const Documents = () => {
         <ExpandMoreRoundedIcon fontSize="small" />
       </IconButton>
     </Box>
+  );
+};
+
+// Directors
+const Directors = () => {
+  const directors = useSelector((state) => state.team.team.directors);
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItem: "center",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h5">Directors</Typography>
+        <Typography variant="subtitle1">{directors.length}</Typography>
+      </Box>
+
+      <List>
+        {directors.map((director) => (
+          <ListItem key={director.id}>
+            {" "}
+            <ParticipantItem participant={director} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+};
+
+const AllMembers = () => {
+  const members = useSelector((state) => state.team.team.members);
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItem: "center",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h5">Members</Typography>
+        <Typography variant="subtitle1">{members.length}</Typography>
+      </Box>
+      <List>
+        {members.map((member) => (
+          <ListItem key={member.id}>
+            {" "}
+            <ParticipantItem participant={member} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+};
+
+// Participant Comonents
+const ParticipantItem = ({ participant }) => {
+  const theme = useTheme();
+  return (
+    <ListItemButton
+      sx={{
+        display: "flex",
+        width: "100%",
+        gap: "10px",
+        borderRadius: "8px",
+        backgroundColor: (theme.vars || theme).palette.action.hover,
+        // Reset on touch devices, it doesn't add specificity
+        "@media (hover: none)": {
+          backgroundColor: "transparent",
+        },
+      }}
+    >
+      <Avatar>{`${participant.firstname[0]}${participant.lastname[0]}`}</Avatar>
+      <Box sx={{ display: "flex", gap: "10px" }}>
+        <Typography vatiant="subtitle1">{participant.firstname}</Typography>
+        <Typography vatiant="subtitle1">{participant.lastname}</Typography>
+      </Box>
+    </ListItemButton>
   );
 };

@@ -5,6 +5,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   background-color: rgb(226, 216, 226);
+  scroll-behavior: smooth;
 }
 @media (prefers-color-scheme: dark) {
   body {
@@ -127,7 +128,7 @@ hr {
   font-feature-settings: "rlig" 1, "calt" 0;
   --content: "Develop.";
   --padding: 0.05em;
- --start-color: dodgerblue;
+  --start-color: dodgerblue;
   --end-color: blue;
   box-sizing: border-box;
   animation: 2s infinite;

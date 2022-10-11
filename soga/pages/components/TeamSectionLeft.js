@@ -123,7 +123,7 @@ const TopBar = ({
           textAlign: "center",
         }}
       >
-        <Avatar alt={"Team NAme"} sx={{ width: 45, height: 45 }} />
+        <Avatar alt={"Team Name"} sx={{ width: 45, height: 45 }} />
         <Typography
           variant="h6"
           sx={{
