@@ -26,25 +26,7 @@ import LoadingLogo from "../../../components/LoadingLogo";
 import { useSelector } from "react-redux";
 
 // Socket.IO
-const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
-
-// Chat Reducer
-const initialState = [];
-
-const chatReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case "ADD_ALL_MESSAGES":
-      return (state = payload);
-    case "RECIEVE_MESSAGE":
-      return [...state, payload];
-    case "SENT_MESSAGE":
-      return [...state, payload];
-    case "CLEAR":
-      return [];
-    default:
-      return state;
-  }
-};
+const socket = io.connect("http://localhost:5005");
 
 export default function Chat() {
   const theme = useTheme();
