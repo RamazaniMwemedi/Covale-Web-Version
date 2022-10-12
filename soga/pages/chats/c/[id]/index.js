@@ -52,16 +52,18 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
+  let loading = true;
+
   const chat = useSelector((state) => {
     if (state.chat.chat) {
+      loading = false;
       return state.chat.chat;
     } else {
       return null;
     }
   });
-  const messages = chat ? chat.messages : [];
+  const messages = chat ? chat.chat.messege : null;
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
 
   // Bools
   const [boolForSent, setBoolForSent] = useState(false);

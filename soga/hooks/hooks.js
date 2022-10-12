@@ -48,28 +48,20 @@ const useCheckLogedinUserToken = () => {
 };
 
 const useGetChatById = (token, id) => {
-  const [chat, setChat] = useState(null);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const dispatch = useDispatch();
 
   // Get chat by id and set it to chat
   useEffect(() => {
-    setLoading(true);
     // Clear Chat Store
     dispatch(chatReset);
     if (router.pathname.includes("chats/c")) {
       if ((token, id)) {
         getChatById(token, id).then((res) => {
-          setChat(res);
-          setLoading(false);
+          dispatch(chatAdd(res));
         });
       }
-    }
-
-    if (chat) {
-      dispatch(chatAdd(chat));
     }
   }, [token, id]);
 };

@@ -58,14 +58,16 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
+  let loading = true;
   const chat = useSelector((state) => {
     if (state.chat.chat) {
+      let loading = false;
       return state.chat.chat;
     } else {
       return null;
     }
   });
-  const messages = chat ? chat.messages : [];
+  const messages = chat ? chat.chat.messege : null;
   const [message, setMessage] = useState("");
 
   // Bools
@@ -82,7 +84,7 @@ export default function Chat() {
   useGetChatById(token, id);
 
   // Getting Team by it's ID
-   useGetTeamById(token, id);
+  useGetTeamById(token, id);
 
   useEffect(() => {
     const audio = new Audio(
@@ -184,7 +186,7 @@ export default function Chat() {
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
           <ChatLeft user={user} chat={chat} />
           {id ? (
-            !messages ? (
+            !loading ? (
               <ChatSectionSkeleton />
             ) : (
               <ChatSection
