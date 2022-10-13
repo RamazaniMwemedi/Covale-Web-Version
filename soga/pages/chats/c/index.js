@@ -27,7 +27,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addNewMessage } from "../../../Redux/slices/chat";
 
 // Socket.IO
-const socket = io.connect("http://localhost:5005");
+const socket = io.connect("https://rtcommunication.herokuapp.com/");
 
 export default function Chat() {
   const dispatch = useDispatch();

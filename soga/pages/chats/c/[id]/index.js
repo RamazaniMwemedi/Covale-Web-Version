@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Box, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState, useRef, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
@@ -14,6 +14,7 @@ import ChatLeft from "../../../components/ChatLeft";
 import ChatSection from "../../../components/ChatSection";
 
 import { getChatById } from "../../../../services/chats";
+import ChatSectionSkeleton from "../../../components/ChatSectionSkeleton";
 
 // Hooks
 import {
@@ -21,24 +22,24 @@ import {
   useGetChatById,
   useGetTeamById,
 } from "../../../../hooks/hooks";
-import ChatSectionSkeleton from "../../../components/ChatSectionSkeleton";
 import LoadingLogo from "../../../components/LoadingLogo";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addNewMessage } from "../../../../Redux/slices/chat";
 
 // Socket.IO
-const socket = io.connect("http://localhost:5005");
+const socket = io.connect("https://rtcommunication.herokuapp.com/");
 
 export default function Chat() {
+  const dispatch = useDispatch();
   const theme = useTheme();
   var user = useCheckLogedinUser();
   const router = useRouter();
   const id = router.query.id;
   const token = user ? user.token : null;
   let loading = true;
-
   const chat = useSelector((state) => {
     if (state.chat.chat) {
-      loading = false;
+      let loading = false;
       return state.chat.chat;
     } else {
       return null;
@@ -57,7 +58,7 @@ export default function Chat() {
 
   const [audioUrl, setAudioUrl] = useState(null);
 
-  // Getting Chat by it's ID
+  // Getting Chchatat by it's ID
   useGetChatById(token, id);
 
   // Getting Team by it's ID
@@ -95,10 +96,8 @@ export default function Chat() {
           if (data.sender != user.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
-            dispatch({
-              type: "RECIEVE_MESSAGE",
-              payload: data,
-            });
+            console.log(data);
+            dispatch(addNewMessage(data));
           }
           setReceiveAudioPlay(false);
         }
@@ -138,15 +137,15 @@ export default function Chat() {
       if (boolForSent) {
         socket.on("messege_sent", (data) => {
           setSentAudioPlay(true);
-          dispatch({
-            type: "SENT_MESSAGE",
-            payload: data,
-          });
+          setPlaying(true);
+          dispatch(addNewMessage(data));
+
           setBoolForSent(false);
         });
       }
     }
   };
+
   return (
     <Box
       sx={{
@@ -160,9 +159,8 @@ export default function Chat() {
         <>
           <DrawerComponent signoutHandler={signoutHandler} user={user} />
           <ChatLeft user={user} chat={chat} />
-
           {id ? (
-            loading ? (
+            !loading ? (
               <ChatSectionSkeleton />
             ) : (
               <ChatSection
