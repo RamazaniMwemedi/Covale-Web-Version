@@ -24,12 +24,13 @@ import {
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
-import { chatAdd, chatReset } from "../Redux/slices/chat";
+import { addNewMessage } from "../../../Redux/slices/chat";
 
 // Socket.IO
 const socket = io.connect("http://localhost:5005");
 
 export default function Chat() {
+  const dispatch = useDispatch();
   const theme = useTheme();
   var user = useCheckLogedinUser();
   const router = useRouter();
@@ -95,10 +96,8 @@ export default function Chat() {
           if (data.sender != user.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
-            dispatch({
-              type: "RECIEVE_MESSAGE",
-              payload: data,
-            });
+            console.log(data);
+            dispatch(addNewMessage(data));
           }
           setReceiveAudioPlay(false);
         }
@@ -139,10 +138,8 @@ export default function Chat() {
         socket.on("messege_sent", (data) => {
           setSentAudioPlay(true);
           setPlaying(true);
-          dispatch({
-            type: "SENT_MESSAGE",
-            payload: data,
-          });
+          dispatch(addNewMessage(data));
+
           setBoolForSent(false);
         });
       }
