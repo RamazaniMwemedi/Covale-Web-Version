@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState, useRef, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
-
+import { v4 as uuidv4 } from "uuid";
 // Logo
 import Logo from "../../../assets/Logo";
 
@@ -24,7 +24,10 @@ import {
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
-import { addNewMessage } from "../../../Redux/slices/chat";
+import {
+  addNewMessage,
+  addNewMessageFromSever,
+} from "../../../Redux/slices/chat";
 
 // Socket.IO
 const socket = io.connect("https://rtcommunication.herokuapp.com/");
@@ -129,8 +132,15 @@ export default function Chat() {
     const userId = user ? user.id : null;
     if (message.length > 0) {
       const newMessage = {
+        sender: userId,
         message: message,
+        idFromClient: uuidv4(),
       };
+
+      dispatch(addNewMessage(newMessage));
+      // receiver: friend._id,
+      // message: messege,
+      // chatRoom: chatRoomId,
       socket.emit("send_message", { newMessage, id, userId });
       setMessage("");
       setBoolForSent(true);
@@ -138,7 +148,8 @@ export default function Chat() {
         socket.on("messege_sent", (data) => {
           setSentAudioPlay(true);
           setPlaying(true);
-          dispatch(addNewMessage(data));
+          console.log(data);
+          dispatch(addNewMessageFromSever(data));
 
           setBoolForSent(false);
         });

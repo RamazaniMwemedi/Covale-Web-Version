@@ -18,6 +18,7 @@ import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import PersonIcon from "@mui/icons-material/Person";
+import { purple } from "@mui/material/colors";
 import { useTheme } from "@mui/material";
 
 import dynamic from "next/dynamic";
@@ -143,7 +144,6 @@ const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
             onClick={() => {
               // Open a new window with a adio call
               window.open(
-                
                 `http://localhost:3000/meet/room/${id}`,
                 "_blank",
                 "toolbar=no,scrollbars=yes,resizable=yes,top=100,left=300,width=1000,height=500"
@@ -200,7 +200,6 @@ const Mid = ({ user, messages }) => {
           overflowX: "hidden",
           padding: "0px",
           margin: "0px",
-          
         }}
       >
         {messages.map((message) => {
@@ -217,36 +216,72 @@ const Mid = ({ user, messages }) => {
 };
 
 const UserMessage = ({ message }) => {
+  const purple1 = purple[600];
+  const purple2 = purple[300];
+
+  let idProvided = message.id ? true : false;
+
+  useEffect(() => {
+    if (message.id) {
+      idProvided = true;
+      console.log("Id changed");
+    }
+
+    return () => {
+      idProvided = false;
+    };
+  }, [message.id]);
   return (
     <Box
       sx={{
         display: "flex",
         // centerd
         alignItems: "center",
-        textAlign: "center",
+        // textAlign: "center",
         // FLoat right
         justifyContent: "flex-end",
       }}
     >
       {/* Message */}
       <Box
-        sx={{
-          backgroundColor: "purple",
-          // centered
-          display: "flex",
-          paddingLeft: "5px",
-          paddingRight: "5px",
-          paddingTop: "5px",
-          paddingBottom: "5px",
-          borderRadius: "12px",
-          width: "auto",
-          height: "auto",
-          marginBottom: "10px",
-          borderBottomRightRadius: "0px",
-          // max width 80%
-          maxWidth: "80%",
-          marginRight: "6px",
-        }}
+        sx={
+          idProvided
+            ? {
+                backgroundColor: purple1,
+                // centered
+                display: "flex",
+                paddingLeft: "5px",
+                paddingRight: "5px",
+                paddingTop: "5px",
+                paddingBottom: "5px",
+                borderRadius: "12px",
+                width: "auto",
+                height: "auto",
+                marginBottom: "10px",
+                borderBottomRightRadius: "0px",
+                // max width 80%
+                maxWidth: "80%",
+                marginRight: "6px",
+              }
+            : {
+                backgroundColor: purple2,
+                // centered
+                display: "flex",
+                paddingLeft: "5px",
+                paddingRight: "5px",
+                paddingTop: "5px",
+                paddingBottom: "5px",
+                borderRadius: "12px",
+                width: "auto",
+                height: "auto",
+                marginBottom: "10px",
+                borderBottomRightRadius: "0px",
+                // max width 80%
+                maxWidth: "80%",
+                marginRight: "6px",
+                borderStyle: "solid purple",
+              }
+        }
       >
         <Typography variant="subtitle2" sx={{ color: "white" }}>
           {message.message}
