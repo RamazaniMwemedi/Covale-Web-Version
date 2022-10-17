@@ -108,6 +108,19 @@ const cancelFriendRequest = async (id, token) => {
   return response.status;
 };
 
+// Find userBy id
+const findUserById = async (token, id) => {
+  if (token) {
+    const response = await axios.get(`${baseUrl}/api/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+    return response;
+  }
+};
+
 module.exports = {
   allUsers,
   addFriendById,
@@ -117,4 +130,5 @@ module.exports = {
   acceptFriendRequest,
   removeFriendRequest,
   cancelFriendRequest,
+  findUserById,
 };

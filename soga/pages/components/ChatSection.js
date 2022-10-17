@@ -13,6 +13,7 @@ const ChatSection = ({
   message,
   sendNewMessage,
   messages,
+  unsentMessages,
   friendUsername,
   onEmojiClick,
 }) => {
@@ -49,6 +50,7 @@ const ChatSection = ({
           sendNewMessage={sendNewMessage}
           message={message}
           messages={messages}
+          unsentMessages={unsentMessages}
           friendUsername={friendUsername}
           showRightHandler={showRightHandler}
           showRight={showRight}

@@ -24,10 +24,7 @@ import {
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  addNewMessage,
-  addNewMessageFromSever,
-} from "../../../Redux/slices/chat";
+import { addNewMessage } from "../../../Redux/slices/chat";
 
 // Socket.IO
 const socket = io.connect("https://rtcommunication.herokuapp.com/");
@@ -49,6 +46,7 @@ export default function Chat() {
     }
   });
   const messages = chat ? chat.chat.messege : null;
+  const [unsentMessages, setUnsentMessages] = useState([]);
   const [message, setMessage] = useState("");
 
   // Bools
@@ -99,7 +97,6 @@ export default function Chat() {
           if (data.sender != user.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
-            console.log(data);
             dispatch(addNewMessage(data));
           }
           setReceiveAudioPlay(false);
@@ -138,18 +135,18 @@ export default function Chat() {
       };
 
       dispatch(addNewMessage(newMessage));
-      // receiver: friend._id,
-      // message: messege,
-      // chatRoom: chatRoomId,
       socket.emit("send_message", { newMessage, id, userId });
+      setUnsentMessages((prev) => prev.push(newMessage));
       setMessage("");
       setBoolForSent(true);
       if (boolForSent) {
         socket.on("messege_sent", (data) => {
           setSentAudioPlay(true);
           setPlaying(true);
-          console.log(data);
-          dispatch(addNewMessageFromSever(data));
+          setUnsentMessages((prev) =>
+            prev.filter((message) => message.idFromClient != data.idFromClient)
+          );
+          dispatch(addNewMessage(data));
 
           setBoolForSent(false);
         });
@@ -181,6 +178,7 @@ export default function Chat() {
                 messageChangeHandler={messageChangeHandler}
                 message={message}
                 messages={messages}
+                unsentMessages={unsentMessages}
                 sendNewMessage={sendMessageHandle}
                 friendUsername={friendUsername}
                 onEmojiClick={onEmojiClick}
