@@ -6,17 +6,22 @@ const { getTeamById } = require("../services/teams");
 const { myFriends } = require("../services/user");
 
 // React-Redux hooks
-const { useDispatch, useSelector } = require("react-redux");
+const { useDispatch } = require("react-redux");
 
 // Reducers
 const { teamAdd, teamReset } = require("../Redux/slices/team");
 const { chatAdd, chatReset } = require("../Redux/slices/chat");
+const { addUser, removeUser } = require("../Redux/slices/user");
 
-//    Team Reducer
-
+// Services
+const { findUserById } = require("../services/user");
 const useCheckLogedinUser = () => {
-  const [logedInUser, setLogedInUser] = useState("");
+  const [loading, setloading] = useState(true)
+  const [logedInUser, setLogedInUser] = useState(null);
+  const [token, setToken] = useState(null);
   const router = useRouter();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const signedInUser = localStorage.getItem("logedinUser");
     if (signedInUser) {
@@ -24,9 +29,38 @@ const useCheckLogedinUser = () => {
     } else {
       router.push("/login");
     }
-  }, []);
+    if (logedInUser) {
+      setToken(logedInUser.token);
+    }
+  }, [logedInUser]);
 
-  return logedInUser;
+  useEffect(() => {
+    let userObject;
+    if (token) {
+      findUserById(token, logedInUser.id).then((res) => {
+        if (res.status != 200) {
+          router.push("/login");
+        }
+        userObject = {
+          id: res.data.id,
+          username: res.data.username,
+          firstname: res.data.firstname,
+          lastname: res.data.lastname,
+          birthday: res.data.birthday,
+          gender: res.data.gender,
+          email: res.data.email,
+        };
+        dispatch(addUser(userObject));
+        setloading(false)
+      });
+    }
+    return () => {
+      setloading(true)
+      dispatch(removeUser());
+    };
+  }, [token]);
+
+  return loading;
 };
 const useCheckLogedinUserToken = () => {
   const [logedInUser, setLogedInUser] = useState("");
@@ -75,6 +109,7 @@ const useGetTeamById = (token, id) => {
   useEffect(() => {
     setLoading(true);
     // Clear Team store
+
     dispatch(teamReset());
     if (router.pathname.includes("chats/t")) {
       if ((token, id)) {

@@ -54,10 +54,11 @@ const chatsStore = createStore(chatReducer);
 export default function Chat() {
   const [messages, dispatch] = useReducer(chatReducer, initialState);
   const theme = useTheme();
-  var user = useCheckLogedinUser();
+  const userLoading = useCheckLogedinUser();
+  const userStore = useSelector((state) => state.user);
   const router = useRouter();
   const id = router.query.id;
-  const token = user ? user.token : null;
+  const token = userStore ? userStore.token : null;
   const chat = useSelector((state) => state.chat.chat);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -101,7 +102,7 @@ export default function Chat() {
     socket.on("receive_message", (data) => {
       if (boolForReceive) {
         if (data) {
-          if (data.sender != user.id) {
+          if (data.sender != userStore.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
             dispatch({
@@ -133,7 +134,7 @@ export default function Chat() {
   }, [token, id]);
 
   const friendUsername = chat
-    ? chat.friend.id !== user.id
+    ? chat.friend.id !== userStore.id
       ? `${chat.friend.firstname}  ${chat.friend.lastname}`
       : ""
     : "";
@@ -144,12 +145,12 @@ export default function Chat() {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    user = null;
+    userStore = null;
     router.push("/login");
   };
 
   const sendMessageHandle = () => {
-    const userId = user ? user.id : null;
+    const userId = userStore ? userStore.id : null;
     if (message.length > 0) {
       const newMessage = {
         message: message,
@@ -170,44 +171,55 @@ export default function Chat() {
       }
     }
   };
-
+  if (userLoading) {
+    console.table(userStore.user);
+  }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "100vh",
-        backgroundColor: theme.colors.background,
-      }}
-    >
-      <CssBaseline />
-      {user ? (
-        <>
-          <DrawerComponent signoutHandler={signoutHandler} user={user} />
-          <ChatLeft user={user} chat={chat} />
-          {id ? (
-            loading ? (
-              <ChatSectionSkeleton />
-            ) : (
-              <ChatSection
-                id={id}
-                user={user}
-                chat={chat.chat}
-                messageChangeHandler={messageChangeHandler}
-                message={message}
-                messages={messages}
-                sendNewMessage={sendMessageHandle}
-                friendUsername={friendUsername}
-                onEmojiClick={onEmojiClick}
-              />
-            )
-          ) : (
-            <ClickaChat />
-          )}
-        </>
-      ) : (
+    <>
+      {userLoading ? (
         <LoadingLogo />
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            height: "100vh",
+            backgroundColor: theme.colors.background,
+          }}
+        >
+          <CssBaseline />
+          {userStore.user ? (
+            <>
+              <DrawerComponent
+                signoutHandler={signoutHandler}
+                user={userStore.user}
+              />
+              <ChatLeft user={userStore.user} chat={chat} />
+              {id ? (
+                loading ? (
+                  <ChatSectionSkeleton />
+                ) : (
+                  <ChatSection
+                    id={id}
+                    user={userStore.user}
+                    chat={chat.chat}
+                    messageChangeHandler={messageChangeHandler}
+                    message={message}
+                    messages={messages}
+                    sendNewMessage={sendMessageHandle}
+                    friendUsername={friendUsername}
+                    onEmojiClick={onEmojiClick}
+                  />
+                )
+              ) : (
+                <ClickaChat />
+              )}
+            </>
+          ) : (
+            <LoadingLogo />
+          )}
+        </Box>
       )}
-    </Box>
+    </>
   );
 }
 
