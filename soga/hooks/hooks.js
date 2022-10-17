@@ -105,6 +105,7 @@ const useGetTeamById = (token, id) => {
   useEffect(() => {
     setLoading(true);
     // Clear Team store
+  
     dispatch(teamReset());
     if (router.pathname.includes("chats/t")) {
       if ((token, id)) {

@@ -23,18 +23,29 @@ import {
   useGetTeamById,
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
+
+// Redux
 import { useSelector, useDispatch } from "react-redux";
 import { addNewMessage } from "../../../Redux/slices/chat";
+import { removeUser } from "../../../Redux/slices/user";
 
 // Socket.IO
 const socket = io.connect("https://rtcommunication.herokuapp.com/");
 
 export default function Chat() {
-  const dispatch = useDispatch();
-  const theme = useTheme();
-  var user = useCheckLogedinUser();
+  useCheckLogedinUser();
   const router = useRouter();
   const id = router.query.id;
+  // Join Room
+  useEffect(() => {
+    if (id) {
+      socket.emit("join_room", id);
+    }
+  }, [id]);
+
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const user = useSelector((state) => state.user);
   const token = user ? user.token : null;
   let loading = true;
   const chat = useSelector((state) => {
@@ -61,9 +72,6 @@ export default function Chat() {
 
   // Getting Chchatat by it's ID
   useGetChatById(token, id);
-
-  // Getting Team by it's ID
-  useGetTeamById(token, id);
 
   useEffect(() => {
     const audio = new Audio(
@@ -117,7 +125,7 @@ export default function Chat() {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    user = null;
+    dispatch(removeUser());
     router.push("/login");
   };
 
@@ -155,43 +163,49 @@ export default function Chat() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "100vh",
-        backgroundColor: theme.colors.background,
-      }}
-    >
-      <CssBaseline />
-      {user ? (
-        <>
-          <DrawerComponent signoutHandler={signoutHandler} user={user} />
-          <ChatLeft user={user} chat={chat} />
-          {id ? (
-            !loading ? (
-              <ChatSectionSkeleton />
-            ) : (
-              <ChatSection
-                id={id}
-                user={user}
-                chat={chat}
-                messageChangeHandler={messageChangeHandler}
-                message={message}
-                messages={messages}
-                unsentMessages={unsentMessages}
-                sendNewMessage={sendMessageHandle}
-                friendUsername={friendUsername}
-                onEmojiClick={onEmojiClick}
-              />
-            )
+    <>
+      {user.username ? (
+        <Box
+          sx={{
+            display: "flex",
+            height: "100vh",
+            backgroundColor: theme.colors.background,
+          }}
+        >
+          <CssBaseline />
+          {user ? (
+            <>
+              <DrawerComponent signoutHandler={signoutHandler} user={user} />
+              <ChatLeft user={user} chat={chat} />
+              {id ? (
+                !loading ? (
+                  <ChatSectionSkeleton />
+                ) : (
+                  <ChatSection
+                    id={id}
+                    user={user}
+                    chat={chat}
+                    messageChangeHandler={messageChangeHandler}
+                    message={message}
+                    messages={messages}
+                    unsentMessages={unsentMessages}
+                    sendNewMessage={sendMessageHandle}
+                    friendUsername={friendUsername}
+                    onEmojiClick={onEmojiClick}
+                  />
+                )
+              ) : (
+                <ClickaChat />
+              )}
+            </>
           ) : (
-            <ClickaChat />
+            <LoadingLogo />
           )}
-        </>
+        </Box>
       ) : (
         <LoadingLogo />
       )}
-    </Box>
+    </>
   );
 }
 
