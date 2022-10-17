@@ -13,7 +13,7 @@ import DrawerComponent from "../components/DrawerComponent";
 import ChatLeft from "../components/ChatLeft";
 import ChatSection from "../components/ChatSection";
 
-import { getChatById } from "../../services/chats";
+import { getChatById, getChat } from "../../services/chats";
 import ChatSectionSkeleton from "../components/ChatSectionSkeleton";
 
 // Hooks
@@ -26,33 +26,11 @@ import LoadingLogo from "../components/LoadingLogo";
 import { useSelector } from "react-redux";
 
 // Redux
-const { createStore } = require("redux");
 
 // Socket.IO
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
-// Chat Reducer
-const initialState = [];
-
-const chatReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case "ADD_ALL_MESSAGES":
-      return (state = payload);
-    case "RECIEVE_MESSAGE":
-      return [...state, payload];
-    case "SENT_MESSAGE":
-      return [...state, payload];
-    case "CLEAR":
-      return [];
-    default:
-      return state;
-  }
-};
-
-const chatsStore = createStore(chatReducer);
-
 export default function Chat() {
-  const [messages, dispatch] = useReducer(chatReducer, initialState);
   const theme = useTheme();
   const userLoading = useCheckLogedinUser();
   const userStore = useSelector((state) => state.user);
@@ -118,20 +96,11 @@ export default function Chat() {
 
   useEffect(() => {
     if ((token, id)) {
-      setLoading(true);
-      dispatch({
-        type: "CLEAR",
-      });
-      getChatById(token, id).then((res) => {
-        dispatch({
-          type: "ADD_ALL_MESSAGES",
-          payload: res.chat.messege,
-        });
-        setLoading(false);
-      });
       socket.emit("join_room", id);
     }
   }, [token, id]);
+
+  
 
   const friendUsername = chat
     ? chat.friend.id !== userStore.id
@@ -171,9 +140,6 @@ export default function Chat() {
       }
     }
   };
-  if (userLoading) {
-    console.table(userStore.user);
-  }
   return (
     <>
       {userLoading ? (
@@ -193,7 +159,7 @@ export default function Chat() {
                 signoutHandler={signoutHandler}
                 user={userStore.user}
               />
-              <ChatLeft user={userStore.user} chat={chat} />
+              <ChatLeft user={userStore.user}  />
               {id ? (
                 loading ? (
                   <ChatSectionSkeleton />

@@ -16,21 +16,21 @@ const { addUser, removeUser } = require("../Redux/slices/user");
 // Services
 const { findUserById } = require("../services/user");
 const useCheckLogedinUser = () => {
-  const [loading, setloading] = useState(true)
-  const [logedInUser, setLogedInUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [loading, setloading] = useState(true);
+  var logedInUser;
+  var token;
   const router = useRouter();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const signedInUser = localStorage.getItem("logedinUser");
     if (signedInUser) {
-      setLogedInUser(JSON.parse(signedInUser));
+      logedInUser = JSON.parse(signedInUser);
     } else {
       router.push("/login");
     }
     if (logedInUser) {
-      setToken(logedInUser.token);
+      token = logedInUser.token;
     }
   }, [logedInUser]);
 
@@ -43,6 +43,7 @@ const useCheckLogedinUser = () => {
         }
         userObject = {
           id: res.data.id,
+          token,
           username: res.data.username,
           firstname: res.data.firstname,
           lastname: res.data.lastname,

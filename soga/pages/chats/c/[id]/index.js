@@ -30,12 +30,13 @@ import { addNewMessage } from "../../../../Redux/slices/chat";
 const socket = io.connect("https://rtcommunication.herokuapp.com/");
 
 export default function Chat() {
+  const userLoading = useCheckLogedinUser();
   const dispatch = useDispatch();
   const theme = useTheme();
-  var user = useCheckLogedinUser();
+  const userStore = useSelector((state) => state.user);
   const router = useRouter();
   const id = router.query.id;
-  const token = user ? user.token : null;
+  const token = userStore ? userStore.token : null;
   let loading = true;
   const chat = useSelector((state) => {
     if (state.chat.chat) {
@@ -45,6 +46,8 @@ export default function Chat() {
       return null;
     }
   });
+  console.log("Id is :", router.query.id);
+
   const messages = chat ? chat.chat.messege : null;
   const [message, setMessage] = useState("");
 
@@ -93,7 +96,7 @@ export default function Chat() {
     socket.on("receive_message", (data) => {
       if (boolForReceive) {
         if (data) {
-          if (data.sender != user.id) {
+          if (data.sender != userStore.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
             console.log(data);
@@ -106,7 +109,7 @@ export default function Chat() {
   }, [socket]);
 
   const friendUsername = chat
-    ? chat.friend.id !== user.id
+    ? chat.friend.id !== userStore.id
       ? `${chat.friend.firstname}  ${chat.friend.lastname}`
       : ""
     : "";
@@ -117,7 +120,7 @@ export default function Chat() {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    user = null;
+    userStore = null;
     router.push("/login");
   };
 
@@ -126,7 +129,7 @@ export default function Chat() {
   };
 
   const sendMessageHandle = () => {
-    const userId = user ? user.id : null;
+    const userId = userStore ? userStore.id : null;
     if (message.length > 0) {
       const newMessage = {
         message: message,
@@ -147,42 +150,51 @@ export default function Chat() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "100vh",
-        backgroundColor: theme.colors.background,
-      }}
-    >
-      <CssBaseline />
-      {user ? (
-        <>
-          <DrawerComponent signoutHandler={signoutHandler} user={user} />
-          <ChatLeft user={user} chat={chat} />
-          {id ? (
-            !loading ? (
-              <ChatSectionSkeleton />
-            ) : (
-              <ChatSection
-                id={id}
-                user={user}
-                chat={chat}
-                messageChangeHandler={messageChangeHandler}
-                message={message}
-                messages={messages}
-                sendNewMessage={sendMessageHandle}
-                friendUsername={friendUsername}
-                onEmojiClick={onEmojiClick}
-              />
-            )
-          ) : (
-            <ClickaChat />
-          )}
-        </>
-      ) : (
+    <>
+      {userLoading ? (
         <LoadingLogo />
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            height: "100vh",
+            backgroundColor: theme.colors.background,
+          }}
+        >
+          <CssBaseline />
+          {userStore ? (
+            <>
+              <DrawerComponent
+                signoutHandler={signoutHandler}
+                user={userStore.user}
+              />
+              <ChatLeft user={userStore.user} chat={chat} />
+              {id ? (
+                !loading ? (
+                  <ChatSectionSkeleton />
+                ) : (
+                  <ChatSection
+                    id={id}
+                    user={userStore.user}
+                    chat={chat}
+                    messageChangeHandler={messageChangeHandler}
+                    message={message}
+                    messages={messages}
+                    sendNewMessage={sendMessageHandle}
+                    friendUsername={friendUsername}
+                    onEmojiClick={onEmojiClick}
+                  />
+                )
+              ) : (
+                <ClickaChat />
+              )}
+            </>
+          ) : (
+            <LoadingLogo />
+          )}
+        </Box>
       )}
-    </Box>
+    </>
   );
 }
 
