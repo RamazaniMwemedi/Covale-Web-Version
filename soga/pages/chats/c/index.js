@@ -23,29 +23,21 @@ import {
   useGetTeamById,
 } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/LoadingLogo";
-
-// Redux
 import { useSelector, useDispatch } from "react-redux";
-import { addNewMessage } from "../../../Redux/slices/chat";
-import { removeUser } from "../../../Redux/slices/user";
+import {
+  addNewMessage,
+  addNewMessageFromSever,
+} from "../../../Redux/slices/chat";
 
 // Socket.IO
 const socket = io.connect("https://rtcommunication.herokuapp.com/");
 
 export default function Chat() {
-  useCheckLogedinUser();
-  const router = useRouter();
-  const id = router.query.id;
-  // Join Room
-  useEffect(() => {
-    if (id) {
-      socket.emit("join_room", id);
-    }
-  }, [id]);
-
   const dispatch = useDispatch();
   const theme = useTheme();
-  const user = useSelector((state) => state.user);
+  var user = useCheckLogedinUser();
+  const router = useRouter();
+  const id = router.query.id;
   const token = user ? user.token : null;
   let loading = true;
   const chat = useSelector((state) => {
@@ -57,7 +49,6 @@ export default function Chat() {
     }
   });
   const messages = chat ? chat.chat.messege : null;
-  const [unsentMessages, setUnsentMessages] = useState([]);
   const [message, setMessage] = useState("");
 
   // Bools
@@ -72,6 +63,9 @@ export default function Chat() {
 
   // Getting Chchatat by it's ID
   useGetChatById(token, id);
+
+  // Getting Team by it's ID
+  useGetTeamById(token, id);
 
   useEffect(() => {
     const audio = new Audio(
@@ -105,6 +99,7 @@ export default function Chat() {
           if (data.sender != user.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
+            console.log(data);
             dispatch(addNewMessage(data));
           }
           setReceiveAudioPlay(false);
@@ -125,7 +120,7 @@ export default function Chat() {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    dispatch(removeUser());
+    user = null;
     router.push("/login");
   };
 
@@ -143,18 +138,18 @@ export default function Chat() {
       };
 
       dispatch(addNewMessage(newMessage));
+      // receiver: friend._id,
+      // message: messege,
+      // chatRoom: chatRoomId,
       socket.emit("send_message", { newMessage, id, userId });
-      setUnsentMessages((prev) => prev.push(newMessage));
       setMessage("");
       setBoolForSent(true);
       if (boolForSent) {
         socket.on("messege_sent", (data) => {
           setSentAudioPlay(true);
           setPlaying(true);
-          setUnsentMessages((prev) =>
-            prev.filter((message) => message.idFromClient != data.idFromClient)
-          );
-          dispatch(addNewMessage(data));
+          console.log(data);
+          dispatch(addNewMessageFromSever(data));
 
           setBoolForSent(false);
         });
@@ -163,49 +158,42 @@ export default function Chat() {
   };
 
   return (
-    <>
-      {user.username ? (
-        <Box
-          sx={{
-            display: "flex",
-            height: "100vh",
-            backgroundColor: theme.colors.background,
-          }}
-        >
-          <CssBaseline />
-          {user ? (
-            <>
-              <DrawerComponent signoutHandler={signoutHandler} user={user} />
-              <ChatLeft user={user} chat={chat} />
-              {id ? (
-                !loading ? (
-                  <ChatSectionSkeleton />
-                ) : (
-                  <ChatSection
-                    id={id}
-                    user={user}
-                    chat={chat}
-                    messageChangeHandler={messageChangeHandler}
-                    message={message}
-                    messages={messages}
-                    unsentMessages={unsentMessages}
-                    sendNewMessage={sendMessageHandle}
-                    friendUsername={friendUsername}
-                    onEmojiClick={onEmojiClick}
-                  />
-                )
-              ) : (
-                <ClickaChat />
-              )}
-            </>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        backgroundColor: theme.colors.background,
+      }}
+    >
+      <CssBaseline />
+      {user ? (
+        <>
+          <DrawerComponent signoutHandler={signoutHandler} user={user} />
+          <ChatLeft user={user} chat={chat} />
+          {id ? (
+            !loading ? (
+              <ChatSectionSkeleton />
+            ) : (
+              <ChatSection
+                id={id}
+                user={user}
+                chat={chat}
+                messageChangeHandler={messageChangeHandler}
+                message={message}
+                messages={messages}
+                sendNewMessage={sendMessageHandle}
+                friendUsername={friendUsername}
+                onEmojiClick={onEmojiClick}
+              />
+            )
           ) : (
-            <LoadingLogo />
+            <ClickaChat />
           )}
-        </Box>
+        </>
       ) : (
         <LoadingLogo />
       )}
-    </>
+    </Box>
   );
 }
 

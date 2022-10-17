@@ -6,20 +6,17 @@ const { getTeamById } = require("../services/teams");
 const { myFriends } = require("../services/user");
 
 // React-Redux hooks
-const { useDispatch } = require("react-redux");
+const { useDispatch, useSelector } = require("react-redux");
 
 // Reducers
 const { teamAdd, teamReset } = require("../Redux/slices/team");
 const { chatAdd, chatReset } = require("../Redux/slices/chat");
-const { addUser, removeUser } = require("../Redux/slices/user");
 
-// Services
-const { findUserById } = require("../services/user");
+//    Team Reducer
+
 const useCheckLogedinUser = () => {
-  const [logedInUser, setLogedInUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [logedInUser, setLogedInUser] = useState("");
   const router = useRouter();
-  const dispatch = useDispatch();
   useEffect(() => {
     const signedInUser = localStorage.getItem("logedinUser");
     if (signedInUser) {
@@ -27,34 +24,7 @@ const useCheckLogedinUser = () => {
     } else {
       router.push("/login");
     }
-    if (logedInUser) {
-      setToken(logedInUser.token);
-    }
-  }, [logedInUser]);
-
-  useEffect(() => {
-    let userObject;
-    if (token) {
-      findUserById(token, logedInUser.id).then((res) => {
-        if (res.status != 200) {
-          router.push("/login");
-        }
-        userObject = {
-          id: res.data._id,
-          username: res.data.username,
-          firstname: res.data.firstname,
-          lastname: res.data.lastname,
-          birthday: res.data.birthday,
-          gender: res.data.gender,
-          email: res.data.email,
-        };
-        dispatch(addUser(userObject));
-      });
-    }
-    return () => {
-      dispatch(removeUser());
-    };
-  }, [token]);
+  }, []);
 
   return logedInUser;
 };
@@ -105,7 +75,6 @@ const useGetTeamById = (token, id) => {
   useEffect(() => {
     setLoading(true);
     // Clear Team store
-  
     dispatch(teamReset());
     if (router.pathname.includes("chats/t")) {
       if ((token, id)) {
