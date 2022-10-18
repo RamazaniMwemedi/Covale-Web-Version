@@ -36,7 +36,7 @@ export default function Chat() {
   const userStore = useSelector((state) => state.user);
   const router = useRouter();
   const id = router.query.id;
-  const token = userStore ? userStore.token : null;
+  const token = userStore.user ? userStore.user.token : null;
   let loading = true;
   const chat = useSelector((state) => {
     if (state.chat.chat) {

@@ -36,6 +36,7 @@ const useCheckLogedinUser = () => {
 
   useEffect(() => {
     let userObject;
+
     if (token) {
       findUserById(token, logedInUser.id).then((res) => {
         if (res.status != 200) {
@@ -52,11 +53,11 @@ const useCheckLogedinUser = () => {
           email: res.data.email,
         };
         dispatch(addUser(userObject));
-        setloading(false)
+        setloading(false);
       });
     }
     return () => {
-      setloading(true)
+      setloading(true);
       dispatch(removeUser());
     };
   }, [token]);
@@ -83,6 +84,7 @@ const useCheckLogedinUserToken = () => {
 };
 
 const useGetChatById = (token, id) => {
+
   const router = useRouter();
 
   const dispatch = useDispatch();

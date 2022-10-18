@@ -36,7 +36,7 @@ export default function Chat() {
   const userStore = useSelector((state) => state.user);
   const router = useRouter();
   const id = router.query.id;
-  const token = userStore ? userStore.token : null;
+  const token = userStore.user ? userStore.user.token : null;
   const chat = useSelector((state) => state.chat.chat);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -100,8 +100,6 @@ export default function Chat() {
     }
   }, [token, id]);
 
-  
-
   const friendUsername = chat
     ? chat.friend.id !== userStore.id
       ? `${chat.friend.firstname}  ${chat.friend.lastname}`
@@ -159,7 +157,7 @@ export default function Chat() {
                 signoutHandler={signoutHandler}
                 user={userStore.user}
               />
-              <ChatLeft user={userStore.user}  />
+              <ChatLeft user={userStore.user} />
               {id ? (
                 loading ? (
                   <ChatSectionSkeleton />
