@@ -185,7 +185,6 @@ const Mid = ({ user, messages }) => {
       <List
         sx={{
           maxHeight: "82.6vh",
-          minHeight: "82.5vh",
           overflowY: "scroll",
           overflowX: "hidden",
           padding: "0px",

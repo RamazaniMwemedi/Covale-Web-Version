@@ -18,6 +18,7 @@ import FormControl from "@mui/material/FormControl";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { useTheme } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 // My components
 import AddMoreFriends from "./AddMoreFriends";
@@ -121,12 +122,12 @@ const Teams = ({ teams, openCreateTeam, toggleShowTeam, teamLoading }) => {
                   <CreateTeam toggleShowTeam={toggleShowTeam} />
                 )}
 
+                {teams.map((team, i) => {
+                  return <Team key={i} team={team} />;
+                })}
                 {!openCreateTeam && (
                   <FloatingATeamB toggleShowTeam={toggleShowTeam} />
                 )}
-                {teams.map((team,i) => {
-                  return <Team key={i} team={team} />;
-                })}
               </Box>
             ) : (
               <Box sx={{ textAlign: "center", marginTop: "150px" }}>
@@ -137,7 +138,7 @@ const Teams = ({ teams, openCreateTeam, toggleShowTeam, teamLoading }) => {
                   Click the{" "}
                   {
                     <Icon>
-                      <AddIcon
+                      <GroupAddIcon
                         sx={{
                           width: "15px",
                           height: "15px",
@@ -147,6 +148,12 @@ const Teams = ({ teams, openCreateTeam, toggleShowTeam, teamLoading }) => {
                   }{" "}
                   to start a team
                 </Typography>
+                {openCreateTeam && (
+                  <CreateTeam toggleShowTeam={toggleShowTeam} />
+                )}
+                {!openCreateTeam && (
+                  <FloatingATeamB toggleShowTeam={toggleShowTeam} />
+                )}
               </Box>
             ))}
         </>

@@ -27,18 +27,16 @@ const createNewTeam = async (
   teamVission
 ) => {
   if (token) {
-    if ((teamName, isPrivate, teamMission, teamVission)) {
-      const response = await axios.post(
-        `${baseUrl}/api/team`,
-        { teamName, isPrivate, teamMission, teamVission },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data;
-    }
+    const response = await axios.post(
+      `${baseUrl}/api/team`,
+      { teamName, isPrivate, teamMission, teamVission },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
   }
 };
 const inviteFriends = async (token, teamId, friends) => {

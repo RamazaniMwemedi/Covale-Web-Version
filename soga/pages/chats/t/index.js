@@ -32,10 +32,11 @@ const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
 export default function Chat() {
   const theme = useTheme();
-  var user = useCheckLogedinUser();
+  const userLoading = useCheckLogedinUser();
+  const userStore = useSelector((state) => state.user);
   const router = useRouter();
   const id = router.query.id;
-  const token = user ? user.token : null;
+  const token = userStore.user ? userStore.user.token : null;
 
   // Getting Chat by it's ID
   useGetChatById(token, id);
@@ -87,7 +88,7 @@ export default function Chat() {
     socket.on("receive_message", (data) => {
       if (boolForReceive) {
         if (data) {
-          if (data.sender != user.id) {
+          if (data.sender != userStore.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
             dispatch({
@@ -134,12 +135,12 @@ export default function Chat() {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    user = null;
+    userStore = null;
     router.push("/login");
   };
 
   const sendMessageHandle = () => {
-    const userId = user ? user.id : null;
+    const userId = userStore ? userStore.id : null;
     if (message.length > 0) {
       const newMessage = {
         message: message,
@@ -166,40 +167,49 @@ export default function Chat() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "100vh",
-        backgroundColor: theme.colors.background,
-      }}
-    >
-      <CssBaseline />
-      {user ? (
-        <>
-          <DrawerComponent signoutHandler={signoutHandler} user={user} />
-          <TeamLeft user={user} />
-          {id ? (
-            <TeamSection
-              messageChangeHandler={messageChangeHandler}
-              sendNewMessage={sendMessageHandle}
-              message={message}
-              onEmojiClick={onEmojiClick}
-            />
-          ) : (
-            // loading ? (
-            //   //Team Sketelton
-            //   <Typography>Team Sketelton</Typography>
-            // ) : (
-            //   // Team Section
-            //   <Typography>Team Section</Typography>
-            // )
-            <ClickTeam />
-          )}
-        </>
-      ) : (
+    <>
+      {userLoading ? (
         <LoadingLogo />
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            height: "100vh",
+            backgroundColor: theme.colors.background,
+          }}
+        >
+          <CssBaseline />
+          {userStore.user ? (
+            <>
+              <DrawerComponent
+                signoutHandler={signoutHandler}
+                user={userStore.user}
+              />
+              <TeamLeft user={userStore.user} />
+              {id ? (
+                <TeamSection
+                  messageChangeHandler={messageChangeHandler}
+                  sendNewMessage={sendMessageHandle}
+                  message={message}
+                  onEmojiClick={onEmojiClick}
+                />
+              ) : (
+                // loading ? (
+                //   //Team Sketelton
+                //   <Typography>Team Sketelton</Typography>
+                // ) : (
+                //   // Team Section
+                //   <Typography>Team Section</Typography>
+                // )
+                <ClickTeam />
+              )}
+            </>
+          ) : (
+            <LoadingLogo />
+          )}
+        </Box>
       )}
-    </Box>
+    </>
   );
 }
 

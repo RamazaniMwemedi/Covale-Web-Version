@@ -58,7 +58,6 @@ const useCheckLogedinUser = () => {
     }
     return () => {
       setloading(true);
-      dispatch(removeUser());
     };
   }, [token]);
 
@@ -84,7 +83,6 @@ const useCheckLogedinUserToken = () => {
 };
 
 const useGetChatById = (token, id) => {
-
   const router = useRouter();
 
   const dispatch = useDispatch();
