@@ -1,7 +1,7 @@
 const io = require("socket.io-client");
 
 const axios = require("axios");
-const baseUrl = "https://covalnt.herokuapp.com";
+const baseUrl = "https://covale.herokuapp.com";
 
 const sendMessege = async (friendId, token, messege) => {
   const response = await axios.post(

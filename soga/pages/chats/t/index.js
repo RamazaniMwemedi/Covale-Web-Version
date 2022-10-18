@@ -4,6 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
 
 // Logo
 import Logo from "../../../assets/Logo";
@@ -26,23 +27,25 @@ import LoadingLogo from "../../components/LoadingLogo";
 
 // Redux Hooks
 import { useSelector, useDispatch } from "react-redux";
+import { addNewMessageToTeam } from "../../../Redux/slices/team";
+import { useMemo } from "react";
 
 // Socket.IO
+// https://rtcommunication.herokuapp.com/
+// http://localhost:5005/
 const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
 
-export default function Chat() {
+export default function TeamPage() {
   const theme = useTheme();
   const userLoading = useCheckLogedinUser();
   const userStore = useSelector((state) => state.user);
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
-
-  // Getting Chat by it's ID
-  useGetChatById(token, id);
-
-  // Getting Team by it's ID
-  useGetTeamById(token, id);
+  const dispatch = useDispatch();
+  const team = useSelector((state) => state.team.team);
+  let messages;
+  // const messages = team ? team.messages : [];
 
   // Saving Team into a redux state
 
@@ -51,13 +54,23 @@ export default function Chat() {
 
   // Bools
   const [boolForSent, setBoolForSent] = useState(false);
-  const [boolForReceive, setBoolForReceive] = useState(false);
+  const [boolForReceive, setBoolForReceive] = useState(true);
   //Audio
   const [playing, setPlaying] = useState(false);
   const [sentAudioPlay, setSentAudioPlay] = useState(false);
   const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
 
-  const [audioUrl, setAudioUrl] = useState(null);
+  // Getting Team by it's ID
+  useGetTeamById(token, id);
+
+  useEffect(() => {
+    console.log("Some changes");
+    messages = team ? team.messages : [];
+
+    return () => {
+      messages = [];
+    };
+  }, [team && team.messages]);
 
   useEffect(() => {
     const audio = new Audio(
@@ -85,49 +98,19 @@ export default function Chat() {
 
   useEffect(() => {
     setBoolForReceive(true);
-    socket.on("receive_message", (data) => {
+    socket.on("receive_message_to_team", (data) => {
+      console.log(data);
       if (boolForReceive) {
         if (data) {
           if (data.sender != userStore.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
-            dispatch({
-              type: "RECIEVE_MESSAGE",
-              payload: data,
-            });
           }
           setReceiveAudioPlay(false);
         }
       }
     });
   }, [socket]);
-
-  // useEffect(() => {
-  //   if ((token, id)) {
-  //     setLoading(true);
-  //     dispatch({
-  //       type: "CLEAR",
-  //     });
-  //     if (router.pathname.includes("chats/c")) {
-  //       // getChatById(token, id).then((res) => {
-  //       //   dispatch({
-  //       //     type: "ADD_ALL_MESSAGES",
-  //       //     payload: res.chat.messege,
-  //       //   });
-  //       //   setLoading(false);
-  //       // });
-  //       // socket.emit("join_room", id);
-  //     } else if(router.pathname.includes("chats/t")){
-
-  //     }
-  //   }
-  // }, [token, id]);
-
-  // const friendUsername = chat
-  //   ? chat.chat.friend.id !== user.id
-  //     ? `${chat.chat.friend.firstname}  ${chat.chat.friend.lastname}`
-  //     : ""
-  //   : "";
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -140,22 +123,22 @@ export default function Chat() {
   };
 
   const sendMessageHandle = () => {
-    const userId = userStore ? userStore.id : null;
+    const userId = userStore.user ? userStore.user.id : null;
+
     if (message.length > 0) {
       const newMessage = {
         message: message,
+        idFromClient: uuidv4(),
       };
-      socket.emit("send_message", { newMessage, id, userId });
+      socket.emit("send_message_to_team", { newMessage, id, userId });
       setMessage("");
       setBoolForSent(true);
       if (boolForSent) {
-        socket.on("messege_sent", (data) => {
+        socket.on("messege_sent_to_team", (data) => {
+          console.log(data);
           setSentAudioPlay(true);
           setPlaying(true);
-          dispatch({
-            type: "SENT_MESSAGE",
-            payload: data,
-          });
+          dispatch(addNewMessageToTeam(data));
           setBoolForSent(false);
         });
       }
@@ -188,9 +171,11 @@ export default function Chat() {
               <TeamLeft user={userStore.user} />
               {id ? (
                 <TeamSection
+                  user={userStore.user}
                   messageChangeHandler={messageChangeHandler}
                   sendNewMessage={sendMessageHandle}
                   message={message}
+                  messages={messages}
                   onEmojiClick={onEmojiClick}
                 />
               ) : (

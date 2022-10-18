@@ -12,13 +12,17 @@ const teamSlice = createSlice({
     teamReset(state) {
       state.team = initialState;
     },
+    addNewMessageToTeam(state, { payload }) {
+      state.team.messages.push(payload);
+    },
   },
 });
 
-const { teamAdd, teamReset } = teamSlice.actions;
+const { teamAdd, teamReset, addNewMessageToTeam } = teamSlice.actions;
 const reducer = teamSlice.reducer;
 module.exports = {
   reducer,
   teamAdd,
   teamReset,
+  addNewMessageToTeam,
 };

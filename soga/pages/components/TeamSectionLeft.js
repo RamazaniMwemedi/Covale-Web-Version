@@ -39,8 +39,8 @@ const TeamSectionLeft = ({
   onEmojiClick,
   showParticipant,
   showMenu,
+  user
 }) => {
-  const user = useCheckLogedinUser();
   const teamName = team ? team.teamName : "";
   const messages = team ? team.messages : [];
   return (

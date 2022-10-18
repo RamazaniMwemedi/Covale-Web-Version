@@ -14,7 +14,9 @@ const TeamSection = ({
   message,
   onEmojiClick,
   messageChangeHandler,
+  user,
 }) => {
+
   const [option, setOption] = useState("");
   const team = useSelector((state) => {
     if (state.team) {
@@ -73,6 +75,7 @@ const TeamSection = ({
           >
             {/* Team Section Left */}
             <TeamSectionLeft
+              user={user}
               team={team}
               showRight={showRight}
               messageChangeHandler={messageChangeHandler}

@@ -101,7 +101,6 @@ const useGetChatById = (token, id) => {
   }, [token, id]);
 };
 const useGetTeamById = (token, id) => {
-  const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -110,20 +109,17 @@ const useGetTeamById = (token, id) => {
   useEffect(() => {
     setLoading(true);
     // Clear Team store
-
+    console.log("Team Added from hook");
     dispatch(teamReset());
     if (router.pathname.includes("chats/t")) {
       if ((token, id)) {
         getTeamById(token, id).then((res) => {
-          setTeam(res);
+          dispatch(teamAdd(res));
           setLoading(false);
         });
       }
     }
   }, [token, id]);
-  if (team) {
-    dispatch(teamAdd(team));
-  }
   return loading;
 };
 

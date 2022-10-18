@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "https://covalnt.herokuapp.com";
+const baseUrl = "https://covale.herokuapp.com";
 // http://localhost:3000/
 const sendMessege = async (friendId, token, messege) => {
   const response = await axios.post(

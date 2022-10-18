@@ -63,8 +63,7 @@ export default function Chat() {
   // Getting Chchatat by it's ID
   useGetChatById(token, id);
 
-  // Getting Team by it's ID
-  useGetTeamById(token, id);
+ 
 
   useEffect(() => {
     const audio = new Audio(
