@@ -41,6 +41,7 @@ const ChatSectionLeft = ({
   showRightHandler,
   showRight,
   onEmojiClick,
+  unsentMessages,
 }) => {
   return (
     <Box
@@ -66,7 +67,13 @@ const ChatSectionLeft = ({
           paddingBottom: "2px",
         }}
       >
-        {messages && <Mid user={user} messages={messages} />}
+        {messages && (
+          <Mid
+            user={user}
+            messages={messages}
+            unsentMessages={unsentMessages}
+          />
+        )}
         <Bottom
           messageChangeHandler={messageChangeHandler}
           sendNewMessage={sendNewMessage}
@@ -179,7 +186,7 @@ const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
   );
 };
 
-const Mid = ({ user, messages }) => {
+const Mid = ({ user, messages, unsentMessages }) => {
   const toBottomWhenNewMessage = useRef(null);
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
@@ -209,6 +216,7 @@ const Mid = ({ user, messages }) => {
             <FriendMessage message={message} />
           );
         })}
+       
         <ListItem ref={toBottomWhenNewMessage} />
       </List>
     </Box>

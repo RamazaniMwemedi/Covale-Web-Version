@@ -27,6 +27,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addNewMessage } from "../../../../Redux/slices/chat";
 
 // Socket.IO
+// https://rtcommunication.herokuapp.com/
 const socket = io.connect("https://rtcommunication.herokuapp.com/");
 
 export default function Chat() {
@@ -129,7 +130,7 @@ export default function Chat() {
   };
 
   const sendMessageHandle = () => {
-    const userId = userStore ? userStore.id : null;
+    const userId = userStore.user ? userStore.user.id : null;
     if (message.length > 0) {
       const newMessage = {
         message: message,
