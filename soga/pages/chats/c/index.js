@@ -127,10 +127,6 @@ export default function Chat() {
     setMessage(message + emojiObject.emoji);
   };
 
-  useEffect(() => {
-    console.log("Unsent messages :", unsentMessages);
-  }, [unsentMessages]);
-
   const sendMessageHandle = () => {
     const userId = userStore ? userStore.user.id : null;
     if (message.length > 0) {

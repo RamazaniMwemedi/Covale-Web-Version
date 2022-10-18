@@ -4,16 +4,13 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState, useRef, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
-
-// Logo
-import Logo from "../../../../assets/Logo";
+import { v4 as uuidv4 } from "uuid";
 
 // My components
 import DrawerComponent from "../../../components/DrawerComponent";
 import ChatLeft from "../../../components/ChatLeft";
 import ChatSection from "../../../components/ChatSection";
 
-import { getChatById } from "../../../../services/chats";
 import ChatSectionSkeleton from "../../../components/ChatSectionSkeleton";
 
 // Hooks
@@ -28,6 +25,7 @@ import { addNewMessage } from "../../../../Redux/slices/chat";
 
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
+// http://localhost:5005/
 const socket = io.connect("https://rtcommunication.herokuapp.com/");
 
 export default function Chat() {
@@ -129,12 +127,16 @@ export default function Chat() {
     setMessage(message + emojiObject.emoji);
   };
 
+
   const sendMessageHandle = () => {
-    const userId = userStore.user ? userStore.user.id : null;
+    const userId = userStore ? userStore.user.id : null;
     if (message.length > 0) {
       const newMessage = {
+        sender: userId,
         message: message,
+        idFromClient: uuidv4(),
       };
+
       socket.emit("send_message", { newMessage, id, userId });
       setMessage("");
       setBoolForSent(true);
