@@ -15,7 +15,8 @@ import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import Tooltip from "@mui/material/Tooltip";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import InsightsSharpIcon from "@mui/icons-material/InsightsSharp";
-import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
+import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import Logo from "../../assets/Logo";
 import NewMeet from "./NewMeet";
@@ -59,12 +60,13 @@ export default function DrawerComponent({ signoutHandler, user }) {
   const theme = useTheme();
 
   const [open, setOpen] = useState(false);
+  const [home, setHome] = useState("");
   const [chatColor, setChatColor] = useState("gray");
   const [peopleColor, setPeopleColor] = useState("gray");
   const [calendar, setCalendar] = useState("gray");
   const [meet, setMeet] = useState("gray");
   // Background color
-  const [notificationBackground, setNotificationBackground] = useState("")
+  const [homeBackground, setHomeBackground] = useState("");
   const [chatBackgroundColor, setChatBackgroundColor] = useState("");
   const [peopleBackgroundColor, setPeopleBackgroundColor] = useState("");
   const [calenderBackgroundColor, setCalenderBackgroundColor] = useState("");
@@ -114,7 +116,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setCalenderBackgroundColor("");
       setMeetBackgroundColor(theme.colors.drawerBackground);
     }
-  }, [router.pathname,theme]);
+  }, [router.pathname, theme]);
 
   return (
     <>
@@ -144,26 +146,27 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 <Logo width={50} height={50} />
               </Box>
               <br />
-              <Tooltip title="Notifications" placement="right-start">
+              {/* Home */}
+              <Tooltip title="Home" placement="right-start">
                 <ListItemButton
                   button
                   onClick={() => {
-                    router.push("/notifications");
+                    router.push("/home");
                   }}
                   sx={{
                     borderRadius: "10px",
                     margin: "5px",
-                    backgroundColor: notificationBackground,
+                    backgroundColor: homeBackground,
                   }}
                 >
-                  <ListItemIcon
-                  >
-                    <NotificationsActiveRoundedIcon fontSize="small" />
+                  <ListItemIcon>
+                    <HomeRoundedIcon fontSize="medium" color={home} />
                   </ListItemIcon>
                   <ListItemText primary="Chats" />
                   <Typography variant="caption">Chat</Typography>
                 </ListItemButton>
               </Tooltip>
+              {/* Chats */}
               <Tooltip title="Chats" placement="right-start">
                 <ListItemButton
                   button
@@ -179,8 +182,8 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   <ListItemIcon>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
+                      width="24"
+                      height="24"
                       fill={chatColor}
                       // class="bi bi-chat-dots"
                       viewBox="0 0 16 16"
@@ -192,6 +195,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   <ListItemText primary="Chats" />
                 </ListItemButton>
               </Tooltip>
+              {/* People */}
               <Tooltip title="People" placement="right-start">
                 <ListItemButton
                   button
@@ -205,11 +209,12 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <PeopleAltIcon fontSize="small" color={peopleColor} />
+                    <PeopleAltIcon fontSize="medium" color={peopleColor} />
                   </ListItemIcon>
                   <ListItemText primary="People" />
                 </ListItemButton>
               </Tooltip>
+              {/* Insight */}
               <Tooltip title="Insight" placement="right-start">
                 <ListItemButton
                   button
@@ -223,11 +228,12 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <InsightsSharpIcon fontSize="small" color={peopleColor} />
+                    <InsightsSharpIcon fontSize="medium" color={peopleColor} />
                   </ListItemIcon>
                   <ListItemText primary="People" />
                 </ListItemButton>
               </Tooltip>
+              {/* Calendar */}
               <Tooltip title="Calendar" placement="right-start">
                 <ListItemButton
                   button
@@ -242,7 +248,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 >
                   <ListItemIcon>
                     <CalendarMonthRoundedIcon
-                      fontSize="small"
+                      fontSize="medium"
                       color={calendar}
                     />
                   </ListItemIcon>
@@ -263,7 +269,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <VideocamRoundedIcon fontSize="small" color={meet} />
+                    <VideocamRoundedIcon fontSize="medium" color={meet} />
                   </ListItemIcon>
                   <ListItemText primary="Calender" />
                 </ListItemButton>
@@ -277,7 +283,9 @@ export default function DrawerComponent({ signoutHandler, user }) {
               left: 8,
             }}
           >
-            {" "}
+            <IconButton>
+              <NotificationsActiveRoundedIcon fontSize="medium" />
+            </IconButton>
             <Box>
               <Tooltip title="Join">
                 <NewMeet />
