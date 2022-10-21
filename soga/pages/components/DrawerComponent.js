@@ -60,13 +60,13 @@ export default function DrawerComponent({ signoutHandler, user }) {
   const theme = useTheme();
 
   const [open, setOpen] = useState(false);
-  const [home, setHome] = useState("");
+  const [homeColor, setHomeColor] = useState("");
   const [chatColor, setChatColor] = useState("gray");
   const [peopleColor, setPeopleColor] = useState("gray");
   const [calendar, setCalendar] = useState("gray");
   const [meet, setMeet] = useState("gray");
   // Background color
-  const [homeBackground, setHomeBackground] = useState("");
+  const [homeBackgroundColor, setHomeBackgroundColor] = useState("");
   const [chatBackgroundColor, setChatBackgroundColor] = useState("");
   const [peopleBackgroundColor, setPeopleBackgroundColor] = useState("");
   const [calenderBackgroundColor, setCalenderBackgroundColor] = useState("");
@@ -76,6 +76,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
 
   useEffect(() => {
     if (pathname.includes("/chat")) {
+      setHomeColor("action");
       setChatColor("purple");
       setPeopleColor("gray");
       setCalendar("gray");
@@ -115,6 +116,17 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor(theme.colors.drawerBackground);
+    } else if (pathname === "/work") {
+      setHomeColor("secondary");
+      setChatColor("gray");
+      setPeopleColor("gray");
+      setCalendar("gray");
+      setMeet("action");
+      // Background color
+      setChatBackgroundColor("");
+      setPeopleBackgroundColor("");
+      setCalenderBackgroundColor("");
+      setHomeBackgroundColor(theme.colors.drawerBackground);
     }
   }, [router.pathname, theme]);
 
@@ -147,20 +159,20 @@ export default function DrawerComponent({ signoutHandler, user }) {
               </Box>
               <br />
               {/* Home */}
-              <Tooltip title="Home" placement="right-start">
+              <Tooltip title="Work" placement="right-start">
                 <ListItemButton
                   button
                   onClick={() => {
-                    router.push("/home");
+                    router.push("/work");
                   }}
                   sx={{
                     borderRadius: "10px",
                     margin: "5px",
-                    backgroundColor: homeBackground,
+                    backgroundColor: homeBackgroundColor,
                   }}
                 >
                   <ListItemIcon>
-                    <HomeRoundedIcon fontSize="medium" color={home} />
+                    <HomeRoundedIcon fontSize="medium" color={homeColor} />
                   </ListItemIcon>
                   <ListItemText primary="Chats" />
                   <Typography variant="caption">Chat</Typography>
