@@ -21,6 +21,7 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import Logo from "../../assets/Logo";
 import NewMeet from "./NewMeet";
 import Signout from "./Signout";
+import Notification from "./Notification";
 
 const closedMixin = (theme) => ({
   transition: theme.transitions.create("width", {
@@ -295,9 +296,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
               left: 8,
             }}
           >
-            <IconButton>
-              <NotificationsActiveRoundedIcon fontSize="medium" />
-            </IconButton>
+            <Notification />
             <Box>
               <Tooltip title="Join">
                 <NewMeet />
