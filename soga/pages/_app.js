@@ -21,6 +21,9 @@ function MyApp({ Component, pageProps }) {
   // Theming
   const darkTheme = {
     // dark theme
+    typography: {
+      fontFamily: "cursive",
+    },
     palette: {
       mode: "dark",
     },
@@ -43,6 +46,9 @@ function MyApp({ Component, pageProps }) {
 
   const lightTheme = {
     // light theme
+    typography: {
+      fontFamily: "cursive",
+    },
     palette: {
       mode: "light",
     },

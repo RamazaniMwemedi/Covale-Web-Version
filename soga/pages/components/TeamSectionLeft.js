@@ -39,7 +39,7 @@ const TeamSectionLeft = ({
   onEmojiClick,
   showParticipant,
   showMenu,
-  user
+  user,
 }) => {
   const teamName = team ? team.teamName : "";
   const messages = team ? team.messages : [];
@@ -192,7 +192,7 @@ const Mid = ({ user, messages }) => {
         }}
       >
         {messages.map((message) => {
-          return message.sender === user.id ? (
+          return message.sender.id === user.id ? (
             <UserMessage message={message} />
           ) : (
             <FriendMessage message={message} />
@@ -210,8 +210,8 @@ const UserMessage = ({ message }) => {
       sx={{
         display: "flex",
         // centerd
-        alignItems: "center",
-        textAlign: "center",
+        // alignItems: "center",
+        // textAlign: "center",
         // FLoat right
         justifyContent: "flex-end",
       }}
@@ -251,7 +251,7 @@ const FriendMessage = ({ message }) => {
       sx={{
         display: "flex",
         // centerd
-        textAlign: "center",
+        // textAlign: "center",
         // FLoat right
         justifyContent: "flex-start",
       }}
@@ -268,8 +268,6 @@ const FriendMessage = ({ message }) => {
       <Box
         sx={{
           backgroundColor: theme.colors.textBackground,
-          // centered
-          display: "flex",
           paddingLeft: "5px",
           paddingRight: "5px",
           paddingTop: "5px",
@@ -283,7 +281,27 @@ const FriendMessage = ({ message }) => {
           maxWidth: "80%",
         }}
       >
-        <Typography variant="subtitle2">{message.message}</Typography>
+        <Box
+          sx={{
+            backgroundColor: theme.palette.grey,
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: "bold",
+            }}
+            variant="subtitle2"
+          >{`${message.sender.firstname} ${message.sender.lastname}`}</Typography>
+        </Box>
+
+        <Box
+          sx={{
+            // centered
+            display: "flex",
+          }}
+        >
+          <Typography variant="subtitle2">{message.message}</Typography>
+        </Box>
       </Box>
     </Box>
   );
