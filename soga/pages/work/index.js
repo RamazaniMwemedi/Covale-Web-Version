@@ -6,7 +6,7 @@ import { useTheme } from "@mui/material/styles";
 
 // My components
 import DrawerComponent from "../components/DrawerComponent";
-import ChatLeft from "../components/ChatLeft";
+import WorktLeft from "../components/workLeft";
 
 // Hooks
 import { useCheckLogedinUser } from "../../hooks/hooks";
@@ -39,7 +39,6 @@ const Home = (props) => {
           sx={{
             display: "flex",
             height: "100vh",
-            backgroundColor: theme.colors.background,
           }}
         >
           <CssBaseline />
@@ -49,7 +48,7 @@ const Home = (props) => {
                 signoutHandler={signoutHandler}
                 user={userStore.user}
               />
-              <ChatLeft user={userStore.user} />
+              <WorktLeft user={userStore.user} />
             </>
           ) : (
             <LoadingLogo />
