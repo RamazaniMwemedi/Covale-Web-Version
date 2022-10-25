@@ -228,11 +228,11 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 </ListItemButton>
               </Tooltip>
               {/* Insight */}
-              <Tooltip title="Insight" placement="right-start">
+              <Tooltip title="Projects" placement="right-start">
                 <ListItemButton
                   button
                   onClick={() => {
-                    router.push("/people");
+                    router.push("/projects");
                   }}
                   sx={{
                     borderRadius: "10px",

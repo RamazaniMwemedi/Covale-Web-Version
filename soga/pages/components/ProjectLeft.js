@@ -34,7 +34,6 @@ const Drawer = styled(MuiDrawer, {
   whiteSpace: "nowrap",
   boxSizing: "border-box",
 
-
   ...(open && {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
@@ -45,13 +44,13 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function WorktLeft({  }) {
+export default function ProjectLeft({}) {
   return (
     <Box>
       <CssBaseline />
       <Drawer variant="permanent">
         <Box>
-            <Typography variant="h4" >Work</Typography> 
+          <Typography variant="h6">Project</Typography>
         </Box>
       </Drawer>
     </Box>

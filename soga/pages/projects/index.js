@@ -6,7 +6,7 @@ import { useTheme } from "@mui/material/styles";
 
 // My components
 import DrawerComponent from "../components/DrawerComponent";
-import WorktLeft from "../components/WorkLeft";
+import ProjectLeft from "../components/ProjectLeft";
 
 // Hooks
 import { useCheckLogedinUser } from "../../hooks/hooks";
@@ -16,7 +16,7 @@ import { removeUser } from "../../Redux/slices/user";
 // Redux
 import PropTypes from "prop-types";
 
-const Work = (props) => {
+const Project = (props) => {
   const theme = useTheme();
   const userLoading = useCheckLogedinUser();
   const userStore = useSelector((state) => state.user);
@@ -48,7 +48,7 @@ const Work = (props) => {
                 signoutHandler={signoutHandler}
                 user={userStore.user}
               />
-              <WorktLeft user={userStore.user} />
+              <ProjectLeft />
             </>
           ) : (
             <LoadingLogo />
@@ -59,6 +59,6 @@ const Work = (props) => {
   );
 };
 
-Work.propTypes = {};
+Project.propTypes = {};
 
-export default Work;
+export default Project;
