@@ -5,7 +5,9 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import "@fontsource/open-sans/500.css"; // Weight 500.
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTheme } from "@mui/styles";
+import { IconButton } from "@mui/material";
 
 const closedMixin = (theme) => ({
   //
@@ -45,12 +47,39 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function ProjectLeft({}) {
+  const theme = useTheme();
   return (
     <Box>
       <CssBaseline />
       <Drawer variant="permanent">
-        <Box>
-          <Typography variant="h6">Project</Typography>
+        {/* Main Box */}
+        <Box
+          sx={{
+            backgroundColor: theme.colors.background1,
+            height: "100vh",
+            p: 1,
+          }}
+        >
+          {/* Project box */}
+          <Box>
+            <Typography variant="h5">Project</Typography>
+          </Box>
+          <br />
+          {/* Pinned projects */}
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6">Pinned</Typography>
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          </Box>
+          <br />
+          {/* All projects */}
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6">All Projects</Typography>
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          </Box>
         </Box>
       </Drawer>
     </Box>
