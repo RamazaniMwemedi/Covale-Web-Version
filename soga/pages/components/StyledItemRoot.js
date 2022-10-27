@@ -31,7 +31,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       backgroundColor: theme.palette.action.hover,
     },
     "&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused": {
-      backgroundColor: `var(--tree-view-bg-color, ${theme.colors.background1})`,
+      backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.hover})`,
       color: "var(--tree-view-color)",
     },
     [`& .${treeItemClasses.label}`]: {

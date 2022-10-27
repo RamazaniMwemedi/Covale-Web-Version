@@ -13,6 +13,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TreeItem from "@mui/lab/TreeItem";
 import Image from "next/image";
 import StyledTreeItem from "./StyledItemRoot";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
 const c = console.log.bind();
 const closedMixin = (theme) => ({
   //
@@ -59,7 +61,12 @@ export default function ProjectLeft({ projects }) {
       <CssBaseline />
       <Drawer variant="permanent">
         {/* Main Box */}
-        <Box>
+        <Box
+          sx={{
+            backgroundColor: theme.colors.background1,
+            height: "100vh",
+          }}
+        >
           {/* Project box */}
           <Box
             sx={{
@@ -72,11 +79,7 @@ export default function ProjectLeft({ projects }) {
             <Typography variant="h4">Projects</Typography>
           </Box>
           <br />
-          <Box
-            sx={{
-              backgroundColor: theme.colors.background,
-            }}
-          >
+          <Box>
             {/* Pinned projects */}
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography variant="h6">Pinned</Typography>
@@ -121,12 +124,20 @@ function ProjectTrees({ projects }) {
         return (
           <StyledTreeItem
             nodeId={project.id}
-            label={<Label name={project.title} />}
+            label={<ProjectLabel name={project.title} />}
+            onClick={() => {
+              if (project.subProject.length == 0) {
+                alert("Its one");
+              }
+            }}
           >
             {project.subProject.length > 1
               ? project.subProject.map((sub) => {
                   return (
-                    <StyledTreeItem nodeId={sub.id} label={<Label name={sub.title} />} />
+                    <StyledTreeItem
+                      nodeId={sub.id}
+                      label={<SubProject name={sub.title} />}
+                    />
                   );
                 })
               : null}
@@ -137,33 +148,51 @@ function ProjectTrees({ projects }) {
   );
 }
 
-const Label = ({ name }) => {
+const ProjectLabel = ({ name }) => {
   return (
     <Box
       sx={{
         display: "flex",
         alightItems: "stretch",
-        justifyContent: "flex-start",
+        justifyContent: "space-between",
         gap: "10px",
         p: "1px",
       }}
     >
-      <Image
-        src="https://material-ui.com/static/images/avatar/1.jpg"
-        alt="Picture of the author"
-        width={35}
-        height={35}
-        style={{
-          borderRadius: "15px",
+      <Box
+        sx={{
+          display: "flex",
+          alightItems: "stretch",
+          gap: "10px",
         }}
-      />{" "}
-      <Typography variant="h6">{name}</Typography>
+      >
+        <Image
+          src="https://img.icons8.com/color/48/000000/old-vmware-logo.png"
+          alt="Picture of the author"
+          width={35}
+          height={35}
+          style={{
+            borderRadius: "15px",
+          }}
+        />{" "}
+        <Typography variant="body1">{name}</Typography>
+      </Box>
+      <IconButton>
+        <MoreVertIcon />
+      </IconButton>
     </Box>
   );
 };
 
-const array = [
-  { id: 1, name: "Project 1", subProjects: ["Sub 1", "Sub 2"] },
-  { id: 2, name: "Project 2", subProjects: ["Sub 1", "Sub 2"] },
-  { id: 3, name: "Project 3", subProjects: [] },
-];
+const SubProject = ({ name }) => {
+  return (
+    <Typography
+      sx={{
+        ml: 5,
+      }}
+      variant="body2"
+    >
+      {name}
+    </Typography>
+  );
+};

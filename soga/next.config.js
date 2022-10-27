@@ -6,6 +6,7 @@ const nextConfig = {
       "images.unsplash.com",
       "lh3.googleusercontent.com",
       "material-ui.com",
+      "img.icons8.com",
     ],
   },
   swcMinify: false, // it should be false by default
