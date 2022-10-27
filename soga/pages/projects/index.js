@@ -11,10 +11,11 @@ import ProjectLeft from "../components/ProjectLeft";
 // Hooks
 import { useCheckLogedinUser } from "../../hooks/hooks";
 import LoadingLogo from "../components/LoadingLogo";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, useStore } from "react-redux";
 import { removeUser } from "../../Redux/slices/user";
 // Redux
 import PropTypes from "prop-types";
+import { useGetProjects } from "../../hooks/projects";
 
 const Project = (props) => {
   const theme = useTheme();
@@ -22,6 +23,8 @@ const Project = (props) => {
   const userStore = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const router = useRouter();
+  const token = userStore.user ? userStore.user.token : null;
+  const projects = useGetProjects(token);
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
@@ -32,10 +35,7 @@ const Project = (props) => {
 
   return (
     <>
-      <DrawerComponent signoutHandler={signoutHandler} user={userStore.user} />
-      <ProjectLeft />
-
-      {/* {userLoading ? (
+      {userLoading ? (
         <LoadingLogo />
       ) : (
         <Box
@@ -51,13 +51,13 @@ const Project = (props) => {
                 signoutHandler={signoutHandler}
                 user={userStore.user}
               />
-              <ProjectLeft />
+              <ProjectLeft projects={projects} />
             </>
           ) : (
             <LoadingLogo />
           )}
         </Box>
-      )} */}
+      )}
     </>
   );
 };

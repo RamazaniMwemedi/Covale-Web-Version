@@ -13,7 +13,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TreeItem from "@mui/lab/TreeItem";
 import Image from "next/image";
 import StyledTreeItem from "./StyledItemRoot";
-
+const c = console.log.bind();
 const closedMixin = (theme) => ({
   //
   transition: theme.transitions.create("width", {
@@ -51,8 +51,9 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function ProjectLeft({}) {
+export default function ProjectLeft({ projects }) {
   const theme = useTheme();
+  c(projects);
   return (
     <Box>
       <CssBaseline />
@@ -93,7 +94,7 @@ export default function ProjectLeft({}) {
             </Box>
             {/* Tree */}
             <Box>
-              <ProjectTrees />
+              {projects ? <ProjectTrees projects={projects} /> : "Loading ..."}
             </Box>
           </Box>
         </Box>
@@ -102,7 +103,7 @@ export default function ProjectLeft({}) {
   );
 }
 
-function ProjectTrees() {
+function ProjectTrees({ projects }) {
   const theme = useTheme();
   return (
     <TreeView
@@ -116,16 +117,18 @@ function ProjectTrees() {
         overflowY: "auto",
       }}
     >
-      {array.map((project) => {
+      {projects.map((project) => {
         return (
           <StyledTreeItem
             nodeId={project.id}
-            label={<Label name={project.name} />}
+            label={<Label name={project.title} />}
           >
-            {project.subProjects.length > 1
-              ? project.subProjects.map((sub) => {
-                return <StyledTreeItem nodeId={sub} label={<Label name={sub} />} />;
-              })
+            {project.subProject.length > 1
+              ? project.subProject.map((sub) => {
+                  return (
+                    <StyledTreeItem nodeId={sub.id} label={<Label name={sub.title} />} />
+                  );
+                })
               : null}
           </StyledTreeItem>
         );
