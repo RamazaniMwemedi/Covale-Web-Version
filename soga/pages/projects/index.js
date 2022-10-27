@@ -32,7 +32,10 @@ const Project = (props) => {
 
   return (
     <>
-      {userLoading ? (
+      <DrawerComponent signoutHandler={signoutHandler} user={userStore.user} />
+      <ProjectLeft />
+
+      {/* {userLoading ? (
         <LoadingLogo />
       ) : (
         <Box
@@ -54,7 +57,7 @@ const Project = (props) => {
             <LoadingLogo />
           )}
         </Box>
-      )}
+      )} */}
     </>
   );
 };

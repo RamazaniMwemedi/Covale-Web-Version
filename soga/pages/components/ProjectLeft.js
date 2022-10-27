@@ -7,7 +7,12 @@ import MuiDrawer from "@mui/material/Drawer";
 import "@fontsource/open-sans/500.css"; // Weight 500.
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTheme } from "@mui/styles";
-import { IconButton } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
+import TreeView from "@mui/lab/TreeView";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import TreeItem from "@mui/lab/TreeItem";
+import Image from "next/image";
+import StyledTreeItem from "./StyledItemRoot";
 
 const closedMixin = (theme) => ({
   //
@@ -53,35 +58,109 @@ export default function ProjectLeft({}) {
       <CssBaseline />
       <Drawer variant="permanent">
         {/* Main Box */}
-        <Box
-          sx={{
-            backgroundColor: theme.colors.background1,
-            height: "100vh",
-            p: 1,
-          }}
-        >
+        <Box>
           {/* Project box */}
-          <Box>
-            <Typography variant="h5">Project</Typography>
+          <Box
+            sx={{
+              backgroundColor: theme.colors.background1,
+              height: "60px",
+              borderTopLeftRadius: "8px",
+              p: 1,
+            }}
+          >
+            <Typography variant="h4">Projects</Typography>
           </Box>
           <br />
-          {/* Pinned projects */}
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">Pinned</Typography>
-            <IconButton>
-              <ExpandMoreIcon />
-            </IconButton>
-          </Box>
-          <br />
-          {/* All projects */}
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">All Projects</Typography>
-            <IconButton>
-              <ExpandMoreIcon />
-            </IconButton>
+          <Box
+            sx={{
+              backgroundColor: theme.colors.background,
+            }}
+          >
+            {/* Pinned projects */}
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h6">Pinned</Typography>
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            </Box>
+            <br />
+            {/* All projects */}
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h6">All Projects</Typography>
+              <IconButton>
+                <ExpandMoreIcon />
+              </IconButton>
+            </Box>
+            {/* Tree */}
+            <Box>
+              <ProjectTrees />
+            </Box>
           </Box>
         </Box>
       </Drawer>
     </Box>
   );
 }
+
+function ProjectTrees() {
+  const theme = useTheme();
+  return (
+    <TreeView
+      aria-label="file system navigator"
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<ChevronRightIcon />}
+      sx={{
+        height: "auto",
+        flexGrow: 1,
+        maxWidth: 400,
+        overflowY: "auto",
+      }}
+    >
+      {array.map((project) => {
+        return (
+          <StyledTreeItem
+            nodeId={project.id}
+            label={<Label name={project.name} />}
+          >
+            {project.subProjects.length > 1
+              ? project.subProjects.map((sub) => {
+                return <StyledTreeItem nodeId={sub} label={<Label name={sub} />} />;
+              })
+              : null}
+          </StyledTreeItem>
+        );
+      })}
+    </TreeView>
+  );
+}
+
+const Label = ({ name }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alightItems: "stretch",
+        justifyContent: "flex-start",
+        gap: "10px",
+        p: "1px",
+      }}
+    >
+      <Image
+        src="https://material-ui.com/static/images/avatar/1.jpg"
+        alt="Picture of the author"
+        width={35}
+        height={35}
+        style={{
+          borderRadius: "15px",
+        }}
+      />{" "}
+      <Typography variant="h6">{name}</Typography>
+    </Box>
+  );
+};
+
+const array = [
+  { id: 1, name: "Project 1", subProjects: ["Sub 1", "Sub 2"] },
+  { id: 2, name: "Project 2", subProjects: ["Sub 1", "Sub 2"] },
+  { id: 3, name: "Project 3", subProjects: [] },
+];
