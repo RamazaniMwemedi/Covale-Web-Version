@@ -15,6 +15,7 @@ import Image from "next/image";
 import StyledTreeItem from "./StyledItemRoot";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
+import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 const c = console.log.bind();
@@ -60,7 +61,12 @@ export default function ProjectLeft() {
   c("Project Store: ", projectStore);
   const theme = useTheme();
   return (
-    <Box>
+    <Box
+      sx={{
+        backgroundColor: "red",
+        width: `calc(${theme.spacing(34.5)} + 1px)`,
+      }}
+    >
       <CssBaseline />
       <Drawer variant="permanent">
         {/* Main Box */}
@@ -122,6 +128,7 @@ export default function ProjectLeft() {
 }
 
 function ProjectTrees({ projects }) {
+  const router = useRouter();
   const theme = useTheme();
   return (
     <TreeView
@@ -141,6 +148,16 @@ function ProjectTrees({ projects }) {
             key={project.id}
             nodeId={project.id}
             label={<ProjectLabel name={project.title} />}
+            onClick={(e) => {
+              e.preventDefault();
+              router.push(
+                `/projects/?project=${project.id}`,
+                `/projects/${project.id}`,
+                {
+                  shallow: true,
+                }
+              );
+            }}
             onDoubleClick={() => {
               if (project.subProjects.length == 0) {
                 alert("Its one");
