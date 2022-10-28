@@ -10,7 +10,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { useTheme } from "@mui/styles";
 
 // My modules
-import chatServices from "../../services/chats";
+import chatServices from "../../../services/chats";
 
 const Friend = ({ friend, token }) => {
   const theme = useTheme();

@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 // My Modules
-import DrawerComponent from "../components/DrawerComponent";
-import MeetLeft from "../components/MeetLeft";
-import MeetSection from "../components/MeetSection";
+import DrawerComponent from "../components/others/DrawerComponent";
+import MeetLeft from "../components/meets/MeetLeft";
+import MeetSection from "../components/meets/MeetSection";
 
 export default function Calendar() {
   

@@ -7,11 +7,11 @@ import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
 // My components
-import DrawerComponent from "../../../components/DrawerComponent";
-import ChatLeft from "../../../components/ChatLeft";
-import ChatSection from "../../../components/ChatSection";
+import DrawerComponent from "../../../components/others/DrawerComponent";
+import ChatLeft from "../../../components/chats/ChatLeft";
+import ChatSection from "../../../components/chats/ChatSection";
 
-import ChatSectionSkeleton from "../../../components/ChatSectionSkeleton";
+import ChatSectionSkeleton from "../../../components/chats/ChatSectionSkeleton";
 
 // Hooks
 import {
@@ -19,7 +19,7 @@ import {
   useGetChatById,
   useGetTeamById,
 } from "../../../../hooks/hooks";
-import LoadingLogo from "../../../components/LoadingLogo";
+import LoadingLogo from "../../../components/others/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
 import { addNewMessage } from "../../../../Redux/slices/chat";
 
@@ -126,7 +126,6 @@ export default function Chat() {
   const onEmojiClick = (event, emojiObject) => {
     setMessage(message + emojiObject.emoji);
   };
-
 
   const sendMessageHandle = () => {
     const userId = userStore ? userStore.user.id : null;

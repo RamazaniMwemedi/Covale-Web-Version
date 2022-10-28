@@ -10,7 +10,7 @@ import SendIcon from "@mui/icons-material/Send";
 import styles from "../styles/Login.module.css";
 // My modules
 import loginServices from "../services/login";
-import CreateAccount from "./components/CreateAccount";
+import CreateAccount from "./components/login/CreateAccount";
 
 const LoginPage = () => {
   useEffect(() => {

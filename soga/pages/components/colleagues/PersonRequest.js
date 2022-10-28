@@ -10,7 +10,7 @@ import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import { useTheme } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import userServices from "../../services/user";
+import userServices from "../../../services/user";
 
 const PersonRequest = ({ user, token }) => {
   const theme = useTheme();

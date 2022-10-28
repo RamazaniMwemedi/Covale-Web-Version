@@ -14,6 +14,7 @@ import TreeItem from "@mui/lab/TreeItem";
 import Image from "next/image";
 import StyledTreeItem from "./StyledItemRoot";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
 
 const c = console.log.bind();
 const closedMixin = (theme) => ({
@@ -74,8 +75,16 @@ export default function ProjectLeft({ projects }) {
               height: "60px",
               borderTopLeftRadius: "8px",
               p: 1,
+              display: "flex",
+              gap: "10px",
             }}
           >
+            <AssessmentRoundedIcon
+              sx={{
+                fontSize: "45px",
+              }}
+              color="secondary"
+            />
             <Typography variant="h4">Projects</Typography>
           </Box>
           <br />
@@ -123,9 +132,10 @@ function ProjectTrees({ projects }) {
       {projects.map((project) => {
         return (
           <StyledTreeItem
+            key={project.id}
             nodeId={project.id}
             label={<ProjectLabel name={project.title} />}
-            onClick={() => {
+            onDoubleClick={() => {
               if (project.subProject.length == 0) {
                 alert("Its one");
               }
@@ -135,6 +145,7 @@ function ProjectTrees({ projects }) {
               ? project.subProject.map((sub) => {
                   return (
                     <StyledTreeItem
+                      key={sub.id}
                       nodeId={sub.id}
                       label={<SubProject name={sub.title} />}
                     />

@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 
-import userServices from "../../services/user";
+import userServices from "../../../services/user";
 
 const PersonRequest = ({ user, token, removeUser }) => {
   return (

@@ -3,9 +3,9 @@ import * as React from "react";
 import { useRouter } from "next/router";
 
 // My Modules
-import DrawerComponent from "../../components/DrawerComponent";
-import PeopleLeft from "../../components/PeopleLeft";
-import PersonRequestSent from "../../components/PersonRequestSent";
+import DrawerComponent from "../../components/others/DrawerComponent";
+import PeopleLeft from "../../components/colleagues/PeopleLeft";
+import PersonRequestSent from "../../components/colleagues/PersonRequestSent";
 import userServices from "../../../services/user";
 import { IconButton, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";

@@ -4,9 +4,9 @@ import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
 
 // My Modules
-import DrawerComponent from "../../components/DrawerComponent";
-import PeopleLeft from "../../components/PeopleLeft";
-import PersonRequest from "../../components/PersonRequest";
+import DrawerComponent from "../../components/others/DrawerComponent";
+import PeopleLeft from "../../components/colleagues/PeopleLeft";
+import PersonRequest from "../../components/colleagues/PersonRequest";
 import userServices from "../../../services/user";
 
 export default function Explore() {

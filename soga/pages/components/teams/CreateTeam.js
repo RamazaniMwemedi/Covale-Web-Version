@@ -24,8 +24,8 @@ import {
   TextField,
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { useGetFriends, useCheckLogedinUserToken } from "../../hooks/hooks";
-import { createNewTeam, inviteFriends } from "../../services/teams";
+import { useGetFriends, useCheckLogedinUserToken } from "../../../hooks/hooks";
+import { createNewTeam, inviteFriends } from "../../../services/teams";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import SaveIcon from "@mui/icons-material/Save";

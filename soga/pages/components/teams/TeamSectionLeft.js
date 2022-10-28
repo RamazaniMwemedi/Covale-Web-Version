@@ -18,7 +18,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { useTheme } from "@mui/material";
-import { useCheckLogedinUser } from "../../hooks/hooks";
+import { useCheckLogedinUser } from "../../../hooks/hooks";
 
 import dynamic from "next/dynamic";
 

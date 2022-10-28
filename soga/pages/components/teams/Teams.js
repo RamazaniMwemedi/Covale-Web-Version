@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FloatingAButton from "../components/FloatingAButton";
+import FloatingAButton from "../chats/FloatingAButton";
 import {
   Avatar,
   List,
@@ -18,25 +18,15 @@ import FormControl from "@mui/material/FormControl";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { useTheme } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 // My components
-import AddMoreFriends from "./AddMoreFriends";
-import Chat from "./Chat";
+import AddMoreFriends from "../chats/AddMoreFriends";
+import Team from "./Team";
+import FloatingATeamB from "./FloatingATeamB";
+import CreateTeam from "./CreateTeam";
 
-const Chats = ({
-  messages,
-  loading,
-  friends,
-  showMoreFriends,
-  showButton,
-  friendClicked,
-  buttonHandler,
-  closeMorePeopleHandler,
-  sendMessage,
-  clickFriendHandler,
-  clearFriendHandler,
-  messageChangeHandler,
-}) => {
+const Teams = ({ teams, openCreateTeam, toggleShowTeam, teamLoading }) => {
   const theme = useTheme();
   return (
     <>
@@ -52,7 +42,7 @@ const Chats = ({
         }}
       >
         <FormControl sx={{ m: 1, width: "95%" }} variant="outlined">
-          <InputLabel color="secondary">Chats</InputLabel>
+          <InputLabel color="secondary">Teams</InputLabel>
 
           <OutlinedInput
             startAdornment={
@@ -70,7 +60,7 @@ const Chats = ({
             id="outlined-adornment-password"
             type="text"
             value=""
-            label="Chats"
+            label="Team"
             onChange={() => {}}
             sx={{
               height: "35px",
@@ -80,7 +70,7 @@ const Chats = ({
           />
         </FormControl>
       </Box>
-      {loading ? (
+      {teamLoading ? (
         <Stack spacing={1}>
           {[...Array(7)].map((_, i) => (
             <ListItem
@@ -124,55 +114,31 @@ const Chats = ({
         </Stack>
       ) : (
         <>
-          {messages &&
-            (messages.length > 0 ? (
+          {teams &&
+            //   If teams are greater than 0
+            (teams.length > 0 ? (
               <Box>
-                {showMoreFriends && (
-                  <AddMoreFriends
-                    closeMorePeopleHandler={closeMorePeopleHandler}
-                    messageChangeHandler={messageChangeHandler}
-                    sendMessage={sendMessage}
-                    // message={message}
-                    clearFriendHandler={clearFriendHandler}
-                    friendClicked={friendClicked}
-                    clickFriendHandler={clickFriendHandler}
-                    friends={friends}
-                  />
+                {openCreateTeam && (
+                  <CreateTeam toggleShowTeam={toggleShowTeam} />
                 )}
 
-                {showButton && (
-                  <FloatingAButton buttonHandler={buttonHandler} />
-                )}
-                {messages.map((message) => {
-                  return <Chat key={message.chatId} message={message} />;
+                {teams.map((team, i) => {
+                  return <Team key={i} team={team} />;
                 })}
+                {!openCreateTeam && (
+                  <FloatingATeamB toggleShowTeam={toggleShowTeam} />
+                )}
               </Box>
             ) : (
               <Box sx={{ textAlign: "center", marginTop: "150px" }}>
-                {showMoreFriends && (
-                  <AddMoreFriends
-                    closeMorePeopleHandler={closeMorePeopleHandler}
-                    messageChangeHandler={messageChangeHandler}
-                    sendMessage={sendMessage}
-                    // message={message}
-                    clearFriendHandler={clearFriendHandler}
-                    friendClicked={friendClicked}
-                    clickFriendHandler={clickFriendHandler}
-                    friends={friends}
-                  />
-                )}
-
-                {showButton && (
-                  <FloatingAButton buttonHandler={buttonHandler} />
-                )}
                 <Typography variant="h5" color="secondary">
-                  No chats yet
+                  No Team yet
                 </Typography>
                 <Typography variant="subtitle2" color="secondary">
                   Click the{" "}
                   {
                     <Icon>
-                      <AddIcon
+                      <GroupAddIcon
                         sx={{
                           width: "15px",
                           height: "15px",
@@ -180,8 +146,14 @@ const Chats = ({
                       />
                     </Icon>
                   }{" "}
-                  to add a friends
+                  to start a team
                 </Typography>
+                {openCreateTeam && (
+                  <CreateTeam toggleShowTeam={toggleShowTeam} />
+                )}
+                {!openCreateTeam && (
+                  <FloatingATeamB toggleShowTeam={toggleShowTeam} />
+                )}
               </Box>
             ))}
         </>
@@ -190,4 +162,4 @@ const Chats = ({
   );
 };
 
-export default Chats;
+export default Teams;

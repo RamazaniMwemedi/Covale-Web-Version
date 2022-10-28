@@ -7,9 +7,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 // My Modules
 import userServices from "../../../services/user";
-import DrawerComponent from "../../components/DrawerComponent";
-import PeopleLeft from "../../components/PeopleLeft";
-import DiscoverPeopleSkeleton from "../../components/DiscoverPeopleSkeleton";
+import DrawerComponent from "../../components/others/DrawerComponent";
+import PeopleLeft from "../../components/colleagues/PeopleLeft";
+import DiscoverPeopleSkeleton from "../../components/colleagues/DiscoverPeopleSkeleton";
 
 export default function Explore() {
   const [users, setUsers] = React.useState([]);

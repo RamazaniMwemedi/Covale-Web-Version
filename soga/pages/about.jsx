@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 // My Modules
-import DrawerComponent from "./components/DrawerComponent";
+import DrawerComponent from "./components/others/DrawerComponent";
 
 export default function About() {
   return (

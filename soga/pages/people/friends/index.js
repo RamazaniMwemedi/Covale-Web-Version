@@ -6,9 +6,9 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import { makeStyles } from "@mui/styles";
 // My Modules
-import DrawerComponent from "../../components/DrawerComponent";
-import PeopleLeft from "../../components/PeopleLeft";
-import Friend from "../../components/Friend";
+import DrawerComponent from "../../components/others/DrawerComponent";
+import PeopleLeft from "../../components/colleagues/PeopleLeft";
+import Friend from "../../components/colleagues/Friend";
 
 import userServices from "../../../services/user";
 
@@ -23,28 +23,33 @@ const useStyles = makeStyles({
 export default function People() {
   const [friends, setFriends] = React.useState([]);
   const [user, setUser] = React.useState(null);
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
 
   const token = user ? user.token : null;
 
   // Loged in user from window.locationStorage
-  React.useEffect((router) => {
-    const signedInUser = JSON.parse(window.localStorage.getItem("logedinUser"));
-    if (!signedInUser) {
-      router.push("/");
-    }
-    if (user === null) {
-      setUser(signedInUser);
-    }
-  }, [user]);
+  React.useEffect(
+    (router) => {
+      const signedInUser = JSON.parse(
+        window.localStorage.getItem("logedinUser")
+      );
+      if (!signedInUser) {
+        router.push("/");
+      }
+      if (user === null) {
+        setUser(signedInUser);
+      }
+    },
+    [user]
+  );
 
   // Get all my friends
   React.useEffect(() => {
     if (token) {
       userServices.myFriends(token).then((data) => {
-        setFriends(data)
-        setLoading(false)
+        setFriends(data);
+        setLoading(false);
       });
     }
   }, [token]);
@@ -79,7 +84,7 @@ export default function People() {
           }}
         >
           <h1 style={{ color: "purple" }}>Your Friends</h1>
-         
+
           <div
             className="redirectToSentReq"
             onClick={() => {
@@ -152,7 +157,7 @@ const NoFriends = () => {
     >
       <Typography variant="h2">You Have No Friend Now</Typography>
       <br />
-      <div className="redirect" >
+      <div className="redirect">
         <Typography
           variant="h5"
           className={classes.text}
@@ -166,10 +171,10 @@ const NoFriends = () => {
   );
 };
 
-const Search = () => { 
-  return(
+const Search = () => {
+  return (
     <div id="search">
-    <h1>Search field</h1>
+      <h1>Search field</h1>
     </div>
-  )
- }
+  );
+};

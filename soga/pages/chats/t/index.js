@@ -10,9 +10,9 @@ import { v4 as uuidv4 } from "uuid";
 import Logo from "../../../assets/Logo";
 
 // My components
-import DrawerComponent from "../../components/DrawerComponent";
-import TeamLeft from "../../components/TeamLeft";
-import TeamSection from "../../components/TeamSection";
+import DrawerComponent from "../../components/others/DrawerComponent";
+import TeamLeft from "../../components/teams/TeamLeft";
+import TeamSection from "../../components/teams/TeamSection";
 
 import { getChatById } from "../../../services/chats";
 
@@ -23,7 +23,7 @@ import {
   useAudio,
   useGetTeamById,
 } from "../../../hooks/hooks";
-import LoadingLogo from "../../components/LoadingLogo";
+import LoadingLogo from "../../components/others/LoadingLogo";
 
 // Redux Hooks
 import { useSelector, useDispatch } from "react-redux";

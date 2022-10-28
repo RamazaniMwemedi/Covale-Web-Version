@@ -4,12 +4,12 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useTheme } from "@mui/material/styles";
 
 // My components
-import DrawerComponent from "../components/DrawerComponent";
-import ChatLeft from "../components/ChatLeft";
+import DrawerComponent from "../components/others/DrawerComponent";
+import ChatLeft from "../components/chats/ChatLeft";
 
 // Hooks
 import { useCheckLogedinUser } from "../../hooks/hooks";
-import LoadingLogo from "../components/LoadingLogo";
+import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../../Redux/slices/user";
 // Redux

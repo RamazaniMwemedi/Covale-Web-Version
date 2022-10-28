@@ -5,12 +5,12 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { useTheme } from "@mui/material/styles";
 
 // My components
-import DrawerComponent from "../components/DrawerComponent";
-import ProjectLeft from "../components/ProjectLeft";
+import DrawerComponent from "../components/others/DrawerComponent";
+import ProjectLeft from "../components/projects/ProjectLeft";
 
 // Hooks
 import { useCheckLogedinUser } from "../../hooks/hooks";
-import LoadingLogo from "../components/LoadingLogo";
+import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import { removeUser } from "../../Redux/slices/user";
 // Redux

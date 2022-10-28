@@ -12,13 +12,12 @@ import "@fontsource/open-sans/500.css"; // Weight 500.
 import { useTheme } from "@mui/styles";
 import { Avatar } from "@mui/material";
 
-import Chats from "./Chats";
-import { useGetFriends } from "../../hooks/hooks";
-
-import chatService from "../../services/chats";
-import { getTeams } from "../../services/teams";
-import Team from "./Team";
+import Chats from "../chats/Chats";
 import Teams from "./Teams";
+import { useGetFriends } from "../../../hooks/hooks";
+
+import chatService from "../../../services/chats";
+import { getTeams } from "../../../services/teams";
 
 const closedMixin = (theme) => ({
   //
@@ -77,7 +76,6 @@ function Tabs({
   teamLoading,
 }) {
   const theme = useTheme();
-
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
@@ -123,11 +121,12 @@ function Tabs({
   );
 }
 
-export default function ChatLeft({ user }) {
+export default function TeamLeft({ user }) {
   const [messages, setMessages] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const token = user ? user.token : null;
-  const [value, setValue] = React.useState("chats");
+  const [value, setValue] = React.useState("team");
+  // Chats States
   const friends = useGetFriends();
   const [showMoreFriends, setShowMoreFriends] = React.useState(false);
   const [showButton, setShowButton] = React.useState(true);
@@ -137,6 +136,8 @@ export default function ChatLeft({ user }) {
   const [openCreateTeam, setOpenCreateTeam] = React.useState(false);
   const [teams, setTeams] = React.useState([]);
   const [teamLoading, setTeamLoading] = React.useState(true);
+
+  // Chats Handlers
 
   const buttonHandler = () => {
     setShowMoreFriends(true);

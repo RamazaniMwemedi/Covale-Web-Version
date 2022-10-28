@@ -20,9 +20,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import SendIcon from "@mui/icons-material/Send";
 
-import DatePicker from "./DatePicker";
+import DatePicker from "../calender/DatePicker";
 
-import styles from "../../styles/Login.module.css";
+import styles from "../../../styles/Login.module.css";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
