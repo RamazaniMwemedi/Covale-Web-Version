@@ -15,6 +15,7 @@ import Image from "next/image";
 import StyledTreeItem from "./StyledItemRoot";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
+import { useSelector } from "react-redux";
 
 const c = console.log.bind();
 const closedMixin = (theme) => ({
@@ -54,9 +55,10 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function ProjectLeft({ projects }) {
+export default function ProjectLeft() {
+  const projectStore = useSelector((state) => state.projects);
+  c("Project Store: ", projectStore);
   const theme = useTheme();
-  c(projects);
   return (
     <Box>
       <CssBaseline />
@@ -106,7 +108,11 @@ export default function ProjectLeft({ projects }) {
             </Box>
             {/* Tree */}
             <Box>
-              {projects ? <ProjectTrees projects={projects} /> : "Loading ..."}
+              {projectStore.projects ? (
+                <ProjectTrees projects={projectStore.projects} />
+              ) : (
+                "Loading ..."
+              )}
             </Box>
           </Box>
         </Box>
@@ -136,13 +142,13 @@ function ProjectTrees({ projects }) {
             nodeId={project.id}
             label={<ProjectLabel name={project.title} />}
             onDoubleClick={() => {
-              if (project.subProject.length == 0) {
+              if (project.subProjects.length == 0) {
                 alert("Its one");
               }
             }}
           >
-            {project.subProject.length > 1
-              ? project.subProject.map((sub) => {
+            {project.subProjects.length > 1
+              ? project.subProjects.map((sub) => {
                   return (
                     <StyledTreeItem
                       key={sub.id}
