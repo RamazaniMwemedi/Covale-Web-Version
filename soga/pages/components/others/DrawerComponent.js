@@ -17,8 +17,7 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import InsightsSharpIcon from "@mui/icons-material/InsightsSharp";
 import BusinessRoundedIcon from "@mui/icons-material/BusinessRounded";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
-import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
-
+import LeaderboardRoundedIcon from "@mui/icons-material/LeaderboardRounded";
 import Logo from "../../../assets/Logo";
 import NewMeet from "../meets/NewMeet";
 import Signout from "../login/Signout";
@@ -249,7 +248,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <AssessmentRoundedIcon
+                    <LeaderboardRoundedIcon
                       fontSize="medium"
                       color={projectsColor}
                     />

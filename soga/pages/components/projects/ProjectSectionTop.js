@@ -14,7 +14,7 @@ import Tab from "@mui/material/Tab";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 
-const ProjectSectionTop = () => {
+const ProjectSectionTop = ({ valueChangeHandler, value }) => {
   const theme = useTheme();
   return (
     <Box
@@ -76,7 +76,6 @@ const ProjectSectionTop = () => {
         </Breadcrumbs>
       </Box>
       {/* Third Box */}
-      <br/>
       <Box
         sx={{
           display: "flex",
@@ -87,20 +86,21 @@ const ProjectSectionTop = () => {
         <Box
           sx={{
             display: "flex",
-            gap: 2,
+            // gap: 2,
 
             alightItems: "stretch",
             alignItems: "center",
             textAlign: "center",
           }}
         >
-          <ColorTabs />
-          {/* <Typography>Tasks</Typography>
-          <Typography>Overview</Typography> */}
+          <ProjectTopTabs
+            valueChangeHandler={valueChangeHandler}
+            value={value}
+          />
         </Box>
         {/* Right */}
         <Box>
-          <TotalAvatars />
+          <TotalAvatars valueChangeHandler={valueChangeHandler} value={value} />
         </Box>
       </Box>
     </Box>
@@ -109,57 +109,65 @@ const ProjectSectionTop = () => {
 
 export default ProjectSectionTop;
 
-function ColorTabs() {
-  const [value, setValue] = useState("one");
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
+function ProjectTopTabs({ valueChangeHandler, value }) {
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <Tabs
         value={value}
-        onChange={handleChange}
+        onChange={valueChangeHandler}
         textColor="secondary"
         indicatorColor="secondary"
         aria-label="secondary tabs example"
       >
-        <Tab value="Tasks" label="Tasks" />
-        <Tab value="Overview" label="Overview" />
+        <Tab value="Tasks" label="Tasks" sx={{ textTransform: "none" }} />
+        <Tab value="Overview" label="Overview" sx={{ textTransform: "none" }} />
       </Tabs>
     </Box>
   );
 }
 
-function TotalAvatars() {
+function TotalAvatars({ valueChangeHandler, value }) {
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
-      <AvatarGroup
-        sx={{
-          // height: "24px",
-          // width: "24px",
-          "& .MuiAvatar-root": { width: 35, height: 35, fontSize: 15 },
-        }}
-        total={24}
+      <Tabs
+        value={value}
+        onChange={valueChangeHandler}
+        textColor="secondary"
+        indicatorColor="secondary"
+        aria-label="secondary tabs example"
       >
-        <Avatar
-          alt="Remy Sharp"
-          src="https://mui.com/static/images/avatar/1.jpg"
+        <Tab
+          value="Members"
+          label={
+            <AvatarGroup
+              sx={{
+                // height: "24px",
+                // width: "24px",
+                "& .MuiAvatar-root": { width: 35, height: 35, fontSize: 15 },
+              }}
+              total={24}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src="https://mui.com/static/images/avatar/1.jpg"
+              />
+              <Avatar
+                alt="Travis Howard"
+                src="https://mui.com/static/images/avatar/2.jpg"
+              />
+              <Avatar
+                alt="Agnes Walker"
+                src="https://mui.com/static/images/avatar/4.jpg"
+              />
+              <Avatar
+                alt="Trevor Henderson"
+                src="https://mui.com/static/images/avatar/5.jpg"
+              />
+            </AvatarGroup>
+          }
+          sx={{ textTransform: "none" }}
         />
-        <Avatar
-          alt="Travis Howard"
-          src="https://mui.com/static/images/avatar/2.jpg"
-        />
-        <Avatar
-          alt="Agnes Walker"
-          src="https://mui.com/static/images/avatar/4.jpg"
-        />
-        <Avatar
-          alt="Trevor Henderson"
-          src="https://mui.com/static/images/avatar/5.jpg"
-        />
-      </AvatarGroup>
+      </Tabs>
       <Divider orientation="vertical" sx={{ width: "1px" }} flexItem />
       <IconButton>
         <PersonAddAlt1RoundedIcon />

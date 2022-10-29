@@ -7,7 +7,7 @@ import MuiDrawer from "@mui/material/Drawer";
 import "@fontsource/open-sans/500.css"; // Weight 500.
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTheme } from "@mui/styles";
-import { Avatar, IconButton } from "@mui/material";
+import { Avatar, IconButton, Button } from "@mui/material";
 import TreeView from "@mui/lab/TreeView";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TreeItem from "@mui/lab/TreeItem";
@@ -33,7 +33,7 @@ const closedMixin = (theme) => ({
   },
   justifyContent: "spaceBetween",
   borderLeft: `2px solid ${theme.colors.background1}`,
-  borderRight: `2px solid ${theme.colors.background1}`,
+  borderRight: `1px solid darkgray`,
   backgroundColor: theme.colors.background,
 });
 
@@ -120,6 +120,19 @@ export default function ProjectLeft() {
               )}
             </Box>
           </Box>
+          <Button
+            sx={{
+              position: "absolute",
+              bottom: 8,
+              width: "98%",
+              marginLeft: 0.3,
+              textTransform: "none",
+            }}
+            variant="contained"
+            color="secondary"
+          >
+            New Project
+          </Button>
         </Box>
       </Drawer>
     </Box>
