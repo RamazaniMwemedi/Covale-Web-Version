@@ -4,6 +4,9 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Typography from "@mui/material/Typography";
+import TasksTabPanel from "./TasksTabPanel";
+
+
 
 const ProjectSectionBottom = ({ value }) => {
   return (
@@ -15,7 +18,7 @@ const ProjectSectionBottom = ({ value }) => {
               margin: "-20px",
             }}
           >
-            <Typography>Tasks</Typography>
+            <TasksTabPanel/>
           </Box>
         </TabPanel>
         <TabPanel value="Overview">

@@ -12,8 +12,6 @@
     "deploy": "git add . && git commit -am'Deploy' && git push"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
     "@fontsource/open-sans": "^4.5.8",
     "@fontsource/roboto": "^4.5.5",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
@@ -21,7 +19,6 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.10.3",
-    "@mui/joy": "^5.0.0-alpha.51",
     "@mui/lab": "^5.0.0-alpha.86",
     "@mui/material": "^5.6.1",
     "@mui/styles": "^5.6.2",

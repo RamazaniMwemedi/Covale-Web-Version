@@ -295,7 +295,7 @@
   "resolved" "https://registry.npmjs.org/@emotion/memoize/-/memoize-0.8.0.tgz"
   "version" "0.8.0"
 
-"@emotion/react@^11.0.0-rc.0", "@emotion/react@^11.10.5", "@emotion/react@^11.4.1", "@emotion/react@^11.5.0", "@emotion/react@^11.9.0":
+"@emotion/react@^11.0.0-rc.0", "@emotion/react@^11.4.1", "@emotion/react@^11.5.0", "@emotion/react@^11.9.0":
   "integrity" "sha512-TZs6235tCJ/7iF6/rvTaOH4oxQg2gMAcdHemjwLKIjKz4rRuYe1HJ2TQJKnAcRAfOUDdU8XoDadCe1rl72iv8A=="
   "resolved" "https://registry.npmjs.org/@emotion/react/-/react-11.10.5.tgz"
   "version" "11.10.5"
@@ -325,7 +325,7 @@
   "resolved" "https://registry.npmjs.org/@emotion/sheet/-/sheet-1.2.1.tgz"
   "version" "1.2.1"
 
-"@emotion/styled@^11.10.5", "@emotion/styled@^11.3.0", "@emotion/styled@^11.8.1":
+"@emotion/styled@^11.3.0", "@emotion/styled@^11.8.1":
   "integrity" "sha512-8EP6dD7dMkdku2foLoruPCNkRevzdcBaY6q0l0OsbyJK+x8D9HWjX27ARiSIKNF634hY9Zdoedh8bJCiva8yZw=="
   "resolved" "https://registry.npmjs.org/@emotion/styled/-/styled-11.10.5.tgz"
   "version" "11.10.5"
@@ -447,20 +447,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@mui/base@5.0.0-alpha.103":
-  "integrity" "sha512-fJIyB2df3CHn7D26WHnutnY7vew6aytTlhmRJz6GX7ag19zU2GcOUhJAzY5qwWcrXKnlYgzimhEjaEnuiUWU4g=="
-  "resolved" "https://registry.npmjs.org/@mui/base/-/base-5.0.0-alpha.103.tgz"
-  "version" "5.0.0-alpha.103"
-  dependencies:
-    "@babel/runtime" "^7.19.0"
-    "@emotion/is-prop-valid" "^1.2.0"
-    "@mui/types" "^7.2.0"
-    "@mui/utils" "^5.10.9"
-    "@popperjs/core" "^2.11.6"
-    "clsx" "^1.2.1"
-    "prop-types" "^15.8.1"
-    "react-is" "^18.2.0"
-
 "@mui/base@5.0.0-alpha.80":
   "integrity" "sha512-sPSYwJzwNMaqpksdLuOhpQQLrhtpBH4sNnMSgkzJzo7Jo4HF9ivjNpq27Zh5+sdRe5MTt0gcBT0QSMO6zML1Aw=="
   "resolved" "https://registry.npmjs.org/@mui/base/-/base-5.0.0-alpha.80.tgz"
@@ -490,33 +476,12 @@
     "prop-types" "^15.8.1"
     "react-is" "^17.0.2"
 
-"@mui/core-downloads-tracker@^5.10.11":
-  "integrity" "sha512-u5ff+UCFDHcR8MoQ8tuJR4c35vt7T/ki3aMEE2O3XQoGs8KJSrBiisFpFKyldg9/W2NSyoZxN+kxEGIfRxh+9Q=="
-  "resolved" "https://registry.npmjs.org/@mui/core-downloads-tracker/-/core-downloads-tracker-5.10.11.tgz"
-  "version" "5.10.11"
-
 "@mui/icons-material@^5.0.0", "@mui/icons-material@^5.10.3":
   "integrity" "sha512-o0kbUlsWCBtCE0wP33cGKbyryCh7kpm2EECYMPDmWrLhbA+HUODXIdhiTFS26szp2xXo9HY1lEx0ufeJ+tddYw=="
   "resolved" "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.10.3.tgz"
   "version" "5.10.3"
   dependencies:
     "@babel/runtime" "^7.18.9"
-
-"@mui/joy@^5.0.0-alpha.51":
-  "integrity" "sha512-7PKsa1XPH8lMVKIxGMhANsviIZfxbnpLvYuizryW/LzdV8Pe2mSsjwEhhIwr5oE17uUTdJTHTw4TPebDBSbeEg=="
-  "resolved" "https://registry.npmjs.org/@mui/joy/-/joy-5.0.0-alpha.51.tgz"
-  "version" "5.0.0-alpha.51"
-  dependencies:
-    "@babel/runtime" "^7.19.0"
-    "@mui/base" "5.0.0-alpha.103"
-    "@mui/core-downloads-tracker" "^5.10.11"
-    "@mui/system" "^5.10.10"
-    "@mui/types" "^7.2.0"
-    "@mui/utils" "^5.10.9"
-    "clsx" "^1.2.1"
-    "csstype" "^3.1.1"
-    "prop-types" "^15.8.1"
-    "react-is" "^18.2.0"
 
 "@mui/lab@^5.0.0-alpha.86":
   "integrity" "sha512-5dx9/vHldiE5KFu99YUtEGKyUgwTiq8wM+IhEnNKkU+YjEMULVYV+mgS9nvnf6laKtgqy2hOE4JivqRPIuOGdA=="
@@ -600,7 +565,7 @@
     "jss-plugin-vendor-prefixer" "^10.8.2"
     "prop-types" "^15.8.1"
 
-"@mui/system@^5.10.10", "@mui/system@^5.2.3", "@mui/system@^5.7.0", "@mui/system@^5.8.0", "@mui/system@^5.8.4":
+"@mui/system@^5.2.3", "@mui/system@^5.7.0", "@mui/system@^5.8.0", "@mui/system@^5.8.4":
   "integrity" "sha512-TXwtKN0adKpBrZmO+eilQWoPf2veh050HLYrN78Kps9OhlvO70v/2Kya0+mORFhu9yhpAwjHXO8JII/R4a5ZLA=="
   "resolved" "https://registry.npmjs.org/@mui/system/-/system-5.10.10.tgz"
   "version" "5.10.10"
@@ -699,7 +664,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
-"@popperjs/core@^2.11.5", "@popperjs/core@^2.11.6":
+"@popperjs/core@^2.11.5":
   "integrity" "sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw=="
   "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.11.6.tgz"
   "version" "2.11.6"

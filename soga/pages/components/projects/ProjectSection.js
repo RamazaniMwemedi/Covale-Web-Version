@@ -10,7 +10,7 @@ const ProjectSection = () => {
   const router = useRouter();
   const project = router.query.project;
 
-  const [value, setValue] = useState("Overview");
+  const [value, setValue] = useState("Tasks");
 
   const valueChangeHandler = (e, newValue) => {
     setValue(newValue);
