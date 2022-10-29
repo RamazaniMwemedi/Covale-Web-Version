@@ -17,7 +17,6 @@ import { useGetFriends } from "../../../hooks/hooks";
 
 import chatService from "../../../services/chats";
 import { getTeams } from "../../../services/teams";
-import Team from "../teams/Team";
 import Teams from "../teams/Teams";
 
 const closedMixin = (theme) => ({
