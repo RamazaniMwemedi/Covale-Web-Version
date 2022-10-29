@@ -21,20 +21,23 @@ export default function ColorTabs() {
         textColor="action"
         indicatorColor="unset"
         aria-label="secondary tabs example"
+        sx={{
+          borderRadius: "10px",
+        }}
       >
         <Tab
           value="kanban"
-          sx={{ textTransform: "none" }}
+          sx={{ textTransform: "none", borderRadius: "10px" }}
           label={<KanbanLabbel value={value} />}
         />
         <Tab
           value="table"
-          sx={{ textTransform: "none" }}
+          sx={{ textTransform: "none", borderRadius: "10px" }}
           label={<TableLabbel value={value} />}
         />
         <Tab
           value="list"
-          sx={{ textTransform: "none" }}
+          sx={{ textTransform: "none", borderRadius: "10px" }}
           label={<ListPanelLable value={value} />}
         />
       </Tabs>
