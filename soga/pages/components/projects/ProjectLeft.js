@@ -63,8 +63,7 @@ export default function ProjectLeft() {
   return (
     <Box
       sx={{
-        backgroundColor: "red",
-        width: `calc(${theme.spacing(34.5)} + 1px)`,
+        width: `calc(${theme.spacing(34.9)} + 1px)`,
       }}
     >
       <CssBaseline />
@@ -198,17 +197,18 @@ const ProjectLabel = ({ name }) => {
           display: "flex",
           alightItems: "stretch",
           gap: "10px",
+          alignItems: "center",
+          textAlign: "center",
         }}
       >
-        <Image
-          src="https://img.icons8.com/color/48/000000/old-vmware-logo.png"
-          alt="Picture of the author"
-          width={35}
-          height={35}
-          style={{
-            borderRadius: "15px",
+        <Box
+          sx={{
+            height: 15,
+            width: 15,
+            borderRadius: 1,
+            border: "2px solid dodgerblue",
           }}
-        />{" "}
+        />
         <Typography variant="body1">{name}</Typography>
       </Box>
       <IconButton>

@@ -43,6 +43,7 @@ const Project = (props) => {
           sx={{
             display: "flex",
             height: "100vh",
+            width: "100vw",
           }}
         >
           <CssBaseline />
@@ -53,7 +54,7 @@ const Project = (props) => {
                 user={userStore.user}
               />
               <ProjectLeft projects={projects} />
-              <ProjectSection/>
+              <ProjectSection />
             </>
           ) : (
             <LoadingLogo />

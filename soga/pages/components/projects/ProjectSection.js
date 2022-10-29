@@ -10,8 +10,10 @@ const ProjectSection = () => {
   const project = router.query.project;
 
   return (
-    <Box>
-      <Typography variant="h3">Projet ID is : {project}</Typography>
+    <Box sx={{
+            height: "100vh",
+            width: "100vw",
+          }}>
       <ProjectSectionTop />
       <ProjectSectionBottom />{" "}
     </Box>
