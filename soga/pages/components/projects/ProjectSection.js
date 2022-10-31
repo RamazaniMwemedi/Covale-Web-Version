@@ -5,15 +5,21 @@ import { useState } from "react";
 
 import ProjectSectionTop from "./ProjectSectionTop";
 import ProjectSectionBottom from "./ProjectSectionBottom";
+import TasksViews from "./TasksViews";
 
 const ProjectSection = () => {
   const router = useRouter();
   const project = router.query.project;
 
   const [value, setValue] = useState("Tasks");
+  const [taskViewValue, setTaskViewValue] = useState("kanban");
 
   const valueChangeHandler = (e, newValue) => {
     setValue(newValue);
+  };
+
+  const taskViewValueChangeHandler = (e, newValue) => {
+    setTaskViewValue(newValue);
   };
 
   return (
@@ -27,7 +33,12 @@ const ProjectSection = () => {
         valueChangeHandler={valueChangeHandler}
         value={value}
       />
-      <ProjectSectionBottom value={value} />{" "}
+      <ProjectSectionBottom
+        taskViewValue={taskViewValue}
+        value={value}
+        taskViewValueChangeHandler={taskViewValueChangeHandler}
+      />
+      <TasksViews taskViewValue={taskViewValue} />
     </Box>
   );
 };

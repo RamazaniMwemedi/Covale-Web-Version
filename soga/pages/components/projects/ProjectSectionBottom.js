@@ -1,14 +1,14 @@
 import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Typography from "@mui/material/Typography";
 import TasksTabPanel from "./TasksTabPanel";
 
-
-
-const ProjectSectionBottom = ({ value }) => {
+const ProjectSectionBottom = ({
+  value,
+  taskViewValue,
+  taskViewValueChangeHandler,
+}) => {
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
@@ -18,7 +18,10 @@ const ProjectSectionBottom = ({ value }) => {
               margin: "-20px",
             }}
           >
-            <TasksTabPanel/>
+            <TasksTabPanel
+              taskViewValueChangeHandler={taskViewValueChangeHandler}
+              taskViewValue={taskViewValue}
+            />
           </Box>
         </TabPanel>
         <TabPanel value="Overview">

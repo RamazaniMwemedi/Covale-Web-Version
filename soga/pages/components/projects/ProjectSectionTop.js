@@ -19,7 +19,7 @@ const ProjectSectionTop = ({ valueChangeHandler, value }) => {
   return (
     <Box
       sx={{
-        witdth: "100vw",
+        witdth: "90vw",
         backgroundColor: theme.colors.background1,
         pt: 1,
       }}
@@ -119,8 +119,16 @@ function ProjectTopTabs({ valueChangeHandler, value }) {
         indicatorColor="secondary"
         aria-label="secondary tabs example"
       >
-        <Tab value="Tasks" label="Tasks" sx={{ textTransform: "none" }} />
-        <Tab value="Overview" label="Overview" sx={{ textTransform: "none" }} />
+        <Tab
+          value="Tasks"
+          label={<Typography>Tasks</Typography>}
+          sx={{ textTransform: "none" }}
+        />
+        <Tab
+          value="Overview"
+          label={<Typography>Overview</Typography>}
+          sx={{ textTransform: "none" }}
+        />
       </Tabs>
     </Box>
   );
@@ -143,14 +151,10 @@ function TotalAvatars({ valueChangeHandler, value }) {
               sx={{
                 // height: "24px",
                 // width: "24px",
-                "& .MuiAvatar-root": { width: 35, height: 35, fontSize: 15 },
+                "& .MuiAvatar-root": { width: 30, height: 30, fontSize: 10 },
               }}
               total={24}
             >
-              <Avatar
-                alt="Remy Sharp"
-                src="https://mui.com/static/images/avatar/1.jpg"
-              />
               <Avatar
                 alt="Travis Howard"
                 src="https://mui.com/static/images/avatar/2.jpg"
@@ -170,7 +174,7 @@ function TotalAvatars({ valueChangeHandler, value }) {
       </Tabs>
       <Divider orientation="vertical" sx={{ width: "1px" }} flexItem />
       <IconButton>
-        <PersonAddAlt1RoundedIcon />
+        <PersonAddAlt1RoundedIcon fontSize="small" />
       </IconButton>
     </Box>
   );

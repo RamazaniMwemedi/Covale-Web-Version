@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }) {
   const darkTheme = {
     // dark theme
     typography: {
-      fontFamily: "cursive",
+      fontFamily: "san-serif",
     },
     palette: {
       mode: "dark",
@@ -47,7 +47,7 @@ function MyApp({ Component, pageProps }) {
   const lightTheme = {
     // light theme
     typography: {
-      fontFamily: "cursive",
+      fontFamily: "sans-serif",
     },
     palette: {
       mode: "light",
