@@ -14,7 +14,7 @@ import Tab from "@mui/material/Tab";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 
-const ProjectSectionTop = ({ valueChangeHandler, value }) => {
+const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
   const theme = useTheme();
   return (
     <Box
@@ -41,7 +41,7 @@ const ProjectSectionTop = ({ valueChangeHandler, value }) => {
               border: "4px solid dodgerblue",
             }}
           />
-          <Typography variant="h5">Project Name</Typography>
+          <Typography variant="h5">{project.title}</Typography>
         </Box>
         {/* Shortcuts and options */}
         <Box
@@ -70,9 +70,12 @@ const ProjectSectionTop = ({ valueChangeHandler, value }) => {
         <Breadcrumbs aria-label="breadcrumb">
           {/* <Link underline="hover" color="inherit" href="/">
           </Link> */}
-          <Typography>Sub 1</Typography>
+          {project.subProjects.map((subProject) => (
+            <Typography>{subProject.title} </Typography>
+          ))}
+          {/* <Typography>Sub 1</Typography>
           <Typography>Sub 2</Typography>
-          <Typography>Sub 3</Typography>
+          <Typography>Sub 3</Typography> */}
         </Breadcrumbs>
       </Box>
       {/* Third Box */}

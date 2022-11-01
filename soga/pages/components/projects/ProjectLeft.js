@@ -18,7 +18,6 @@ import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
-const c = console.log.bind();
 const closedMixin = (theme) => ({
   //
   transition: theme.transitions.create("width", {
@@ -58,7 +57,6 @@ const Drawer = styled(MuiDrawer, {
 
 export default function ProjectLeft() {
   const projectStore = useSelector((state) => state.projects);
-  c("Project Store: ", projectStore);
   const theme = useTheme();
   return (
     <Box

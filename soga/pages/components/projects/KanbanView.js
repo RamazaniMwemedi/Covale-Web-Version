@@ -117,7 +117,6 @@ const SectionBox = ({ sectionName }) => {
 };
 
 const TaskDraggableCard = ({ task }) => {
-  console.log("Tasks :", task);
   const { title, description, status, priority, subtasks } = task;
   const theme = useTheme();
 
