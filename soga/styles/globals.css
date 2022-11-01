@@ -102,8 +102,10 @@ hr {
 }
 
 /* width */
+
 ::-webkit-scrollbar {
-  width: 7px;
+    width: 7px;
+    height: 7px;
 }
 
 /* Track */
