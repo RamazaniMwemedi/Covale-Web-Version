@@ -71,7 +71,7 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
           {/* <Link underline="hover" color="inherit" href="/">
           </Link> */}
           {project.subProjects.map((subProject) => (
-            <Typography>{subProject.title} </Typography>
+            <Typography key={subProject.id}>{subProject.title} </Typography>
           ))}
           {/* <Typography>Sub 1</Typography>
           <Typography>Sub 2</Typography>
