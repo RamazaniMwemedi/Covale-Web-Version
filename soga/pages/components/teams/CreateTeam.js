@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 import { Box } from "@mui/system";
 import { lightBlue, purple } from "@mui/material/colors";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import { useTheme } from "@mui/material/styles";
 import {
   Autocomplete,
   Avatar,
@@ -23,7 +23,6 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import { useGetFriends, useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { createNewTeam, inviteFriends } from "../../../services/teams";
 import { useState } from "react";
