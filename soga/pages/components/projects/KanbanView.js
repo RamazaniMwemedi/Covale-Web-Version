@@ -43,15 +43,15 @@ const KanbanView = ({ taskViewValue }) => {
         // display: "flex",
       }}
     >
-      <SectionsBoxs />
+      <StatusBoxs />
     </Box>
   );
 };
 
 export default KanbanView;
 
-const array = ["To do", "In Progress", "Completed", "Add Section"];
-const SectionsBoxs = () => {
+const array = ["To do", "In Progress", "Completed", "Add Status"];
+const StatusBoxs = () => {
   return (
     <Box
       sx={{
@@ -66,13 +66,13 @@ const SectionsBoxs = () => {
       }}
     >
       {array.map((element, i) => {
-        return <SectionBox key={i} sectionName={element} />;
+        return <StatusBox key={i} statusName={element} />;
       })}
     </Box>
   );
 };
 
-const SectionBox = ({ sectionName }) => {
+const StatusBox = ({ statusName }) => {
   const tasks = ["New", "Group"];
   const theme = useTheme();
   return (
@@ -97,7 +97,7 @@ const SectionBox = ({ sectionName }) => {
               borderRadius: "5px",
             }}
           />
-          <Typography>{sectionName}</Typography>
+          <Typography>{statusName}</Typography>
         </Box>
 
         <IconButton>

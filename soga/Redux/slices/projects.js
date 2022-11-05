@@ -45,6 +45,7 @@ const projectsSlice = createSlice({
             subProject = {
               id: subProjectByIndex.id,
               title: subProjectByIndex.title,
+              tasks: subProjectByIndex.tasks,
             };
             project.subProjects.push(subProject);
           }
