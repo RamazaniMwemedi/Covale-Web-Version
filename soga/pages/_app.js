@@ -95,6 +95,7 @@ function MyApp({ Component, pageProps }) {
       return createTheme(lightTheme);
     }
   }, [preferedTheme]);
+  
 
   return (
     <Provider store={store}>
