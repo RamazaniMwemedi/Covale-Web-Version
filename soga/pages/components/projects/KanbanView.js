@@ -152,8 +152,7 @@ const TaskDraggableCard = ({ task }) => {
           {title}
         </Typography>
       </Box>
-      {/*End Of
-       Task Title Box */}
+      {/*End Of Task Title Box */}
       {/* Task Description Box */}
       <Box>
         <Typography>{description}</Typography>
