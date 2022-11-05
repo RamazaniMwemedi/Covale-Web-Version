@@ -5,6 +5,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Provider } from "react-redux";
+import { Analytics } from '@vercel/analytics/react';
+
 import store from "../Redux/store";
 
 function MyApp({ Component, pageProps }) {
@@ -110,6 +112,7 @@ function MyApp({ Component, pageProps }) {
         </Head>
         <CssBaseline />
         <Component {...pageProps} />
+        <Analytics />
       </ThemeProvider>
     </Provider>
   );
