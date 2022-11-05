@@ -17,99 +17,108 @@ import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
   const theme = useTheme();
   return (
-    <Box
-      sx={{
-        witdth: "90vw",
-        backgroundColor: theme.colors.background1,
-        pt: 1,
-      }}
-    >
-      {/* First Box  */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Project name */}
-        <Box sx={{ display: "flex", gap: 1, p: 0.3 }}>
+    <>
+      {project ? (
+        <Box
+          sx={{
+            witdth: "90vw",
+            backgroundColor: theme.colors.background1,
+            pt: 1,
+          }}
+        >
+          {/* First Box  */}
           <Box
             sx={{
-              height: 35,
-              width: 35,
-              borderRadius: 2,
-              border: "4px solid dodgerblue",
+              display: "flex",
+              justifyContent: "space-between",
             }}
-          />
-          <Typography variant="h5">{project.title}</Typography>
-        </Box>
-        {/* Shortcuts and options */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: "10px",
-          }}
-        >
-          <IconButton>
-            <SearchRoundedIcon fontSize="small" />
-          </IconButton>
-          <IconButton>
-            <PushPinRoundedIcon fontSize="small" />
-          </IconButton>
-          <IconButton>
-            <ChatBubbleRoundedIcon fontSize="small" />
-          </IconButton>
-          <IconButton>
-            <MoreVertRoundedIcon fontSize="small" />
-          </IconButton>
-        </Box>
-      </Box>
-      {/* Second Box  */}
-      <Box sx={{ display: "flex", gap: "10px", ml: 7 }}>
-        {/* Sub projects */}
-        <Breadcrumbs aria-label="breadcrumb">
-          {/* <Link underline="hover" color="inherit" href="/">
+          >
+            {/* Project name */}
+            <Box sx={{ display: "flex", gap: 1, p: 0.3 }}>
+              <Box
+                sx={{
+                  height: 35,
+                  width: 35,
+                  borderRadius: 2,
+                  border: "4px solid dodgerblue",
+                }}
+              />
+              <Typography variant="h5">{project.title}</Typography>
+            </Box>
+            {/* Shortcuts and options */}
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+              }}
+            >
+              <IconButton>
+                <SearchRoundedIcon fontSize="small" />
+              </IconButton>
+              <IconButton>
+                <PushPinRoundedIcon fontSize="small" />
+              </IconButton>
+              <IconButton>
+                <ChatBubbleRoundedIcon fontSize="small" />
+              </IconButton>
+              <IconButton>
+                <MoreVertRoundedIcon fontSize="small" />
+              </IconButton>
+            </Box>
+          </Box>
+          {/* Second Box  */}
+          <Box sx={{ display: "flex", gap: "10px", ml: 7 }}>
+            {/* Sub projects */}
+            <Breadcrumbs aria-label="breadcrumb">
+              {/* <Link underline="hover" color="inherit" href="/">
           </Link> */}
-          {project.subProjects.length > 0
-            ? project.subProjects.map((subProject) => (
-                <Typography key={subProject.id}>{subProject.title} </Typography>
-              ))
-            : null}
-          {}
-          {/* <Typography>Sub 1</Typography>
+              {project.subProjects.length != 0
+                ? project.subProjects.map((subProject) => (
+                    <Typography key={subProject.id}>
+                      {subProject.title}{" "}
+                    </Typography>
+                  ))
+                : null}
+              {}
+              {/* <Typography>Sub 1</Typography>
           <Typography>Sub 2</Typography>
           <Typography>Sub 3</Typography> */}
-        </Breadcrumbs>
-      </Box>
-      {/* Third Box */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Left */}
-        <Box
-          sx={{
-            display: "flex",
-            // gap: 2,
+            </Breadcrumbs>
+          </Box>
+          {/* Third Box */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            {/* Left */}
+            <Box
+              sx={{
+                display: "flex",
+                // gap: 2,
 
-            alightItems: "stretch",
-            alignItems: "center",
-            textAlign: "center",
-          }}
-        >
-          <ProjectTopTabs
-            valueChangeHandler={valueChangeHandler}
-            value={value}
-          />
+                alightItems: "stretch",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <ProjectTopTabs
+                valueChangeHandler={valueChangeHandler}
+                value={value}
+              />
+            </Box>
+            {/* Right */}
+            <Box>
+              <TotalAvatars
+                valueChangeHandler={valueChangeHandler}
+                value={value}
+              />
+            </Box>
+          </Box>
         </Box>
-        {/* Right */}
-        <Box>
-          <TotalAvatars valueChangeHandler={valueChangeHandler} value={value} />
-        </Box>
-      </Box>
-    </Box>
+      ) : null}
+    </>
   );
 };
 
