@@ -232,7 +232,6 @@ const UserMessage = ({ message }) => {
   useEffect(() => {
     if (message.id) {
       idProvided = true;
-      console.log("Id changed");
     }
 
     return () => {

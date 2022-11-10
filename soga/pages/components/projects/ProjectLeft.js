@@ -178,6 +178,16 @@ function ProjectTrees({ projects }) {
               ? project.subProjects.map((sub) => {
                   return (
                     <StyledTreeItem
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.push(
+                          `/projects/?project=${project.id}&subproject=${sub.id}`,
+                          `/projects/${project.id}/${sub.id}`,
+                          {
+                            shallow: true,
+                          }
+                        );
+                      }}
                       key={sub.id}
                       nodeId={sub.id}
                       label={<SubProject name={sub.title} />}

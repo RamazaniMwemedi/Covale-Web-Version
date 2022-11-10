@@ -7,20 +7,22 @@ const { useSelector } = require("react-redux");
 import ProjectSectionTop from "./ProjectSectionTop";
 import ProjectSectionBottom from "./ProjectSectionBottom";
 import TasksViews from "./TasksViews";
-import { useProject } from "../../../hooks/projects";
+import { useProject, useSubProjectsTasks } from "../../../hooks/projects";
 
 // Get a projects which much the Project Id
 
 const ProjectSection = () => {
   const router = useRouter();
   const projectId = router.query.project;
-  const allProjects = useSelector((state) => state.projects);
+  const subProjectId = router.query.subproject;
   const project = useProject(projectId);
-  const [value, setValue] = useState("Tasks");
+  const tasks = useSubProjectsTasks(projectId, subProjectId);
+  console.log("Tasks :", tasks)
+  const [tabValue, setTabValue] = useState("Tasks");
   const [taskViewValue, setTaskViewValue] = useState("kanban");
 
   const valueChangeHandler = (e, newValue) => {
-    setValue(newValue);
+    setTabValue(newValue);
   };
 
   const taskViewValueChangeHandler = (e, newValue) => {
@@ -39,15 +41,19 @@ const ProjectSection = () => {
           <ProjectSectionTop
             project={project}
             valueChangeHandler={valueChangeHandler}
-            value={value}
+            value={tabValue}
           />
           <ProjectSectionBottom
             taskViewValue={taskViewValue}
-            value={value}
+            value={tabValue}
             taskViewValueChangeHandler={taskViewValueChangeHandler}
             project={project}
           />
-          <ComponetToDisplay taskViewValue={taskViewValue} project={project} />
+          <ComponetToDisplayTasks
+            tabValue={tabValue}
+            taskViewValue={taskViewValue}
+            project={project}
+          />
         </>
       ) : (
         <Box>
@@ -59,12 +65,12 @@ const ProjectSection = () => {
 };
 export default ProjectSection;
 
-const ComponetToDisplay = ({ taskViewValue, project }) => {
-  switch (taskViewValue) {
-    case "Task":
+const ComponetToDisplayTasks = ({ tabValue, taskViewValue, project }) => {
+  switch (tabValue) {
+    case "Tasks":
       return <TasksViews taskViewValue={taskViewValue} project={project} />;
 
     default:
-      return <TasksViews taskViewValue={taskViewValue} project={project} />;
+      return null;
   }
 };

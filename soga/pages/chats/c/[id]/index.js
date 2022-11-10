@@ -45,7 +45,6 @@ export default function Chat() {
       return null;
     }
   });
-  console.log("Id is :", router.query.id);
 
   const messages = chat ? chat.chat.messege : null;
   const [message, setMessage] = useState("");
@@ -98,7 +97,6 @@ export default function Chat() {
           if (data.sender != userStore.id) {
             setReceiveAudioPlay(true);
             setBoolForReceive(false);
-            console.log(data);
             dispatch(addNewMessage(data));
           }
           setReceiveAudioPlay(false);

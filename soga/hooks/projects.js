@@ -38,7 +38,31 @@ const useProject = (id) => {
   return project;
 };
 
+const useSubProjectsTasks = (projectId, subprojectId) => {
+  const allProjects = useSelector((state) => state.projects);
+  const [subProjectTasks, setSubProjectTasks] = useState([]);
+  useEffect(() => {
+    if (allProjects.projects) {
+      let project;
+      if (allProjects.projects.length > 0 && projectId && subprojectId) {
+        project = allProjects.projects.find(
+          (project) => project.id === projectId
+        );
+        if (project) {
+          setSubProjectTasks(
+            project.subProjects.find((subproject) => subproject.tasks)
+          );
+        }
+      }
+    }
+  }, [projectId, subprojectId]);
+
+  console.log("The real Task", subProjectTasks);
+  return subProjectTasks;
+};
+
 module.exports = {
   useGetProjects,
   useProject,
+  useSubProjectsTasks,
 };

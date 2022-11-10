@@ -3,11 +3,13 @@ import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Typography from "@mui/material/Typography";
 import TasksTabPanel from "./TasksTabPanel";
+import TasksViews from "./TasksViews";
 
 const ProjectSectionBottom = ({
   value,
   taskViewValue,
   taskViewValueChangeHandler,
+  project,
 }) => {
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
@@ -22,6 +24,7 @@ const ProjectSectionBottom = ({
               taskViewValueChangeHandler={taskViewValueChangeHandler}
               taskViewValue={taskViewValue}
             />
+            {/* <TasksViews taskViewValue={taskViewValue} project={project} /> */}
           </Box>
         </TabPanel>
         <TabPanel value="Overview">
@@ -50,3 +53,13 @@ const ProjectSectionBottom = ({
 };
 
 export default ProjectSectionBottom;
+
+const ComponetToDisplay = ({ taskViewValue, project }) => {
+  switch (taskViewValue) {
+    case "Task":
+      return <TasksViews taskViewValue={taskViewValue} project={project} />;
+
+    default:
+      return <TasksViews taskViewValue={taskViewValue} project={project} />;
+  }
+};

@@ -109,7 +109,6 @@ const useGetTeamById = (token, id) => {
   useEffect(() => {
     setLoading(true);
     // Clear Team store
-    console.log("Team Added from hook");
     dispatch(teamReset());
     if (router.pathname.includes("chats/t")) {
       if ((token, id)) {

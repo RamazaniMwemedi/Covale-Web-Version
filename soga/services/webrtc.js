@@ -10,9 +10,7 @@ const createOffer = async (peerConnection, localStream, remoteStream) => {
 
     // Get remote tracks to peerConnetion
     peerConnection.ontrack = async (event) => {
-      console.log("Event :", event);
       event.streams[0].getTracks().forEach((track) => {
-        console.log("Remote Track :", track);
         remoteStream.addTrack(track);
       });
     };

@@ -13,9 +13,13 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
+import { useRouter } from "next/router";
 
 const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
   const theme = useTheme();
+  const router = useRouter();
+  const subProjectId = router.query.subproject;
+
   return (
     <>
       {project ? (
@@ -74,7 +78,12 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
           </Link> */}
               {project.subProjects.length != 0
                 ? project.subProjects.map((subProject) => (
-                    <Typography key={subProject.id}>
+                    <Typography
+                      sx={{
+                        color: subProjectId == subProject.id ? "red" : "blue",
+                      }}
+                      key={subProject.id}
+                    >
                       {subProject.title}{" "}
                     </Typography>
                   ))

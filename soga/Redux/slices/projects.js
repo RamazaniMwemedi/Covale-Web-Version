@@ -1,5 +1,4 @@
 const { createSlice } = require("@reduxjs/toolkit");
-const c = console.log.bind();
 
 let task = {
   title: String(),
@@ -52,10 +51,7 @@ const projectsSlice = createSlice({
           allProjects.push(project);
         }
       }
-      c("All projects are :", allProjects);
-
       state.projects = [];
-      c("Payload :", payload);
       state.projects = allProjects;
     },
     clearProjects(state) {

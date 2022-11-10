@@ -64,7 +64,6 @@ export default function TeamPage() {
   useGetTeamById(token, id);
 
   useEffect(() => {
-    console.log("Some changes");
     messages = team ? team.messages : [];
 
     return () => {
@@ -99,7 +98,6 @@ export default function TeamPage() {
   useEffect(() => {
     setBoolForReceive(true);
     socket.on("receive_message_to_team", (data) => {
-      console.log(data);
       if (boolForReceive) {
         if (data) {
           if (data.sender != userStore.id) {
@@ -135,7 +133,6 @@ export default function TeamPage() {
       setBoolForSent(true);
       if (boolForSent) {
         socket.on("messege_sent_to_team", (data) => {
-          console.log(data);
           setSentAudioPlay(true);
           setPlaying(true);
           dispatch(addNewMessageToTeam(data));

@@ -11,6 +11,20 @@ const getProjects = async (token) => {
   return response.data;
 };
 
+const createNewProjeect = async (token, title, description) => {
+  const response = await axios.post(
+    `${baseUrl}/api/project`,
+    { title, description },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
 module.exports = {
   getProjects,
+  createNewProjeect,
 };
