@@ -57,9 +57,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function Tabs({
-  messages,
   teams,
-  loading,
   value,
   friends,
   showMoreFriends,
@@ -87,8 +85,6 @@ function Tabs({
             }}
           >
             <Chats
-              messages={messages}
-              loading={loading}
               friends={friends}
               showMoreFriends={showMoreFriends}
               showButton={showButton}
@@ -123,8 +119,6 @@ function Tabs({
 }
 
 export default function ChatLeft({ user }) {
-  const [messages, setMessages] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
   const token = user ? user.token : null;
   const [value, setValue] = React.useState("chats");
   const friends = useGetFriends();
@@ -171,26 +165,6 @@ export default function ChatLeft({ user }) {
     setOpenCreateTeam((prev) => !prev);
   };
 
-  const getChatsTeams = async (token) => {
-    if (token) {
-      const chatsRes = await chatService.getChats(token);
-      if (chatsRes) {
-        setMessages(chatsRes);
-        setLoading(false);
-      }
-
-      const teamsRes = await getTeams(token);
-      if (teamsRes) {
-        setTeams(teamsRes);
-        setTeamLoading(false);
-      }
-    }
-  };
-
-  React.useEffect(() => {
-    getChatsTeams(token);
-  }, [token]);
-
   return (
     <Box>
       <CssBaseline />
@@ -198,10 +172,8 @@ export default function ChatLeft({ user }) {
         <ProfileDialog handleChange={handleChange} value={value} user={user} />
 
         <Tabs
-          messages={messages}
           value={value}
           handleChange={handleChange}
-          loading={loading}
           friends={friends}
           showMoreFriends={showMoreFriends}
           showButton={showButton}

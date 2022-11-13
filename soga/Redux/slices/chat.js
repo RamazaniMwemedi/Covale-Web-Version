@@ -1,47 +1,27 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialChatsState = {};
+let chats = new Array();
 
 const chatSlice = createSlice({
-  name: "chat",
-  initialState: initialState,
+  name: "chats",
+  initialState: initialChatsState,
   reducers: {
-    chatAdd(state, { payload }) {
-      state.chat = payload;
+    allChats(state, { payload }) {
+      if (payload) {
+        for (let index = 0; index < payload.length; index++) {
+          const chatByIndex = payload[index];
+          chats.push(chatByIndex);
+        }
+      }
+      state.chats = chats;
     },
-    chatReset() {
+    chatsReset() {
       state.chat = initialState;
-    },
-    addNewMessage(state, { payload }) {
-      state.chat.chat.messege.push(payload);
-    },
-    addNewMessageFromSever(state, { payload }) {
-      // Bug when updating a message
-      // Its still not working
-      let State = current(state);
-      // return [
-      //   ...State,
-      //   State.chat.chat.messege
-      //     .map((m) => {
-      //       return m.idFromClient == payload.idFromClient;
-      //     })
-      //     .filter((ms) => {
-      //       return (ms = payload);
-      //     }),
-      //   ];
     },
   },
 });
-// console.log("Message length", state.chat.chat.messege.length);
-// state.chat.chat.messege.filter((message) => {
-//   let theMessage = message.idFromClient == payload.idFromClient;
-//   console.log("Messsage Before :", theMessage);
-//   theMessage = payload;
-//   console.log("Messsage After :", theMessage);
-//   console.log("Message length", state.chat.chat.messege.length);
-// });
-
-const { chatAdd, chatReset, addNewMessage, addNewMessageFromSever } =
+const { chatAdd, chatReset, addNewMessage, addNewMessageFromSever, allChats } =
   chatSlice.actions;
 const reducer = chatSlice.reducer;
 module.exports = {
@@ -50,4 +30,9 @@ module.exports = {
   chatReset,
   addNewMessage,
   addNewMessageFromSever,
+  allChats,
 };
+
+// chatAdd(state, { payload }) {
+//   state.chat = payload;
+// },

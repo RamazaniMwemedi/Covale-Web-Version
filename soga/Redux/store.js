@@ -1,12 +1,12 @@
 const { configureStore } = require("@reduxjs/toolkit");
-const chatReducer = require("./slices/chat");
+const chatsReducer = require("./slices/chat");
 const teamReducer = require("./slices/team");
 const userReducer = require("./slices/user");
 const projectsReducer = require("./slices/projects");
 
 const store = configureStore({
   reducer: {
-    chat: chatReducer.reducer,
+    chats: chatsReducer.reducer,
     team: teamReducer.reducer,
     user: userReducer.reducer,
     projects: projectsReducer.reducer,

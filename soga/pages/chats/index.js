@@ -1,31 +1,135 @@
 import { useRouter } from "next/router";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
+import { useEffect, useState, useRef, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
+import io from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
 
 // My components
 import DrawerComponent from "../components/others/DrawerComponent";
 import ChatLeft from "../components/chats/ChatLeft";
+import ChatSection from "../components/chats/ChatSection";
+
+import ChatSectionSkeleton from "../components/chats/ChatSectionSkeleton";
 
 // Hooks
-import { useCheckLogedinUser } from "../../hooks/hooks";
+import {
+  useCheckLogedinUser,
+  useGetChatById,
+  useGetChats,
+  useGetTeamById,
+} from "../../hooks/hooks";
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
-import { removeUser } from "../../Redux/slices/user";
-// Redux
+import { addNewMessage } from "../../Redux/slices/chat";
+
+// Socket.IO
+// https://rtcommunication.herokuapp.com/
+// http://localhost:5005/
+const socket = io.connect("https://rtcommunication.herokuapp.com/");
 
 export default function Chat() {
-  const theme = useTheme();
   const userLoading = useCheckLogedinUser();
-  const userStore = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const userStore = useSelector((state) => state.user);
   const router = useRouter();
+  const id = router.query.id;
+  const token = userStore.user ? userStore.user.token : null;
+  useGetChats(token);
+  let loading = true;
+
+  const [message, setMessage] = useState("");
+
+  // Bools
+  const [boolForSent, setBoolForSent] = useState(false);
+  const [boolForReceive, setBoolForReceive] = useState(false);
+  //Audio
+  const [playing, setPlaying] = useState(false);
+  const [sentAudioPlay, setSentAudioPlay] = useState(false);
+  const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
+
+  const [audioUrl, setAudioUrl] = useState(null);
+
+  useEffect(() => {
+    const audio = new Audio(
+      "https://ramazanimwemedi.github.io/sounds/recieve.mp3"
+    );
+    receiveAudioPlay ? audio.play() : audio.pause();
+
+    audio.addEventListener("ended", () => setReceiveAudioPlay(false));
+    return () => {
+      audio.addEventListener("ended", () => setReceiveAudioPlay(false));
+    };
+  }, [receiveAudioPlay]);
+
+  useEffect(() => {
+    const audio = new Audio(
+      "https://ramazanimwemedi.github.io/sounds/sent.mp3"
+    );
+
+    sentAudioPlay ? audio.play() : audio.pause();
+    audio.addEventListener("ended", () => setSentAudioPlay(true));
+    return () => {
+      audio.addEventListener("ended", () => setSentAudioPlay(true));
+    };
+  }, [sentAudioPlay]);
+
+  useEffect(() => {
+    setBoolForReceive(true);
+    socket.on("receive_message", (data) => {
+      if (boolForReceive) {
+        if (data) {
+          if (data.sender != userStore.id) {
+            setReceiveAudioPlay(true);
+            setBoolForReceive(false);
+            dispatch(addNewMessage(data));
+          }
+          setReceiveAudioPlay(false);
+        }
+      }
+    });
+  }, [socket]);
+
+  const friendUsername = "Friend Name";
+
+  const messageChangeHandler = (e) => {
+    setMessage(e.target.value);
+  };
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
     userStore = null;
     router.push("/login");
-    dispatch(removeUser());
+  };
+
+  const onEmojiClick = (event, emojiObject) => {
+    setMessage(message + emojiObject.emoji);
+  };
+
+  const sendMessageHandle = () => {
+    const userId = userStore ? userStore.user.id : null;
+    if (message.length > 0) {
+      const newMessage = {
+        sender: userId,
+        message: message,
+        idFromClient: uuidv4(),
+      };
+
+      socket.emit("send_message", { newMessage, id, userId });
+      setMessage("");
+      setBoolForSent(true);
+      if (boolForSent) {
+        socket.on("messege_sent", (data) => {
+          setSentAudioPlay(true);
+          setPlaying(true);
+          dispatch(addNewMessage(data));
+
+          setBoolForSent(false);
+        });
+      }
+    }
   };
 
   return (
@@ -41,15 +145,32 @@ export default function Chat() {
           }}
         >
           <CssBaseline />
-          {userStore.user ? (
+          {userStore ? (
             <>
               <DrawerComponent
                 signoutHandler={signoutHandler}
                 user={userStore.user}
               />
-              <ChatLeft user={userStore.user} />
-
-              <ClickaChat />
+              <ChatLeft user={userStore.user} chat={[]} />
+              {id ? (
+                !loading ? (
+                  <ChatSectionSkeleton />
+                ) : (
+                  <ChatSection
+                    id={id}
+                    user={userStore.user}
+                    chat={[]}
+                    messageChangeHandler={messageChangeHandler}
+                    message={message}
+                    messages={[]}
+                    sendNewMessage={sendMessageHandle}
+                    friendUsername={friendUsername}
+                    onEmojiClick={onEmojiClick}
+                  />
+                )
+              ) : (
+                <ClickaChat />
+              )}
             </>
           ) : (
             <LoadingLogo />

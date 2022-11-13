@@ -17,6 +17,7 @@ import ChatSectionSkeleton from "../../../components/chats/ChatSectionSkeleton";
 import {
   useCheckLogedinUser,
   useGetChatById,
+  useGetChats,
   useGetTeamById,
 } from "../../../../hooks/hooks";
 import LoadingLogo from "../../../components/others/LoadingLogo";
@@ -36,17 +37,9 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
+  useGetChats(token);
   let loading = true;
-  const chat = useSelector((state) => {
-    if (state.chat.chat) {
-      let loading = false;
-      return state.chat.chat;
-    } else {
-      return null;
-    }
-  });
 
-  const messages = chat ? chat.chat.messege : null;
   const [message, setMessage] = useState("");
 
   // Bools
@@ -58,12 +51,6 @@ export default function Chat() {
   const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState(null);
-
-  // Getting Chchatat by it's ID
-  useGetChatById(token, id);
-
-  // Getting Team by it's ID
-  useGetTeamById(token, id);
 
   useEffect(() => {
     const audio = new Audio(
@@ -105,11 +92,7 @@ export default function Chat() {
     });
   }, [socket]);
 
-  const friendUsername = chat
-    ? chat.friend.id !== userStore.id
-      ? `${chat.friend.firstname}  ${chat.friend.lastname}`
-      : ""
-    : "";
+  const friendUsername = "Friend Name";
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -168,7 +151,7 @@ export default function Chat() {
                 signoutHandler={signoutHandler}
                 user={userStore.user}
               />
-              <ChatLeft user={userStore.user} chat={chat} />
+              <ChatLeft user={userStore.user} chat={[]} />
               {id ? (
                 !loading ? (
                   <ChatSectionSkeleton />
@@ -176,10 +159,10 @@ export default function Chat() {
                   <ChatSection
                     id={id}
                     user={userStore.user}
-                    chat={chat}
+                    chat={{}}
                     messageChangeHandler={messageChangeHandler}
                     message={message}
-                    messages={messages}
+                    messages={[]}
                     sendNewMessage={sendMessageHandle}
                     friendUsername={friendUsername}
                     onEmojiClick={onEmojiClick}

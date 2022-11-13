@@ -1,7 +1,7 @@
 const { useEffect, useState, useLayoutEffect } = require("react");
 const { useRouter } = require("next/router");
 
-const { getChatById } = require("../services/chats");
+const { getChats } = require("../services/chats");
 const { getTeamById } = require("../services/teams");
 const { myFriends } = require("../services/user");
 
@@ -10,7 +10,7 @@ const { useDispatch } = require("react-redux");
 
 // Reducers
 const { teamAdd, teamReset } = require("../Redux/slices/team");
-const { chatAdd, chatReset } = require("../Redux/slices/chat");
+const { allChats, chatReset } = require("../Redux/slices/chat");
 const { addUser, removeUser } = require("../Redux/slices/user");
 
 // Services
@@ -82,7 +82,7 @@ const useCheckLogedinUserToken = () => {
   return logedInUserToken;
 };
 
-const useGetChatById = (token, id) => {
+const useGetChats = (token) => {
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -90,15 +90,14 @@ const useGetChatById = (token, id) => {
   // Get chat by id and set it to chat
   useEffect(() => {
     // Clear Chat Store
-    dispatch(chatReset);
-    if (router.pathname.includes("chats/c")) {
-      if ((token, id)) {
-        getChatById(token, id).then((res) => {
-          dispatch(chatAdd(res));
-        });
-      }
+
+    if (token) {
+      console.log("Token :", token);
+      getChats(token).then((res) => {
+        dispatch(allChats(res));
+      });
     }
-  }, [token, id]);
+  }, [token]);
 };
 const useGetTeamById = (token, id) => {
   const [loading, setLoading] = useState(true);
@@ -175,7 +174,7 @@ const useWindow = () => {
 module.exports = {
   useCheckLogedinUser,
   useCheckLogedinUserToken,
-  useGetChatById,
+  useGetChats,
   useGetTeamById,
   useGetTheme,
   useGetFriends,

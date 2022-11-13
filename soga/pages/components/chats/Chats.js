@@ -22,10 +22,9 @@ import AddIcon from "@mui/icons-material/Add";
 // My components
 import AddMoreFriends from "./AddMoreFriends";
 import Chat from "./Chat";
+import { useSelector } from "react-redux";
 
 const Chats = ({
-  messages,
-  loading,
   friends,
   showMoreFriends,
   showButton,
@@ -37,7 +36,15 @@ const Chats = ({
   clearFriendHandler,
   messageChangeHandler,
 }) => {
+  let loading = true;
+  const chats = useSelector((state) => {
+    if (state.chats.chats) {
+      loading = false;
+    }
+    return state.chats.chats;
+  });
   const theme = useTheme();
+
   return (
     <>
       <Box
@@ -124,8 +131,8 @@ const Chats = ({
         </Stack>
       ) : (
         <>
-          {messages &&
-            (messages.length > 0 ? (
+          {chats &&
+            (chats.length > 0 ? (
               <Box>
                 {showMoreFriends && (
                   <AddMoreFriends
@@ -143,7 +150,7 @@ const Chats = ({
                 {showButton && (
                   <FloatingAButton buttonHandler={buttonHandler} />
                 )}
-                {messages.map((message) => {
+                {chats.map((message) => {
                   return <Chat key={message.chatId} message={message} />;
                 })}
               </Box>
