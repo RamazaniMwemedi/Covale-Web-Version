@@ -28,6 +28,7 @@ import { createNewTeam, inviteFriends } from "../../../services/teams";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import SaveIcon from "@mui/icons-material/Save";
+import { useRouter } from "next/router";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -35,6 +36,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const CreateTeam = ({ toggleShowTeam }) => {
   const theme = useTheme();
+  const router = useRouter();
   const friends = useGetFriends();
   const token = useCheckLogedinUserToken();
   const [number, setNumber] = useState(1);
@@ -103,7 +105,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
       const res = await inviteFriends(token, createdTeamId, selectedFriends);
       if (res == 200 && createdTeamId) {
         setInvitingBool(false);
-        window.location.href = `http://localhost:3000/chats/t/${createdTeamId}`;
+        router.push(`/chats/t/${createdTeamId}`);
       }
     }
   };
