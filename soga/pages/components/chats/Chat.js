@@ -15,6 +15,7 @@ export default function Chat({ message }) {
   const router = useRouter();
   const id = router.query.t;
   const theme = useTheme();
+  const lastMessage=message.messages[message.messages.length - 1].message
 
   return (
     <List
@@ -69,9 +70,9 @@ export default function Chat({ message }) {
             </Typography>
             {/* Show the first 25 characters only else add ... */}
             <Typography variant="body2">
-              {message.lastMessege.length > 30
-                ? message.lastMessege.substring(0, 30) + "..."
-                : message.lastMessege}
+              {lastMessage.length > 30
+                ? lastMessage.substring(0, 30) + "..."
+                : lastMessage}
             </Typography>
           </Box>
 

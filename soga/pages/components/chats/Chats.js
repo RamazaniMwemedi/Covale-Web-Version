@@ -44,7 +44,6 @@ const Chats = ({
     return state.chats.chats;
   });
   const theme = useTheme();
-
   return (
     <>
       <Box
