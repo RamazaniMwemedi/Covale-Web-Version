@@ -4,10 +4,9 @@ import { useTheme } from "@mui/styles";
 import React from "react";
 import ChatSectionLeft from "./ChatSectionLeft";
 import ChatSectionRight from "./ChatSectionRight";
+import { useSelector } from "react-redux";
 
 const ChatSection = ({
-  id,
-  user,
   chat,
   messageChangeHandler,
   message,
@@ -15,9 +14,9 @@ const ChatSection = ({
   messages,
   friendUsername,
   onEmojiClick,
-  
 }) => {
   const [showRight, setShowRight] = React.useState(false);
+  const user = useSelector((state) => state.user);
   const showRightHandler = () => {
     setShowRight(!showRight);
   };
@@ -43,7 +42,7 @@ const ChatSection = ({
       >
         {/* ChatSectionLeft */}
         <ChatSectionLeft
-          id={id}
+          id={chat.id}
           user={user}
           chat={chat}
           messageChangeHandler={messageChangeHandler}
@@ -64,7 +63,7 @@ const ChatSection = ({
             borderLeft: `2px solid ${theme.colors.background1}`,
           }}
         >
-          <ChatSectionRight friendUsername={friendUsername} />
+          <ChatSectionRight friendUsername={chat.friendUsername} />
         </Box>
       )}
     </Box>

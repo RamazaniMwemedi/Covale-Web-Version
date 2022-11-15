@@ -20,6 +20,7 @@ import {
   useGetChats,
   useGetTeamById,
 } from "../../../hooks/hooks";
+import { useChatId } from "../../../hooks/chats";
 import LoadingLogo from "../../components/others/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
 import { addNewMessage } from "../../../Redux/slices/chat";
@@ -37,6 +38,7 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
+  const chat = useChatId(id);
   useGetChats(token);
   let loading = true;
 
@@ -153,16 +155,14 @@ export default function Chat() {
               />
               <ChatLeft user={userStore.user} chat={{}} />
               {id ? (
-                !loading ? (
+                !chat ? (
                   <ChatSectionSkeleton />
                 ) : (
                   <ChatSection
-                    id={id}
-                    user={userStore.user}
-                    chat={{}}
+                    chat={chat}
                     messageChangeHandler={messageChangeHandler}
                     message={message}
-                    messages={[]}
+                    messages={chat.messages}
                     sendNewMessage={sendMessageHandle}
                     friendUsername={friendUsername}
                     onEmojiClick={onEmojiClick}

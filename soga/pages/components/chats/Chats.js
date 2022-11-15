@@ -138,7 +138,6 @@ const Chats = ({
                     closeMorePeopleHandler={closeMorePeopleHandler}
                     messageChangeHandler={messageChangeHandler}
                     sendMessage={sendMessage}
-                    // message={message}
                     clearFriendHandler={clearFriendHandler}
                     friendClicked={friendClicked}
                     clickFriendHandler={clickFriendHandler}

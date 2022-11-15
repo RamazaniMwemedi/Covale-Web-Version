@@ -29,8 +29,8 @@ export default function Chat({ message }) {
           onClick={(e) => {
             e.preventDefault();
             router.push(
-              `/chats/c/?id=${message.chatId}`,
-              `/chats/c/${message.chatId}`,
+              `/chats/c/?id=${message.id}`,
+              `/chats/c/${message.id}`,
               {
                 shallow: true,
               }
@@ -38,9 +38,9 @@ export default function Chat({ message }) {
           }}
           sx={{
             borderRadius: "0.5rem",
-            boxShadow: message.chatId === id ? 1 : "unset",
+            boxShadow: message.id === id ? 1 : "unset",
             backgroundColor:
-              message.chatId === id ? theme.colors.itemBackground : "unset",
+              message.id === id ? theme.colors.itemBackground : "unset",
             "&:hover": {
               // backgroundColor: ,
               // boxShadow: 1,

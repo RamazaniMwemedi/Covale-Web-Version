@@ -33,6 +33,7 @@ const Picker = dynamic(
 const ChatSectionLeft = ({
   id,
   user,
+  chat,
   messageChangeHandler,
   sendNewMessage,
   message,
@@ -53,7 +54,7 @@ const ChatSectionLeft = ({
       }}
     >
       <TopBar
-        friendUsername={friendUsername}
+        friendUsername={chat.friendUsername}
         showRightHandler={showRightHandler}
         showRight={showRight}
         id={id}
@@ -216,7 +217,7 @@ const Mid = ({ user, messages, unsentMessages }) => {
             <FriendMessage message={message} />
           );
         })}
-       
+
         <ListItem ref={toBottomWhenNewMessage} />
       </List>
     </Box>
