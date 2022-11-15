@@ -124,10 +124,9 @@ export default function Chat() {
       setBoolForSent(true);
       if (boolForSent) {
         socket.on("messege_sent", (data) => {
+          console.log("Data is :", data);
           setSentAudioPlay(true);
           setPlaying(true);
-          dispatch(addNewMessage(data));
-
           setBoolForSent(false);
         });
       }

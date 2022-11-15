@@ -211,7 +211,7 @@ const Mid = ({ user, messages, unsentMessages }) => {
         }}
       >
         {messages.map((message) => {
-          return message.sender === user.id ? (
+          return message.sender === user.user.id ? (
             <UserMessage message={message} />
           ) : (
             <FriendMessage message={message} />
