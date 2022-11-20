@@ -15,7 +15,9 @@ export default function Chat({ message }) {
   const router = useRouter();
   const id = router.query.id;
   const theme = useTheme();
-  const lastMessage = message.messages[message.messages.length - 1].message;
+  const lastMessage = message
+    ? message.messages[message.messages.length - 1].message
+    : null;
 
   return (
     <List
@@ -23,7 +25,7 @@ export default function Chat({ message }) {
         backgroundColor: theme.colors.background,
       }}
     >
-      {message && (
+      {message ? (
         <ListItem
           button
           onClick={(e) => {
@@ -89,7 +91,7 @@ export default function Chat({ message }) {
           <MoreVertIcon />{" "}
         </IconButton> */}
         </ListItem>
-      )}
+      ) : null}
     </List>
   );
 }

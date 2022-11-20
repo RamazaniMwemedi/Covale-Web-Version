@@ -38,51 +38,54 @@ const ChatSectionLeft = ({
   sendNewMessage,
   message,
   messages,
-  friendUsername,
   showRightHandler,
   showRight,
   onEmojiClick,
   unsentMessages,
 }) => {
   return (
-    <Box
-      sx={{
-        flex: "65%",
-        display: "flex",
-        justifyContent: "flex-end",
-        flexDirection: "column",
-      }}
-    >
-      <TopBar
-        friendUsername={chat.friendUsername}
-        showRightHandler={showRightHandler}
-        showRight={showRight}
-        id={id}
-      />
-      <Box
-        sx={{
-          flex: "55%",
-          display: "flex",
-          justifyContent: "flex-end",
-          flexDirection: "column",
-          paddingBottom: "2px",
-        }}
-      >
-        {messages && (
-          <Mid
-            user={user}
-            messages={messages}
-            unsentMessages={unsentMessages}
+    <>
+      {chat ? (
+        <Box
+          sx={{
+            flex: "65%",
+            display: "flex",
+            justifyContent: "flex-end",
+            flexDirection: "column",
+          }}
+        >
+          <TopBar
+            friendUsername={chat.friendUsername}
+            showRightHandler={showRightHandler}
+            showRight={showRight}
+            id={id}
           />
-        )}
-        <Bottom
-          messageChangeHandler={messageChangeHandler}
-          sendNewMessage={sendNewMessage}
-          message={message}
-          onEmojiClick={onEmojiClick}
-        />
-      </Box>
-    </Box>
+          <Box
+            sx={{
+              flex: "55%",
+              display: "flex",
+              justifyContent: "flex-end",
+              flexDirection: "column",
+              paddingBottom: "2px",
+            }}
+          >
+            {messages && (
+              <Mid
+                user={user}
+                messages={messages}
+                unsentMessages={unsentMessages}
+              />
+            )}
+            <Bottom
+              messageChangeHandler={messageChangeHandler}
+              sendNewMessage={sendNewMessage}
+              message={message}
+              onEmojiClick={onEmojiClick}
+            />
+          </Box>
+        </Box>
+      ) : null}
+    </>
   );
 };
 

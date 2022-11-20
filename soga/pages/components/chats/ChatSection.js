@@ -22,51 +22,55 @@ const ChatSection = ({
   };
   const theme = useTheme();
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flex: 1,
-        marginLeft: "-65px",
-        overflowY: "hidden",
-      }}
-    >
-      <Box
-        sx={{
-          flex: "65%",
-          display: "flex",
-          justifyContent: "flex-end",
-          flexDirection: "column",
-
-          borderBottom: `1px solid ${theme.colors.background1}`,
-        }}
-      >
-        {/* ChatSectionLeft */}
-        <ChatSectionLeft
-          id={chat.id}
-          user={user}
-          chat={chat}
-          messageChangeHandler={messageChangeHandler}
-          sendNewMessage={sendNewMessage}
-          message={message}
-          messages={messages}
-          friendUsername={friendUsername}
-          showRightHandler={showRightHandler}
-          showRight={showRight}
-          onEmojiClick={onEmojiClick}
-        />
-      </Box>
-      {/* ChatSectionRight */}
-      {showRight && (
+    <>
+      {chat ? (
         <Box
           sx={{
-            flex: "35%",
-            borderLeft: `2px solid ${theme.colors.background1}`,
+            display: "flex",
+            flex: 1,
+            marginLeft: "-65px",
+            overflowY: "hidden",
           }}
         >
-          <ChatSectionRight friendUsername={chat.friendUsername} />
+          <Box
+            sx={{
+              flex: "65%",
+              display: "flex",
+              justifyContent: "flex-end",
+              flexDirection: "column",
+
+              borderBottom: `1px solid ${theme.colors.background1}`,
+            }}
+          >
+            {/* ChatSectionLeft */}
+            <ChatSectionLeft
+              id={chat.id}
+              user={user}
+              chat={chat}
+              messageChangeHandler={messageChangeHandler}
+              sendNewMessage={sendNewMessage}
+              message={message}
+              messages={messages}
+              friendUsername={friendUsername}
+              showRightHandler={showRightHandler}
+              showRight={showRight}
+              onEmojiClick={onEmojiClick}
+            />
+          </Box>
+          {/* ChatSectionRight */}
+          {showRight && chat ? (
+            <Box
+              sx={{
+                flex: "35%",
+                borderLeft: `2px solid ${theme.colors.background1}`,
+              }}
+            >
+              <ChatSectionRight friendUsername={chat.friendUsername} />
+            </Box>
+          ) : null}
         </Box>
-      )}
-    </Box>
+      ) : null}
+    </>
   );
 };
 
