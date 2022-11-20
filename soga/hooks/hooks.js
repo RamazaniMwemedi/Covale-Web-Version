@@ -92,7 +92,6 @@ const useGetChats = (token) => {
     // Clear Chat Store
 
     if (token) {
-      console.log("Token :", token);
       getChats(token).then((res) => {
         dispatch(allChats(res));
       });

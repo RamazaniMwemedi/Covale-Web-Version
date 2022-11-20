@@ -17,7 +17,6 @@ const ProjectSection = () => {
   const subProjectId = router.query.subproject;
   const project = useProject(projectId);
   const tasks = useSubProjectsTasks(projectId, subProjectId);
-  console.log("Tasks :", tasks)
   const [tabValue, setTabValue] = useState("Tasks");
   const [taskViewValue, setTaskViewValue] = useState("kanban");
 

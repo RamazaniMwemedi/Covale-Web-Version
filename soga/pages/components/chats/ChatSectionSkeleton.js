@@ -40,15 +40,6 @@ const ChatSectionSkeleton = () => {
         <TopBar />
         <Left />
       </Box>
-      {/* ChatSectionRigth */}
-      <Box
-        sx={{
-          flex: "35%",
-          display: "flex",
-        }}
-      >
-        <Right />
-      </Box>
     </Box>
   );
 };

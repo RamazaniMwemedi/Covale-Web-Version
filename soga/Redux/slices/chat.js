@@ -16,20 +16,42 @@ const chatSlice = createSlice({
       }
       state.chats = chats;
     },
+    addNewMessageToChatId(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          chats: state.chats
+            .filter((chat) => chat.id === payload.chatId)[0]
+            .messages.push(payload.newMessage),
+        };
+      }
+    },
+    updateMessageId(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          chats: (state.chats
+            .filter((chat) => chat.id === payload.chatId)[0]
+            .messages.filter(
+              (message) => message.idFromClient == payload.idFromClient
+            )[0].id = payload.id),
+        };
+      }
+    },
     chatsReset() {
       state.chat = initialState;
     },
   },
 });
-const { chatAdd, chatReset, addNewMessage, addNewMessageFromSever, allChats } =
+const { chatAdd, chatReset, addNewMessageToChatId, updateMessageId, allChats } =
   chatSlice.actions;
 const reducer = chatSlice.reducer;
 module.exports = {
   reducer,
   chatAdd,
   chatReset,
-  addNewMessage,
-  addNewMessageFromSever,
+  addNewMessageToChatId,
+  updateMessageId,
   allChats,
 };
 

@@ -4,7 +4,6 @@ const { useDispatch, useSelector } = require("react-redux");
 
 const useChatId = (id) => {
   const allChats = useSelector((state) => state.chats);
-  console.log("Id is :", id);
   const [chat, setChat] = useState(null);
   useEffect(() => {
     if (allChats.chats) {

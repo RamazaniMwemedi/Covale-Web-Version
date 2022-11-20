@@ -225,20 +225,10 @@ const Mid = ({ user, messages, unsentMessages }) => {
 };
 
 const UserMessage = ({ message }) => {
-  const purple1 = purple[600];
-  const purple2 = purple[300];
+  const purple1 = purple[700];
+  const purple2 = purple[400];
 
   let idProvided = message.id ? true : false;
-
-  useEffect(() => {
-    if (message.id) {
-      idProvided = true;
-    }
-
-    return () => {
-      idProvided = false;
-    };
-  }, [message.id]);
   return (
     <Box
       sx={{
@@ -272,6 +262,7 @@ const UserMessage = ({ message }) => {
                 marginRight: "6px",
               }
             : {
+                fontStyle: "italic",
                 backgroundColor: purple2,
                 // centered
                 display: "flex",

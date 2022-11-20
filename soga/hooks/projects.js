@@ -57,7 +57,6 @@ const useSubProjectsTasks = (projectId, subprojectId) => {
     }
   }, [projectId, subprojectId]);
 
-  console.log("The real Task", subProjectTasks);
   return subProjectTasks;
 };
 

@@ -5,7 +5,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Provider } from "react-redux";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
 
 import store from "../Redux/store";
 
@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }) {
   const darkTheme = {
     // dark theme
     typography: {
-      fontFamily: "san-serif",
+      fontFamily: "sans-serif",
     },
     palette: {
       mode: "dark",
@@ -95,7 +95,6 @@ function MyApp({ Component, pageProps }) {
       return createTheme(lightTheme);
     }
   }, [preferedTheme]);
-  
 
   return (
     <Provider store={store}>

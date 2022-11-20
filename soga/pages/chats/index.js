@@ -23,7 +23,10 @@ import {
 import { useChatId } from "../../hooks/chats";
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
-import { addNewMessage } from "../../Redux/slices/chat";
+import {
+  addNewMessageToChatId,
+  updateMessageId,
+} from "../../Redux/slices/chat";
 
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
@@ -37,6 +40,7 @@ export default function Chat() {
   const userStore = useSelector((state) => state.user);
   const router = useRouter();
   const id = router.query.id;
+  console.log("ID :", router.query.id);
   const token = userStore.user ? userStore.user.token : null;
   const chat = useChatId(id);
   useGetChats(token);
@@ -45,7 +49,7 @@ export default function Chat() {
   const [message, setMessage] = useState("");
 
   // Bools
-  const [boolForSent, setBoolForSent] = useState(false);
+  const [boolForSent, setBoolForSent] = useState(true);
   const [boolForReceive, setBoolForReceive] = useState(false);
   //Audio
   const [playing, setPlaying] = useState(false);
@@ -118,16 +122,27 @@ export default function Chat() {
         message: message,
         idFromClient: uuidv4(),
       };
+      dispatch(
+        addNewMessageToChatId({
+          chatId: id,
+          newMessage,
+        })
+      );
 
       socket.emit("send_message", { newMessage, id, userId });
       setMessage("");
       setBoolForSent(true);
       if (boolForSent) {
         socket.on("messege_sent", (data) => {
+          dispatch(
+            updateMessageId({
+              chatId: id,
+              id: data.id,
+              idFromClient: data.idFromClient,
+            })
+          );
           setSentAudioPlay(true);
           setPlaying(true);
-          dispatch(addNewMessage(data));
-
           setBoolForSent(false);
         });
       }

@@ -13,9 +13,9 @@ import { useTheme } from "@mui/material/styles";
 
 export default function Chat({ message }) {
   const router = useRouter();
-  const id = router.query.t;
+  const id = router.query.id;
   const theme = useTheme();
-  const lastMessage=message.messages[message.messages.length - 1].message
+  const lastMessage = message.messages[message.messages.length - 1].message;
 
   return (
     <List
@@ -29,7 +29,7 @@ export default function Chat({ message }) {
           onClick={(e) => {
             e.preventDefault();
             router.push(
-              `/chats/c/?id=${message.id}`,
+              `/chats/?c=c&id=${message.id}`,
               `/chats/c/${message.id}`,
               {
                 shallow: true,
@@ -40,17 +40,10 @@ export default function Chat({ message }) {
             borderRadius: "0.5rem",
             boxShadow: message.id === id ? 1 : "unset",
             backgroundColor:
-              message.id === id ? theme.colors.itemBackground : "unset",
+              message.id == id ? theme.colors.background1 : "unset",
             "&:hover": {
-              // backgroundColor: ,
-              // boxShadow: 1,
+              boxShadow: 3,
             },
-            // border style
-            borderStyle: " solid ",
-            // border color
-            borderColor: "whitesmoke",
-            // border width
-            borderWidth: "1px",
             marginTop: "-8px",
           }}
         >
