@@ -32,9 +32,9 @@ const chatSlice = createSlice({
           ...state,
           chats: (state.chats
             .filter((chat) => chat.id === payload.chatId)[0]
-            .messages.filter(
-              (message) => message.idFromClient == payload.idFromClient
-            )[0].id = payload.id),
+            .messages.filter((message) => {
+              return message.idFromClient == payload.idFromClient;
+            })[0].id = payload.id),
         };
       }
     },
