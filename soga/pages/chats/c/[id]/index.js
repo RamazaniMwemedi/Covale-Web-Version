@@ -19,6 +19,7 @@ import {
   useGetChatById,
   useGetChats,
   useGetTeamById,
+  useUserId,
 } from "../../../../hooks/hooks";
 import { useChatId } from "../../../../hooks/chats";
 import LoadingLogo from "../../../components/others/LoadingLogo";
@@ -26,12 +27,13 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   addNewMessageToChatId,
   updateMessageId,
+  addNewMessageToChatIdFromSender,
 } from "../../../../Redux/slices/chat";
 
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
-const socket = io.connect("http://localhost:5005/chat");
+const socket = io.connect("https://rtcommunication.herokuapp.com/chat");
 
 export default function Chat() {
   const userLoading = useCheckLogedinUser();
@@ -39,6 +41,7 @@ export default function Chat() {
   const theme = useTheme();
   const userStore = useSelector((state) => state.user);
   const user = userStore ? userStore.user : null;
+  const currentUserId = useUserId();
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
@@ -92,18 +95,19 @@ export default function Chat() {
     setBoolForReceive(true);
     socket.on("receive_message", (data) => {
       if (boolForReceive) {
-        console.log("New message new is: ", data);
-        console.log("User :", user);
-        if (data && user) {
-          if (data.sender != user.id) {
-            setReceiveAudioPlay(true);
-            setBoolForReceive(false);
-            dispatch(
-              addNewMessageToChatId({
-                chatId: id,
-                data,
-              })
-            );
+        if (data && currentUserId) {
+          if (data.sender != currentUserId) {
+            if (boolForReceive) {
+              setReceiveAudioPlay(true);
+              setBoolForReceive(false);
+              dispatch(
+                addNewMessageToChatIdFromSender({
+                  chatId: id,
+                  data,
+                  boolForReceive,
+                })
+              );
+            }
           }
           setReceiveAudioPlay(false);
         }

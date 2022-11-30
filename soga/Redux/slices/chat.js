@@ -38,13 +38,30 @@ const chatSlice = createSlice({
         };
       }
     },
+    addNewMessageToChatIdFromSender(state, { payload }) {
+      if (payload && payload.boolForReceive) {
+        console.log(payload.boolForReceive);;
+        state = {
+          ...state,
+          chats: state.chats
+            .filter((chat) => chat.id === payload.chatId)[0]
+            .messages.push(payload.data),
+        };
+      }
+    },
     chatsReset() {
       state.chat = initialState;
     },
   },
 });
-const { chatAdd, chatReset, addNewMessageToChatId, updateMessageId, allChats } =
-  chatSlice.actions;
+const {
+  chatAdd,
+  chatReset,
+  addNewMessageToChatId,
+  updateMessageId,
+  addNewMessageToChatIdFromSender,
+  allChats,
+} = chatSlice.actions;
 const reducer = chatSlice.reducer;
 module.exports = {
   reducer,
@@ -53,8 +70,5 @@ module.exports = {
   addNewMessageToChatId,
   updateMessageId,
   allChats,
+  addNewMessageToChatIdFromSender,
 };
-
-// chatAdd(state, { payload }) {
-//   state.chat = payload;
-// },

@@ -170,6 +170,19 @@ const useWindow = () => {
   return myWindow;
 };
 
+const useUserId = () => {
+  let logedInUser;
+  const [id, setId] = useState("");
+  useEffect(() => {
+    const signedInUser = localStorage.getItem("logedinUser");
+    if (signedInUser) {
+      logedInUser = JSON.parse(signedInUser);
+      setId(logedInUser.id);
+    }
+  }, [logedInUser]);
+  return id;
+};
+
 module.exports = {
   useCheckLogedinUser,
   useCheckLogedinUserToken,
@@ -178,4 +191,5 @@ module.exports = {
   useGetTheme,
   useGetFriends,
   useWindow,
+  useUserId,
 };
