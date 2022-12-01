@@ -22,6 +22,8 @@ import {
   useUserId,
 } from "../../hooks/hooks";
 import { useChatId } from "../../hooks/chats";
+import { useGetTeams } from "../../hooks/teams";
+
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -47,6 +49,7 @@ export default function Chat() {
   const token = userStore.user ? userStore.user.token : null;
   const chat = useChatId(id);
   useGetChats(token);
+  useGetTeams(token);
 
   const [message, setMessage] = useState("");
 

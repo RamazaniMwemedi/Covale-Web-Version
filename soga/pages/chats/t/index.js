@@ -43,7 +43,7 @@ export default function TeamPage() {
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
   const dispatch = useDispatch();
-  const team = useSelector((state) => state.team.team);
+  const team = useSelector((state) => state.teams.teams);
   let messages;
   // const messages = team ? team.messages : [];
 
