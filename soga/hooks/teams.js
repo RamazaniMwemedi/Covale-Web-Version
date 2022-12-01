@@ -21,6 +21,7 @@ const useTeamId = (id) => {
 };
 
 const useGetTeams = (token) => {
+  console.log("USEGETTEAMS");
   const router = useRouter();
 
   const dispatch = useDispatch();

@@ -29,6 +29,8 @@ import {
   updateMessageId,
   addNewMessageToChatIdFromSender,
 } from "../../../../Redux/slices/chat";
+import { removeUser } from "../../../../Redux/slices/user";
+import { useGetTeams } from "../../../../hooks/teams";
 
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
@@ -47,7 +49,7 @@ export default function Chat() {
   const token = userStore.user ? userStore.user.token : null;
   const chat = useChatId(id);
   useGetChats(token);
-
+  useGetTeams(token);
   const [message, setMessage] = useState("");
 
   // Bools
@@ -123,7 +125,7 @@ export default function Chat() {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    userStore = null;
+    dispatch(removeUser);
     router.push("/login");
   };
 
@@ -211,7 +213,7 @@ export default function Chat() {
           ) : (
             <LoadingLogo />
           )}
-        </Box>  
+        </Box>
       )}
     </>
   );

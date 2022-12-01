@@ -39,6 +39,12 @@ export default function Chat({ message }) {
             );
           }}
           sx={{
+            // border style
+            borderStyle: " solid ",
+            // border color
+            borderColor: theme.colors.background1,
+            // border width
+            borderWidth: "1px",
             borderRadius: "0.5rem",
             boxShadow: message.id === id ? 1 : "unset",
             backgroundColor:

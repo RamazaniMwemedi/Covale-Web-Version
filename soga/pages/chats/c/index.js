@@ -29,6 +29,7 @@ import {
   updateMessageId,
   addNewMessageToChatIdFromSender,
 } from "../../../Redux/slices/chat";
+import { useGetTeams } from "../../../hooks/teams";
 
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
@@ -47,6 +48,7 @@ export default function Chat() {
   const token = userStore.user ? userStore.user.token : null;
   const chat = useChatId(id);
   useGetChats(token);
+  useGetTeams(token);
 
   const [message, setMessage] = useState("");
 

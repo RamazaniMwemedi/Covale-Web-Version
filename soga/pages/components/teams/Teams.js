@@ -25,9 +25,17 @@ import AddMoreFriends from "../chats/AddMoreFriends";
 import Team from "./Team";
 import FloatingATeamB from "./FloatingATeamB";
 import CreateTeam from "./CreateTeam";
+import { useSelector } from "react-redux";
 
-const Teams = ({ teams, openCreateTeam, toggleShowTeam, teamLoading }) => {
+const Teams = ({ openCreateTeam, toggleShowTeam }) => {
   const theme = useTheme();
+  let teamLoading = true;
+  const teams = useSelector((state) => {
+    if (state.teams.teams) {
+      teamLoading = false;
+    }
+    return state.teams.teams;
+  });
   return (
     <>
       <Box

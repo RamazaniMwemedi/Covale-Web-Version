@@ -34,7 +34,7 @@ export default function Team({ team }) {
             borderRadius: "0.5rem",
             boxShadow: team.id === id ? 1 : "unset",
             backgroundColor:
-              team.id === id ? theme.colors.itemBackground : "lightgray",
+              team.id === id ? theme.colors.background1 : "unset",
             "&:hover": {
               // backgroundColor: ,
               // boxShadow: 1,
@@ -42,7 +42,7 @@ export default function Team({ team }) {
             // border style
             borderStyle: " solid ",
             // border color
-            borderColor: "whitesmoke",
+            borderColor: theme.colors.background1,
             // border width
             borderWidth: "1px",
             marginTop: "-8px",
