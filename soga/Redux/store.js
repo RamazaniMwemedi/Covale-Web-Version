@@ -7,7 +7,7 @@ const projectsReducer = require("./slices/projects");
 const store = configureStore({
   reducer: {
     chats: chatsReducer.reducer,
-    team: teamReducer.reducer,
+    teams: teamReducer.reducer,
     user: userReducer.reducer,
     projects: projectsReducer.reducer,
   },

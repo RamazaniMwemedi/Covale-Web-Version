@@ -211,7 +211,7 @@ export default function Chat() {
           ) : (
             <LoadingLogo />
           )}
-        </Box>
+        </Box>  
       )}
     </>
   );
