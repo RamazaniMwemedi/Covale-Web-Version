@@ -1,75 +1,77 @@
 import { useRouter } from "next/router";
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useEffect, useState, useReducer } from "react";
+import { useEffect, useState, useRef, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
-// Logo
-import Logo from "../../../assets/Logo";
-
 // My components
 import DrawerComponent from "../../components/others/DrawerComponent";
-import TeamLeft from "../../components/teams/TeamLeft";
-import TeamSection from "../../components/teams/TeamSection";
+import ChatLeft from "../../components/chats/ChatLeft";
+import ChatSection from "../../components/chats/ChatSection";
 
-import { getChatById } from "../../../services/chats";
+import ChatSectionSkeleton from "../../components/chats/ChatSectionSkeleton";
 
 // Hooks
 import {
   useCheckLogedinUser,
   useGetChatById,
-  useAudio,
+  useGetChats,
   useGetTeamById,
+  useUserId,
 } from "../../../hooks/hooks";
+import { useChatId } from "../../../hooks/chats";
 import LoadingLogo from "../../components/others/LoadingLogo";
-
-// Redux Hooks
 import { useSelector, useDispatch } from "react-redux";
-import { addNewMessageToTeam } from "../../../Redux/slices/team";
-import { useMemo } from "react";
-
+import {
+  addNewMessageToChatId,
+  updateMessageId,
+  addNewMessageToChatIdFromSender,
+} from "../../../Redux/slices/chat";
+import { removeUser } from "../../../Redux/slices/user";
+import { useGetTeams, useTeamId } from "../../../hooks/teams";
+import TeamSectionSkeleton from "../../components/teams/TeamSectionSkeleton";
+import TeamSection from "../../components/teams/TeamSection";
+import TeamLeft from "../../components/teams/TeamLeft";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
-const socket = io.connect(`https://rtcommunication.herokuapp.com/`);
+const socket = io.connect("https://rtcommunication.herokuapp.com/chat");
 
-export default function TeamPage() {
+export default function Chat() {
+  // Global States
+  const dispatch = useDispatch();
   const theme = useTheme();
-  const userLoading = useCheckLogedinUser();
   const userStore = useSelector((state) => state.user);
+  const userLoading = useCheckLogedinUser();
+  const user = userStore ? userStore.user : null;
+  const currentUserId = useUserId();
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
-  const dispatch = useDispatch();
-  const team = useSelector((state) => state.teams.teams);
-  let messages;
-  // const messages = team ? team.messages : [];
+  useGetChats(token);
+  useGetTeams(token);
 
-  // Saving Team into a redux state
-
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  // Bools
-  const [boolForSent, setBoolForSent] = useState(false);
+  // Chats States
+  const [chatMessage, setMessage] = useState("");
+  //      Bools
+  const [boolForSent, setBoolForSent] = useState(true);
   const [boolForReceive, setBoolForReceive] = useState(true);
-  //Audio
+  //      Audio
   const [playing, setPlaying] = useState(false);
   const [sentAudioPlay, setSentAudioPlay] = useState(false);
   const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
 
-  // Getting Team by it's ID
-  useGetTeamById(token, id);
+  const [audioUrl, setAudioUrl] = useState(null);
+  // Teams States
 
   useEffect(() => {
-    messages = team ? team.messages : [];
-
-    return () => {
-      messages = [];
-    };
-  }, [team && team.messages]);
+    console.log("Joining");
+    if (id) {
+      socket.emit("join_room", id);
+    }
+  }, [id]);
 
   useEffect(() => {
     const audio = new Audio(
@@ -97,18 +99,29 @@ export default function TeamPage() {
 
   useEffect(() => {
     setBoolForReceive(true);
-    socket.on("receive_message_to_team", (data) => {
+    socket.on("receive_message", (data) => {
       if (boolForReceive) {
-        if (data) {
-          if (data.sender != userStore.id) {
-            setReceiveAudioPlay(true);
-            setBoolForReceive(false);
+        if (data && currentUserId) {
+          if (data.sender != currentUserId) {
+            if (boolForReceive) {
+              setReceiveAudioPlay(true);
+              setBoolForReceive(false);
+              dispatch(
+                addNewMessageToChatIdFromSender({
+                  chatId: id,
+                  data,
+                  boolForReceive,
+                })
+              );
+            }
           }
           setReceiveAudioPlay(false);
         }
       }
     });
-  }, [socket]);
+  }, [socket, user]);
+
+  const friendUsername = "Friend Name";
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -116,34 +129,51 @@ export default function TeamPage() {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    userStore = null;
+    dispatch(removeUser);
     router.push("/login");
   };
 
-  const sendMessageHandle = () => {
-    const userId = userStore.user ? userStore.user.id : null;
-
-    if (message.length > 0) {
-      const newMessage = {
-        message: message,
-        idFromClient: uuidv4(),
-      };
-      socket.emit("send_message_to_team", { newMessage, id, userId });
-      setMessage("");
-      setBoolForSent(true);
-      if (boolForSent) {
-        socket.on("messege_sent_to_team", (data) => {
-          setSentAudioPlay(true);
-          setPlaying(true);
-          dispatch(addNewMessageToTeam(data));
-          setBoolForSent(false);
-        });
-      }
-    }
+  const onEmojiClick = (event, emojiObject) => {
+    setMessage(chatMessage + emojiObject.emoji);
   };
 
-  const onEmojiClick = (event, emojiObject) => {
-    setMessage(message + emojiObject.emoji);
+  const sendMessageHandle = () => {
+    const userId = userStore ? userStore.user.id : null;
+    try {
+      if (chatMessage.length > 0) {
+        const newMessage = {
+          sender: userId,
+          message: chatMessage,
+          idFromClient: uuidv4(),
+        };
+        dispatch(
+          addNewMessageToChatId({
+            chatId: id,
+            newMessage,
+          })
+        );
+
+        socket.emit("send_message", { newMessage, id, userId });
+        setMessage("");
+        setBoolForSent(true);
+        if (boolForSent) {
+          socket.on("messege_sent", (data) => {
+            dispatch(
+              updateMessageId({
+                chatId: id,
+                id: data.id,
+                idFromClient: data.idFromClient,
+              })
+            );
+            setSentAudioPlay(true);
+            setPlaying(true);
+            setBoolForSent(false);
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error is :", error);
+    }
   };
 
   return (
@@ -159,31 +189,27 @@ export default function TeamPage() {
           }}
         >
           <CssBaseline />
-          {userStore.user ? (
+          {userStore ? (
             <>
               <DrawerComponent
                 signoutHandler={signoutHandler}
                 user={userStore.user}
               />
-              <TeamLeft user={userStore.user} />
+              <TeamLeft user={userStore.user} chat={{}} />
+              {/* If there is an Id */}
               {id ? (
-                <TeamSection
-                  user={userStore.user}
-                  messageChangeHandler={messageChangeHandler}
-                  sendNewMessage={sendMessageHandle}
-                  message={message}
-                  messages={messages}
-                  onEmojiClick={onEmojiClick}
-                />
+                <>
+                  <SectionToDisplay
+                    messageChangeHandler={messageChangeHandler}
+                    message={chatMessage}
+                    sendNewMessage={sendMessageHandle}
+                    friendUsername={friendUsername}
+                    onEmojiClick={onEmojiClick}
+                  />
+                </>
               ) : (
-                // loading ? (
-                //   //Team Sketelton
-                //   <Typography>Team Sketelton</Typography>
-                // ) : (
-                //   // Team Section
-                //   <Typography>Team Section</Typography>
-                // )
-                <ClickTeam />
+                // There is no ID
+                <ClickaChat />
               )}
             </>
           ) : (
@@ -195,7 +221,7 @@ export default function TeamPage() {
   );
 }
 
-const ClickTeam = () => {
+const ClickaChat = () => {
   return (
     <Box
       sx={{
@@ -205,7 +231,42 @@ const ClickTeam = () => {
         margin: "200px",
       }}
     >
-      <Typography variant="h1">Click Team</Typography>
+      <Typography variant="h1">Click a chat</Typography>
     </Box>
   );
+};
+
+const SectionToDisplay = ({
+  messageChangeHandler,
+  message,
+  sendMessageHandle,
+  friendUsername,
+  onEmojiClick,
+}) => {
+  const router = useRouter();
+  const id = router.query.id;
+  const chat = useChatId(id);
+  const team = useTeamId(id);
+  console.log("Team :", team);
+  if (router.asPath.includes("/chats/c")) {
+    return (
+      <>
+        {chat ? (
+          <ChatSection
+            chat={chat}
+            messageChangeHandler={messageChangeHandler}
+            message={message}
+            messages={chat.messages}
+            sendNewMessage={sendMessageHandle}
+            friendUsername={friendUsername}
+            onEmojiClick={onEmojiClick}
+          />
+        ) : (
+          <ChatSectionSkeleton />
+        )}
+      </>
+    );
+  } else if (router.asPath.includes("/chats/t")) {
+    return <>{team ? <TeamSection team={team} /> : <TeamSectionSkeleton />}</>;
+  }
 };
