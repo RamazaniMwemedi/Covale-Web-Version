@@ -30,36 +30,40 @@ import {
   addNewMessageToChatIdFromSender,
 } from "../../../../Redux/slices/chat";
 import { removeUser } from "../../../../Redux/slices/user";
-import { useGetTeams } from "../../../../hooks/teams";
+import { useGetTeams, useTeamId } from "../../../../hooks/teams";
+import TeamSectionSkeleton from "../../../components/teams/TeamSectionSkeleton";
+import TeamSection from "../../../components/teams/TeamSection";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
 const socket = io.connect("https://rtcommunication.herokuapp.com/chat");
 
 export default function Chat() {
-  const userLoading = useCheckLogedinUser();
+  // Global States
   const dispatch = useDispatch();
   const theme = useTheme();
   const userStore = useSelector((state) => state.user);
+  const userLoading = useCheckLogedinUser();
   const user = userStore ? userStore.user : null;
   const currentUserId = useUserId();
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
-  const chat = useChatId(id);
   useGetChats(token);
   useGetTeams(token);
-  const [message, setMessage] = useState("");
 
-  // Bools
+  // Chats States
+  const [chatMessage, setMessage] = useState("");
+  //      Bools
   const [boolForSent, setBoolForSent] = useState(true);
   const [boolForReceive, setBoolForReceive] = useState(true);
-  //Audio
+  //      Audio
   const [playing, setPlaying] = useState(false);
   const [sentAudioPlay, setSentAudioPlay] = useState(false);
   const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState(null);
+  // Teams States
 
   useEffect(() => {
     console.log("Joining");
@@ -129,16 +133,16 @@ export default function Chat() {
   };
 
   const onEmojiClick = (event, emojiObject) => {
-    setMessage(message + emojiObject.emoji);
+    setMessage(chatMessage + emojiObject.emoji);
   };
 
   const sendMessageHandle = () => {
     const userId = userStore ? userStore.user.id : null;
     try {
-      if (message.length > 0) {
+      if (chatMessage.length > 0) {
         const newMessage = {
           sender: userId,
-          message: message,
+          message: chatMessage,
           idFromClient: uuidv4(),
         };
         dispatch(
@@ -195,10 +199,8 @@ export default function Chat() {
               {id ? (
                 <>
                   <SectionToDisplay
-                    chat={chat}
                     messageChangeHandler={messageChangeHandler}
-                    message={message}
-                    messages={chat}
+                    message={chatMessage}
                     sendNewMessage={sendMessageHandle}
                     friendUsername={friendUsername}
                     onEmojiClick={onEmojiClick}
@@ -208,23 +210,6 @@ export default function Chat() {
                 // There is no ID
                 <ClickaChat />
               )}
-
-              {/* {id ? (
-                // If therte is a chat, display the section to display, otherwise, display
-                <SectionToDisplay
-                  chat={chat}
-                  messageChangeHandler={messageChangeHandler}
-                  message={message}
-                  messages={chat.messages}
-                  sendNewMessage={sendMessageHandle}
-                  friendUsername={friendUsername}
-                  onEmojiClick={onEmojiClick}
-                />
-              ) : !chat ? (
-                <ChatSectionSkeleton />
-              ) : (
-                <ClickaChat />
-              )} */}
             </>
           ) : (
             <LoadingLogo />
@@ -251,7 +236,6 @@ const ClickaChat = () => {
 };
 
 const SectionToDisplay = ({
-  chat,
   messageChangeHandler,
   message,
   sendMessageHandle,
@@ -259,11 +243,10 @@ const SectionToDisplay = ({
   onEmojiClick,
 }) => {
   const router = useRouter();
-  const queries = router.query;
-  console.log("The router.route are: ", router.route);
-  for (const prop in queries) {
-    console.log("prop : ", prop);
-  }
+  const id = router.query.id;
+  const chat = useChatId(id);
+  const team = useTeamId(id);
+  console.log("Team :", team);
   if (router.asPath.includes("/chats/c")) {
     return (
       <>
@@ -283,10 +266,6 @@ const SectionToDisplay = ({
       </>
     );
   } else if (router.asPath.includes("/chats/t")) {
-    return (
-      <>
-        <Typography variant="h1">Teams Sections</Typography>
-      </>
-    );
+    return <>{team ? <TeamSection team={team} /> : <TeamSectionSkeleton />}</>;
   }
 };

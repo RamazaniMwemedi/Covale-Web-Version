@@ -29,38 +29,41 @@ import {
   updateMessageId,
   addNewMessageToChatIdFromSender,
 } from "../../../Redux/slices/chat";
-import { useGetTeams } from "../../../hooks/teams";
-
+import { removeUser } from "../../../Redux/slices/user";
+import { useGetTeams, useTeamId } from "../../../hooks/teams";
+import TeamSectionSkeleton from "../../components/teams/TeamSectionSkeleton";
+import TeamSection from "../../components/teams/TeamSection";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
 const socket = io.connect("https://rtcommunication.herokuapp.com/chat");
 
 export default function Chat() {
-  const userLoading = useCheckLogedinUser();
+  // Global States
   const dispatch = useDispatch();
   const theme = useTheme();
   const userStore = useSelector((state) => state.user);
+  const userLoading = useCheckLogedinUser();
   const user = userStore ? userStore.user : null;
   const currentUserId = useUserId();
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
-  const chat = useChatId(id);
   useGetChats(token);
   useGetTeams(token);
 
-  const [message, setMessage] = useState("");
-
-  // Bools
+  // Chats States
+  const [chatMessage, setMessage] = useState("");
+  //      Bools
   const [boolForSent, setBoolForSent] = useState(true);
   const [boolForReceive, setBoolForReceive] = useState(true);
-  //Audio
+  //      Audio
   const [playing, setPlaying] = useState(false);
   const [sentAudioPlay, setSentAudioPlay] = useState(false);
   const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState(null);
+  // Teams States
 
   useEffect(() => {
     console.log("Joining");
@@ -125,21 +128,21 @@ export default function Chat() {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    userStore = null;
+    dispatch(removeUser);
     router.push("/login");
   };
 
   const onEmojiClick = (event, emojiObject) => {
-    setMessage(message + emojiObject.emoji);
+    setMessage(chatMessage + emojiObject.emoji);
   };
 
   const sendMessageHandle = () => {
     const userId = userStore ? userStore.user.id : null;
     try {
-      if (message.length > 0) {
+      if (chatMessage.length > 0) {
         const newMessage = {
           sender: userId,
-          message: message,
+          message: chatMessage,
           idFromClient: uuidv4(),
         };
         dispatch(
@@ -192,21 +195,19 @@ export default function Chat() {
                 user={userStore.user}
               />
               <ChatLeft user={userStore.user} chat={{}} />
+              {/* If there is an Id */}
               {id ? (
-                !chat ? (
-                  <ChatSectionSkeleton />
-                ) : (
-                  <ChatSection
-                    chat={chat}
+                <>
+                  <SectionToDisplay
                     messageChangeHandler={messageChangeHandler}
-                    message={message}
-                    messages={chat.messages}
+                    message={chatMessage}
                     sendNewMessage={sendMessageHandle}
                     friendUsername={friendUsername}
                     onEmojiClick={onEmojiClick}
                   />
-                )
+                </>
               ) : (
+                // There is no ID
                 <ClickaChat />
               )}
             </>
@@ -232,4 +233,39 @@ const ClickaChat = () => {
       <Typography variant="h1">Click a chat</Typography>
     </Box>
   );
+};
+
+const SectionToDisplay = ({
+  messageChangeHandler,
+  message,
+  sendMessageHandle,
+  friendUsername,
+  onEmojiClick,
+}) => {
+  const router = useRouter();
+  const id = router.query.id;
+  const chat = useChatId(id);
+  const team = useTeamId(id);
+  console.log("Team :", team);
+  if (router.asPath.includes("/chats/c")) {
+    return (
+      <>
+        {chat ? (
+          <ChatSection
+            chat={chat}
+            messageChangeHandler={messageChangeHandler}
+            message={message}
+            messages={chat.messages}
+            sendNewMessage={sendMessageHandle}
+            friendUsername={friendUsername}
+            onEmojiClick={onEmojiClick}
+          />
+        ) : (
+          <ChatSectionSkeleton />
+        )}
+      </>
+    );
+  } else if (router.asPath.includes("/chats/t")) {
+    return <>{team ? <TeamSection team={team} /> : <TeamSectionSkeleton />}</>;
+  }
 };
