@@ -31,7 +31,6 @@ import {
 } from "../../../../Redux/slices/chat";
 import { removeUser } from "../../../../Redux/slices/user";
 import { useGetTeams } from "../../../../hooks/teams";
-
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
@@ -192,23 +191,40 @@ export default function Chat() {
                 user={userStore.user}
               />
               <ChatLeft user={userStore.user} chat={{}} />
+              {/* If there is an Id */}
               {id ? (
-                !chat ? (
-                  <ChatSectionSkeleton />
-                ) : (
-                  <ChatSection
+                <>
+                  <SectionToDisplay
                     chat={chat}
                     messageChangeHandler={messageChangeHandler}
                     message={message}
-                    messages={chat.messages}
+                    messages={chat}
                     sendNewMessage={sendMessageHandle}
                     friendUsername={friendUsername}
                     onEmojiClick={onEmojiClick}
                   />
-                )
+                </>
               ) : (
+                // There is no ID
                 <ClickaChat />
               )}
+
+              {/* {id ? (
+                // If therte is a chat, display the section to display, otherwise, display
+                <SectionToDisplay
+                  chat={chat}
+                  messageChangeHandler={messageChangeHandler}
+                  message={message}
+                  messages={chat.messages}
+                  sendNewMessage={sendMessageHandle}
+                  friendUsername={friendUsername}
+                  onEmojiClick={onEmojiClick}
+                />
+              ) : !chat ? (
+                <ChatSectionSkeleton />
+              ) : (
+                <ClickaChat />
+              )} */}
             </>
           ) : (
             <LoadingLogo />
@@ -232,4 +248,45 @@ const ClickaChat = () => {
       <Typography variant="h1">Click a chat</Typography>
     </Box>
   );
+};
+
+const SectionToDisplay = ({
+  chat,
+  messageChangeHandler,
+  message,
+  sendMessageHandle,
+  friendUsername,
+  onEmojiClick,
+}) => {
+  const router = useRouter();
+  const queries = router.query;
+  console.log("The router.route are: ", router.route);
+  for (const prop in queries) {
+    console.log("prop : ", prop);
+  }
+  if (router.asPath.includes("/chats/c")) {
+    return (
+      <>
+        {chat ? (
+          <ChatSection
+            chat={chat}
+            messageChangeHandler={messageChangeHandler}
+            message={message}
+            messages={chat.messages}
+            sendNewMessage={sendMessageHandle}
+            friendUsername={friendUsername}
+            onEmojiClick={onEmojiClick}
+          />
+        ) : (
+          <ChatSectionSkeleton />
+        )}
+      </>
+    );
+  } else if (router.asPath.includes("/chats/t")) {
+    return (
+      <>
+        <Typography variant="h1">Teams Sections</Typography>
+      </>
+    );
+  }
 };

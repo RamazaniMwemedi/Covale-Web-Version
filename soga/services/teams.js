@@ -1,8 +1,8 @@
 import axios from "axios";
-const baseUrl = "https://covale.herokuapp.com";
-const baseUrlDev = "http://localhost:5005";
+const { SERVER_ADDRESS } = require("../config/index");
+
 const getTeams = async (token) => {
-  const response = await axios.get(`${baseUrl}/api/team`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/team`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -11,7 +11,7 @@ const getTeams = async (token) => {
 };
 
 const getTeamById = async (token, id) => {
-  const response = await axios.get(`${baseUrl}/api/team/${id}`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/team/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -28,7 +28,7 @@ const createNewTeam = async (
 ) => {
   if (token) {
     const response = await axios.post(
-      `${baseUrl}/api/team`,
+      `${SERVER_ADDRESS}/api/team`,
       { teamName, isPrivate, teamMission, teamVission },
       {
         headers: {
@@ -43,7 +43,7 @@ const inviteFriends = async (token, teamId, friends) => {
   if (token) {
     if (friends.length > 0) {
       const response = await axios.post(
-        `${baseUrl}/api/team/invite`,
+        `${SERVER_ADDRESS}/api/team/invite`,
         { teamId, friends },
         {
           headers: {

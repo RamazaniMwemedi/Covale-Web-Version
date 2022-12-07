@@ -15,16 +15,11 @@ const TeamSection = ({
   onEmojiClick,
   messageChangeHandler,
   user,
+  team
 }) => {
 
   const [option, setOption] = useState("");
-  const team = useSelector((state) => {
-    if (state.team) {
-      return state.team.team;
-    } else {
-      return null;
-    }
-  });
+ 
 
   const [showRight, setShowRight] = React.useState(false);
 
@@ -94,7 +89,11 @@ const TeamSection = ({
                 borderLeft: `2px solid ${theme.colors.background1}`,
               }}
             >
-              <TeamSectionRight option={option} showRight={showRight} />
+              <TeamSectionRight
+                option={option}
+                team={team}
+                showRight={showRight}
+              />
             </Box>
           )}
         </Box>

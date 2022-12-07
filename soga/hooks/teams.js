@@ -7,12 +7,12 @@ const { getTeams } = require("../services/teams");
 const { allTeams } = require("../Redux/slices/team");
 
 const useTeamId = (id) => {
-  const allTeams = useSelector((state) => state.chats);
+  const allTeams = useSelector((state) => state.teams);
   const [team, setTeam] = useState(null);
   useEffect(() => {
     if (allTeams.teams) {
       if (allTeams.teams.length > 0 && id) {
-        setChat(allTeams.teams.find((team) => team.id === id));
+        setTeam(allTeams.teams.find((team) => team.id === id));
       }
     }
   }, [allTeams, id]);

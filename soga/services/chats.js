@@ -1,9 +1,9 @@
-import axios from "axios";
-const baseUrl = "https://covale.herokuapp.com";
+const axios = require("axios");
+const { SERVER_ADDRESS } = require("../config/index");
 // http://localhost:3000/
 const sendMessege = async (friendId, token, messege) => {
   const response = await axios.post(
-    `${baseUrl}/api/messege`,
+    `${SERVER_ADDRESS}/api/messege`,
     { messege, friendId },
     {
       headers: {
@@ -16,7 +16,7 @@ const sendMessege = async (friendId, token, messege) => {
 
 // Get all chats
 const getChats = async (token) => {
-  const response = await axios.get(`${baseUrl}/api/chats`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/chats`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -25,7 +25,7 @@ const getChats = async (token) => {
 };
 
 const getChatById = async (token, id) => {
-  const response = await axios.get(`${baseUrl}/api/chats/${id}`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/chats/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

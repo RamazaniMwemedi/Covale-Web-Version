@@ -1,9 +1,9 @@
 import axios from "axios";
-const baseUrl = "https://covale.herokuapp.com";
+const { SERVER_ADDRESS } = require("../config/index");
 
 const allUsers = async (token) => {
   const response = await axios.get(
-    `${baseUrl}/api/authorizeduser/friend/explore`,
+    `${SERVER_ADDRESS}/api/authorizeduser/friend/explore`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -16,7 +16,7 @@ const allUsers = async (token) => {
 // Add a friend
 const addFriendById = async (id, token) => {
   const response = await axios.post(
-    `${baseUrl}/api/authorizeduser/friend/add/${id}`,
+    `${SERVER_ADDRESS}/api/authorizeduser/friend/add/${id}`,
     {},
     {
       headers: {
@@ -29,7 +29,7 @@ const addFriendById = async (id, token) => {
 
 const myFriends = async (token) => {
   const response = await axios.get(
-    `${baseUrl}/api/authorizeduser/friend/myFriends`,
+    `${SERVER_ADDRESS}/api/authorizeduser/friend/myFriends`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ const myFriends = async (token) => {
 // Friend Requests Received
 const friendReqRecieved = async (token) => {
   const response = await axios.get(
-    `${baseUrl}/api/authorizeduser/friend/friendReqRecieved`,
+    `${SERVER_ADDRESS}/api/authorizeduser/friend/friendReqRecieved`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ const friendReqRecieved = async (token) => {
 // Friend Requests Sent
 const friendReqSent = async (token) => {
   const response = await axios.get(
-    `${baseUrl}/api/authorizeduser/friend/friendReqSent`,
+    `${SERVER_ADDRESS}/api/authorizeduser/friend/friendReqSent`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -69,7 +69,7 @@ const friendReqSent = async (token) => {
 // Accept Friend Request
 const acceptFriendRequest = async (id, token) => {
   const response = await axios.post(
-    `${baseUrl}/api/authorizeduser/friend/accept/${id}`,
+    `${SERVER_ADDRESS}/api/authorizeduser/friend/accept/${id}`,
     {},
     {
       headers: {
@@ -83,7 +83,7 @@ const acceptFriendRequest = async (id, token) => {
 // Remove Friend Request
 const removeFriendRequest = async (id, token) => {
   const response = await axios.post(
-    `${baseUrl}/api/authorizeduser/friend/remove/${id}`,
+    `${SERVER_ADDRESS}/api/authorizeduser/friend/remove/${id}`,
     {},
     {
       headers: {
@@ -97,7 +97,7 @@ const removeFriendRequest = async (id, token) => {
 //Cancel Friend Request
 const cancelFriendRequest = async (id, token) => {
   const response = await axios.post(
-    `${baseUrl}/api/authorizeduser/friend/cancel/${id}`,
+    `${SERVER_ADDRESS}/api/authorizeduser/friend/cancel/${id}`,
     {},
     {
       headers: {
@@ -111,7 +111,7 @@ const cancelFriendRequest = async (id, token) => {
 // Find userBy id
 const findUserById = async (token, id) => {
   if (token) {
-    const response = await axios.get(`${baseUrl}/api/users/${id}`, {
+    const response = await axios.get(`${SERVER_ADDRESS}/api/users/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

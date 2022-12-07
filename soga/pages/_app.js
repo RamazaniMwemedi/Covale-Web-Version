@@ -8,10 +8,12 @@ import { Provider } from "react-redux";
 import { Analytics } from "@vercel/analytics/react";
 
 import store from "../Redux/store";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
+  const router = useRouter();
+  console.log("The router.asPath are: ", router.asPath);
   const [lightMode, setLightMode] = React.useState("light-mode");
   const [darkMode, setDarkMode] = React.useState("dark-mode");
   const [systemTheme, setSystemTheme] = React.useState("system-mode");

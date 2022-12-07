@@ -15,6 +15,8 @@ export default function Team({ team }) {
   const router = useRouter();
   const id = router.query.id;
   const theme = useTheme();
+  console.log("Query :", router.query);
+  console.log("pathname :", router.pathname);
   return (
     <List
       sx={{
@@ -26,7 +28,7 @@ export default function Team({ team }) {
           button
           onClick={(e) => {
             e.preventDefault();
-            router.push(`/chats/t/?id=${team.id}`, `/chats/t/${team.id}`, {
+            router.push(`/chats/?t=t&id=${team.id}`, `/chats/t/${team.id}`, {
               shallow: true,
             });
           }}

@@ -14,12 +14,12 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import React from "react";
 import { useSelector } from "react-redux";
 
-const TeamSectionRight = ({ option }) => {
+const TeamSectionRight = ({ option, team }) => {
   switch (option) {
     case "PARTICIPANT":
-      return <Participant />;
+      return <Participant team={team} />;
     case "MENU":
-      return <Menu />;
+      return <Menu team={team} />;
     default:
       break;
   }
@@ -27,7 +27,7 @@ const TeamSectionRight = ({ option }) => {
 
 export default TeamSectionRight;
 
-const Participant = () => {
+const Participant = ({ team }) => {
   const theme = useTheme();
 
   return (
@@ -49,12 +49,12 @@ const Participant = () => {
         <Typography variant="h5">Participant</Typography>
       </Box>
       <br />
-      <Directors />
-      <AllMembers />
+      <Directors directors={team.directors} />
+      <AllMembers members={team.members} />
     </Box>
   );
 };
-const Menu = () => {
+const Menu = ({ team }) => {
   const theme = useTheme();
   return (
     <Box
@@ -91,14 +91,13 @@ const Menu = () => {
       <Box>
         <br />
       </Box>
-      <Media />
-      <Events />
+      <Media team={team} />
+      <Events team={team} />
     </Box>
   );
 };
 
-const Media = () => {
-  const team = useSelector((state) => state.team.team);
+const Media = ({ team }) => {
   const theme = useTheme();
 
   return (
@@ -260,8 +259,7 @@ const Documents = () => {
 };
 
 // Directors
-const Directors = () => {
-  const directors = useSelector((state) => state.team.team.directors);
+const Directors = ({ directors }) => {
   return (
     <Box>
       <Box
@@ -288,8 +286,7 @@ const Directors = () => {
   );
 };
 
-const AllMembers = () => {
-  const members = useSelector((state) => state.team.team.members);
+const AllMembers = ({ members }) => {
   return (
     <Box>
       <Box

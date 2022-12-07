@@ -1,9 +1,10 @@
 const axios = require("axios");
+const { SERVER_ADDRESS } = require("../config/index");
 
-const baseUrl = "https://covale.herokuapp.com";
+const SERVER_ADDRESS = "https://covale.herokuapp.com";
 
 const getProjects = async (token) => {
-  const response = await axios.get(`${baseUrl}/api/project`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/project`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -13,7 +14,7 @@ const getProjects = async (token) => {
 
 const createNewProjeect = async (token, title, description) => {
   const response = await axios.post(
-    `${baseUrl}/api/project`,
+    `${SERVER_ADDRESS}/api/project`,
     { title, description },
     {
       headers: {

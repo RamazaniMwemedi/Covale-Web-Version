@@ -87,10 +87,7 @@ function Index(props) {
             }}
           >
             <Logo height={50} width={50} />
-            <Typography
-              sx={{ marginTop: "10px",  }}
-              variant="h6"
-            >
+            <Typography sx={{ marginTop: "10px" }} variant="h6">
               Covale
             </Typography>
           </Box>

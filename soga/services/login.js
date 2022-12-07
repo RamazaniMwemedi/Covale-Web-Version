@@ -1,9 +1,9 @@
 import axios from "axios";
-const baseUrl = "https://covale.herokuapp.com";
+const { SERVER_ADDRESS } = require("../config/index");
 
 const signIn = async (data) => {
   const { email, password } = data;
-  const response = await axios.post(`${baseUrl}/api/login/`, {
+  const response = await axios.post(`${SERVER_ADDRESS}/api/login/`, {
     email,
     password,
   });
@@ -13,7 +13,7 @@ const signIn = async (data) => {
 const signUp = async (data) => {
   const { email, password, firstname, lastname, username, birthday, gender } =
     data;
-  const response = await axios.post(`${baseUrl}/api/users/`, {
+  const response = await axios.post(`${SERVER_ADDRESS}/api/users/`, {
     email,
     password,
     firstname,
@@ -26,7 +26,7 @@ const signUp = async (data) => {
 };
 
 const getUsers = async () => {
-  const response = await axios.get(`${baseUrl}/users/`);
+  const response = await axios.get(`${SERVER_ADDRESS}/users/`);
   return response.data;
 };
 export default { signIn, signUp, getUsers };
