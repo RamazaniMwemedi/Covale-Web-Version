@@ -327,6 +327,9 @@ const Bottom = ({
         backgroundColor: theme.colors.background1,
         borderBottomRightRadius: "5px",
         borderBottomLeftRadius: "5px",
+        marginLeft: "10px",
+        marginRight: "15px",
+        borderRadius: "5px",
       }}
     >
       {showEmojiPeaker === true && (

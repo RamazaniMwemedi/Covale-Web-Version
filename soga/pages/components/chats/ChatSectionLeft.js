@@ -355,6 +355,12 @@ const Bottom = ({
         marginBottom: "4px",
         // Be at the bottom of the page
         verticalAlign: "bottom",
+        backgroundColor: theme.colors.background1,
+        borderBottomRightRadius: "5px",
+        borderBottomLeftRadius: "5px",
+        marginLeft: "10px",
+        marginRight: "15px",
+        borderRadius: "5px",
       }}
     >
       {showEmojiPeaker === true && (
