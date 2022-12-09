@@ -202,7 +202,7 @@ export default function Chat() {
                   <SectionToDisplay
                     messageChangeHandler={messageChangeHandler}
                     message={chatMessage}
-                    sendNewMessage={sendMessageHandle}
+                    sendMessageHandle={sendMessageHandle}
                     friendUsername={friendUsername}
                     onEmojiClick={onEmojiClick}
                   />
