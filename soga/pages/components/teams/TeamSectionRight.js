@@ -13,6 +13,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 import React from "react";
 import { useSelector } from "react-redux";
+import { AddCircleOutlineRounded } from "@mui/icons-material";
 
 const TeamSectionRight = ({ option, team }) => {
   switch (option) {
@@ -51,6 +52,7 @@ const Participant = ({ team }) => {
       <br />
       <Directors directors={team.directors} />
       <AllMembers members={team.members} />
+      <InvitedMembers />
     </Box>
   );
 };
@@ -340,5 +342,31 @@ const ParticipantItem = ({ participant }) => {
         <Typography variant="body2">{participant.lastname}</Typography>
       </Box>
     </ListItemButton>
+  );
+};
+
+const InvitedMembers = () => {
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItem: "center",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="subtitle1">Invited Members</Typography>
+        {/* Icon for inviting new member */}
+        <IconButton>
+          <AddCircleOutlineRounded />
+        </IconButton>
+      </Box>
+      <List>
+        <ListItem>
+          <Typography variant="body2">No Invited Members</Typography>
+        </ListItem>
+      </List>
+    </Box>
   );
 };

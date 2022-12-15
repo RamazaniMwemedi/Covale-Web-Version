@@ -1,8 +1,6 @@
 const axios = require("axios");
 const { SERVER_ADDRESS } = require("../config/index");
 
-const SERVER_ADDRESS = "https://covale.herokuapp.com";
-
 const getProjects = async (token) => {
   const response = await axios.get(`${SERVER_ADDRESS}/api/project`, {
     headers: {

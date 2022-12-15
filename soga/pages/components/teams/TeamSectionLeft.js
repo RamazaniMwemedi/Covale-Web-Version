@@ -18,7 +18,8 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { useTheme } from "@mui/material";
-import { useCheckLogedinUser } from "../../../hooks/hooks";
+// Redux Hooks
+import { useSelector } from "react-redux";
 
 import dynamic from "next/dynamic";
 
@@ -32,15 +33,16 @@ const Picker = dynamic(
 const TeamSectionLeft = ({
   team,
   showRightHandler,
-  message,
+  teamMessage,
   showRight,
-  messageChangeHandler,
-  sendNewMessage,
-  onEmojiClick,
+  teamMessageChangeHandler,
+  teamSendMessageHandle,
+  teamOnEmojiClick,
   showParticipant,
   showMenu,
-  user,
 }) => {
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user;
   const teamName = team ? team.teamName : "";
   const messages = team ? team.messages : [];
   return (
@@ -72,10 +74,10 @@ const TeamSectionLeft = ({
           >
             {messages && <Mid user={user} messages={messages} />}
             <Bottom
-              messageChangeHandler={messageChangeHandler}
-              sendNewMessage={sendNewMessage}
-              message={message}
-              onEmojiClick={onEmojiClick}
+              teamMessageChangeHandler={teamMessageChangeHandler}
+              teamSendMessageHandle={teamSendMessageHandle}
+              teamMessage={teamMessage}
+              teamOnEmojiClick={teamOnEmojiClick}
             />
           </Box>
         </Box>
@@ -192,8 +194,8 @@ const Mid = ({ user, messages }) => {
         }}
       >
         {messages.map((message) => {
-          return message.sender.id === user.id ? (
-            <UserMessage message={message} />
+          return message.sender === user.id ? (
+            <UserMessage message={message} user={user} />
           ) : (
             <FriendMessage message={message} />
           );
@@ -204,7 +206,7 @@ const Mid = ({ user, messages }) => {
   );
 };
 
-const UserMessage = ({ message }) => {
+const UserMessage = ({ message, user }) => {
   return (
     <Box
       sx={{
@@ -236,10 +238,26 @@ const UserMessage = ({ message }) => {
           marginRight: "6px",
         }}
       >
-        <Typography variant="subtitle2" sx={{ color: "white" }}>
-          {message.message}
-        </Typography>
+        <Box>
+          {/* User name */}
+          <Typography
+            variant="subtitle1"
+            sx={{
+              color: "white",
+              paddingRight: "5px",
+              paddingTop: "5px",
+              paddingBottom: "5px",
+              fontSize: "700",
+            }}
+          >
+            {`${user.firstname} ${user.lastname}`}
+          </Typography>
+          <Typography variant="subtitle2" sx={{ color: "white" }}>
+            {message.message}
+          </Typography>
+        </Box>
       </Box>
+      <Avatar />
     </Box>
   );
 };
@@ -308,10 +326,10 @@ const FriendMessage = ({ message }) => {
 };
 
 const Bottom = ({
-  messageChangeHandler,
-  sendNewMessage,
-  message,
-  onEmojiClick,
+  teamMessageChangeHandler,
+  teamSendMessageHandle,
+  teamMessage,
+  teamOnEmojiClick,
 }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
   const theme = useTheme();
@@ -360,7 +378,7 @@ const Bottom = ({
             native={true}
             preload={true}
             searchPlaceholder={"Search emojie"}
-            onEmojiClick={onEmojiClick}
+            onEmojiClick={teamOnEmojiClick}
             pickerStyle={{
               backgroundColor: theme.colors.textBackground,
               boxShadow: "none",
@@ -404,9 +422,9 @@ const Bottom = ({
             }
             id="outlined-adornment-password"
             type="text"
-            value={message}
+            value={teamMessage}
             onChange={(e) => {
-              messageChangeHandler(e);
+              teamMessageChangeHandler(e);
             }}
             sx={{
               height: "35px",
@@ -415,7 +433,7 @@ const Bottom = ({
             color="secondary"
             endAdornment={
               <InputAdornment position="end">
-                <IconButton onClick={() => sendNewMessage()} edge="end">
+                <IconButton onClick={() => teamSendMessageHandle()} edge="end">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"

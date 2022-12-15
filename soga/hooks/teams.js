@@ -21,7 +21,6 @@ const useTeamId = (id) => {
 };
 
 const useGetTeams = (token) => {
-  console.log("USEGETTEAMS");
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -32,7 +31,6 @@ const useGetTeams = (token) => {
 
     if (token) {
       getTeams(token).then((res) => {
-        console.log("My RES: ", res);
         dispatch(allTeams(res));
       });
     }

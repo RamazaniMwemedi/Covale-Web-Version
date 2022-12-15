@@ -40,7 +40,6 @@ const chatSlice = createSlice({
     },
     addNewMessageToChatIdFromSender(state, { payload }) {
       if (payload && payload.boolForReceive) {
-        console.log(payload.boolForReceive);;
         state = {
           ...state,
           chats: state.chats

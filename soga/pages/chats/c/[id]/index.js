@@ -66,7 +66,6 @@ export default function Chat() {
   // Teams States
 
   useEffect(() => {
-    console.log("Joining");
     if (id) {
       socket.emit("join_room", id);
     }
@@ -246,7 +245,6 @@ const SectionToDisplay = ({
   const id = router.query.id;
   const chat = useChatId(id);
   const team = useTeamId(id);
-  console.log("Team :", team);
   if (router.asPath.includes("/chats/c")) {
     return (
       <>

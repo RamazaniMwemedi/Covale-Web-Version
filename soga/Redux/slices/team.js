@@ -21,8 +21,8 @@ const teamSlice = createSlice({
         state = {
           ...state,
           teams: state.teams
-            .filter((team) => team.id === payload.teamByIndex)[0]
-            .messages.push(payload.newMessage),
+            .filter((team) => team.id === payload.teamId)[0]
+            .messages.push(payload.teamNewMessage),
         };
       }
     },
@@ -40,7 +40,6 @@ const teamSlice = createSlice({
     },
     addNewMessageToTeamIdFromSender(state, { payload }) {
       if (payload && payload.boolForReceive) {
-        console.log(payload.boolForReceive);
         state = {
           ...state,
           teams: state.teams

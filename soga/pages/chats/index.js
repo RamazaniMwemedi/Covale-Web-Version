@@ -29,6 +29,7 @@ import {
   updateMessageId,
   addNewMessageToChatIdFromSender,
 } from "../../Redux/slices/chat";
+import { addNewMessageToTeamId } from "../../Redux/slices/team";
 import { removeUser } from "../../Redux/slices/user";
 import { useGetTeams, useTeamId } from "../../hooks/teams";
 import TeamSectionSkeleton from "../components/teams/TeamSectionSkeleton";
@@ -64,9 +65,17 @@ export default function Chat() {
 
   const [audioUrl, setAudioUrl] = useState(null);
   // Teams States
+  // team message state
+  const [teamMessage, setTeamMessage] = useState("");
+  //      Bools
+  const [teamBoolForSent, setTeamBoolForSent] = useState(true);
+  const [teamBoolForReceive, setTeamBoolForReceive] = useState(true);
+  //      Audio
+  const [teamPlaying, setTeamPlaying] = useState(false);
+  const [teamSentAudioPlay, setTeamSentAudioPlay] = useState(false);
+  const [teamReceiveAudioPlay, setTeamReceiveAudioPlay] = useState(false);
 
   useEffect(() => {
-    console.log("Joining");
     if (id) {
       socket.emit("join_room", id);
     }
@@ -119,8 +128,6 @@ export default function Chat() {
       }
     });
   }, [socket, user]);
-
-  const friendUsername = "Friend Name";
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -175,6 +182,78 @@ export default function Chat() {
     }
   };
 
+  // Teams handlers
+  const teamOnEmojiClick = (event, emojiObject) => {
+    setTeamMessage(teamMessage + emojiObject.emoji);
+  };
+
+  const teamMessageChangeHandler = (e) => {
+    setTeamMessage(e.target.value);
+  };
+
+  const teamSendMessageHandle = () => {
+    const userId = userStore ? userStore.user.id : null;
+    try {
+      if (teamMessage.length > 0) {
+        const teamNewMessage = {
+          sender: userId,
+          message: teamMessage,
+          idFromClient: uuidv4(),
+        };
+        dispatch(
+          addNewMessageToTeamId({
+            teamId: id,
+            teamNewMessage,
+          })
+        );
+
+        // socket.emit("send_team_message", { newMessage, id, userId });
+        // setTeamMessage("");
+        // setTeamBoolForSent(true);
+        // if (teamBoolForSent) {
+        //   socket.on("team_messege_sent", (data) => {
+        //     dispatch(
+        //       updateTeamMessageId({
+        //         teamId: id,
+        //         id: data.id,
+        //         idFromClient: data.idFromClient,
+        //       })
+        //     );
+        //     setTeamSentAudioPlay(true);
+        //     setTeamPlaying(true);
+        //     setTeamBoolForSent(false);
+        //   });
+        // }
+      }
+    } catch (error) {
+      console.error("Error is :", error);
+    }
+  };
+
+  useEffect(() => {
+    const audio = new Audio(
+      "https://ramazanimwemedi.github.io/sounds/recieve.mp3"
+    );
+    teamReceiveAudioPlay ? audio.play() : audio.pause();
+
+    audio.addEventListener("ended", () => setTeamReceiveAudioPlay(false));
+    return () => {
+      audio.addEventListener("ended", () => setTeamReceiveAudioPlay(false));
+    };
+  }, [teamReceiveAudioPlay]);
+
+  useEffect(() => {
+    const audio = new Audio(
+      "https://ramazanimwemedi.github.io/sounds/sent.mp3"
+    );
+
+    teamSentAudioPlay ? audio.play() : audio.pause();
+    audio.addEventListener("ended", () => setTeamSentAudioPlay(true));
+    return () => {
+      audio.addEventListener("ended", () => setTeamSentAudioPlay(true));
+    };
+  }, [teamSentAudioPlay]);
+
   return (
     <>
       {userLoading ? (
@@ -202,8 +281,12 @@ export default function Chat() {
                     messageChangeHandler={messageChangeHandler}
                     message={chatMessage}
                     sendMessageHandle={sendMessageHandle}
-                    friendUsername={friendUsername}
                     onEmojiClick={onEmojiClick}
+                    // Teams
+                    teamMessageChangeHandler={teamMessageChangeHandler}
+                    teamMessage={teamMessage}
+                    teamSendMessageHandle={teamSendMessageHandle}
+                    teamOnEmojiClick={teamOnEmojiClick}
                   />
                 </>
               ) : (
@@ -239,14 +322,16 @@ const SectionToDisplay = ({
   messageChangeHandler,
   message,
   sendMessageHandle,
-  friendUsername,
   onEmojiClick,
+  teamMessageChangeHandler,
+  teamMessage,
+  teamSendMessageHandle,
+  teamOnEmojiClick,
 }) => {
   const router = useRouter();
   const id = router.query.id;
   const chat = useChatId(id);
   const team = useTeamId(id);
-  console.log("Team :", team);
   if (router.asPath.includes("/chats/c")) {
     return (
       <>
@@ -257,7 +342,6 @@ const SectionToDisplay = ({
             message={message}
             messages={chat.messages}
             sendNewMessage={sendMessageHandle}
-            friendUsername={friendUsername}
             onEmojiClick={onEmojiClick}
           />
         ) : (
@@ -266,6 +350,20 @@ const SectionToDisplay = ({
       </>
     );
   } else if (router.asPath.includes("/chats/t")) {
-    return <>{team ? <TeamSection team={team} /> : <TeamSectionSkeleton />}</>;
+    return (
+      <>
+        {team ? (
+          <TeamSection
+            team={team}
+            teamMessageChangeHandler={teamMessageChangeHandler}
+            teamMessage={teamMessage}
+            teamSendMessageHandle={teamSendMessageHandle}
+            teamOnEmojiClick={teamOnEmojiClick}
+          />
+        ) : (
+          <TeamSectionSkeleton />
+        )}
+      </>
+    );
   }
 };

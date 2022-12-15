@@ -10,16 +10,13 @@ import TeamSectionRight from "./TeamSectionRight";
 import { useState } from "react";
 
 const TeamSection = ({
-  sendNewMessage,
-  message,
-  onEmojiClick,
-  messageChangeHandler,
-  user,
-  team
+  team,
+  teamMessageChangeHandler,
+  teamSendMessageHandle,
+  teamMessage,
+  teamOnEmojiClick,
 }) => {
-
   const [option, setOption] = useState("");
- 
 
   const [showRight, setShowRight] = React.useState(false);
 
@@ -70,13 +67,12 @@ const TeamSection = ({
           >
             {/* Team Section Left */}
             <TeamSectionLeft
-              user={user}
               team={team}
               showRight={showRight}
-              messageChangeHandler={messageChangeHandler}
-              sendNewMessage={sendNewMessage}
-              message={message}
-              onEmojiClick={onEmojiClick}
+              teamMessageChangeHandler={teamMessageChangeHandler}
+              teamSendMessageHandle={teamSendMessageHandle}
+              teamMessage={teamMessage}
+              teamOnEmojiClick={teamOnEmojiClick}
               showMenu={showMenu}
               showParticipant={showParticipant}
             />
