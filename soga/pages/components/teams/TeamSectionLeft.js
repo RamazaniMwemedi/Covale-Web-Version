@@ -18,6 +18,8 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { useTheme } from "@mui/material";
+import { purple } from "@mui/material/colors";
+
 // Redux Hooks
 import { useSelector } from "react-redux";
 
@@ -207,6 +209,18 @@ const Mid = ({ user, messages }) => {
 };
 
 const UserMessage = ({ message, user }) => {
+  const purple1 = purple[700];
+  const purple2 = purple[400];
+  let idProvided = message.id ? true : false;
+  console.log(
+    "Id Providd : ",
+    idProvided,
+    "id : ",
+    message.id,
+    "message : ",
+    message.message
+  );
+
   return (
     <Box
       sx={{
@@ -220,23 +234,42 @@ const UserMessage = ({ message, user }) => {
     >
       {/* Message */}
       <Box
-        sx={{
-          backgroundColor: "purple",
-          // centered
-          display: "flex",
-          paddingLeft: "5px",
-          paddingRight: "5px",
-          paddingTop: "5px",
-          paddingBottom: "5px",
-          borderRadius: "12px",
-          width: "auto",
-          height: "auto",
-          marginBottom: "10px",
-          borderBottomRightRadius: "0px",
-          // max width 80%
-          maxWidth: "80%",
-          marginRight: "6px",
-        }}
+        sx={
+          idProvided
+            ? {
+                backgroundColor: purple1,
+                // centered
+                display: "flex",
+                paddingLeft: "5px",
+                paddingRight: "5px",
+                paddingTop: "5px",
+                paddingBottom: "5px",
+                borderRadius: "12px",
+                width: "auto",
+                height: "auto",
+                marginBottom: "10px",
+                borderBottomRightRadius: "0px",
+                // max width 80%
+                maxWidth: "80%",
+                marginRight: "6px",
+              }
+            : {
+                backgroundColor: purple2,
+                display: "flex",
+                paddingLeft: "5px",
+                paddingRight: "5px",
+                paddingTop: "5px",
+                paddingBottom: "5px",
+                borderRadius: "12px",
+                width: "auto",
+                height: "auto",
+                marginBottom: "10px",
+                borderBottomRightRadius: "0px",
+                // max width 80%
+                maxWidth: "80%",
+                marginRight: "6px",
+              }
+        }
       >
         <Box>
           {/* User name */}
@@ -247,7 +280,8 @@ const UserMessage = ({ message, user }) => {
               paddingRight: "5px",
               paddingTop: "5px",
               paddingBottom: "5px",
-              fontSize: "700",
+              // to be bold
+              fontWeight: "bold",
             }}
           >
             {`${user.firstname} ${user.lastname}`}
