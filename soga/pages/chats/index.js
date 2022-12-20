@@ -29,15 +29,20 @@ import {
   updateMessageId,
   addNewMessageToChatIdFromSender,
 } from "../../Redux/slices/chat";
-import { addNewMessageToTeamId } from "../../Redux/slices/team";
+import {
+  addNewMessageToTeamId,
+  updateTeamMessageId,
+} from "../../Redux/slices/team";
 import { removeUser } from "../../Redux/slices/user";
 import { useGetTeams, useTeamId } from "../../hooks/teams";
 import TeamSectionSkeleton from "../components/teams/TeamSectionSkeleton";
 import TeamSection from "../components/teams/TeamSection";
+import { RTC_ADDRESS } from "../../config";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
-const socket = io.connect("https://rtcommunication.herokuapp.com/chat");
+const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
+const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
 
 export default function Chat() {
   // Global States
@@ -77,7 +82,13 @@ export default function Chat() {
 
   useEffect(() => {
     if (id) {
-      socket.emit("join_room", id);
+      chatSocket.emit("join_room", id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      teamSocket.emit("join_team_room", id);
     }
   }, [id]);
 
@@ -107,7 +118,7 @@ export default function Chat() {
 
   useEffect(() => {
     setBoolForReceive(true);
-    socket.on("receive_message", (data) => {
+    chatSocket.on("receive_message", (data) => {
       if (boolForReceive) {
         if (data && currentUserId) {
           if (data.sender != currentUserId) {
@@ -127,7 +138,7 @@ export default function Chat() {
         }
       }
     });
-  }, [socket, user]);
+  }, [chatSocket, user]);
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -159,11 +170,11 @@ export default function Chat() {
           })
         );
 
-        socket.emit("send_message", { newMessage, id, userId });
+        chatSocket.emit("send_message", { newMessage, id, userId });
         setMessage("");
         setBoolForSent(true);
         if (boolForSent) {
-          socket.on("messege_sent", (data) => {
+          chatSocket.on("messege_sent", (data) => {
             dispatch(
               updateMessageId({
                 chatId: id,
@@ -206,24 +217,23 @@ export default function Chat() {
             teamNewMessage,
           })
         );
-
-        // socket.emit("send_team_message", { newMessage, id, userId });
-        // setTeamMessage("");
-        // setTeamBoolForSent(true);
-        // if (teamBoolForSent) {
-        //   socket.on("team_messege_sent", (data) => {
-        //     dispatch(
-        //       updateTeamMessageId({
-        //         teamId: id,
-        //         id: data.id,
-        //         idFromClient: data.idFromClient,
-        //       })
-        //     );
-        //     setTeamSentAudioPlay(true);
-        //     setTeamPlaying(true);
-        //     setTeamBoolForSent(false);
-        //   });
-        // }
+        teamSocket.emit("send_message_to_team", { teamNewMessage, id, userId });
+        setTeamMessage("");
+        setTeamBoolForSent(true);
+        if (teamBoolForSent) {
+          teamSocket.on("messege_sent_to_team", (data) => {
+            dispatch(
+              updateTeamMessageId({
+                teamId: id,
+                id: data.id,
+                idFromClient: data.idFromClient,
+              })
+            );
+            setTeamSentAudioPlay(true);
+            setTeamPlaying(true);
+            setTeamBoolForSent(false);
+          });
+        }
       }
     } catch (error) {
       console.error("Error is :", error);

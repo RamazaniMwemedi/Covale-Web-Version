@@ -26,7 +26,8 @@ const teamSlice = createSlice({
         };
       }
     },
-    updateMessageId(state, { payload }) {
+
+    updateTeamMessageId(state, { payload }) {
       if (payload) {
         state = {
           ...state,
@@ -55,7 +56,7 @@ const {
   allTeams,
   addNewMessageToTeamId,
   addNewMessageToTeamIdFromSender,
-  updateMessageId,
+  updateTeamMessageId,
 } = teamSlice.actions;
 const reducer = teamSlice.reducer;
 module.exports = {
@@ -63,5 +64,5 @@ module.exports = {
   allTeams,
   addNewMessageToTeamId,
   addNewMessageToTeamIdFromSender,
-  updateMessageId,
+  updateTeamMessageId,
 };

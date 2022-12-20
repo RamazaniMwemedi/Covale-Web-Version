@@ -211,15 +211,8 @@ const Mid = ({ user, messages }) => {
 const UserMessage = ({ message, user }) => {
   const purple1 = purple[700];
   const purple2 = purple[400];
-  let idProvided = message.id ? true : false;
-  console.log(
-    "Id Providd : ",
-    idProvided,
-    "id : ",
-    message.id,
-    "message : ",
-    message.message
-  );
+  const idProvided = message.id ? true : false;
+  const theme = useTheme();
 
   return (
     <Box
@@ -274,12 +267,12 @@ const UserMessage = ({ message, user }) => {
         <Box>
           {/* User name */}
           <Typography
-            variant="subtitle1"
+            variant="subtitle2"
             sx={{
-              color: "white",
-              paddingRight: "5px",
-              paddingTop: "5px",
-              paddingBottom: "5px",
+              color: theme.palette.mode === "dark" ? "white" : "black",
+              // paddingRight: "5px",
+              // paddingTop: "5px",
+              // paddingBottom: "5px",
               // to be bold
               fontWeight: "bold",
             }}
@@ -291,7 +284,13 @@ const UserMessage = ({ message, user }) => {
           </Typography>
         </Box>
       </Box>
-      <Avatar />
+      <Avatar
+        sx={{
+          width: 25,
+          height: 25,
+          marginRight: "6px",
+        }}
+      />
     </Box>
   );
 };
