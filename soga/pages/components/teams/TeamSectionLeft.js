@@ -269,7 +269,7 @@ const UserMessage = ({ message, user }) => {
           <Typography
             variant="subtitle2"
             sx={{
-              color: theme.palette.mode === "dark" ? "white" : "black",
+              color: "white",
               // paddingRight: "5px",
               // paddingTop: "5px",
               // paddingBottom: "5px",
