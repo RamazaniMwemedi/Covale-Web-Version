@@ -7,10 +7,7 @@ const URLS = {
   devSerURL: "http://localhost:5005",
   devRtcURL: "http://localhost:5055",
 };
-
-const SERVER_ADDRESS = URLS.prodSerURL;
-const RTC_ADDRESS = URLS.prodRtcURL;
 module.exports = {
-  SERVER_ADDRESS,
-  RTC_ADDRESS,
+  SERVER_ADDRESS:URLS.prodSerURL,
+  RTC_ADDRESS:URLS.prodRtcURL,
 };

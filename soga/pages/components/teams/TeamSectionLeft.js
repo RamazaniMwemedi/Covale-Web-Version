@@ -455,6 +455,7 @@ const Bottom = ({
             }
             id="outlined-adornment-password"
             type="text"
+            multiline={false}
             value={teamMessage}
             onChange={(e) => {
               teamMessageChangeHandler(e);

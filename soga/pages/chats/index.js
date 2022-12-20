@@ -203,11 +203,17 @@ export default function Chat() {
   };
 
   const teamSendMessageHandle = () => {
+    
     const userId = userStore ? userStore.user.id : null;
     try {
       if (teamMessage.length > 0) {
         const teamNewMessage = {
-          sender: userId,
+          sender: {
+            username: userStore.user.username,
+            firstname: userStore.user.firstname,
+            lastname: userStore.user.lastname,
+            id: userStore.user.id,
+          },
           message: teamMessage,
           idFromClient: uuidv4(),
         };
