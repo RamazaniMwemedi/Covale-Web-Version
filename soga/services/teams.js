@@ -51,7 +51,7 @@ const inviteFriends = async (token, teamId, friends) => {
           },
         }
       );
-      return response.status;
+      return response;
     }
   }
 };

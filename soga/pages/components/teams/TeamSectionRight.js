@@ -11,9 +11,10 @@ import { useTheme } from "@mui/material";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { AddCircleOutlineRounded } from "@mui/icons-material";
+import InviteMembers from "./InviteMembers";
 
 const TeamSectionRight = ({ option, team }) => {
   switch (option) {
@@ -52,7 +53,7 @@ const Participant = ({ team }) => {
       <br />
       <Directors directors={team.directors} />
       <AllMembers members={team.members} />
-      <InvitedMembers />
+      <InvitedMembers teamId={team.id} />
     </Box>
   );
 };
@@ -345,7 +346,14 @@ const ParticipantItem = ({ participant }) => {
   );
 };
 
-const InvitedMembers = () => {
+const InvitedMembers = ({teamId}) => {
+  // Show InviteMembers State
+  const [showInviteMembers, setShowInviteMembers] = useState(false);
+  // showInviteMembers handler
+  const showInviteMembersHandler =()=>{
+setShowInviteMembers(!showInviteMembers);
+  }
+
   return (
     <Box>
       <Box
@@ -358,11 +366,20 @@ const InvitedMembers = () => {
       >
         <Typography variant="subtitle1">Invited Members</Typography>
         {/* Icon for inviting new member */}
-        <IconButton>
+        <IconButton onClick={showInviteMembersHandler}>
           <AddCircleOutlineRounded />
         </IconButton>
       </Box>
       <List>
+        {
+          // Show InviteMenbers Component
+          showInviteMembers && (
+            <InviteMembers
+              teamId={teamId}
+              showInviteMembersHandler={showInviteMembersHandler}
+            />
+          )
+        }
         <ListItem>
           <Typography variant="body2">No Invited Members</Typography>
         </ListItem>

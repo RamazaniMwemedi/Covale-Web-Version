@@ -103,7 +103,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
     if (token && selectedFriends.length > 0 && createdTeamId) {
       setInvitingBool(true);
       const res = await inviteFriends(token, createdTeamId, selectedFriends);
-      if (res == 200 && createdTeamId) {
+      if (res.status == 200 && createdTeamId) {
         setInvitingBool(false);
         router.push(`/chats/t/${createdTeamId}`);
       }
@@ -567,7 +567,7 @@ const AddPeopleInTeam = ({
             borderRadius: "10px",
           }}
           onClick={() => {
-            window.location.href = `http://localhost:3000/chats/t/${createdTeamId}`;
+            window.location.href = `/chats/t/${createdTeamId}`;
           }}
         >
           Skip

@@ -218,10 +218,6 @@ const UserMessage = ({ message, user }) => {
     <Box
       sx={{
         display: "flex",
-        // centerd
-        // alignItems: "center",
-        // textAlign: "center",
-        // FLoat right
         justifyContent: "flex-end",
       }}
     >
