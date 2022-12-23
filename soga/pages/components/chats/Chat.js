@@ -11,13 +11,16 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 
-export default function Chat({ message }) {
+export default function Chat({ chat }) {
   const router = useRouter();
   const id = router.query.id;
   const theme = useTheme();
-  const lastMessage = message
-    ? message.messages[message.messages.length - 1].message
-    : null;
+  // messages
+  const messages = chat.messages;
+  // last message
+  const lastMessage = messages[messages.length - 1].message;
+
+  console.log("LAST MESSAGE: ", lastMessage);
 
   return (
     <List
@@ -25,18 +28,13 @@ export default function Chat({ message }) {
         backgroundColor: theme.colors.background,
       }}
     >
-      {message ? (
+      {chat ? (
         <ListItem
-          button
           onClick={(e) => {
             e.preventDefault();
-            router.push(
-              `/chats/?c=c&id=${message.id}`,
-              `/chats/c/${message.id}`,
-              {
-                shallow: true,
-              }
-            );
+            router.push(`/chats/?c=c&id=${chat.id}`, `/chats/c/${chat.id}`, {
+              shallow: true,
+            });
           }}
           sx={{
             // border style
@@ -46,9 +44,8 @@ export default function Chat({ message }) {
             // border width
             borderWidth: "1px",
             borderRadius: "0.5rem",
-            boxShadow: message.id === id ? 1 : "unset",
-            backgroundColor:
-              message.id == id ? theme.colors.background1 : "unset",
+            boxShadow: chat.id === id ? 1 : "unset",
+            backgroundColor: chat.id == id ? theme.colors.background1 : "unset",
             "&:hover": {
               boxShadow: 3,
             },
@@ -56,19 +53,17 @@ export default function Chat({ message }) {
           }}
         >
           <Avatar
-            alt={message.friendUsername[0]}
+            alt={chat.friendUsername[0]}
             src="https://material-ui.com/static/images/avatar/1.jpg"
           >
-            {message.friendUsername[0]}
+            {chat.friendUsername[0]}
           </Avatar>
           <Box
             sx={{
               marginLeft: "5px",
             }}
           >
-            <Typography variant="subtitle1">
-              {message.friendUsername}
-            </Typography>
+            <Typography variant="subtitle1">{chat.friendUsername}</Typography>
             {/* Show the first 25 characters only else add ... */}
             <Typography variant="body2">
               {lastMessage.length > 30

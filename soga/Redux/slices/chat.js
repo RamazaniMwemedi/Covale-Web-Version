@@ -21,8 +21,10 @@ const chatSlice = createSlice({
         state = {
           ...state,
           chats: state.chats
-            .filter((chat) => chat.id === payload.chatId)[0]
-            .messages.push(payload.newMessage),
+            .filter((chat) => chat.id === payload.chatId)
+            .map((chat) => {
+              chat.messages.push(payload.newMessage);
+            }),
         };
       }
     },
@@ -39,13 +41,23 @@ const chatSlice = createSlice({
       }
     },
     addNewMessageToChatIdFromSender(state, { payload }) {
+      console.log("payload.newMessage", payload.newMessage);
       if (payload && payload.boolForReceive) {
-        state = {
-          ...state,
-          chats: state.chats
+        // Add new message to chat
+        // IF the data.id is not in the chat.messages array THEN add the new message to the chat.messages array ELSE do nothing
+
+        if (
+          !state.chats
             .filter((chat) => chat.id === payload.chatId)[0]
-            .messages.push(payload.data),
-        };
+            .messages.some((message) => message.id === payload.data[0].id)
+        ) {
+          state = {
+            ...state,
+            chats: state.chats
+              .filter((chat) => chat.id === payload.chatId)[0]
+              .messages.push(payload.data[0]),
+          };
+        }
       }
     },
     chatsReset() {

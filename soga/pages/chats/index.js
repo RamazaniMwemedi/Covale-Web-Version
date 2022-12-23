@@ -81,6 +81,10 @@ export default function Chat() {
   const [teamSentAudioPlay, setTeamSentAudioPlay] = useState(false);
   const [teamReceiveAudioPlay, setTeamReceiveAudioPlay] = useState(false);
   const userId = user ? user.id : null;
+
+  const chatId = useChatId(id);
+  console.log("chatId", chatId);
+
   useEffect(() => {
     if (id) {
       chatSocket.emit("join_room", id);
@@ -123,19 +127,21 @@ export default function Chat() {
     };
   }, [sentAudioPlay]);
 
+  console.log("Router  :", router);
   useEffect(() => {
     setBoolForReceive(true);
     chatSocket.on("receive_message", (data) => {
       if (boolForReceive) {
-        if (data && currentUserId) {
-          if (data.sender != currentUserId) {
+        console.log("Receive Message :", data);
+        if (data && "63a55a08be53015699f2987b") {
+          if (data.sender != "63a55a08be53015699f2987b") {
             if (boolForReceive) {
               setReceiveAudioPlay(true);
               setBoolForReceive(false);
               dispatch(
                 addNewMessageToChatIdFromSender({
-                  chatId: id,
-                  data,
+                  chatId: "63a55a08be53015699f2987b",
+                  data: [data],
                   boolForReceive,
                 })
               );
@@ -147,11 +153,11 @@ export default function Chat() {
     });
   }, [chatSocket, user]);
 
-  useEffect(()=>{
+  useEffect(() => {
     notificationSocket.on("new_notification", (data) => {
-      console.log("Notification :",data)
-    })
-  },[notificationSocket])
+      console.log("Notification :", data);
+    });
+  }, [notificationSocket]);
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -164,6 +170,7 @@ export default function Chat() {
   };
 
   const onEmojiClick = (event, emojiObject) => {
+    console.log(emojiObject);
     setMessage(chatMessage + emojiObject.emoji);
   };
 
@@ -186,7 +193,7 @@ export default function Chat() {
         chatSocket.emit("send_message", { newMessage, id, userId });
         setMessage("");
         setBoolForSent(true);
-        if (boolForSent) {
+        if (boolForSent && id) {
           chatSocket.on("messege_sent", (data) => {
             dispatch(
               updateMessageId({
