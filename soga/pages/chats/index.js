@@ -43,6 +43,7 @@ import { RTC_ADDRESS } from "../../config";
 // http://localhost:5005/
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
+const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`);
 
 export default function Chat() {
   // Global States
@@ -79,7 +80,7 @@ export default function Chat() {
   const [teamPlaying, setTeamPlaying] = useState(false);
   const [teamSentAudioPlay, setTeamSentAudioPlay] = useState(false);
   const [teamReceiveAudioPlay, setTeamReceiveAudioPlay] = useState(false);
-
+  const userId = user ? user.id : null;
   useEffect(() => {
     if (id) {
       chatSocket.emit("join_room", id);
@@ -91,6 +92,12 @@ export default function Chat() {
       teamSocket.emit("join_team_room", id);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (userId) {
+      notificationSocket.emit("join_notification_room", "notification");
+    }
+  }, [userId]);
 
   useEffect(() => {
     const audio = new Audio(
@@ -139,6 +146,12 @@ export default function Chat() {
       }
     });
   }, [chatSocket, user]);
+
+  useEffect(()=>{
+    notificationSocket.on("new_notification", (data) => {
+      console.log("Notification :",data)
+    })
+  },[notificationSocket])
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -203,7 +216,6 @@ export default function Chat() {
   };
 
   const teamSendMessageHandle = () => {
-    
     const userId = userStore ? userStore.user.id : null;
     try {
       if (teamMessage.length > 0) {

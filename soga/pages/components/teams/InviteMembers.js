@@ -12,14 +12,27 @@ import {
 import { LoadingButton } from "@mui/lab";
 import SaveIcon from "@mui/icons-material/Save";
 import { useTheme } from "@mui/styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import io from "socket.io-client";
 
 import { inviteFriends } from "../../../services/teams";
 import { useGetFriends, useCheckLogedinUserToken } from "../../../hooks/hooks";
+import { RTC_ADDRESS } from "../../../config";
+import { useSelector } from "react-redux";
+
+const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`);
+
 const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
   const [selectedColleagues, setSelectedColleagues] = useState([]);
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user;
+  const userId = user ? user.id : null;
   const token = useCheckLogedinUserToken();
-
+  useEffect(() => {
+    if (userId) {
+      notificationSocket.emit("join_notification_room", "notification");
+    }
+  }, [userId]);
   // invitingBool state
   const [invitingBool, setInvitingBool] = useState(false);
   const friends = useGetFriends();
@@ -30,7 +43,22 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
       const res = await inviteFriends(token, teamId, selectedColleagues);
       console.log("RES Status :", res.status);
       if (res.status == 200) {
-        showInviteMembersHandler();
+        const invitations = res.data;
+        if (invitations.length > 0) {
+          invitations.forEach((invitation) => {
+            const notification = {
+              senderId: invitation.inviter.id,
+              recieverId: invitation.invitee.id,
+              typeofNotification: "joinTeam",
+              notifiHead: "Invitation to join a team",
+              notifiBody: `${invitation.inviter.firstname} ${invitation.inviter.lastname} invited you to join the ${invitation.team.teamName} team`,
+              link: `/teams/join/?s=${invitation.inviter.id}&r=${invitation.invitee.id}&ti=${invitation.team.id}&ii=${invitation.id}&t=${invitation.token}`,
+            };
+            console.log("Notification :", notification)
+            notificationSocket.emit("send_notification", notification);
+          });
+        }
+        // showInviteMembersHandler();
         setSelectedColleagues((prev) => []);
         setInvitingBool(false);
       }
