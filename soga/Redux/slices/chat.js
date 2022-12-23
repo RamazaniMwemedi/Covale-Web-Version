@@ -41,7 +41,6 @@ const chatSlice = createSlice({
       }
     },
     addNewMessageToChatIdFromSender(state, { payload }) {
-      console.log("payload.newMessage", payload.newMessage);
       if (payload && payload.boolForReceive) {
         // Add new message to chat
         // IF the data.id is not in the chat.messages array THEN add the new message to the chat.messages array ELSE do nothing

@@ -83,7 +83,6 @@ export default function Chat() {
   const userId = user ? user.id : null;
 
   const chatId = useChatId(id);
-  console.log("chatId", chatId);
 
   useEffect(() => {
     if (id) {
@@ -127,12 +126,10 @@ export default function Chat() {
     };
   }, [sentAudioPlay]);
 
-  console.log("Router  :", router);
   useEffect(() => {
     setBoolForReceive(true);
     chatSocket.on("receive_message", (data) => {
       if (boolForReceive) {
-        console.log("Receive Message :", data);
         if (data && "63a55a08be53015699f2987b") {
           if (data.sender != "63a55a08be53015699f2987b") {
             if (boolForReceive) {
@@ -155,7 +152,6 @@ export default function Chat() {
 
   useEffect(() => {
     notificationSocket.on("new_notification", (data) => {
-      console.log("Notification :", data);
     });
   }, [notificationSocket]);
 
@@ -170,7 +166,6 @@ export default function Chat() {
   };
 
   const onEmojiClick = (event, emojiObject) => {
-    console.log(emojiObject);
     setMessage(chatMessage + emojiObject.emoji);
   };
 

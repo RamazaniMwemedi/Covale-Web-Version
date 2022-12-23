@@ -16,11 +16,9 @@ export default function Chat({ chat }) {
   const id = router.query.id;
   const theme = useTheme();
   // messages
-  const messages = chat.messages;
+  const messages = chat ? chat.messages : null;
   // last message
-  const lastMessage = messages[messages.length - 1].message;
-
-  console.log("LAST MESSAGE: ", lastMessage);
+  const lastMessage =messages? messages[messages.length - 1].message : "";
 
   return (
     <List

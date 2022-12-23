@@ -25,7 +25,6 @@ const Work = (props) => {
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
-    userStore = null;
     router.push("/login");
     dispatch(removeUser());
   };

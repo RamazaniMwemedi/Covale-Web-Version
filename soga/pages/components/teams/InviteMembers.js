@@ -41,7 +41,6 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
     if (token && selectedColleagues.length > 0 && teamId) {
       setInvitingBool(true);
       const res = await inviteFriends(token, teamId, selectedColleagues);
-      console.log("RES Status :", res.status);
       if (res.status == 200) {
         const invitations = res.data;
         if (invitations.length > 0) {
@@ -54,7 +53,6 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
               notifiBody: `${invitation.inviter.firstname} ${invitation.inviter.lastname} invited you to join the ${invitation.team.teamName} team`,
               link: `/teams/join/?s=${invitation.inviter.id}&r=${invitation.invitee.id}&ti=${invitation.team.id}&ii=${invitation.id}&t=${invitation.token}`,
             };
-            console.log("Notification :", notification)
             notificationSocket.emit("send_notification", notification);
           });
         }
