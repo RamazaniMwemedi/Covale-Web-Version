@@ -13,8 +13,14 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
 import { Avatar } from "@mui/material";
-import { useSelector } from "react-redux";
 import { useTheme } from "@mui/styles";
+import { useDispatch, useSelector } from "react-redux";
+import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
+import {
+  acceptJoinTeamRequest,
+  rejectJoinTeamRequest,
+} from "../../../Redux/slices/notifications";
 
 export default function Notification() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -156,7 +162,7 @@ export default function Notification() {
                     // Style like the Menu Item
                     alignItems: "flex-start",
                     textAlign: "left",
-                    p: 1,
+                    p: 0,
                     "&:hover": {
                       backgroundColor:
                         theme.palette.mode === "dark"
@@ -167,18 +173,8 @@ export default function Notification() {
                   }}
                   key={index}
                 >
-                  <Typography variant="body1">{notification.head}</Typography>
-                  <Typography
-                    sx={{
-                      textOverflow: "ellipsis",
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                    }}
-                    variant="body2"
-                    component="div"
-                  >
-                    {notification.body}
-                  </Typography>
+                  {/* <Typography variant="body1">{notification.head}</Typography> */}
+                  <JoinTeamNotification notification={notification} />
                 </Box>
               );
             })
@@ -200,3 +196,54 @@ export default function Notification() {
     </React.Fragment>
   );
 }
+
+// Notifications
+// Join Team Notification component
+const JoinTeamNotification = ({ notification }) => {
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  // const {  id, teamId,  senderId, senderName } = notification;
+  // const handleAccept = () => {
+  //   dispatch(acceptJoinTeamRequest(id, teamId, senderId, currentTeam._id));
+  // };
+  // const handleReject = () => {
+  //   dispatch(rejectJoinTeamRequest(id, teamId, senderId, currentTeam._id));
+  // };
+  return (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          textAlign: "left",
+          p: 1,
+          "&:hover": {
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "#1e1e1e"
+                : theme.palette.grey[100],
+            cursor: "pointer",
+          },
+          borderRadius: "10px",
+          mb: 1,
+        }}
+      >
+        <Avatar />
+        <Box sx={{ ml: 1 }}>
+          <Typography variant="body1">{notification.head}</Typography>
+          <Typography variant="caption" component="div">
+            {notification.body}
+          </Typography>
+        </Box>
+        <Box sx={{ ml: "auto" }}>
+          <IconButton color="secondary" onClick={() => {}}>
+            <CheckCircleOutlineRoundedIcon />
+          </IconButton>
+          <IconButton color="error" onClick={() => {}}>
+            <HighlightOffRoundedIcon />
+          </IconButton>
+        </Box>
+      </Box>
+    </>
+  );
+};

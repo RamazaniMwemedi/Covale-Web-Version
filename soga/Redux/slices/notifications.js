@@ -24,13 +24,40 @@ const notificationSlice = createSlice({
         };
       }
     },
+    acceptJoinTeamRequest(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          notifications: state.notifications.filter(
+            (notification) => notification.id !== payload
+          ),
+        };
+      }
+    },
+    rejectJoinTeamRequest(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          notifications: state.notifications.filter(
+            (notification) => notification.id !== payload
+          ),
+        };
+      }
+    },
   },
 });
 
 const { reducer } = notificationSlice;
-const { allNotifications, addNewNotification } = notificationSlice.actions;
+const {
+  allNotifications,
+  addNewNotification,
+  acceptJoinTeamRequest,
+  rejectJoinTeamRequest,
+} = notificationSlice.actions;
 module.exports = {
   allNotifications,
   addNewNotification,
+  acceptJoinTeamRequest,
+  rejectJoinTeamRequest,
   reducer,
 };
