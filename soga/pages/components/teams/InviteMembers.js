@@ -58,7 +58,7 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
               senderId: invitation.inviter.id,
               recieverId: invitation.invitee.id,
               typeofNotification: "joinTeam",
-              notifiHead: "Invitation to join a team",
+              notifiHead: `${invitation.inviter.firstname} ${invitation.inviter.lastname} invited you to join the ${invitation.team.teamName} team`,
               notifiBody: `${invitation.inviter.firstname} ${invitation.inviter.lastname} invited you to join the ${invitation.team.teamName} team`,
               link: `/teams/join/?s=${invitation.inviter.id}&r=${invitation.invitee.id}&ti=${invitation.team.id}&ii=${invitation.id}&t=${invitation.token}`,
             };

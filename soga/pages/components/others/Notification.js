@@ -174,7 +174,7 @@ export default function Notification() {
                       overflow: "hidden",
                       whiteSpace: "nowrap",
                     }}
-                    variant="caption"
+                    variant="body2"
                     component="div"
                   >
                     {notification.body}
