@@ -20,7 +20,15 @@ import { useGetFriends, useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { RTC_ADDRESS } from "../../../config";
 import { useSelector } from "react-redux";
 
-const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`);
+const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`, {
+  reconnectionDelayMax: 10000,
+  auth: {
+    token: "123",
+  },
+  query: {
+    "my-key": "my-value",
+  },
+});
 
 const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
   const [selectedColleagues, setSelectedColleagues] = useState([]);
@@ -30,7 +38,7 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
   const token = useCheckLogedinUserToken();
   useEffect(() => {
     if (userId) {
-      notificationSocket.emit("join_notification_room", "notification");
+      notificationSocket.emit("join_notification_room", userId);
     }
   }, [userId]);
   // invitingBool state
@@ -45,6 +53,7 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
         const invitations = res.data;
         if (invitations.length > 0) {
           invitations.forEach((invitation) => {
+            console.log("Invitation :", invitation);
             const notification = {
               senderId: invitation.inviter.id,
               recieverId: invitation.invitee.id,
@@ -55,10 +64,10 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
             };
             notificationSocket.emit("send_notification", notification);
           });
+          showInviteMembersHandler();
+          setSelectedColleagues((prev) => []);
+          setInvitingBool(false);
         }
-        // showInviteMembersHandler();
-        setSelectedColleagues((prev) => []);
-        setInvitingBool(false);
       }
     }
   };

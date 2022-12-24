@@ -10,8 +10,10 @@ import { v4 as uuidv4 } from "uuid";
 import DrawerComponent from "../components/others/DrawerComponent";
 import ChatLeft from "../components/chats/ChatLeft";
 import ChatSection from "../components/chats/ChatSection";
-
+import TeamSectionSkeleton from "../components/teams/TeamSectionSkeleton";
+import TeamSection from "../components/teams/TeamSection";
 import ChatSectionSkeleton from "../components/chats/ChatSectionSkeleton";
+import LoadingLogo from "../components/others/LoadingLogo";
 
 // Hooks
 import {
@@ -22,7 +24,8 @@ import {
   useUserId,
 } from "../../hooks/hooks";
 import { useChatId } from "../../hooks/chats";
-import LoadingLogo from "../components/others/LoadingLogo";
+
+// Redux
 import { useSelector, useDispatch } from "react-redux";
 import {
   addNewMessageToChatId,
@@ -34,9 +37,13 @@ import {
   updateTeamMessageId,
 } from "../../Redux/slices/team";
 import { removeUser } from "../../Redux/slices/user";
+import {
+  addNewNotification,
+  allNotifications,
+} from "../../Redux/slices/notifications";
+
+// Hooks
 import { useGetTeams, useTeamId } from "../../hooks/teams";
-import TeamSectionSkeleton from "../components/teams/TeamSectionSkeleton";
-import TeamSection from "../components/teams/TeamSection";
 import { RTC_ADDRESS } from "../../config";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
@@ -81,8 +88,7 @@ export default function Chat() {
   const [teamSentAudioPlay, setTeamSentAudioPlay] = useState(false);
   const [teamReceiveAudioPlay, setTeamReceiveAudioPlay] = useState(false);
   const userId = user ? user.id : null;
-
-  const chatId = useChatId(id);
+  dispatch(allNotifications());
 
   useEffect(() => {
     if (id) {
@@ -98,7 +104,7 @@ export default function Chat() {
 
   useEffect(() => {
     if (userId) {
-      notificationSocket.emit("join_notification_room", "notification");
+      notificationSocket.emit("join_notification_room", userId);
     }
   }, [userId]);
 
@@ -152,8 +158,9 @@ export default function Chat() {
 
   useEffect(() => {
     notificationSocket.on("new_notification", (data) => {
+      dispatch(addNewNotification(data));
     });
-  }, [notificationSocket]);
+  }, [notificationSocket, user]);
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
