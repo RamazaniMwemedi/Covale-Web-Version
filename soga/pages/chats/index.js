@@ -45,6 +45,7 @@ import {
 // Hooks
 import { useGetTeams, useTeamId } from "../../hooks/teams";
 import { RTC_ADDRESS } from "../../config";
+import { useGetNotification } from "../../hooks/notification";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
@@ -63,8 +64,6 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
-  useGetChats(token);
-  useGetTeams(token);
 
   // Chats States
   const [chatMessage, setMessage] = useState("");
@@ -88,7 +87,11 @@ export default function Chat() {
   const [teamSentAudioPlay, setTeamSentAudioPlay] = useState(false);
   const [teamReceiveAudioPlay, setTeamReceiveAudioPlay] = useState(false);
   const userId = user ? user.id : null;
-  dispatch(allNotifications());
+
+  // HOOKS WILL BE HERE
+  useGetChats(token);
+  useGetTeams(token);
+  useGetNotification(token);
 
   useEffect(() => {
     if (id) {
@@ -158,6 +161,7 @@ export default function Chat() {
 
   useEffect(() => {
     notificationSocket.on("new_notification", (data) => {
+      console.log(data);
       dispatch(addNewNotification(data));
     });
   }, [notificationSocket, user]);

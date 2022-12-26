@@ -1,5 +1,3 @@
-const io = require("socket.io-client");
-
 const axios = require("axios");
 const baseUrl = "https://covale.herokuapp.com";
 

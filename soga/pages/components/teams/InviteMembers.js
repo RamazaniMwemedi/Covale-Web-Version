@@ -53,16 +53,7 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
         const invitations = res.data;
         if (invitations.length > 0) {
           invitations.forEach((invitation) => {
-            console.log("Invitation :", invitation);
-            const notification = {
-              senderId: invitation.inviter.id,
-              recieverId: invitation.invitee.id,
-              typeofNotification: "joinTeam",
-              notifiHead: `${invitation.team.teamName} Team Invitation`,
-              notifiBody: `${invitation.inviter.firstname} ${invitation.inviter.lastname} has invited you to join ${invitation.team.teamName} team`,
-              link: `/teams/join/?s=${invitation.inviter.id}&r=${invitation.invitee.id}&ti=${invitation.team.id}&ii=${invitation.id}&t=${invitation.token}`,
-            };
-            notificationSocket.emit("send_notification", notification);
+            notificationSocket.emit("send_notification", invitation);
           });
           showInviteMembersHandler();
           setSelectedColleagues((prev) => []);

@@ -9,12 +9,8 @@ const notificationSlice = createSlice({
   reducers: {
     allNotifications(state, { payload }) {
       if (payload) {
-        for (let index = 0; index < payload.length; index++) {
-          const notificationByIndex = payload[index];
-          notifications.push(notificationByIndex);
-        }
+        state.notifications = payload;
       }
-      state.notifications = notifications;
     },
     addNewNotification(state, { payload }) {
       if (payload) {
@@ -24,22 +20,12 @@ const notificationSlice = createSlice({
         };
       }
     },
-    acceptJoinTeamRequest(state, { payload }) {
+    deleteNotification(state, { payload }) {
       if (payload) {
         state = {
           ...state,
           notifications: state.notifications.filter(
-            (notification) => notification.id !== payload
-          ),
-        };
-      }
-    },
-    rejectJoinTeamRequest(state, { payload }) {
-      if (payload) {
-        state = {
-          ...state,
-          notifications: state.notifications.filter(
-            (notification) => notification.id !== payload
+            (notification) => notification._id !== payload
           ),
         };
       }
@@ -48,16 +34,11 @@ const notificationSlice = createSlice({
 });
 
 const { reducer } = notificationSlice;
-const {
-  allNotifications,
-  addNewNotification,
-  acceptJoinTeamRequest,
-  rejectJoinTeamRequest,
-} = notificationSlice.actions;
+const { allNotifications, addNewNotification, deleteNotification } =
+  notificationSlice.actions;
 module.exports = {
   allNotifications,
   addNewNotification,
-  acceptJoinTeamRequest,
-  rejectJoinTeamRequest,
+  deleteNotification,
   reducer,
 };
