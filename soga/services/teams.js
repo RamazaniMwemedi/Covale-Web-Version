@@ -67,12 +67,6 @@ const acceptInvite = async (userToken, invitationToken) => {
         },
       }
     );
-    const url = response.data;
-    // redirect to url
-    window && window.location
-      ? (window.location.href = `${SERVER_ADDRESS}${url}`)
-      : null;
-
     return response;
   }
 };

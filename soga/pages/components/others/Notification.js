@@ -12,27 +12,76 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
-import { Avatar, Badge, Button, CircularProgress } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Button,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  Slide,
+} from "@mui/material";
 import { styled, useTheme } from "@mui/styles";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 // Redux
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { acceptInvite, declineInvite } from "../../../services/teams";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { purple } from "@mui/material/colors";
+import { useRouter } from "next/router";
+import { updateReadNotification } from "../../../Redux/slices/notifications";
 
 export default function Notification() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const notificationsStore = useSelector((state) => state.notifications);
+  const notifications = notificationsStore.notifications
+    ? notificationsStore.notifications
+    : [];
   const [category, setCategory] = React.useState("all");
 
   const theme = useTheme();
   const open = Boolean(anchorEl);
-  const notifications = notificationsStore
-    ? notificationsStore.notifications
-    : [];
+
+  const notificationsLength = notifications.filter(
+    (notification) => notification.read === false
+  ).length;
+  const chatNotifications = notifications.filter(
+    (notification) => notification.category === "chats"
+  );
+  console.log("chatNotifications :>> ", chatNotifications);
+  const chatNotificationsLength = chatNotifications.filter(
+    (notification) => notification.read === false
+  ).length;
+
+  const workNotifications = notifications.filter(
+    (notification) => notification.category === "work"
+  );
+  const workNotificationsLength = workNotifications.filter(
+    (notification) => notification.read === false
+  ).length;
+  const projectNotifications = notifications.filter(
+    (notification) => notification.category === "project"
+  );
+  const projectNotificationsLength = projectNotifications.filter(
+    (notification) => notification.read === false
+  ).length;
+
+  const callendarNotifications = notifications.filter(
+    (notification) => notification.category === "callendar"
+  );
+  const callendarNotificationsLength = callendarNotifications.filter(
+    (notification) => notification.read === false
+  ).length;
+
+  const meetingsNotifications = notifications.filter(
+    (notification) => notification.category === "meetings"
+  );
+  const meetingsNotificationsLength = meetingsNotifications.filter(
+    (notification) => notification.read === false
+  ).length;
 
   const categoryHandler = (value) => {
     setCategory(value);
@@ -65,7 +114,6 @@ export default function Notification() {
         id="account-menu"
         open={open}
         onClose={handleClose}
-        onClick={handleClose}
         PaperProps={{
           elevation: 0,
           sx: {
@@ -126,11 +174,22 @@ export default function Notification() {
               mr: 1,
               mb: 1,
             }}
+            onClick={handleClose}
           >
             <CloseIcon />
           </IconButton>
         </Box>
-        <NavigationBar categoryHandler={categoryHandler} category={category} />
+        <NavigationBar
+          categoryHandler={categoryHandler}
+          category={category}
+          // Category Length
+          chatNotificationsLength={chatNotificationsLength}
+          workNotificationsLength={workNotificationsLength}
+          projectNotificationsLength={projectNotificationsLength}
+          callendarNotificationsLength={callendarNotificationsLength}
+          meetingsNotificationsLength={meetingsNotificationsLength}
+          notificationsLength={notificationsLength}
+        />
 
         <Divider />
         {/* Notification will come here */}
@@ -168,6 +227,12 @@ export default function Notification() {
           <NotificationToDisplay
             category={category}
             notifications={notifications}
+            // Category
+            chatNotifications={chatNotifications}
+            workNotifications={workNotifications}
+            projectNotifications={projectNotifications}
+            callendarNotifications={callendarNotifications}
+            meetingsNotifications={meetingsNotifications}
           />
         </Box>
       </Menu>
@@ -204,7 +269,16 @@ const UnReadNotificationsBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const NavigationBar = ({ category, categoryHandler }) => {
+const NavigationBar = ({
+  category,
+  categoryHandler,
+  notificationsLength,
+  chatNotificationsLength,
+  workNotificationsLength,
+  projectNotificationsLength,
+  callendarNotificationsLength,
+  meetingsNotificationsLength,
+}) => {
   const purpleColor = purple[500];
   return (
     <Box
@@ -219,7 +293,10 @@ const NavigationBar = ({ category, categoryHandler }) => {
         overflow: "auto",
       }}
     >
-      <UnReadNotificationsBadge badgeContent={0} color="secondary">
+      <UnReadNotificationsBadge
+        badgeContent={notificationsLength}
+        color="secondary"
+      >
         <NavButton
           sx={
             category === "all"
@@ -239,7 +316,10 @@ const NavigationBar = ({ category, categoryHandler }) => {
           All
         </NavButton>
       </UnReadNotificationsBadge>
-      <UnReadNotificationsBadge badgeContent={0} color="secondary">
+      <UnReadNotificationsBadge
+        badgeContent={workNotificationsLength}
+        color="secondary"
+      >
         <NavButton
           sx={
             category === "work"
@@ -254,7 +334,10 @@ const NavigationBar = ({ category, categoryHandler }) => {
           Work
         </NavButton>
       </UnReadNotificationsBadge>
-      <UnReadNotificationsBadge badgeContent={0} color="secondary">
+      <UnReadNotificationsBadge
+        badgeContent={chatNotificationsLength}
+        color="secondary"
+      >
         <NavButton
           sx={
             category === "chat"
@@ -269,7 +352,10 @@ const NavigationBar = ({ category, categoryHandler }) => {
           Chat
         </NavButton>
       </UnReadNotificationsBadge>
-      <UnReadNotificationsBadge badgeContent={0} color="secondary">
+      <UnReadNotificationsBadge
+        badgeContent={callendarNotificationsLength}
+        color="secondary"
+      >
         <NavButton
           sx={
             category === "callendar"
@@ -289,7 +375,10 @@ const NavigationBar = ({ category, categoryHandler }) => {
           Callendar
         </NavButton>
       </UnReadNotificationsBadge>
-      <UnReadNotificationsBadge badgeContent={0} color="secondary">
+      <UnReadNotificationsBadge
+        badgeContent={meetingsNotificationsLength}
+        color="secondary"
+      >
         <NavButton
           sx={
             category === "meetings"
@@ -317,7 +406,9 @@ const NavigationBar = ({ category, categoryHandler }) => {
 // Join Team Notification component
 const JoinTeamNotification = ({ userToken, notification }) => {
   const theme = useTheme();
-  const { subject, preview, read, token, time, priority } = notification;
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { subject, preview, read, token, time, priority, id } = notification;
   const [accepting, setAccepting] = React.useState(false);
   // time ago function to show time ago from now in notification
   const timeAgo = (date) => {
@@ -350,6 +441,8 @@ const JoinTeamNotification = ({ userToken, notification }) => {
     setAccepting(true);
     const response = await acceptInvite(userToken, token);
     if (response) {
+      dispatch(updateReadNotification(id));
+      router.push(response.data);
       setAccepting(false);
     } else {
       setAccepting(false);
@@ -358,38 +451,37 @@ const JoinTeamNotification = ({ userToken, notification }) => {
 
   const timePast = timeAgo(new Date(time));
   return (
-    <>
-      <Box
+    <Box
+      sx={{
+        display: "flex",
+        flex: 1,
+        alignItems: "center",
+        textAlign: "left",
+        m: 1,
+        p: 1,
+        backgroundColor: "background.paper",
+        "&:hover": {
+          backgroundColor:
+            theme.palette.mode === "dark" ? "#1e1e1e" : theme.palette.grey[200],
+          cursor: "pointer",
+        },
+        mb: 1,
+        // borger style
+        border: `1px solid ${theme.palette.grey[300]}`,
+        borderRadius: "10px",
+      }}
+    >
+      <Dot read={read} />
+      <Avatar
         sx={{
-          display: "flex",
-          alignItems: "center",
-          textAlign: "left",
-          m: 1,
-          p: 1,
-          backgroundColor: "background.paper",
-          "&:hover": {
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? "#1e1e1e"
-                : theme.palette.grey[200],
-            cursor: "pointer",
-          },
-          mb: 1,
-          // borger style
-          border: `1px solid ${theme.palette.grey[300]}`,
-          borderRadius: "10px",
+          // it should remain at the top
+          width: 24,
+          height: 24,
+          alignSelf: "flex-start",
         }}
-      >
-        <Dot read={read} />
-        <Avatar
-          sx={{
-            // it should remain at the top
-            width: 24,
-            height: 24,
-            alignSelf: "flex-start",
-          }}
-        />
-        <Box>
+      />
+      <Box>
+        <Box sx={{ display: "flex", flex: 1, justifyContent: "space-between" }}>
           <Box sx={{ ml: 0.2 }}>
             <Typography variant="body2">{subject}</Typography>
             <Typography variant="caption" component="div">
@@ -403,48 +495,48 @@ const JoinTeamNotification = ({ userToken, notification }) => {
               {timePast} ago
             </Typography>
           </Box>
-          {!read && (
-            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-              {!accepting ? (
-                <Button
-                  variant="contained"
-                  size="small"
-                  color="secondary"
-                  onClick={acceptInviteHandler}
-                  sx={{
-                    textTransform: "none",
-                    // make it smaller
-                    fontSize: "11px",
-                    height: "20px",
-                  }}
-                >
-                  Accept
-                </Button>
-              ) : (
-                <CircularProgress size={20} />
-              )}
-
+        </Box>
+        {!read && (
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
+            {!accepting ? (
               <Button
                 variant="contained"
                 size="small"
-                color="error"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log("Decline");
-                }}
+                color="secondary"
+                onClick={acceptInviteHandler}
                 sx={{
                   textTransform: "none",
+                  // make it smaller
                   fontSize: "11px",
                   height: "20px",
                 }}
               >
-                Decline
+                Accept
               </Button>
-            </Box>
-          )}
-        </Box>
+            ) : (
+              <CircularProgress size={20} />
+            )}
+
+            <Button
+              variant="contained"
+              size="small"
+              color="error"
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log("Decline");
+              }}
+              sx={{
+                textTransform: "none",
+                fontSize: "11px",
+                height: "20px",
+              }}
+            >
+              Decline
+            </Button>
+          </Box>
+        )}
       </Box>
-    </>
+    </Box>
   );
 };
 
@@ -465,23 +557,41 @@ const Dot = ({ read }) => {
   );
 };
 
-const NotificationToDisplay = ({ category, notifications }) => {
+const NotificationToDisplay = ({
+  category,
+  notifications,
+  chatNotifications,
+  workNotifications,
+  callendarNotifications,
+  meetingsNotifications,
+}) => {
   const token = useCheckLogedinUserToken();
   switch (category) {
     case "all":
       return <AllNotifications notifications={notifications} token={token} />;
 
     case "work":
-      return <WorkNotifications />;
+      return <WorkNotifications workNotifications={workNotifications} />;
 
     case "chat":
-      return <ChatNotifications />;
+      return (
+        <ChatNotifications
+          chatNotifications={chatNotifications}
+          token={token}
+        />
+      );
     case "callendar":
-      return <CallendarNotifications />;
+      return (
+        <CallendarNotifications
+          callendarNotifications={callendarNotifications}
+        />
+      );
     case "meetings":
-      return <MeetingsNotifications />;
+      return (
+        <MeetingsNotifications meetingsNotifications={meetingsNotifications} />
+      );
     default:
-      return <AllNotifications />;
+      return <AllNotifications notifications={notifications} token={token} />;
   }
 };
 
@@ -555,14 +665,12 @@ const WorkNotifications = () => {
   );
 };
 
-const ChatNotifications = () => {
+const ChatNotifications = ({ chatNotifications, token }) => {
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
         mt: 1,
         mb: 1,
         ml: 0.5,
@@ -570,7 +678,39 @@ const ChatNotifications = () => {
         overflow: "auto",
       }}
     >
-      <Typography variant="body1">Chat Notifications</Typography>
+      {chatNotifications && chatNotifications.length > 0 ? (
+        chatNotifications.map((notification, index) => {
+          return (
+            <Box
+              sx={{
+                // Style like the Menu Item
+                alignItems: "flex-start",
+                textAlign: "left",
+                p: 0,
+              }}
+              key={index}
+            >
+              <Typography variant="body1">{notification.head}</Typography>
+              <JoinTeamNotification
+                userToken={token}
+                notification={notification}
+              />
+            </Box>
+          );
+        })
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            mt: 10,
+          }}
+        >
+          <Typography variant="body1">No Notification</Typography>
+        </Box>
+      )}
     </Box>
   );
 };
