@@ -442,7 +442,8 @@ const JoinTeamNotification = ({ userToken, notification }) => {
     const response = await acceptInvite(userToken, token);
     if (response) {
       dispatch(updateReadNotification(id));
-      router.push(response.data);
+      router.push(response.data.teamUrl);
+      // then send a notification 
       setAccepting(false);
     } else {
       setAccepting(false);
@@ -490,7 +491,7 @@ const JoinTeamNotification = ({ userToken, notification }) => {
             <Typography
               variant="caption"
               component="div"
-              sx={{ display: "flex", justifyContent: "flex-end", m: 1 }}
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
               {timePast} ago
             </Typography>

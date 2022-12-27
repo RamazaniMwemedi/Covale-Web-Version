@@ -18,10 +18,14 @@ const notificationSlice = createSlice({
     },
     addNewNotification(state, { payload }) {
       if (payload) {
-        state = {
-          ...state,
-          notifications: state.notifications.push(payload),
-        };
+        // if the notification is already in the state, don't add it again. Add the new notification to the top of the array
+        if (
+          !state.notifications.some(
+            (notification) => notification.id === payload.id
+          )
+        ) {
+          state.notifications.unshift(payload);
+        }
       }
     },
     deleteNotification(state, { payload }) {
