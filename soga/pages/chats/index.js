@@ -138,6 +138,7 @@ export default function Chat() {
   useEffect(() => {
     setBoolForReceive(true);
     chatSocket.on("receive_message", (data) => {
+      console.log(data);
       if (boolForReceive) {
         if (data && "63a55a08be53015699f2987b") {
           if (data.sender != "63a55a08be53015699f2987b") {
@@ -146,7 +147,7 @@ export default function Chat() {
               setBoolForReceive(false);
               dispatch(
                 addNewMessageToChatIdFromSender({
-                  chatId: "63a55a08be53015699f2987b",
+                  chatId: data.chatRoom,
                   data: [data],
                   boolForReceive,
                 })
