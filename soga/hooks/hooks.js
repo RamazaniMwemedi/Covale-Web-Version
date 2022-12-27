@@ -64,20 +64,16 @@ const useCheckLogedinUser = () => {
   return loading;
 };
 const useCheckLogedinUserToken = () => {
-  const [logedInUser, setLogedInUser] = useState("");
-  const [logedInUserToken, setLogedInUserToken] = useState("");
+  let [logedInUserToken, setLogedInUserToken] = useState(null);
   const router = useRouter();
   useEffect(() => {
     const signedInUser = localStorage.getItem("logedinUser");
     if (signedInUser) {
-      setLogedInUser(JSON.parse(signedInUser));
-      if (logedInUser) {
-        setLogedInUserToken(logedInUser.token);
-      }
+      setLogedInUserToken(JSON.parse(signedInUser).token);
     } else {
       router.push("/login");
     }
-  }, [logedInUser]);
+  }, [logedInUserToken]);
 
   return logedInUserToken;
 };

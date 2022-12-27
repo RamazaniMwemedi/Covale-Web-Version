@@ -56,9 +56,47 @@ const inviteFriends = async (token, teamId, friends) => {
   }
 };
 
+const acceptInvite = async (userToken, invitationToken) => {
+  if (userToken && invitationToken) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/team/invite/accept`,
+      { token: invitationToken },
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
+    const url = response.data;
+    // redirect to url
+    window && window.location
+      ? (window.location.href = `${SERVER_ADDRESS}${url}`)
+      : null;
+
+    return response;
+  }
+};
+
+const declineInvite = async (userToken, invitationToken) => {
+  if (userToken && invitationToken) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/team/decline`,
+      { token: invitationToken },
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
+    return response;
+  }
+};
+
 module.exports = {
   getTeams,
   createNewTeam,
   getTeamById,
   inviteFriends,
+  acceptInvite,
+  declineInvite,
 };
