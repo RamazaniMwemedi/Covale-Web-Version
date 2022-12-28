@@ -39,7 +39,6 @@ const notificationSlice = createSlice({
       }
     },
     updateReadNotification(state, { payload }) {
-      console.log("payload", payload);
       if (payload) {
         state = {
           ...state,

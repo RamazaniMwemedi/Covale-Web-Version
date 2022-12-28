@@ -11,7 +11,7 @@ const getallNotifications = async (token) => {
       });
       return response.data;
     } catch (error) {
-      console.log("Error in getallNotifications", error);
+      console.error("Error in getallNotifications", error);
     }
   }
 };
@@ -28,7 +28,7 @@ const deleteNotification = async (token, id) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error in deleteNotification", error);
+    console.error("Error in deleteNotification", error);
   }
 };
 

@@ -139,14 +139,14 @@ export default function Chat() {
     setBoolForReceive(true);
     chatSocket.on("receive_message", (data) => {
       if (boolForReceive) {
-        if (data && "63a55a08be53015699f2987b") {
-          if (data.sender != "63a55a08be53015699f2987b") {
+        if (data) {
+          if (data.sender != userId) {
             if (boolForReceive) {
               setReceiveAudioPlay(true);
               setBoolForReceive(false);
               dispatch(
                 addNewMessageToChatIdFromSender({
-                  chatId: "63a55a08be53015699f2987b",
+                  chatId: data.chatRoom,
                   data: [data],
                   boolForReceive,
                 })
@@ -161,7 +161,6 @@ export default function Chat() {
 
   useEffect(() => {
     notificationSocket.on("new_notification", (data) => {
-      console.log(data);
       dispatch(addNewNotification(data));
     });
   }, [notificationSocket, user]);

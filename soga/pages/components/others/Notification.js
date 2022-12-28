@@ -51,7 +51,6 @@ export default function Notification() {
   const chatNotifications = notifications.filter(
     (notification) => notification.category === "chats"
   );
-  console.log("chatNotifications :>> ", chatNotifications);
   const chatNotificationsLength = chatNotifications.filter(
     (notification) => notification.read === false
   ).length;
@@ -524,7 +523,6 @@ const JoinTeamNotification = ({ userToken, notification }) => {
               color="error"
               onClick={(e) => {
                 e.stopPropagation();
-                console.log("Decline");
               }}
               sx={{
                 textTransform: "none",
