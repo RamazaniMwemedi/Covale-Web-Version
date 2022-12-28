@@ -10,8 +10,10 @@ import { v4 as uuidv4 } from "uuid";
 import DrawerComponent from "../../components/others/DrawerComponent";
 import ChatLeft from "../../components/chats/ChatLeft";
 import ChatSection from "../../components/chats/ChatSection";
-
+import TeamSectionSkeleton from "../../components/teams/TeamSectionSkeleton";
+import TeamSection from "../../components/teams/TeamSection";
 import ChatSectionSkeleton from "../../components/chats/ChatSectionSkeleton";
+import LoadingLogo from "../../components/others/LoadingLogo";
 
 // Hooks
 import {
@@ -22,7 +24,8 @@ import {
   useUserId,
 } from "../../../hooks/hooks";
 import { useChatId } from "../../../hooks/chats";
-import LoadingLogo from "../../components/others/LoadingLogo";
+
+// Redux
 import { useSelector, useDispatch } from "react-redux";
 import {
   addNewMessageToChatId,
@@ -34,15 +37,21 @@ import {
   updateTeamMessageId,
 } from "../../../Redux/slices/team";
 import { removeUser } from "../../../Redux/slices/user";
+import {
+  addNewNotification,
+  allNotifications,
+} from "../../../Redux/slices/notifications";
+
+// Hooks
 import { useGetTeams, useTeamId } from "../../../hooks/teams";
-import TeamSectionSkeleton from "../../components/teams/TeamSectionSkeleton";
-import TeamSection from "../../components/teams/TeamSection";
 import { RTC_ADDRESS } from "../../../config";
+import { useGetNotification } from "../../../hooks/notification";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
+const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`);
 
 export default function Chat() {
   // Global States
@@ -55,8 +64,6 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
-  useGetChats(token);
-  useGetTeams(token);
 
   // Chats States
   const [chatMessage, setMessage] = useState("");
@@ -79,6 +86,12 @@ export default function Chat() {
   const [teamPlaying, setTeamPlaying] = useState(false);
   const [teamSentAudioPlay, setTeamSentAudioPlay] = useState(false);
   const [teamReceiveAudioPlay, setTeamReceiveAudioPlay] = useState(false);
+  const userId = user ? user.id : null;
+
+  // HOOKS WILL BE HERE
+  useGetChats(token);
+  useGetTeams(token);
+  useGetNotification(token);
 
   useEffect(() => {
     if (id) {
@@ -91,6 +104,12 @@ export default function Chat() {
       teamSocket.emit("join_team_room", id);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (userId) {
+      notificationSocket.emit("join_notification_room", userId);
+    }
+  }, [userId]);
 
   useEffect(() => {
     const audio = new Audio(
@@ -120,15 +139,15 @@ export default function Chat() {
     setBoolForReceive(true);
     chatSocket.on("receive_message", (data) => {
       if (boolForReceive) {
-        if (data && currentUserId) {
-          if (data.sender != currentUserId) {
+        if (data) {
+          if (data.sender != userId) {
             if (boolForReceive) {
               setReceiveAudioPlay(true);
               setBoolForReceive(false);
               dispatch(
                 addNewMessageToChatIdFromSender({
-                  chatId: id,
-                  data,
+                  chatId: data.chatRoom,
+                  data: [data],
                   boolForReceive,
                 })
               );
@@ -139,6 +158,12 @@ export default function Chat() {
       }
     });
   }, [chatSocket, user]);
+
+  useEffect(() => {
+    notificationSocket.on("new_notification", (data) => {
+      dispatch(addNewNotification(data));
+    });
+  }, [notificationSocket, user]);
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -173,7 +198,7 @@ export default function Chat() {
         chatSocket.emit("send_message", { newMessage, id, userId });
         setMessage("");
         setBoolForSent(true);
-        if (boolForSent) {
+        if (boolForSent && id) {
           chatSocket.on("messege_sent", (data) => {
             dispatch(
               updateMessageId({
