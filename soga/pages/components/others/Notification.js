@@ -402,8 +402,228 @@ const NavigationBar = ({
 };
 
 // Notifications
+
+const Dot = ({ read }) => {
+  const theme = useTheme();
+  const purpleColor = purple[500];
+  return (
+    <Box
+      sx={{
+        width: 10,
+        height: 10,
+        borderRadius: "50%",
+        mr: 1,
+        backgroundColor: !read ? purpleColor : "unset",
+        alignSelf: "flex-start",
+      }}
+    />
+  );
+};
+
+const NotificationToDisplay = ({
+  category,
+  notifications,
+  chatNotifications,
+  workNotifications,
+  callendarNotifications,
+  meetingsNotifications,
+}) => {
+  const token = useCheckLogedinUserToken();
+  switch (category) {
+    case "all":
+      return <AllNotifications notifications={notifications} token={token} />;
+
+    case "work":
+      return <WorkNotifications workNotifications={workNotifications} />;
+
+    case "chat":
+      return (
+        <ChatNotifications
+          chatNotifications={chatNotifications}
+          token={token}
+        />
+      );
+    case "callendar":
+      return (
+        <CallendarNotifications
+          callendarNotifications={callendarNotifications}
+        />
+      );
+    case "meetings":
+      return (
+        <MeetingsNotifications meetingsNotifications={meetingsNotifications} />
+      );
+    default:
+      return <AllNotifications notifications={notifications} token={token} />;
+  }
+};
+
+const AllNotifications = ({ notifications, token }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        mt: 1,
+        mb: 1,
+        ml: 0.5,
+        // scrollable
+        overflow: "auto",
+      }}
+    >
+      {notifications && notifications.length > 0 ? (
+        notifications.map((notification, index) => {
+          return (
+            <Box
+              sx={{
+                // Style like the Menu Item
+                alignItems: "flex-start",
+                textAlign: "left",
+                p: 0,
+              }}
+              key={index}
+            >
+              <NotificationByType notification={notification} token={token} />
+            </Box>
+          );
+        })
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            mt: 10,
+          }}
+        >
+          <Typography variant="body1">No Notification</Typography>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+const WorkNotifications = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        mt: 1,
+        mb: 1,
+        ml: 0.5,
+        // scrollable
+        overflow: "auto",
+      }}
+    >
+      <Typography variant="body1">Work Notifications</Typography>
+    </Box>
+  );
+};
+
+const ChatNotifications = ({ chatNotifications, token }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        mt: 1,
+        mb: 1,
+        ml: 0.5,
+        // scrollable
+        overflow: "auto",
+      }}
+    >
+      {chatNotifications && chatNotifications.length > 0 ? (
+        chatNotifications.map((notification, index) => {
+          return (
+            <Box
+              sx={{
+                // Style like the Menu Item
+                alignItems: "flex-start",
+                textAlign: "left",
+                p: 0,
+              }}
+              key={index}
+            >
+              <NotificationByType notification={notification} token={token} />
+            </Box>
+          );
+        })
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            mt: 10,
+          }}
+        >
+          <Typography variant="body1">No Notification</Typography>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+const CallendarNotifications = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        mt: 1,
+        mb: 1,
+        ml: 0.5,
+        // scrollable
+        overflow: "auto",
+      }}
+    >
+      <Typography variant="body1">Callendar Notifications</Typography>
+    </Box>
+  );
+};
+
+const MeetingsNotifications = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        mt: 1,
+        mb: 1,
+        ml: 0.5,
+        // scrollable
+        overflow: "auto",
+      }}
+    >
+      <Typography variant="body1">Meeting Notifications</Typography>
+    </Box>
+  );
+};
+
+const NotificationByType = ({ notification, token }) => {
+  const { type } = notification;
+  switch (type) {
+    case "invitation":
+      return (
+        <InvitationNotification notification={notification} userToken={token} />
+      );
+    case "invitationAccepted":
+      return <InvitationAcceptedNotification notification={notification} />;
+  }
+};
+// Notification type component
 // Join Team Notification component
-const JoinTeamNotification = ({ userToken, notification }) => {
+const InvitationNotification = ({ userToken, notification }) => {
   const theme = useTheme();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -442,7 +662,7 @@ const JoinTeamNotification = ({ userToken, notification }) => {
     if (response) {
       dispatch(updateReadNotification(id));
       router.push(response.data.teamUrl);
-      // then send a notification 
+      // then send a notification
       setAccepting(false);
     } else {
       setAccepting(false);
@@ -539,217 +759,82 @@ const JoinTeamNotification = ({ userToken, notification }) => {
   );
 };
 
-const Dot = ({ read }) => {
+const InvitationAcceptedNotification = ({ notification }) => {
   const theme = useTheme();
-  const purpleColor = purple[500];
-  return (
-    <Box
-      sx={{
-        width: 10,
-        height: 10,
-        borderRadius: "50%",
-        mr: 1,
-        backgroundColor: !read ? purpleColor : "unset",
-        alignSelf: "flex-start",
-      }}
-    />
-  );
-};
+  const { subject, preview, read, time, priority, id } = notification;
+  const timeAgo = (date) => {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) {
+      return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+      return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+      return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+      return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+      return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+  };
 
-const NotificationToDisplay = ({
-  category,
-  notifications,
-  chatNotifications,
-  workNotifications,
-  callendarNotifications,
-  meetingsNotifications,
-}) => {
-  const token = useCheckLogedinUserToken();
-  switch (category) {
-    case "all":
-      return <AllNotifications notifications={notifications} token={token} />;
-
-    case "work":
-      return <WorkNotifications workNotifications={workNotifications} />;
-
-    case "chat":
-      return (
-        <ChatNotifications
-          chatNotifications={chatNotifications}
-          token={token}
-        />
-      );
-    case "callendar":
-      return (
-        <CallendarNotifications
-          callendarNotifications={callendarNotifications}
-        />
-      );
-    case "meetings":
-      return (
-        <MeetingsNotifications meetingsNotifications={meetingsNotifications} />
-      );
-    default:
-      return <AllNotifications notifications={notifications} token={token} />;
-  }
-};
-
-const AllNotifications = ({ notifications, token }) => {
+  const timePast = timeAgo(new Date(time));
   return (
     <Box
       sx={{
         display: "flex",
-        flexDirection: "column",
-        mt: 1,
+        flex: 1,
+        alignItems: "center",
+        textAlign: "left",
+        m: 1,
+        p: 1,
+        backgroundColor: "background.paper",
+        "&:hover": {
+          backgroundColor:
+            theme.palette.mode === "dark" ? "#1e1e1e" : theme.palette.grey[200],
+          cursor: "pointer",
+        },
         mb: 1,
-        ml: 0.5,
-        // scrollable
-        overflow: "auto",
+        // borger style
+        border: `1px solid ${theme.palette.grey[300]}`,
+        borderRadius: "10px",
       }}
     >
-      {notifications && notifications.length > 0 ? (
-        notifications.map((notification, index) => {
-          return (
-            <Box
-              sx={{
-                // Style like the Menu Item
-                alignItems: "flex-start",
-                textAlign: "left",
-                p: 0,
-              }}
-              key={index}
+      <Dot read={read} />
+      <Avatar
+        sx={{
+          // it should remain at the top
+          width: 24,
+          height: 24,
+          alignSelf: "flex-start",
+        }}
+      />
+      <Box>
+        <Box sx={{ display: "flex", flex: 1, justifyContent: "space-between" }}>
+          <Box sx={{ ml: 0.2 }}>
+            <Typography variant="body2">{subject}</Typography>
+            <Typography variant="caption" component="div">
+              {preview}
+            </Typography>
+            <Typography
+              variant="caption"
+              component="div"
+              sx={{ display: "flex", justifyContent: "flex-end" }}
             >
-              <Typography variant="body1">{notification.head}</Typography>
-              <JoinTeamNotification
-                userToken={token}
-                notification={notification}
-              />
-            </Box>
-          );
-        })
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            mt: 10,
-          }}
-        >
-          <Typography variant="body1">No Notification</Typography>
+              {timePast} ago
+            </Typography>
+          </Box>
         </Box>
-      )}
-    </Box>
-  );
-};
-
-const WorkNotifications = () => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-        mt: 1,
-        mb: 1,
-        ml: 0.5,
-        // scrollable
-        overflow: "auto",
-      }}
-    >
-      <Typography variant="body1">Work Notifications</Typography>
-    </Box>
-  );
-};
-
-const ChatNotifications = ({ chatNotifications, token }) => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        mt: 1,
-        mb: 1,
-        ml: 0.5,
-        // scrollable
-        overflow: "auto",
-      }}
-    >
-      {chatNotifications && chatNotifications.length > 0 ? (
-        chatNotifications.map((notification, index) => {
-          return (
-            <Box
-              sx={{
-                // Style like the Menu Item
-                alignItems: "flex-start",
-                textAlign: "left",
-                p: 0,
-              }}
-              key={index}
-            >
-              <Typography variant="body1">{notification.head}</Typography>
-              <JoinTeamNotification
-                userToken={token}
-                notification={notification}
-              />
-            </Box>
-          );
-        })
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            mt: 10,
-          }}
-        >
-          <Typography variant="body1">No Notification</Typography>
-        </Box>
-      )}
-    </Box>
-  );
-};
-
-const CallendarNotifications = () => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-        mt: 1,
-        mb: 1,
-        ml: 0.5,
-        // scrollable
-        overflow: "auto",
-      }}
-    >
-      <Typography variant="body1">Callendar Notifications</Typography>
-    </Box>
-  );
-};
-
-const MeetingsNotifications = () => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-        mt: 1,
-        mb: 1,
-        ml: 0.5,
-        // scrollable
-        overflow: "auto",
-      }}
-    >
-      <Typography variant="body1">Meeting Notifications</Typography>
+      </Box>
     </Box>
   );
 };
