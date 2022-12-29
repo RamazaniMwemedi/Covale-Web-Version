@@ -96,16 +96,18 @@ export default function Notification() {
     <React.Fragment>
       <Box>
         <Tooltip title="Notification" placement="top">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 1 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-          >
-            <NotificationsActiveRoundedIcon />
-          </IconButton>
+          <Badge badgeContent={notificationsLength} color="error">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 1 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <NotificationsActiveRoundedIcon />
+            </IconButton>
+          </Badge>
         </Tooltip>
       </Box>
       <Menu
