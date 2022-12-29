@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
-import { Box, Button, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useEffect, useState, useRef, useReducer } from "react";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
+import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 
 // My components
 import DrawerComponent from "../../components/others/DrawerComponent";
@@ -16,43 +16,43 @@ import ChatSectionSkeleton from "../../components/chats/ChatSectionSkeleton";
 import LoadingLogo from "../../components/others/LoadingLogo";
 
 // Hooks
+import { useCheckLogedinUser, useGetChats } from "../../../hooks/hooks";
 import {
-  useCheckLogedinUser,
-  useGetChatById,
-  useGetChats,
-  useGetTeamById,
-  useUserId,
-} from "../../../hooks/hooks";
-import { useChatId } from "../../../hooks/chats";
+  useChatId,
+  useJoinChatRoom,
+  useRecieveNewChatMessage,
+} from "../../../hooks/chats";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import {
   addNewMessageToChatId,
   updateMessageId,
-  addNewMessageToChatIdFromSender,
 } from "../../../Redux/slices/chat";
 import {
   addNewMessageToTeamId,
   updateTeamMessageId,
-  addNewMessageToTeamIdFromSender,
 } from "../../../Redux/slices/team";
 import { removeUser } from "../../../Redux/slices/user";
-import {
-  addNewNotification,
-  allNotifications,
-} from "../../../Redux/slices/notifications";
 
 // Hooks
-import { useGetTeams, useTeamId } from "../../../hooks/teams";
+import {
+  useGetTeams,
+  useJoinTeamRoom,
+  useRecieveNewTeamMessage,
+  useTeamId,
+} from "../../../hooks/teams";
 import { RTC_ADDRESS } from "../../../config";
-import { useGetNotification } from "../../../hooks/notification";
+import {
+  useGetNotification,
+  useJoinNotificationRoom,
+  useRecieveNewNotification,
+} from "../../../hooks/notification";
+import { useState } from "react";
+import Image from "next/image";
 // Socket.IO
-// https://rtcommunication.herokuapp.com/
-// http://localhost:5005/
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
-const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`);
 
 export default function Chat() {
   // Global States
@@ -61,7 +61,6 @@ export default function Chat() {
   const userStore = useSelector((state) => state.user);
   const userLoading = useCheckLogedinUser();
   const user = userStore ? userStore.user : null;
-  const currentUserId = useUserId();
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
@@ -70,107 +69,33 @@ export default function Chat() {
   const [chatMessage, setMessage] = useState("");
   //      Bools
   const [boolForSent, setBoolForSent] = useState(true);
-  const [boolForReceive, setBoolForReceive] = useState(true);
-  //      Audio
-  const [playing, setPlaying] = useState(false);
-  const [sentAudioPlay, setSentAudioPlay] = useState(false);
-  const [receiveAudioPlay, setReceiveAudioPlay] = useState(false);
 
-  const [audioUrl, setAudioUrl] = useState(null);
   // Teams States
   // team message state
   const [teamMessage, setTeamMessage] = useState("");
   //      Bools
   const [teamBoolForSent, setTeamBoolForSent] = useState(true);
-  const [teamBoolForReceive, setTeamBoolForReceive] = useState(true);
-  //      Audio
-  const [teamPlaying, setTeamPlaying] = useState(false);
-  const [teamSentAudioPlay, setTeamSentAudioPlay] = useState(false);
-  const [teamReceiveAudioPlay, setTeamReceiveAudioPlay] = useState(false);
   const userId = user ? user.id : null;
 
   // HOOKS WILL BE HERE
   useGetChats(token);
   useGetTeams(token);
   useGetNotification(token);
+  // Join chat room
+  useJoinChatRoom(id);
+  // Join team room
+  useJoinTeamRoom(id);
+  // Join notification room
+  useJoinNotificationRoom(userId);
 
-  useEffect(() => {
-    if (id) {
-      chatSocket.emit("join_room", id);
-    }
-  }, [id]);
+  // Recieve new message for chat
+  useRecieveNewChatMessage(user, userId);
 
-  useEffect(() => {
-    if (id) {
-      teamSocket.emit("join_team_room", id);
-    }
-  }, [id]);
+  // Recieve new message for team
+  useRecieveNewTeamMessage(user, userId);
 
-  useEffect(() => {
-    if (userId) {
-      notificationSocket.emit("join_notification_room", userId);
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    const audio = new Audio(
-      "https://ramazanimwemedi.github.io/sounds/recieve.mp3"
-    );
-    receiveAudioPlay ? audio.play() : audio.pause();
-
-    audio.addEventListener("ended", () => setReceiveAudioPlay(false));
-    return () => {
-      audio.addEventListener("ended", () => setReceiveAudioPlay(false));
-    };
-  }, [receiveAudioPlay]);
-
-  useEffect(() => {
-    const audio = new Audio(
-      "https://ramazanimwemedi.github.io/sounds/sent.mp3"
-    );
-
-    sentAudioPlay ? audio.play() : audio.pause();
-    audio.addEventListener("ended", () => setSentAudioPlay(true));
-    return () => {
-      audio.addEventListener("ended", () => setSentAudioPlay(true));
-    };
-  }, [sentAudioPlay]);
-
-  useEffect(() => {
-    chatSocket.on("receive_message", (data) => {
-      if (data && data.sender != userId) {
-        setReceiveAudioPlay(true);
-        dispatch(
-          addNewMessageToChatIdFromSender({
-            chatId: data.chatRoom,
-            data: [data],
-          })
-        );
-        setReceiveAudioPlay(false);
-      }
-    });
-  }, [chatSocket, user]);
-
-  useEffect(() => {
-    teamSocket.on("receive_message_to_team", (data) => {
-      if (data && data.sender != userId) {
-        setTeamReceiveAudioPlay(true);
-        dispatch(
-          addNewMessageToTeamIdFromSender({
-            teamId: data.teamRoom,
-            data: data,
-          })
-        );
-        setTeamReceiveAudioPlay(false);
-      }
-    });
-  }, [teamSocket, user]);
-
-  useEffect(() => {
-    notificationSocket.on("new_notification", (data) => {
-      dispatch(addNewNotification(data));
-    });
-  }, [notificationSocket, user]);
+  // Recieve new notification
+  useRecieveNewNotification(user);
 
   const messageChangeHandler = (e) => {
     setMessage(e.target.value);
@@ -214,7 +139,6 @@ export default function Chat() {
                 idFromClient: data.idFromClient,
               })
             );
-            setSentAudioPlay(true);
             setPlaying(true);
             setBoolForSent(false);
           });
@@ -277,30 +201,6 @@ export default function Chat() {
     }
   };
 
-  useEffect(() => {
-    const audio = new Audio(
-      "https://ramazanimwemedi.github.io/sounds/recieve.mp3"
-    );
-    teamReceiveAudioPlay ? audio.play() : audio.pause();
-
-    audio.addEventListener("ended", () => setTeamReceiveAudioPlay(false));
-    return () => {
-      audio.addEventListener("ended", () => setTeamReceiveAudioPlay(false));
-    };
-  }, [teamReceiveAudioPlay]);
-
-  useEffect(() => {
-    const audio = new Audio(
-      "https://ramazanimwemedi.github.io/sounds/sent.mp3"
-    );
-
-    teamSentAudioPlay ? audio.play() : audio.pause();
-    audio.addEventListener("ended", () => setTeamSentAudioPlay(true));
-    return () => {
-      audio.addEventListener("ended", () => setTeamSentAudioPlay(true));
-    };
-  }, [teamSentAudioPlay]);
-
   return (
     <>
       {userLoading ? (
@@ -354,13 +254,40 @@ const ClickaChat = () => {
   return (
     <Box
       sx={{
-        alignItems: "center",
-        textAlign: "center",
+        //  it should be at the center of the screen and it should be responsive
+
+        display: "flex",
         justifyContent: "center",
-        margin: "200px",
+        alignItems: "center",
+        height: "100vh",
+        width: "100%",
       }}
     >
-      <Typography variant="h1">Click a chat</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <Typography
+          variant="h2"
+          sx={{
+            marginBottom: "20px",
+          }}
+        >
+          Click a chat to start messaging
+        </Typography>
+        <ChatBubbleRoundedIcon
+          color="secondary"
+          sx={{
+            width: "30vw",
+            height: "30vh",
+            fontSize: "10px",
+          }}
+        />
+      </Box>
     </Box>
   );
 };

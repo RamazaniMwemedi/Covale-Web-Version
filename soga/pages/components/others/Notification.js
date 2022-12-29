@@ -96,7 +96,7 @@ export default function Notification() {
     <React.Fragment>
       <Box>
         <Tooltip title="Notification" placement="top">
-          <Badge badgeContent={notificationsLength} color="error">
+          <Badge badgeContent={notificationsLength} color="secondary">
             <IconButton
               onClick={handleClick}
               size="small"
