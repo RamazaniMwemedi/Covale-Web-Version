@@ -9,5 +9,5 @@ const URLS = {
 };
 module.exports = {
   SERVER_ADDRESS: URLS.prodSerURL,
-  RTC_ADDRESS: URLS.devRtcURL,
+  RTC_ADDRESS: URLS.prodRtcURL,
 };
