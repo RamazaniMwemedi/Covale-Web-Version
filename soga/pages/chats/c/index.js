@@ -35,6 +35,7 @@ import {
 import {
   addNewMessageToTeamId,
   updateTeamMessageId,
+  addNewMessageToTeamIdFromSender,
 } from "../../../Redux/slices/team";
 import { removeUser } from "../../../Redux/slices/user";
 import {
@@ -136,28 +137,34 @@ export default function Chat() {
   }, [sentAudioPlay]);
 
   useEffect(() => {
-    setBoolForReceive(true);
     chatSocket.on("receive_message", (data) => {
-      if (boolForReceive) {
-        if (data) {
-          if (data.sender != userId) {
-            if (boolForReceive) {
-              setReceiveAudioPlay(true);
-              setBoolForReceive(false);
-              dispatch(
-                addNewMessageToChatIdFromSender({
-                  chatId: data.chatRoom,
-                  data: [data],
-                  boolForReceive,
-                })
-              );
-            }
-          }
-          setReceiveAudioPlay(false);
-        }
+      if (data && data.sender != userId) {
+        setReceiveAudioPlay(true);
+        dispatch(
+          addNewMessageToChatIdFromSender({
+            chatId: data.chatRoom,
+            data: [data],
+          })
+        );
+        setReceiveAudioPlay(false);
       }
     });
   }, [chatSocket, user]);
+
+  useEffect(() => {
+    teamSocket.on("receive_message_to_team", (data) => {
+      if (data && data.sender != userId) {
+        setTeamReceiveAudioPlay(true);
+        dispatch(
+          addNewMessageToTeamIdFromSender({
+            teamId: data.teamRoom,
+            data: data,
+          })
+        );
+        setTeamReceiveAudioPlay(false);
+      }
+    });
+  }, [teamSocket, user]);
 
   useEffect(() => {
     notificationSocket.on("new_notification", (data) => {
