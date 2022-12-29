@@ -65,18 +65,15 @@ function Tabs({
   friendClicked,
   buttonHandler,
   closeMorePeopleHandler,
-  sendMessage,
   clickFriendHandler,
   clearFriendHandler,
-  messageChangeHandler,
   toggleShowTeam,
   openCreateTeam,
   teamLoading,
 }) {
-  const theme = useTheme();
 
   return (
-    <Box sx={{ width: "100%", typography: "body1" }}>
+    <Box sx={{ width: "100%", typography: "body1", overflow: "hidden" }}>
       <TabContext value={value}>
         <TabPanel value="chats">
           <Box
@@ -91,8 +88,6 @@ function Tabs({
               friendClicked={friendClicked}
               buttonHandler={buttonHandler}
               closeMorePeopleHandler={closeMorePeopleHandler}
-              messageChangeHandler={messageChangeHandler}
-              sendMessage={sendMessage}
               clickFriendHandler={clickFriendHandler}
               clearFriendHandler={clearFriendHandler}
             />
@@ -119,17 +114,13 @@ function Tabs({
 }
 
 export default function ChatLeft({ user }) {
-  const token = user ? user.token : null;
   const [value, setValue] = React.useState("chats");
   const friends = useGetFriends();
   const [showMoreFriends, setShowMoreFriends] = React.useState(false);
   const [showButton, setShowButton] = React.useState(true);
-  const [message, setMessage] = React.useState("");
   const [friendClicked, setFriendClicked] = React.useState(null);
   // Team States
   const [openCreateTeam, setOpenCreateTeam] = React.useState(false);
-  const [teams, setTeams] = React.useState([]);
-  const [teamLoading, setTeamLoading] = React.useState(true);
 
   const buttonHandler = () => {
     setShowMoreFriends(true);
@@ -140,13 +131,6 @@ export default function ChatLeft({ user }) {
     setShowButton(true);
   };
 
-  const messageChangeHandler = (e) => {
-    setMessage(e.target.value);
-  };
-
-  const sendMessage = () => {
-    alert(`message: ${message} sent to ${friendClicked.username}`);
-  };
 
   const clickFriendHandler = (friend) => {
     setFriendClicked(friend);
@@ -166,7 +150,12 @@ export default function ChatLeft({ user }) {
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        // unscrollable
+        overflow: "hidden",
+      }}
+    >
       <CssBaseline />
       <Drawer variant="permanent">
         <ProfileDialog handleChange={handleChange} value={value} user={user} />
@@ -180,15 +169,11 @@ export default function ChatLeft({ user }) {
           friendClicked={friendClicked}
           buttonHandler={buttonHandler}
           closeMorePeopleHandler={closeMorePeopleHandler}
-          messageChangeHandler={messageChangeHandler}
-          sendMessage={sendMessage}
           clickFriendHandler={clickFriendHandler}
           clearFriendHandler={clearFriendHandler}
           // Teams
-          teams={teams}
           toggleShowTeam={toggleShowTeam}
           openCreateTeam={openCreateTeam}
-          teamLoading={teamLoading}
         />
       </Drawer>
     </Box>

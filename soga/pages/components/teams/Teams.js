@@ -78,94 +78,109 @@ const Teams = ({ openCreateTeam, toggleShowTeam }) => {
           />
         </FormControl>
       </Box>
-      {teamLoading ? (
-        <Stack spacing={1}>
-          {[...Array(7)].map((_, i) => (
-            <ListItem
-              key={i}
-              sx={{
-                display: "flex",
-                // border style
-                borderStyle: " solid ",
-                // border color
-                borderColor: "lightgrey",
-                // border width
-                borderWidth: "2px",
-                borderRadius: "0.5rem",
-              }}
-            >
-              {/* Avatar skeleton */}
-              <Skeleton
-                variant="circle"
-                width={40}
-                height={40}
-                style={{ borderRadius: "50%" }}
-              />
-              {/* Skeleton for user first and lastname */}
-              <Box sx={{}}>
+      <Box
+        sx={{
+          // it should be scrowable
+          height: "79vh",
+          overflowY: "scroll",
+          overflowX: "hidden",
+          backgroundColor: theme.colors.background1,
+          borderRadius: "5px",
+          marginBottom: "10px",
+          alignItems: "center",
+          textAlign: "center",
+          justiContent: "center",
+        }}
+      >
+        {teamLoading ? (
+          <Stack spacing={1}>
+            {[...Array(7)].map((_, i) => (
+              <ListItem
+                key={i}
+                sx={{
+                  display: "flex",
+                  // border style
+                  borderStyle: " solid ",
+                  // border color
+                  borderColor: "lightgrey",
+                  // border width
+                  borderWidth: "2px",
+                  borderRadius: "0.5rem",
+                }}
+              >
+                {/* Avatar skeleton */}
                 <Skeleton
-                  variant="rect"
-                  width={185}
-                  height={20}
-                  style={{ marginLeft: "10px" }}
+                  variant="circle"
+                  width={40}
+                  height={40}
+                  style={{ borderRadius: "50%" }}
                 />
-                <Skeleton
-                  variant="rect"
-                  width={185}
-                  height={8}
-                  style={{ marginLeft: "10px", marginTop: "8px" }}
-                />
-              </Box>
-            </ListItem>
-          ))}
-          {/* A skeleton of ListItem skeleton for chat */}
-        </Stack>
-      ) : (
-        <>
-          {teams &&
-            //   If teams are greater than 0
-            (teams.length > 0 ? (
-              <Box>
-                {openCreateTeam && (
-                  <CreateTeam toggleShowTeam={toggleShowTeam} />
-                )}
-
-                {teams.map((team, i) => {
-                  return <Team key={i} team={team} />;
-                })}
-                {!openCreateTeam && (
-                  <FloatingATeamB toggleShowTeam={toggleShowTeam} />
-                )}
-              </Box>
-            ) : (
-              <Box sx={{ textAlign: "center", marginTop: "150px" }}>
-                <Typography variant="h5" color="secondary">
-                  No Team yet
-                </Typography>
-                <Typography variant="subtitle2" color="secondary">
-                  Click the{" "}
-                  {
-                    <Icon>
-                      <GroupAddIcon
-                        sx={{
-                          width: "15px",
-                          height: "15px",
-                        }}
-                      />
-                    </Icon>
-                  }{" "}
-                  to start a team
-                </Typography>
-                {openCreateTeam && (
-                  <CreateTeam toggleShowTeam={toggleShowTeam} />
-                )}
-                {!openCreateTeam && (
-                  <FloatingATeamB toggleShowTeam={toggleShowTeam} />
-                )}
-              </Box>
+                {/* Skeleton for user first and lastname */}
+                <Box sx={{}}>
+                  <Skeleton
+                    variant="rect"
+                    width={185}
+                    height={20}
+                    style={{ marginLeft: "10px" }}
+                  />
+                  <Skeleton
+                    variant="rect"
+                    width={185}
+                    height={8}
+                    style={{ marginLeft: "10px", marginTop: "8px" }}
+                  />
+                </Box>
+              </ListItem>
             ))}
-        </>
-      )}
+            {/* A skeleton of ListItem skeleton for chat */}
+          </Stack>
+        ) : (
+          <>
+            {teams &&
+              //   If teams are greater than 0
+              (teams.length > 0 ? (
+                <Box>
+                  {openCreateTeam && (
+                    <CreateTeam toggleShowTeam={toggleShowTeam} />
+                  )}
+
+                  {teams.map((team, i) => {
+                    return <Team key={i} team={team} />;
+                  })}
+                  {!openCreateTeam && (
+                    <FloatingATeamB toggleShowTeam={toggleShowTeam} />
+                  )}
+                </Box>
+              ) : (
+                <Box sx={{ textAlign: "center", marginTop: "150px" }}>
+                  <Typography variant="h5" color="secondary">
+                    No Team yet
+                  </Typography>
+                  <Typography variant="subtitle2" color="secondary">
+                    Click the{" "}
+                    {
+                      <Icon>
+                        <GroupAddIcon
+                          sx={{
+                            width: "15px",
+                            height: "15px",
+                          }}
+                        />
+                      </Icon>
+                    }{" "}
+                    to start a team
+                  </Typography>
+                  {openCreateTeam && (
+                    <CreateTeam toggleShowTeam={toggleShowTeam} />
+                  )}
+                  {!openCreateTeam && (
+                    <FloatingATeamB toggleShowTeam={toggleShowTeam} />
+                  )}
+                </Box>
+              ))}
+          </>
+        )}
+      </Box>
     </>
   );
 };

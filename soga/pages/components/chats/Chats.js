@@ -86,111 +86,125 @@ const Chats = ({
           />
         </FormControl>
       </Box>
-      {loading ? (
-        <Stack spacing={1}>
-          {[...Array(7)].map((_, i) => (
-            <ListItem
-              key={i}
-              sx={{
-                display: "flex",
-                // border style
-                borderStyle: " solid ",
-                // border color
-                borderColor: "lightgrey",
-                // border width
-                borderWidth: "2px",
-                borderRadius: "0.5rem",
-              }}
-            >
-              {/* Avatar skeleton */}
-              <Skeleton
-                variant="circle"
-                width={40}
-                height={40}
-                style={{ borderRadius: "50%" }}
-              />
-              {/* Skeleton for user first and lastname */}
-              <Box sx={{}}>
+      <Box
+        sx={{
+          // it should be scrowable
+          height: "79vh",
+          overflowY: "scroll",
+          overflowX: "hidden",
+          borderRadius: "5px",
+          marginBottom: "10px",
+          alignItems: "center",
+          textAlign: "center",
+          justiContent: "center",
+        }}
+      >
+        {loading ? (
+          <Stack spacing={1}>
+            {[...Array(70)].map((_, i) => (
+              <ListItem
+                key={i}
+                sx={{
+                  display: "flex",
+                  // border style
+                  borderStyle: " solid ",
+                  // border color
+                  borderColor: "lightgrey",
+                  // border width
+                  borderWidth: "2px",
+                  borderRadius: "0.5rem",
+                }}
+              >
+                {/* Avatar skeleton */}
                 <Skeleton
-                  variant="rect"
-                  width={185}
-                  height={20}
-                  style={{ marginLeft: "10px" }}
+                  variant="circle"
+                  width={40}
+                  height={40}
+                  style={{ borderRadius: "50%" }}
                 />
-                <Skeleton
-                  variant="rect"
-                  width={185}
-                  height={8}
-                  style={{ marginLeft: "10px", marginTop: "8px" }}
-                />
-              </Box>
-            </ListItem>
-          ))}
-          {/* A skeleton of ListItem skeleton for chat */}
-        </Stack>
-      ) : (
-        <>
-          {chats &&
-            (chats.length > 0 ? (
-              <Box>
-                {showMoreFriends && (
-                  <AddMoreFriends
-                    closeMorePeopleHandler={closeMorePeopleHandler}
-                    messageChangeHandler={messageChangeHandler}
-                    sendMessage={sendMessage}
-                    clearFriendHandler={clearFriendHandler}
-                    friendClicked={friendClicked}
-                    clickFriendHandler={clickFriendHandler}
-                    friends={friends}
+                {/* Skeleton for user first and lastname */}
+                <Box sx={{}}>
+                  <Skeleton
+                    variant="rect"
+                    width={185}
+                    height={20}
+                    style={{ marginLeft: "10px" }}
                   />
-                )}
-
-                {showButton && (
-                  <FloatingAButton buttonHandler={buttonHandler} />
-                )}
-                {chats.map((chat) => {
-                  return <Chat key={chat.chatId} chat={chat} />;
-                })}
-              </Box>
-            ) : (
-              <Box sx={{ textAlign: "center", marginTop: "150px" }}>
-                {showMoreFriends && (
-                  <AddMoreFriends
-                    closeMorePeopleHandler={closeMorePeopleHandler}
-                    messageChangeHandler={messageChangeHandler}
-                    sendMessage={sendMessage}
-                    // message={message}
-                    clearFriendHandler={clearFriendHandler}
-                    friendClicked={friendClicked}
-                    clickFriendHandler={clickFriendHandler}
-                    friends={friends}
+                  <Skeleton
+                    variant="rect"
+                    width={185}
+                    height={8}
+                    style={{ marginLeft: "10px", marginTop: "8px" }}
                   />
-                )}
-
-                {showButton && (
-                  <FloatingAButton buttonHandler={buttonHandler} />
-                )}
-                <Typography variant="h5" color="secondary">
-                  No chats yet
-                </Typography>
-                <Typography variant="subtitle2" color="secondary">
-                  Click the{" "}
-                  {
-                    <Icon>
-                      <AddIcon
-                        sx={{
-                          width: "15px",
-                          height: "15px",
-                        }}
-                      />
-                    </Icon>
-                  }{" "}
-                  to add a friends
-                </Typography>
-              </Box>
+                </Box>
+              </ListItem>
             ))}
-        </>
-      )}
+            {/* A skeleton of ListItem skeleton for chat */}
+          </Stack>
+        ) : (
+          <>
+            {chats &&
+              (chats.length > 0 ? (
+                <Box>
+                  {showMoreFriends && (
+                    <AddMoreFriends
+                      closeMorePeopleHandler={closeMorePeopleHandler}
+                      messageChangeHandler={messageChangeHandler}
+                      sendMessage={sendMessage}
+                      clearFriendHandler={clearFriendHandler}
+                      friendClicked={friendClicked}
+                      clickFriendHandler={clickFriendHandler}
+                      friends={friends}
+                    />
+                  )}
+
+                  {showButton && (
+                    <FloatingAButton buttonHandler={buttonHandler} />
+                  )}
+                  {chats.map((chat) => {
+                    return <Chat key={chat.chatId} chat={chat} />;
+                  })}
+                </Box>
+              ) : (
+                <Box sx={{ textAlign: "center", marginTop: "150px" }}>
+                  {showMoreFriends && (
+                    <AddMoreFriends
+                      closeMorePeopleHandler={closeMorePeopleHandler}
+                      messageChangeHandler={messageChangeHandler}
+                      sendMessage={sendMessage}
+                      // message={message}
+                      clearFriendHandler={clearFriendHandler}
+                      friendClicked={friendClicked}
+                      clickFriendHandler={clickFriendHandler}
+                      friends={friends}
+                    />
+                  )}
+
+                  {showButton && (
+                    <FloatingAButton buttonHandler={buttonHandler} />
+                  )}
+                  <Typography variant="h5" color="secondary">
+                    No chats yet
+                  </Typography>
+                  <Typography variant="subtitle2" color="secondary">
+                    Click the{" "}
+                    {
+                      <Icon>
+                        <AddIcon
+                          sx={{
+                            width: "15px",
+                            height: "15px",
+                          }}
+                        />
+                      </Icon>
+                    }{" "}
+                    to add a friends
+                  </Typography>
+                </Box>
+              ))}
+          </>
+        )}
+      </Box>
     </>
   );
 };
