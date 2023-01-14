@@ -41,7 +41,6 @@ const Teams = ({ openCreateTeam, toggleShowTeam }) => {
       <Box
         sx={{
           width: "100%",
-          backgroundColor: theme.colors.background1,
           borderRadius: "5px",
           marginBottom: "10px",
           alignItems: "center",
@@ -84,7 +83,6 @@ const Teams = ({ openCreateTeam, toggleShowTeam }) => {
           height: "79vh",
           overflowY: "scroll",
           overflowX: "hidden",
-          backgroundColor: theme.colors.background1,
           borderRadius: "5px",
           marginBottom: "10px",
           alignItems: "center",

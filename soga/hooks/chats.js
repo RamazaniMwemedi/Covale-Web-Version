@@ -36,19 +36,18 @@ const useJoinChatRoom = (id) => {
 const useRecieveNewChatMessage = (user, userId) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    if(userId){
-    chatSocket.on("receive_message", (data) => {
-      if (data && data.sender != userId) {
-        console.log(data.sender == userId);
-        dispatch(
-          addNewMessageToChatIdFromSender({
-            chatId: data.chatRoom,
-            data: [data],
-          })
-        );
-      }
-    });
-  }
+    if (userId) {
+      chatSocket.on("receive_message", (data) => {
+        if (data && data.sender != userId) {
+          dispatch(
+            addNewMessageToChatIdFromSender({
+              chatId: data.chatRoom,
+              data: [data],
+            })
+          );
+        }
+      });
+    }
   }, [chatSocket, user]);
 };
 module.exports = {

@@ -108,7 +108,7 @@ hr {
 ::-webkit-scrollbar-track {
   /* box-shadow: inset 0 0 5px white; */
   border-radius: 0px;
-  background-color: whitesmoke;
+  background-color: unset;
 }
 
 /* Handle */

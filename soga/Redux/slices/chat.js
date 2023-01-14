@@ -29,13 +29,20 @@ const chatSlice = createSlice({
       }
     },
     updateMessageId(state, { payload }) {
+      const { idFromClient, files, chatId } = payload;
+      // update the message id and each file url
       if (payload) {
         state = {
           ...state,
           chats: (state.chats
-            .filter((chat) => chat.id === payload.chatId)[0]
+            .filter((chat) => chat.id === chatId)[0]
             .messages.filter((message) => {
-              return message.idFromClient == payload.idFromClient;
+              return message.idFromClient == idFromClient;
+            })[0].files = files),
+          chats: (state.chats
+            .filter((chat) => chat.id === chatId)[0]
+            .messages.filter((message) => {
+              return message.idFromClient == idFromClient;
             })[0].id = payload.id),
         };
       }

@@ -420,9 +420,6 @@ const Bottom = ({
       <IconButton>
         <ControlPointRoundedIcon color="secondary" />
       </IconButton>
-      <IconButton>
-        <PhotoSizeSelectActualRoundedIcon color="secondary" />
-      </IconButton>
       {/* Communication */}
       <Box
         sx={{

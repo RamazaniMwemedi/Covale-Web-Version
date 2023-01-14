@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, Button, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/styles";
@@ -9,10 +9,29 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Image from "next/image";
 import VedeoOpen from "./VideoOpen";
+import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
+import FileComponent from "../mediaFiles/FileComponent";
 
-const ChatSectionRight = ({ friendUsername }) => {
+const ChatSectionRight = ({ friendUsername, files }) => {
+  const [showFile, setShowFile] = useState(false);
+  const [file, setFile] = useState(null);
+  const handleShowFile = (file) => {
+    if (file.fileUrl.includes("https://")) {
+      setFile(file);
+      setShowFile(true);
+    }
+  };
+  const handleCloseShowFile = () => {
+    setShowFile(false);
+  };
   return (
     <>
+      {showFile && (
+        <FileDisplayComponent
+          handleCloseShowVideoPlayer={handleCloseShowFile}
+          file={file}
+        />
+      )}
       {friendUsername && (
         <Box
           sx={{
@@ -54,7 +73,7 @@ const ChatSectionRight = ({ friendUsername }) => {
               // Padding
             }}
           >
-            <Media />
+            <Media handleShowFile={handleShowFile} files={files} />
           </Box>
         </Box>
       )}
@@ -99,7 +118,16 @@ const Friend = ({ friendUsername }) => {
 };
 
 // Media
-const Media = () => {
+const Media = ({ files, handleShowFile }) => {
+  const imageFiles = files.filter((file) => file.fileType.includes("image"));
+  const videoFiles = files.filter((file) => file.fileType.includes("video"));
+  const documentFiles = files.filter((file) =>
+    file.fileType.includes(
+      "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+        "application/msword"
+    )
+  );
+  console.log("Hello World");
   return (
     <Box
       sx={{
@@ -112,19 +140,22 @@ const Media = () => {
         {" "}
         Media
       </Typography>
-      <MediaPhotos />
-      <MediaVideos />
-      <MediaDocuments />
+      <ImageMedia handleShowFile={handleShowFile} imageFiles={imageFiles} />
+      <MediaVideos handleShowFile={handleShowFile} videoFiles={videoFiles} />
+      <MediaDocuments
+        handleShowFile={handleShowFile}
+        documentFiles={documentFiles}
+      />
       <MediaLinks />
     </Box>
   );
 };
 
-const MediaPhotos = () => {
+const ImageMedia = ({ imageFiles, handleShowFile }) => {
   const theme = useTheme();
   return (
     <Box>
-      <MediaName name="Photos" />
+      <MediaName name="Images" />
       {/* Images */}
 
       <ImageList
@@ -137,11 +168,12 @@ const MediaPhotos = () => {
         cols={3}
         rowHeight={80}
       >
-        {itemData.map((item) => (
-          <ImageListItem key={item.img}>
+        {imageFiles.map((imageFile) => (
+          <ImageListItem key={imageFile.img}>
             <Image
-              src={`${item.img}?w=110&h=80&fit=crop&auto=format`}
-              srcSet={`${item.img}?w=110&h=80&fit=crop&auto=format&dpr=2 2x`}
+              onClick={() => handleShowFile(imageFile)}
+              src={`${imageFile.fileUrl}?w=110&h=80&fit=crop&auto=format`}
+              srcSet={`${imageFile.fileUrl}?w=110&h=80&fit=crop&auto=format&dpr=2 2x`}
               alt="Picture of the author"
               width={110}
               height={80}
@@ -157,44 +189,11 @@ const MediaPhotos = () => {
   );
 };
 
-const itemData = [
-  {
-    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-    title: "Breakfast",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-    title: "Burger",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-    title: "Camera",
-  },
-];
-
-const MediaVideos = () => {
-  const [open, setOpen] = React.useState(false);
-  const [videoUrl, setVideoUrl] = React.useState(null);
-
-  const handleClickOpen = (url) => {
-    setVideoUrl(url);
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen((prev) => !prev);
-  };
-
+const MediaVideos = ({ videoFiles, handleShowFile }) => {
   const theme = useTheme();
-  const videos = [
-    "https://d290.d2mefast.net/tb/9/8f/sauti_sol_kuliko_jana_featuring_redfourth_chorus_upper_hill_school_h264_44600.mp4?play",
-    "ih",
-    "fev",
-  ];
+
   return (
     <Box>
-      {open && (
-        <VedeoOpen videoUrl={videoUrl} open={open} handleClose={handleClose} />
-      )}
       <MediaName name="Videos" />
       {/* Videos */}
       <ImageList
@@ -207,35 +206,22 @@ const MediaVideos = () => {
         cols={2}
         rowHeight={80}
       >
-        {videos.map((item, i) => (
-          <Box key={i}>
-            <ImageListItem
-              sx={{
-                display: "flex",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  cursor: "pointer",
-                  margin: "-2px",
-                  transform: "scale(1)",
-                },
+        {videoFiles.map((videoFile, i) => (
+          <ImageListItem key={i} onClick={() => handleShowFile(videoFile)}>
+            <video
+              // controls
+              style={{
+                backgroundColor: "black",
+                width: "auto",
+                height: "80px",
+                borderRadius: "3px",
               }}
+              width="250"
             >
-              <video
-                // controls
-                onClick={() => handleClickOpen(item)}
-                style={{
-                  backgroundColor: "black",
-                  width: "auto",
-                  height: "80px",
-                  borderRadius: "3px",
-                }}
-                width="250"
-              >
-                <source src={item} />
-                Sorry, your browser doesn't support embedded videos.
-              </video>
-            </ImageListItem>
-          </Box>
+              <source src={videoFile.fileUrl} />
+              Sorry, your browser doesn't support embedded videos.
+            </video>
+          </ImageListItem>
         ))}
       </ImageList>
     </Box>
@@ -264,9 +250,9 @@ const MediaLinks = () => {
     </Box>
   );
 };
-const MediaDocuments = () => {
+const MediaDocuments = ({ documentFiles, handleShowFile }) => {
   const theme = useTheme();
-
+  console.log("Document Files  :", documentFiles);
   return (
     <Box>
       <MediaName name="Documents" />
@@ -274,14 +260,18 @@ const MediaDocuments = () => {
       <ImageList
         sx={{
           maxHeight: "200px",
-          backgroundColor: theme.colors.background1,
+          backgroundColor: theme.colors.textBackground,
           padding: "5px",
           borderRadius: "5px",
         }}
         cols={3}
         rowHeight={80}
       >
-        <ImageListItem></ImageListItem>
+        {documentFiles.map((documentFile, i) => (
+          <Box onClick={() => handleShowFile(documentFile)} key={i}>
+            <FileComponent file={documentFile} />
+          </Box>
+        ))}
       </ImageList>
     </Box>
   );

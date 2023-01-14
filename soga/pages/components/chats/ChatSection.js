@@ -14,6 +14,12 @@ const ChatSection = ({
   messages,
   friendUsername,
   onEmojiClick,
+  chatFileInput,
+  handleChooseFileIcon,
+  handleChooseFile,
+  chatFiles,
+  handleChooseFileIcon2,
+  chatFileInput2,
 }) => {
   const [showRight, setShowRight] = React.useState(false);
   const user = useSelector((state) => state.user);
@@ -55,6 +61,12 @@ const ChatSection = ({
               showRightHandler={showRightHandler}
               showRight={showRight}
               onEmojiClick={onEmojiClick}
+              handleChooseFileIcon={handleChooseFileIcon}
+              chatFileInput={chatFileInput}
+              handleChooseFile={handleChooseFile}
+              chatFiles={chatFiles}
+              chatFileInput2={chatFileInput2}
+              handleChooseFileIcon2={handleChooseFileIcon2}
             />
           </Box>
           {/* ChatSectionRight */}
@@ -65,7 +77,9 @@ const ChatSection = ({
                 borderLeft: `2px solid ${theme.colors.background1}`,
               }}
             >
-              <ChatSectionRight friendUsername={chat.friendUsername} />
+              <ChatSectionRight 
+              files = {chat.files}
+              friendUsername={chat.friendUsername} />
             </Box>
           ) : null}
         </Box>

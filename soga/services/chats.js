@@ -1,10 +1,10 @@
 const axios = require("axios");
 const { SERVER_ADDRESS } = require("../config/index");
 // http://localhost:3000/
-const sendMessege = async (friendId, token, messege) => {
+const sendMessege = async (token, id, formData) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/messege`,
-    { messege, friendId },
+    `${SERVER_ADDRESS}/api/chats/message/${id}`,
+    formData,
     {
       headers: {
         Authorization: `Bearer ${token}`,

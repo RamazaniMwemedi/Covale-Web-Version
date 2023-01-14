@@ -4,24 +4,44 @@ import {
   Avatar,
   Typography,
   IconButton,
-  Button,
   List,
   ListItem,
+  ListItemIcon,
+  Button,
+  Menu,
+  LinearProgress,
 } from "@mui/material";
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
-import VideoFileIcon from "@mui/icons-material/VideoFile";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
-import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import { purple } from "@mui/material/colors";
 import { useTheme } from "@mui/material";
+import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
+import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
+import GifRoundedIcon from "@mui/icons-material/GifRounded";
+import AddIcon from "@mui/icons-material/Add";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import Stack from "@mui/material/Stack";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
+
+import FileComponent from "../mediaFiles/FileComponent";
+import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
+import getFileType from "../../../../tools/tools";
+import FileIcone from "../mediaFiles/FileIcon";
 
 const Picker = dynamic(
   () => {
@@ -42,9 +62,33 @@ const ChatSectionLeft = ({
   showRight,
   onEmojiClick,
   unsentMessages,
+  chatFileInput,
+  handleChooseFileIcon,
+  handleChooseFile,
+  chatFiles,
+  handleChooseFileIcon2,
+  chatFileInput2,
 }) => {
+  const [showFile, setShowFile] = useState(false);
+  const [file, setFile] = useState(null);
+  const handleShowFile = (file) => {
+    // If file.fileUrl includes https:// then setFile to file and setShowVideoPlayer to true
+    if (file.fileUrl.includes("https://")) {
+      setFile(file);
+      setShowFile(true);
+    }
+  };
+  const handleCloseShowFile = () => {
+    setShowFile(false);
+  };
   return (
     <>
+      {showFile && (
+        <FileDisplayComponent
+          handleCloseShowVideoPlayer={handleCloseShowFile}
+          file={file}
+        />
+      )}
       {chat ? (
         <Box
           sx={{
@@ -74,6 +118,7 @@ const ChatSectionLeft = ({
                 user={user}
                 messages={messages}
                 unsentMessages={unsentMessages}
+                handleShowFile={handleShowFile}
               />
             )}
             <Bottom
@@ -81,6 +126,12 @@ const ChatSectionLeft = ({
               sendNewMessage={sendNewMessage}
               message={message}
               onEmojiClick={onEmojiClick}
+              handleChooseFileIcon={handleChooseFileIcon}
+              chatFileInput={chatFileInput}
+              handleChooseFile={handleChooseFile}
+              chatFiles={chatFiles}
+              chatFileInput2={chatFileInput2}
+              handleChooseFileIcon2={handleChooseFileIcon2}
             />
           </Box>
         </Box>
@@ -190,7 +241,7 @@ const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
   );
 };
 
-const Mid = ({ user, messages, unsentMessages }) => {
+const Mid = ({ user, messages, handleShowFile }) => {
   const toBottomWhenNewMessage = useRef(null);
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
@@ -215,9 +266,9 @@ const Mid = ({ user, messages, unsentMessages }) => {
       >
         {messages.map((message) => {
           return message.sender === user.user.id ? (
-            <UserMessage message={message} />
+            <UserMessage message={message} handleShowFile={handleShowFile} />
           ) : (
-            <FriendMessage message={message} />
+            <FriendMessage message={message} handleShowFile={handleShowFile} />
           );
         })}
 
@@ -227,10 +278,10 @@ const Mid = ({ user, messages, unsentMessages }) => {
   );
 };
 
-const UserMessage = ({ message }) => {
+const UserMessage = ({ message, handleShowFile }) => {
   const purple1 = purple[700];
   const purple2 = purple[400];
-
+  const theme = useTheme();
   let idProvided = message.id ? true : false;
   return (
     <Box
@@ -250,7 +301,6 @@ const UserMessage = ({ message }) => {
             ? {
                 backgroundColor: purple1,
                 // centered
-                display: "flex",
                 paddingLeft: "5px",
                 paddingRight: "5px",
                 paddingTop: "5px",
@@ -268,7 +318,6 @@ const UserMessage = ({ message }) => {
                 fontStyle: "italic",
                 backgroundColor: purple2,
                 // centered
-                display: "flex",
                 paddingLeft: "5px",
                 paddingRight: "5px",
                 paddingTop: "5px",
@@ -285,22 +334,58 @@ const UserMessage = ({ message }) => {
               }
         }
       >
-        <Typography variant="subtitle2" sx={{ color: "white" }}>
-          {message.message}
-        </Typography>
+        {/* File  */}
+        <Box
+          sx={{
+            // If there are 3 or more files, display in grid
+            display: "flex",
+            flexDirection: "column",
+            gridGap: "5px",
+            // centerd
+            // alignItems: "center",
+            // textAlign: "center",
+          }}
+        >
+          {message.files.map((file) => {
+            const fileType = getFileType(file.fileType);
+
+            return (
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  backgroundColor: theme.colors.textBackground,
+                  display: "flex",
+                  m: 1,
+                  width:"150px"
+                }}
+                onClick={() => handleShowFile(file)}
+              >
+                <FileComponent file={file}  />
+               
+              </Box>
+            );
+          })}
+        </Box>
+        {message.message.length > 0 ? (
+          <Typography variant="subtitle2" sx={{ color: "white" }}>
+            {message.message}
+          </Typography>
+        ) : null}
+        {/* If idProvided is false show the loadind component */}
+        {!idProvided ? <LinearProgress color="inherit" /> : null}
       </Box>
     </Box>
   );
 };
 
-const FriendMessage = ({ message }) => {
+const FriendMessage = ({ message, handleShowFile }) => {
   const theme = useTheme();
   return (
     <Box
       sx={{
         display: "flex",
         // centerd
-        textAlign: "center",
+        // textAlign: "center",
         // FLoat right
         justifyContent: "flex-start",
       }}
@@ -318,7 +403,6 @@ const FriendMessage = ({ message }) => {
         sx={{
           backgroundColor: theme.colors.textBackground,
           // centered
-          display: "flex",
           paddingLeft: "5px",
           paddingRight: "5px",
           paddingTop: "5px",
@@ -332,7 +416,29 @@ const FriendMessage = ({ message }) => {
           maxWidth: "80%",
         }}
       >
-        <Typography variant="subtitle2">{message.message}</Typography>
+        <Box
+          sx={{
+            // If there are 3 or more files, display in grid
+            display: message.files.length > 2 ? "grid" : "flex",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gridGap: "5px",
+            // centerd
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          {message.files.map((file) => {
+            return (
+              <Box onClick={() => handleShowFile(file)}>
+                <FileComponent file={file} />
+              </Box>
+            );
+          })}
+        </Box>
+        {message.message.length > 0 ? (
+          <Typography variant="subtitle2">{message.message}</Typography>
+        ) : null}
       </Box>
     </Box>
   );
@@ -343,126 +449,336 @@ const Bottom = ({
   sendNewMessage,
   message,
   onEmojiClick,
+  handleChooseFileIcon,
+  chatFileInput,
+  handleChooseFile,
+  chatFiles,
+  handleChooseFileIcon2,
+  chatFileInput2,
 }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
   const theme = useTheme();
 
   return (
-    <Box
-      sx={{
-        height: "3rem",
-        display: "flex",
-        marginBottom: "4px",
-        // Be at the bottom of the page
-        verticalAlign: "bottom",
-        backgroundColor: theme.colors.background1,
-        borderBottomRightRadius: "5px",
-        borderBottomLeftRadius: "5px",
-        marginLeft: "10px",
-        marginRight: "15px",
-        borderRadius: "5px",
-      }}
-    >
-      {showEmojiPeaker === true && (
+    <Box>
+      {/* Selected files will be displayed here  */}
+      {chatFiles.length > 0 && (
         <Box
           sx={{
-            position: "absolute",
-            bottom: "53px",
+            position: "fixed",
+            bottom: "60px",
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgba(0,0,0,0.6)"
+                : "rgba(255,255,255,0.4)",
+            marginBottom: "4px",
+            borderBottomRightRadius: "5px",
+            borderBottomLeftRadius: "5px",
+            width: "37vw",
             marginLeft: "30px",
-            backgroundColor: theme.colors.textBackground,
-            borderRadius: "15px",
-
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
+            marginRight: "15px",
+            borderRadius: "5px",
           }}
         >
-          <IconButton
+          {/* Display only the first element */}
+          <Box
             sx={{
-              marginLeft: "250px",
-            }}
-            onClick={() => {
-              setShowEmojiPeaker(!showEmojiPeaker);
+              display: "grid",
+              gridTemplateColumns: "auto auto",
             }}
           >
-            <CloseRoundedIcon color="secondary" fontSize="small" />
-          </IconButton>
-          <Picker
-            native={true}
-            preload={true}
-            searchPlaceholder={"Search emojie"}
-            onEmojiClick={onEmojiClick}
-            pickerStyle={{
-              backgroundColor: theme.colors.textBackground,
-              boxShadow: "none",
-              border: `1px solid ${theme.colors.textBackground}`,
+            {chatFiles.map((file, i) => (
+              <Box
+                key={i}
+                sx={{
+                  backgroundColor:
+                    theme.palette.mode === "dark"
+                      ? theme.colors.background1
+                      : theme.colors.background1,
+                  p: 1,
+                  mt: 0.3,
+                  ml: 0.3,
+                  borderRadius: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <FileIcone fileType={file.fileType} />
+                <Typography variant="body1">
+                  {file.fileName.length > 15
+                    ? file.fileName.substring(0, 15) + "..."
+                    : file.fileName}
+                </Typography>
+                <IconButton
+                  sx={{
+                    "&:hover": {
+                      color: "red",
+                    },
+                  }}
+                >
+                  <CancelRoundedIcon />
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
+
+          <Box
+            sx={{
+              m: 1,
+              display: "flex",
+              justifyContent: "space-between",
             }}
-          />
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              size="small"
+              onClick={(e) => handleChooseFileIcon2(e)}
+            >
+              <AddIcon />
+              <input
+                type="file"
+                hidden
+                ref={chatFileInput2}
+                onChange={(e) => handleChooseFile(e)}
+              />
+            </Button>
+          </Box>
         </Box>
       )}
-
-      <IconButton>
-        <VideoFileIcon color="secondary" />
-      </IconButton>
-      <IconButton>
-        <PhotoSizeSelectActualRoundedIcon color="secondary" />
-      </IconButton>
-      {/* Communication */}
       <Box
         sx={{
+          height: "3rem",
           display: "flex",
-          width: "100%",
+          marginBottom: "4px",
+          // Be at the bottom of the page
+          verticalAlign: "bottom",
+          backgroundColor: theme.colors.background1,
+          borderBottomRightRadius: "5px",
+          borderBottomLeftRadius: "5px",
+          marginLeft: "10px",
+          marginRight: "15px",
+          borderRadius: "5px",
         }}
       >
-        <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
-          <OutlinedInput
-            startAdornment={
-              <InputAdornment
-                sx={{
-                  marginLeft: "-15px",
-                }}
-                position="start"
-              >
-                <IconButton>
-                  <EmojiEmotionsRoundedIcon
-                    color="secondary"
-                    onClick={() => {
-                      setShowEmojiPeaker(true);
-                    }}
-                  />
-                </IconButton>
-              </InputAdornment>
-            }
-            id="outlined-adornment-password"
-            type="text"
-            value={message}
-            onChange={(e) => {
-              messageChangeHandler(e);
-            }}
+        {showEmojiPeaker === true && (
+          <Box
             sx={{
-              height: "35px",
+              position: "absolute",
+              bottom: "53px",
+              marginLeft: "30px",
+              backgroundColor: theme.colors.textBackground,
               borderRadius: "15px",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
             }}
-            color="secondary"
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton onClick={() => sendNewMessage()} edge="end">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    fill="purple"
-                    // class="bi bi-send-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-                  </svg>
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
+          >
+            <IconButton
+              sx={{
+                marginLeft: "250px",
+              }}
+              onClick={() => {
+                setShowEmojiPeaker(!showEmojiPeaker);
+              }}
+            >
+              <CloseRoundedIcon color="secondary" fontSize="small" />
+            </IconButton>
+            <Picker
+              native={true}
+              preload={true}
+              searchPlaceholder={"Search emojie"}
+              onEmojiClick={onEmojiClick}
+              pickerStyle={{
+                backgroundColor: theme.colors.textBackground,
+                boxShadow: "none",
+                border: `1px solid ${theme.colors.textBackground}`,
+              }}
+            />
+          </Box>
+        )}
+
+        <MenuListComposition
+          handleChooseFileIcon={handleChooseFileIcon}
+          chatFileInput={chatFileInput}
+          handleChooseFile={handleChooseFile}
+        />
+
+        {/* Communication */}
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+          }}
+        >
+          <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
+            <OutlinedInput
+              startAdornment={
+                <InputAdornment
+                  sx={{
+                    marginLeft: "-15px",
+                  }}
+                  position="start"
+                >
+                  <IconButton>
+                    <EmojiEmotionsRoundedIcon
+                      color="secondary"
+                      onClick={() => {
+                        setShowEmojiPeaker(true);
+                      }}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              }
+              id="outlined-adornment-password"
+              type="text"
+              value={message}
+              onChange={(e) => {
+                messageChangeHandler(e);
+              }}
+              sx={{
+                height: "35px",
+                borderRadius: "15px",
+              }}
+              color="secondary"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={(e) => sendNewMessage(e)} edge="end">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="purple"
+                      // class="bi bi-send-fill"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                    </svg>
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+        </Box>
       </Box>
     </Box>
   );
 };
+
+function MenuListComposition({
+  handleChooseFileIcon,
+  chatFileInput,
+  handleChooseFile,
+}) {
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+
+  const handleToggle = (e) => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (e) => {
+    e.stopPropagation();
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
+  return (
+    <Stack direction="row" spacing={2}>
+      <Box>
+        <IconButton
+          ref={anchorRef}
+          id="composition-button"
+          aria-controls={open ? "composition-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle}
+        >
+          <ControlPointRoundedIcon color="secondary" />
+        </IconButton>
+        <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement="bottom-start"
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === "bottom-start" ? "left top" : "left bottom",
+              }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={(e) => handleClose(e)}>
+                  <MenuList
+                    autoFocusItem={open}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    <MenuItem
+                      onClick={(e) => {
+                        handleChooseFileIcon(e);
+                      }}
+                    >
+                      <ListItemIcon>
+                        <FileUploadRoundedIcon
+                          fontSize="small"
+                          color="secondary"
+                        />
+                      </ListItemIcon>
+                      <input
+                        type={"file"}
+                        ref={chatFileInput}
+                        style={{
+                          display: "none",
+                        }}
+                        onChange={(e) => {
+                          handleClose(e);
+                          handleChooseFile(e);
+                        }}
+                      />
+                      Upload file
+                    </MenuItem>
+                    <MenuItem onClick={(e) => handleClose(e)}>
+                      <ListItemIcon>
+                        <GifRoundedIcon fontSize="medium" color="secondary" />
+                      </ListItemIcon>
+                      Gif
+                    </MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </Box>
+    </Stack>
+  );
+}
