@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }) {
       error: "#f44336",
       background: "rgb(226, 216, 226)",
       background1: "whitesmoke",
-      textBackground: "rgba(255,255,255,0.4)",
+      textBackground: "rgba(255,255,255,0.7)",
       itemBackground: "whitesmoke",
       drawerBackground: "whitesmoke",
       border: "rgb(226, 216, 226)",

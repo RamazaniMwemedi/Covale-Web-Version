@@ -356,6 +356,7 @@ const UserMessage = ({ message, handleShowFile }) => {
                   m: 1,
                   // To be at the right of the message
                   width: "200px",
+                  borderRadius: "5px",
                 }}
                 onClick={() => handleShowFile(file)}
               >
@@ -417,18 +418,25 @@ const FriendMessage = ({ message, handleShowFile }) => {
         <Box
           sx={{
             // If there are 3 or more files, display in grid
-            display: message.files.length > 2 ? "grid" : "flex",
-            gridTemplateColumns: "1fr 1fr 1fr",
+            display: "flex",
+            flexDirection: "column",
             gridGap: "5px",
-            // centerd
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
           }}
         >
           {message.files.map((file) => {
             return (
-              <Box onClick={() => handleShowFile(file)}>
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  backgroundColor: theme.colors.textBackground,
+                  display: "flex",
+                  m: 1,
+                  // To be at the right of the message
+                  width: "200px",
+                  borderRadius: "5px",
+                }}
+                onClick={() => handleShowFile(file)}
+              >
                 <FileComponent file={file} />
               </Box>
             );

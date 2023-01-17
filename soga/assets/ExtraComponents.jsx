@@ -43,10 +43,7 @@ const ImageComponent = React.memo(
               }}
             >
               <ImageIcon width={width} height={height} />
-              <Typography
-                variant="subtitle2"
-                sx={{ color: "#fff", fontSize: "12px" }}
-              >
+              <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
                 {/* First 10 characters and .{fileExtension} */}
                 {fileName.substring(0, 10)}...{fileName.split(".").pop()}
               </Typography>
@@ -90,10 +87,7 @@ const Video = React.memo(({ src, fileName, width, height, displayFile }) => {
             }}
           >
             <VideoIcon width={width} height={height} />
-            <Typography
-              variant="subtitle2"
-              sx={{ color: "#fff", fontSize: "12px" }}
-            >
+            <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
               {/* First 10 characters and .{fileExtension} */}
               {fileName.substring(0, 10)}...{fileName.split(".").pop()}
             </Typography>
@@ -158,10 +152,7 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
             }}
           >
             <PdfIcon height={height} width={width} />
-            <Typography
-              variant="subtitle2"
-              sx={{ color: "#fff", fontSize: "12px" }}
-            >
+            <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
               {/* First 10 characters and .{fileExtension} */}
               {fileName.substring(0, 10)}...{fileName.split(".").pop()}
             </Typography>
@@ -253,7 +244,7 @@ const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
               <DocxIcon height={height} width={width} />
               <Typography
                 variant="subtitle2"
-                sx={{ color: "#fff", fontSize: "12px", width: "100%" }}
+                sx={{ fontSize: "12px", width: "100%" }}
               >
                 {fileName.substring(0, 10)}...{fileName.split(".").pop()}
               </Typography>
@@ -304,11 +295,7 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
             }}
           >
             <XlsIcon height={height} width={width} />
-            <Typography
-              variant="subtitle2"
-              sx={{ color: "#fff", fontSize: "12px" }}
-              noWrap
-            >
+            <Typography variant="subtitle2" sx={{ fontSize: "12px" }} noWrap>
               {/* First 10 characters and .{fileExtension} */}
               {fileName.substring(0, 10)}...{fileName.split(".").pop()}
             </Typography>
@@ -353,10 +340,7 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
             }}
           >
             <PptIcon height={height} width={width} />
-            <Typography
-              variant="subtitle2"
-              sx={{ color: "#fff", fontSize: "12px" }}
-            >
+            <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
               {/* First 10 characters and .{fileExtension} */}
               {fileName.substring(0, 10)}...{fileName.split(".").pop()}
             </Typography>
