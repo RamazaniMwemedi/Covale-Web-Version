@@ -347,8 +347,6 @@ const UserMessage = ({ message, handleShowFile }) => {
           }}
         >
           {message.files.map((file) => {
-            const fileType = getFileType(file.fileType);
-
             return (
               <Box
                 sx={{
@@ -356,12 +354,12 @@ const UserMessage = ({ message, handleShowFile }) => {
                   backgroundColor: theme.colors.textBackground,
                   display: "flex",
                   m: 1,
-                  width:"150px"
+                  // To be at the right of the message
+                  width: "200px",
                 }}
                 onClick={() => handleShowFile(file)}
               >
-                <FileComponent file={file}  />
-               
+                <FileComponent file={file} />
               </Box>
             );
           })}

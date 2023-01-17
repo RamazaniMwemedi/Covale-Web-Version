@@ -107,15 +107,11 @@ const Video = React.memo(({ src, fileName, width, height, displayFile }) => {
 const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
   const Widget = styled("div")(({ theme }) => ({
     borderRadius: 6,
-    width: width,
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
     position: "relative",
     zIndex: 1,
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(0,0,0,0.6)"
-        : "rgba(255,255,255,0.4)",
+    backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
     backdropFilter: "blur(40px)",
     display: "flex",
     justifyContent: "center",
@@ -123,7 +119,16 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
   }));
 
   return (
-    <Box sx={{ width: "100%", overflow: "hidden" }}>
+    <Box
+      sx={{
+        // Should fit the parent container
+        display: "flex",
+        // justifyContent: "center",
+        // alignItems: "center",
+        // width: "100%",
+        overflow: "hidden",
+      }}
+    >
       <Widget>
         {displayFile ? (
           <Box
@@ -200,15 +205,10 @@ const Audio = React.memo(({ src, width, height }) => {
 const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
   const Widget = styled("div")(({ theme }) => ({
     borderRadius: 6,
-    width: width,
     maxWidth: "100%",
-    // margin: displayFile ? "auto" : "none",
     position: "relative",
+    backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
     zIndex: 1,
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(0,0,0,0.6)"
-        : "rgba(255,255,255,0.4)",
     backdropFilter: "blur(40px)",
     display: "flex",
     justifyContent: "center",
@@ -216,34 +216,50 @@ const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
   }));
 
   return (
-    <Box sx={{ width: "100%", overflow: "hidden" }}>
+    <Box
+      sx={
+        {
+          // width: "100%",
+          // display: "flex",
+          // alignItems: "center",
+          // justifyContent: "center",
+        }
+      }
+    >
       <Widget>
-        {displayFile ? (
-          <iframe
-            // className={filetype}
-            width="100%"
-            height="600"
-            frameborder="0"
-            src={`https://docs.google.com/gview?url=${src}&embedded=true`}
-          ></iframe>
-        ) : (
-          <Box
-            sx={{
-              alignItems: "center",
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            <DocxIcon height={height} width={width} />
-            <Typography
-              variant="subtitle2"
-              sx={{ color: "#fff", fontSize: "12px", width: "100%" }}
+        <Box
+          sx={
+            {
+              // width: "100%",
+              // display: "flex",
+              // alignItems: "center",
+              // justifyContent: "center",
+            }
+          }
+        >
+          {displayFile ? (
+            <iframe
+              width={width}
+              height={height}
+              frameborder="0"
+              src={`https://docs.google.com/gview?url=${src}&embedded=true`}
+            ></iframe>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+              }}
             >
-              {/* First 10 characters and .{fileExtension} */}
-              {fileName.substring(0, 10)}...{fileName.split(".").pop()}
-            </Typography>
-          </Box>
-        )}
+              <DocxIcon height={height} width={width} />
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "#fff", fontSize: "12px", width: "100%" }}
+              >
+                {fileName.substring(0, 10)}...{fileName.split(".").pop()}
+              </Typography>
+            </Box>
+          )}
+        </Box>
       </Widget>
     </Box>
   );
@@ -253,15 +269,11 @@ const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
 const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
   const Widget = styled("div")(({ theme }) => ({
     borderRadius: 6,
-    width: width < 40 ? "200px" : width,
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
     position: "relative",
     zIndex: 1,
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(0,0,0,0.6)"
-        : "rgba(255,255,255,0.4)",
+    backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
     backdropFilter: "blur(40px)",
     display: "flex",
     justifyContent: "center",
@@ -269,13 +281,19 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
   }));
 
   return (
-    <Box sx={{ width: "200px", overflow: "hidden" }}>
+    <Box
+      sx={{
+        // Should fit the parent container
+        display: "flex",
+        width: "100%",
+      }}
+    >
       <Widget>
         {displayFile ? (
           <iframe
             // className={filetype}
-            width="100%"
-            height="600"
+            width={width}
+            height={height}
             frameborder="0"
             src={`https://docs.google.com/gview?url=${src}&embedded=true`}
           ></iframe>
@@ -283,9 +301,6 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
           <Box
             sx={{
               display: "flex",
-              alignItems: "center",
-              textAlign: "center",
-              width: "100%",
             }}
           >
             <XlsIcon height={height} width={width} />
@@ -307,15 +322,11 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
 const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
   const Widget = styled("div")(({ theme }) => ({
     borderRadius: 6,
-    width: width,
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
     position: "relative",
     zIndex: 1,
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(0,0,0,0.6)"
-        : "rgba(255,255,255,0.4)",
+    backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
     backdropFilter: "blur(40px)",
     display: "flex",
     justifyContent: "center",
@@ -323,26 +334,16 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
   }));
 
   return (
-    <Box sx={{ width: "100%", overflow: "hidden" }}>
+    <Box sx={{ overflow: "hidden" }}>
       <Widget>
         {displayFile ? (
-          src.length > 2083 ? (
-            <iframe
-              // className={filetype}
-              width="100%"
-              height="600"
-              frameborder="0"
-              src={src}
-            ></iframe>
-          ) : (
-            <iframe
-              // className={filetype}
-              width="100%"
-              height="600"
-              frameborder="0"
-              src={`https://docs.google.com/gview?url=${src}&embedded=true`}
-            ></iframe>
-          )
+          <iframe
+            // className={filetype}
+            width={width}
+            height={height}
+            frameborder="0"
+            src={`https://docs.google.com/gview?url=${src}&embedded=true`}
+          ></iframe>
         ) : (
           <Box
             sx={{

@@ -39,6 +39,8 @@ const FileIcone = ({ fileType }) => {
     )
   ) {
     return <PptIcon height={25} width={25} />;
+  } else if (fileType.includes("audio")) {
+    return <AudioIcon height={25} width={25} />;
   }
   return "Hello";
 };
