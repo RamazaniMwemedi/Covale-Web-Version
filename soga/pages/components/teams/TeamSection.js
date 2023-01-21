@@ -15,6 +15,12 @@ const TeamSection = ({
   teamSendMessageHandle,
   teamMessage,
   teamOnEmojiClick,
+  handleChooseFileIconTeam,
+  handleChooseFileIcon2Team,
+  handleChooseFileTeam,
+  teamFileInput,
+  teamFileInput2,
+  teamFiles,
 }) => {
   const [option, setOption] = useState("");
 
@@ -75,6 +81,13 @@ const TeamSection = ({
               teamOnEmojiClick={teamOnEmojiClick}
               showMenu={showMenu}
               showParticipant={showParticipant}
+              //
+              handleChooseFileIconTeam={handleChooseFileIconTeam}
+              handleChooseFileIcon2Team={handleChooseFileIcon2Team}
+              handleChooseFileTeam={handleChooseFileTeam}
+              teamFileInput={teamFileInput}
+              teamFileInput2={teamFileInput2}
+              teamFiles={teamFiles}
             />
           </Box>
           {/* Team Section Right */}

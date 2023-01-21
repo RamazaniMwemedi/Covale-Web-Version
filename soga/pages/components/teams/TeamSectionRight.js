@@ -161,7 +161,7 @@ const Photos = ({ photos }) => {
           Photos{"  "}
         </Typography>
         <Typography color="action" variant="body2">
-          {photos.length}
+          {photos ? photos.length : 0}
         </Typography>
       </Box>
       <IconButton
@@ -192,7 +192,7 @@ const Videos = ({ videos }) => {
           Videos{"  "}
         </Typography>
         <Typography color="action" variant="body2">
-          {videos.length}
+          {videos ? videos.length : 0}
         </Typography>
       </Box>
       <IconButton
@@ -346,13 +346,13 @@ const ParticipantItem = ({ participant }) => {
   );
 };
 
-const InvitedMembers = ({teamId}) => {
+const InvitedMembers = ({ teamId }) => {
   // Show InviteMembers State
   const [showInviteMembers, setShowInviteMembers] = useState(false);
   // showInviteMembers handler
-  const showInviteMembersHandler =()=>{
-setShowInviteMembers(!showInviteMembers);
-  }
+  const showInviteMembersHandler = () => {
+    setShowInviteMembers(!showInviteMembers);
+  };
 
   return (
     <Box>

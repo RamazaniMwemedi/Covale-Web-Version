@@ -111,13 +111,17 @@ const cancelFriendRequest = async (id, token) => {
 // Find userBy id
 const findUserById = async (token, id) => {
   if (token) {
-    const response = await axios.get(`${SERVER_ADDRESS}/api/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response;
+    try {
+      const response = await axios.get(`${SERVER_ADDRESS}/api/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response;
+    } catch (error) {
+      // Redirect to the login page
+      window.location.href = "/login";
+    }
   }
 };
 

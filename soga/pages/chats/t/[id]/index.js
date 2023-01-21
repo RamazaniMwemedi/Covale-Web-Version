@@ -48,8 +48,10 @@ import {
   useJoinNotificationRoom,
   useRecieveNewNotification,
 } from "../../../../hooks/notification";
-import { useState } from "react";
-import Image from "next/image";
+import { useRef, useState } from "react";
+import axios from "axios";
+import { sendMessege } from "../../../../services/chats";
+import { sendTeamMessege } from "../../../../services/teams";
 // Socket.IO
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
@@ -66,13 +68,17 @@ export default function Chat() {
   const token = userStore.user ? userStore.user.token : null;
 
   // Chats States
-  const [chatMessage, setMessage] = useState("");
-  //      Bools
-  const [boolForSent, setBoolForSent] = useState(true);
+  const [chatMessage, setChatMessage] = useState("");
+  const chatFileInput = useRef(null);
+  const chatFileInput2 = useRef(null);
+  const [chatFiles, setChatFiles] = useState([]);
 
   // Teams States
   // team message state
   const [teamMessage, setTeamMessage] = useState("");
+  const teamFileInput = useRef(null);
+  const teamFileInput2 = useRef(null);
+  const [teamFiles, setTeamFiles] = useState([]);
   //      Bools
   const [teamBoolForSent, setTeamBoolForSent] = useState(true);
   const userId = user ? user.id : null;
@@ -98,7 +104,7 @@ export default function Chat() {
   useRecieveNewNotification(user);
 
   const messageChangeHandler = (e) => {
-    setMessage(e.target.value);
+    setChatMessage(e.target.value);
   };
 
   const signoutHandler = () => {
@@ -108,45 +114,73 @@ export default function Chat() {
   };
 
   const onEmojiClick = (event, emojiObject) => {
-    setMessage(chatMessage + emojiObject.emoji);
+    setChatMessage(chatMessage + emojiObject.emoji);
+  };
+  const handleChooseFileIcon = (e) => {
+    chatFileInput.current.click();
+  };
+  const handleChooseFileIcon2 = (e) => {
+    chatFileInput2.current.click();
   };
 
-  const sendMessageHandle = () => {
-    const userId = userStore ? userStore.user.id : null;
-    try {
-      if (chatMessage.length > 0) {
-        const newMessage = {
-          sender: userId,
-          message: chatMessage,
-          idFromClient: uuidv4(),
-        };
-        dispatch(
-          addNewMessageToChatId({
-            chatId: id,
-            newMessage,
-          })
-        );
+  const handleChooseFile = (e) => {
+    // input change handler
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setChatFiles((prev) => [
+        ...prev,
+        {
+          file: file,
+          fileName: file.name,
+          fileUrl: reader.result,
+          fileUri: reader.result,
+          fileType: file.type,
+          fileSize: file.size,
+        },
+      ]);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
 
-        chatSocket.emit("send_message", { newMessage, id, userId });
-        setMessage("");
-        setBoolForSent(true);
-        if (boolForSent && id) {
-          chatSocket.on("messege_sent", (data) => {
-            dispatch(
-              updateMessageId({
-                chatId: id,
-                id: data.id,
-                idFromClient: data.idFromClient,
-              })
-            );
-            setPlaying(true);
-            setBoolForSent(false);
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error is :", error);
+  const sendMessageHandle = async (event) => {
+    event.preventDefault();
+    const uuid = uuidv4();
+    const formData = new FormData();
+
+    for (const file of chatFiles) {
+      formData.append("files", file.file);
     }
+
+    formData.append("message", chatMessage);
+    formData.append("idFromClient", uuid);
+    setChatMessage("");
+    const newMessage = {
+      idFromClient: uuid,
+      sender: user.id,
+      message: chatMessage,
+      files: chatFiles,
+      chatRoom: id,
+    };
+    setChatFiles([]);
+
+    dispatch(
+      addNewMessageToChatId({
+        chatId: id,
+        newMessage,
+      })
+    );
+    const sentMessage = await sendMessege(token, id, formData);
+
+    chatSocket.emit("send_message", sentMessage);
+    dispatch(
+      updateMessageId({
+        chatId: id,
+        id: sentMessage.id,
+        idFromClient: sentMessage.idFromClient,
+        files: sentMessage.files,
+      })
+    );
   };
 
   // Teams handlers
@@ -154,51 +188,82 @@ export default function Chat() {
     setTeamMessage(teamMessage + emojiObject.emoji);
   };
 
+  const handleChooseFileIconTeam = (e) => {
+    teamFileInput.current.click();
+  };
+  const handleChooseFileIcon2Team = (e) => {
+    teamFileInput2.current.click();
+  };
+
+  const handleChooseFileTeam = (e) => {
+    // input change handler
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setTeamFiles((prev) => [
+        ...prev,
+        {
+          file: file,
+          fileName: file.name,
+          fileUrl: reader.result,
+          fileUri: reader.result,
+          fileType: file.type,
+          fileSize: file.size,
+        },
+      ]);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   const teamMessageChangeHandler = (e) => {
     setTeamMessage(e.target.value);
   };
 
-  const teamSendMessageHandle = () => {
-    const userId = userStore ? userStore.user.id : null;
-    try {
-      if (teamMessage.length > 0) {
-        const teamNewMessage = {
-          sender: {
-            username: userStore.user.username,
-            firstname: userStore.user.firstname,
-            lastname: userStore.user.lastname,
-            id: userStore.user.id,
-          },
-          message: teamMessage,
-          idFromClient: uuidv4(),
-        };
-        dispatch(
-          addNewMessageToTeamId({
-            teamId: id,
-            teamNewMessage,
-          })
-        );
-        teamSocket.emit("send_message_to_team", { teamNewMessage, id, userId });
-        setTeamMessage("");
-        setTeamBoolForSent(true);
-        if (teamBoolForSent) {
-          teamSocket.on("messege_sent_to_team", (data) => {
-            dispatch(
-              updateTeamMessageId({
-                teamId: id,
-                id: data.id,
-                idFromClient: data.idFromClient,
-              })
-            );
-            setTeamSentAudioPlay(true);
-            setTeamPlaying(true);
-            setTeamBoolForSent(false);
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error is :", error);
+  const teamSendMessageHandle = async () => {
+    const uuid = uuidv4();
+    const formData = new FormData();
+
+    for (const file of teamFiles) {
+      formData.append("files", file.file);
     }
+
+    formData.append("message", teamMessage);
+    formData.append("idFromClient", uuid);
+    setTeamMessage("");
+    const teamNewMessage = {
+      sender: {
+        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        id: user.id,
+      },
+      message: teamMessage,
+      idFromClient: uuid,
+      files: teamFiles,
+    };
+    setTeamFiles([]);
+
+    dispatch(
+      addNewMessageToTeamId({
+        teamId: id,
+        teamNewMessage,
+      })
+    );
+    const sentMessage = await sendTeamMessege(token, id, formData);
+    console.log("Sent message: ", sentMessage);
+
+    teamSocket.emit("send_message_to_team", {
+      teamId: id,
+      message: sentMessage,
+    });
+    dispatch(
+      updateTeamMessageId({
+        teamId: id,
+        id: sentMessage.id,
+        idFromClient: sentMessage.idFromClient,
+        files: sentMessage.files,
+      })
+    );
   };
 
   return (
@@ -229,11 +294,23 @@ export default function Chat() {
                     message={chatMessage}
                     sendMessageHandle={sendMessageHandle}
                     onEmojiClick={onEmojiClick}
+                    chatFileInput={chatFileInput}
+                    handleChooseFileIcon={handleChooseFileIcon}
+                    chatFileInput2={chatFileInput2}
+                    handleChooseFileIcon2={handleChooseFileIcon2}
+                    handleChooseFile={handleChooseFile}
+                    chatFiles={chatFiles}
                     // Teams
                     teamMessageChangeHandler={teamMessageChangeHandler}
                     teamMessage={teamMessage}
                     teamSendMessageHandle={teamSendMessageHandle}
                     teamOnEmojiClick={teamOnEmojiClick}
+                    handleChooseFileIconTeam={handleChooseFileIconTeam}
+                    handleChooseFileIcon2Team={handleChooseFileIcon2Team}
+                    handleChooseFileTeam={handleChooseFileTeam}
+                    teamFileInput={teamFileInput}
+                    teamFileInput2={teamFileInput2}
+                    teamFiles={teamFiles}
                   />
                 </>
               ) : (
@@ -279,14 +356,6 @@ const ClickaChat = () => {
         >
           Click a chat to start messaging
         </Typography>
-        <ChatBubbleRoundedIcon
-          color="secondary"
-          sx={{
-            width: "30vw",
-            height: "30vh",
-            fontSize: "10px",
-          }}
-        />
       </Box>
     </Box>
   );
@@ -301,6 +370,19 @@ const SectionToDisplay = ({
   teamMessage,
   teamSendMessageHandle,
   teamOnEmojiClick,
+  chatFileInput,
+  handleChooseFileIcon,
+  handleChooseFile,
+  chatFiles,
+  handleChooseFileIcon2,
+  chatFileInput2,
+  // Teams
+  handleChooseFileIconTeam,
+  handleChooseFileIcon2Team,
+  handleChooseFileTeam,
+  teamFileInput,
+  teamFileInput2,
+  teamFiles,
 }) => {
   const router = useRouter();
   const id = router.query.id;
@@ -317,6 +399,12 @@ const SectionToDisplay = ({
             messages={chat.messages}
             sendNewMessage={sendMessageHandle}
             onEmojiClick={onEmojiClick}
+            handleChooseFileIcon={handleChooseFileIcon}
+            chatFileInput={chatFileInput}
+            handleChooseFile={handleChooseFile}
+            chatFiles={chatFiles}
+            chatFileInput2={chatFileInput2}
+            handleChooseFileIcon2={handleChooseFileIcon2}
           />
         ) : (
           <ChatSectionSkeleton />
@@ -333,6 +421,12 @@ const SectionToDisplay = ({
             teamMessage={teamMessage}
             teamSendMessageHandle={teamSendMessageHandle}
             teamOnEmojiClick={teamOnEmojiClick}
+            handleChooseFileIconTeam={handleChooseFileIconTeam}
+            handleChooseFileIcon2Team={handleChooseFileIcon2Team}
+            handleChooseFileTeam={handleChooseFileTeam}
+            teamFileInput={teamFileInput}
+            teamFileInput2={teamFileInput2}
+            teamFiles={teamFiles}
           />
         ) : (
           <TeamSectionSkeleton />

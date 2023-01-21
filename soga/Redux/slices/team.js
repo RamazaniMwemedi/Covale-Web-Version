@@ -28,9 +28,15 @@ const teamSlice = createSlice({
     },
 
     updateTeamMessageId(state, { payload }) {
+      console.log("updateTeamMessageId :>>", payload);
       if (payload) {
         state = {
           ...state,
+          teams: (state.teams
+            .filter((team) => team.id === payload.teamId)[0]
+            .messages.filter((message) => {
+              return message.idFromClient == payload.idFromClient;
+            })[0].files = payload.files),
           teams: (state.teams
             .filter((team) => team.id === payload.teamId)[0]
             .messages.filter((message) => {
@@ -45,14 +51,14 @@ const teamSlice = createSlice({
       // IF the data.id is not in the team.messages array THEN add the new message to the team.messages array ELSE do nothing
       if (
         !state.teams
-          .filter((team) => team.id === payload.teamId)[0]
-          .messages.some((message) => message.id === payload.data.id)
+          .filter((team) => team.id === payload.data.teamId)[0]
+          .messages.some((message) => message.id === payload.data.message.id)
       ) {
         state = {
           ...state,
           teams: state.teams
-            .filter((team) => team.id === payload.teamId)[0]
-            .messages.push(payload.data),
+            .filter((team) => team.id === payload.data.teamId)[0]
+            .messages.push(payload.data.message),
         };
       }
     },

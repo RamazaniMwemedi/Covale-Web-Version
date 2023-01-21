@@ -86,6 +86,22 @@ const declineInvite = async (userToken, invitationToken) => {
   }
 };
 
+// send a team message
+const sendTeamMessege = async (token, id, formData) => {
+  if (token) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/team/messages/new/${id}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
 module.exports = {
   getTeams,
   createNewTeam,
@@ -93,4 +109,5 @@ module.exports = {
   inviteFriends,
   acceptInvite,
   declineInvite,
+  sendTeamMessege,
 };

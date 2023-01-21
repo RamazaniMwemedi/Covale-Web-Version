@@ -5,6 +5,7 @@ import { useTheme } from "@mui/styles";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Image from "next/image";
@@ -35,7 +36,6 @@ const ChatSectionRight = ({ friendUsername, files }) => {
       {friendUsername && (
         <Box
           sx={{
-            maxHeight: "10vh",
             maxHeight: "100vh",
             overflowY: "scroll",
             overflowX: "hidden",
@@ -56,9 +56,6 @@ const ChatSectionRight = ({ friendUsername, files }) => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              // Center this section
-              alignItems: "center",
-              // Padding
             }}
           >
             <Friend friendUsername={friendUsername} />
@@ -69,7 +66,6 @@ const ChatSectionRight = ({ friendUsername, files }) => {
               display: "flex",
               flexDirection: "column",
               // Center this section
-              alignItems: "center",
               // Padding
             }}
           >
@@ -127,7 +123,23 @@ const Media = ({ files, handleShowFile }) => {
         "application/msword"
     )
   );
-  console.log("Hello World");
+  const xlsFiles = files.filter((file) =>
+    file.fileType.includes(
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+        "application/vnd.ms-powerpoint"
+    )
+  );
+
+  const pdfFiles = files.filter((file) =>
+    file.fileType.includes("application/pdf")
+  );
+  const pptFile = files.filter((file) =>
+    file.fileType.includes(
+      "application/vnd.ms-powerpoint" ||
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    )
+  );
+
   return (
     <Box
       sx={{
@@ -140,144 +152,267 @@ const Media = ({ files, handleShowFile }) => {
         {" "}
         Media
       </Typography>
-      <ImageMedia handleShowFile={handleShowFile} imageFiles={imageFiles} />
-      <MediaVideos handleShowFile={handleShowFile} videoFiles={videoFiles} />
-      <MediaDocuments
-        handleShowFile={handleShowFile}
-        documentFiles={documentFiles}
-      />
-      <MediaLinks />
+      {imageFiles.length > 0 && (
+        <ImageMedia handleShowFile={handleShowFile} imageFiles={imageFiles} />
+      )}
+      {videoFiles.length > 0 && (
+        <MediaVideos handleShowFile={handleShowFile} videoFiles={videoFiles} />
+      )}
+      {documentFiles.length > 0 && (
+        <MediaDocuments
+          handleShowFile={handleShowFile}
+          documentFiles={documentFiles}
+        />
+      )}
+      {xlsFiles.length > 0 && (
+        <MediaXls handleShowFile={handleShowFile} xlsFiles={xlsFiles} />
+      )}
+
+      {pdfFiles.length > 0 && (
+        <MediaPdf handleShowFile={handleShowFile} pdfFiles={pdfFiles} />
+      )}
+      {pptFile.length > 0 && (
+        <MediaPpt handleShowFile={handleShowFile} pptFiles={pptFile} />
+      )}
     </Box>
   );
 };
 
 const ImageMedia = ({ imageFiles, handleShowFile }) => {
   const theme = useTheme();
+  const [show, setShow] = useState(false);
+
+  const toggleShow = () => {
+    setShow((prev) => !prev);
+  };
   return (
     <Box>
-      <MediaName name="Images" />
+      <MediaName name="Images" show={show} toggleShow={toggleShow} />
       {/* Images */}
-
-      <ImageList
-        sx={{
-          maxHeight: "200px",
-          backgroundColor: theme.colors.background1,
-          padding: "5px",
-          borderRadius: "5px",
-        }}
-        cols={3}
-        rowHeight={80}
-      >
-        {imageFiles.map((imageFile) => (
-          <ImageListItem key={imageFile.img}>
-            <Image
-              onClick={() => handleShowFile(imageFile)}
-              src={`${imageFile.fileUrl}?w=110&h=80&fit=crop&auto=format`}
-              srcSet={`${imageFile.fileUrl}?w=110&h=80&fit=crop&auto=format&dpr=2 2x`}
-              alt="Picture of the author"
-              width={110}
-              height={80}
-              quality={100}
-              style={{
-                borderRadius: "3px",
-              }}
-            />
-          </ImageListItem>
-        ))}
-      </ImageList>
+      {show && (
+        <ImageList
+          sx={{
+            maxHeight: "200px",
+            backgroundColor: theme.colors.background1,
+            padding: "5px",
+            borderRadius: "5px",
+            maxWidth: "400px",
+          }}
+          cols={3}
+          rowHeight={80}
+        >
+          {imageFiles.map((imageFile) => (
+            <ImageListItem key={imageFile.img}>
+              <Image
+                onClick={() => handleShowFile(imageFile)}
+                src={`${imageFile.fileUrl}?w=110&h=80&fit=crop&auto=format`}
+                srcSet={`${imageFile.fileUrl}?w=110&h=80&fit=crop&auto=format&dpr=2 2x`}
+                alt="Picture of the author"
+                width={110}
+                height={80}
+                quality={100}
+                style={{
+                  borderRadius: "3px",
+                }}
+              />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      )}
     </Box>
   );
 };
 
 const MediaVideos = ({ videoFiles, handleShowFile }) => {
   const theme = useTheme();
+  const [show, setShow] = useState(false);
 
+  const toggleShow = () => {
+    setShow((prev) => !prev);
+  };
   return (
     <Box>
-      <MediaName name="Videos" />
+      <MediaName name="Videos" show={show} toggleShow={toggleShow} />
       {/* Videos */}
-      <ImageList
-        sx={{
-          maxHeight: "200px",
-          backgroundColor: theme.colors.background1,
-          padding: "5px",
-          borderRadius: "5px",
-        }}
-        cols={2}
-        rowHeight={80}
-      >
-        {videoFiles.map((videoFile, i) => (
-          <ImageListItem key={i} onClick={() => handleShowFile(videoFile)}>
-            <video
-              // controls
-              style={{
-                backgroundColor: "black",
-                width: "auto",
-                height: "80px",
-                borderRadius: "3px",
+      {show && (
+        <ImageList
+          sx={{
+            maxHeight: "200px",
+            backgroundColor: theme.colors.background1,
+            padding: "5px",
+            borderRadius: "5px",
+            // width:""
+          }}
+          cols={1}
+          // rowHeight={80}
+        >
+          {videoFiles.map((videoFile, i) => (
+            <ImageListItem
+              sx={{
+                backgroundColor: theme.colors.textBackground,
               }}
-              width="250"
+              key={i}
+              onClick={() => handleShowFile(videoFile)}
             >
-              <source src={videoFile.fileUrl} />
-              Sorry, your browser doesn't support embedded videos.
-            </video>
-          </ImageListItem>
-        ))}
-      </ImageList>
+              <FileComponent file={videoFile} />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      )}
     </Box>
   );
 };
 
-const MediaLinks = () => {
-  const theme = useTheme();
-
-  return (
-    <Box>
-      <MediaName name="Links" />
-      {/* Links */}
-      <ImageList
-        sx={{
-          maxHeight: "200px",
-          backgroundColor: theme.colors.background1,
-          padding: "5px",
-          borderRadius: "5px",
-        }}
-        cols={3}
-        rowHeight={80}
-      >
-        <ImageListItem></ImageListItem>
-      </ImageList>
-    </Box>
-  );
-};
 const MediaDocuments = ({ documentFiles, handleShowFile }) => {
   const theme = useTheme();
-  console.log("Document Files  :", documentFiles);
+  const [show, setShow] = useState(false);
+
+  const toggleShow = () => {
+    setShow((prev) => !prev);
+  };
   return (
     <Box>
-      <MediaName name="Documents" />
+      <MediaName name="Documents" show={show} toggleShow={toggleShow} />
       {/* Links */}
-      <ImageList
-        sx={{
-          maxHeight: "200px",
-          backgroundColor: theme.colors.textBackground,
-          padding: "5px",
-          borderRadius: "5px",
-        }}
-        cols={3}
-        rowHeight={80}
-      >
-        {documentFiles.map((documentFile, i) => (
-          <Box onClick={() => handleShowFile(documentFile)} key={i}>
-            <FileComponent file={documentFile} />
-          </Box>
-        ))}
-      </ImageList>
+      {show && (
+        <ImageList
+          sx={{
+            maxHeight: "200px",
+            backgroundColor: theme.colors.textBackground,
+            padding: "5px",
+            borderRadius: "5px",
+          }}
+          cols={1}
+        >
+          {documentFiles.map((documentFile, i) => (
+            <ImageListItem
+              sx={{
+                backgroundColor: theme.colors.textBackground,
+              }}
+              onClick={() => handleShowFile(documentFile)}
+              key={i}
+            >
+              <FileComponent file={documentFile} />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      )}
+    </Box>
+  );
+};
+const MediaXls = ({ xlsFiles, handleShowFile }) => {
+  const theme = useTheme();
+  const [show, setShow] = useState(false);
+
+  const toggleShow = () => {
+    setShow((prev) => !prev);
+  };
+  return (
+    <Box>
+      <MediaName name="Xls Sheet" show={show} toggleShow={toggleShow} />
+      {/* Links */}
+      {show && (
+        <ImageList
+          sx={{
+            maxHeight: "200px",
+            backgroundColor: theme.colors.textBackground,
+            padding: "5px",
+            borderRadius: "5px",
+          }}
+          cols={1}
+        >
+          {xlsFiles.map((xlsFile, i) => (
+            <ImageListItem
+              sx={{
+                backgroundColor: theme.colors.textBackground,
+              }}
+              onClick={() => handleShowFile(xlsFile)}
+              key={i}
+            >
+              <FileComponent file={xlsFile} />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      )}
+    </Box>
+  );
+};
+const MediaPdf = ({ pdfFiles, handleShowFile }) => {
+  const [show, setShow] = useState(false);
+
+  const toggleShow = () => {
+    setShow((prev) => !prev);
+  };
+  const theme = useTheme();
+  return (
+    <Box>
+      <MediaName name="Pdf" show={show} toggleShow={toggleShow} />
+      {/* Links */}
+      {show && (
+        <ImageList
+          sx={{
+            maxHeight: "200px",
+            backgroundColor: theme.colors.textBackground,
+            padding: "5px",
+            borderRadius: "5px",
+          }}
+          cols={1}
+        >
+          {pdfFiles.map((pdfFile, i) => (
+            <ImageListItem
+              sx={{
+                backgroundColor: theme.colors.textBackground,
+              }}
+              onClick={() => handleShowFile(pdfFile)}
+              key={i}
+            >
+              <FileComponent file={pdfFile} />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      )}
+    </Box>
+  );
+};
+const MediaPpt = ({ pptFiles, handleShowFile }) => {
+  const theme = useTheme();
+  const [show, setShow] = useState(false);
+
+  const toggleShow = () => {
+    setShow((prev) => !prev);
+  };
+  return (
+    <Box>
+      <MediaName name="Pressentation" show={show} toggleShow={toggleShow} />
+      {/* Links */}
+      {show && (
+        <ImageList
+          sx={{
+            maxHeight: "200px",
+            backgroundColor: theme.colors.textBackground,
+            padding: "5px",
+            borderRadius: "5px",
+          }}
+          cols={1}
+        >
+          {pptFiles.map((pptFile, i) => (
+            <ImageListItem
+              sx={{
+                backgroundColor: theme.colors.textBackground,
+              }}
+              onClick={() => handleShowFile(pptFile)}
+              key={i}
+            >
+              <FileComponent file={pptFile} />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      )}
     </Box>
   );
 };
 
-const MediaName = ({ name }) => {
+const MediaName = ({ name, show, toggleShow }) => {
   return (
     <Box
       sx={{
@@ -286,8 +421,8 @@ const MediaName = ({ name }) => {
       }}
     >
       <Typography variant="h6">{name}</Typography>
-      <Button color="secondary" size="small">
-        <KeyboardArrowDownIcon />
+      <Button onClick={toggleShow} color="secondary" size="small">
+        {show ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </Button>
     </Box>
   );

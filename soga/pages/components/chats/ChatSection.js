@@ -73,13 +73,14 @@ const ChatSection = ({
           {showRight && chat ? (
             <Box
               sx={{
-                flex: "35%",
                 borderLeft: `2px solid ${theme.colors.background1}`,
+                width: "410px",
               }}
             >
-              <ChatSectionRight 
-              files = {chat.files}
-              friendUsername={chat.friendUsername} />
+              <ChatSectionRight
+                files={chat.files}
+                friendUsername={chat.friendUsername}
+              />
             </Box>
           ) : null}
         </Box>

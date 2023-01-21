@@ -40,7 +40,7 @@ import Image from "next/image";
 
 import FileComponent from "../mediaFiles/FileComponent";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
-import getFileType from "../../../../tools/tools";
+import { getFileType } from "../../../tools/tools";
 import FileIcone from "../mediaFiles/FileIcon";
 
 const Picker = dynamic(
@@ -197,7 +197,7 @@ const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
           textAlign: "center",
         }}
       >
-        <IconButton>
+        {/* <IconButton>
           <AddIcCallRoundedIcon
             color="secondary"
             sx={{
@@ -228,7 +228,7 @@ const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
               );
             }}
           />
-        </IconButton>
+        </IconButton> */}
         <IconButton
           onClick={() => {
             showRightHandler();

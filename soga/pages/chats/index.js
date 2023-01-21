@@ -51,6 +51,7 @@ import {
 import { useRef, useState } from "react";
 import axios from "axios";
 import { sendMessege } from "../../services/chats";
+import { sendTeamMessege } from "../../services/teams";
 // Socket.IO
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
@@ -75,6 +76,9 @@ export default function Chat() {
   // Teams States
   // team message state
   const [teamMessage, setTeamMessage] = useState("");
+  const teamFileInput = useRef(null);
+  const teamFileInput2 = useRef(null);
+  const [teamFiles, setTeamFiles] = useState([]);
   //      Bools
   const [teamBoolForSent, setTeamBoolForSent] = useState(true);
   const userId = user ? user.id : null;
@@ -184,51 +188,82 @@ export default function Chat() {
     setTeamMessage(teamMessage + emojiObject.emoji);
   };
 
+  const handleChooseFileIconTeam = (e) => {
+    teamFileInput.current.click();
+  };
+  const handleChooseFileIcon2Team = (e) => {
+    teamFileInput2.current.click();
+  };
+
+  const handleChooseFileTeam = (e) => {
+    // input change handler
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setTeamFiles((prev) => [
+        ...prev,
+        {
+          file: file,
+          fileName: file.name,
+          fileUrl: reader.result,
+          fileUri: reader.result,
+          fileType: file.type,
+          fileSize: file.size,
+        },
+      ]);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   const teamMessageChangeHandler = (e) => {
     setTeamMessage(e.target.value);
   };
 
-  const teamSendMessageHandle = () => {
-    const userId = userStore ? userStore.user.id : null;
-    try {
-      if (teamMessage.length > 0) {
-        const teamNewMessage = {
-          sender: {
-            username: userStore.user.username,
-            firstname: userStore.user.firstname,
-            lastname: userStore.user.lastname,
-            id: userStore.user.id,
-          },
-          message: teamMessage,
-          idFromClient: uuidv4(),
-        };
-        dispatch(
-          addNewMessageToTeamId({
-            teamId: id,
-            teamNewMessage,
-          })
-        );
-        teamSocket.emit("send_message_to_team", { teamNewMessage, id, userId });
-        setTeamMessage("");
-        setTeamBoolForSent(true);
-        if (teamBoolForSent) {
-          teamSocket.on("messege_sent_to_team", (data) => {
-            dispatch(
-              updateTeamMessageId({
-                teamId: id,
-                id: data.id,
-                idFromClient: data.idFromClient,
-              })
-            );
-            setTeamSentAudioPlay(true);
-            setTeamPlaying(true);
-            setTeamBoolForSent(false);
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error is :", error);
+  const teamSendMessageHandle = async () => {
+    const uuid = uuidv4();
+    const formData = new FormData();
+
+    for (const file of teamFiles) {
+      formData.append("files", file.file);
     }
+
+    formData.append("message", teamMessage);
+    formData.append("idFromClient", uuid);
+    setTeamMessage("");
+    const teamNewMessage = {
+      sender: {
+        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        id: user.id,
+      },
+      message: teamMessage,
+      idFromClient: uuid,
+      files: teamFiles,
+    };
+    setTeamFiles([]);
+
+    dispatch(
+      addNewMessageToTeamId({
+        teamId: id,
+        teamNewMessage,
+      })
+    );
+    const sentMessage = await sendTeamMessege(token, id, formData);
+    console.log("Sent message: ", sentMessage);
+
+    teamSocket.emit("send_message_to_team", {
+      teamId: id,
+      message: sentMessage,
+    });
+    dispatch(
+      updateTeamMessageId({
+        teamId: id,
+        id: sentMessage.id,
+        idFromClient: sentMessage.idFromClient,
+        files: sentMessage.files,
+      })
+    );
   };
 
   return (
@@ -270,6 +305,12 @@ export default function Chat() {
                     teamMessage={teamMessage}
                     teamSendMessageHandle={teamSendMessageHandle}
                     teamOnEmojiClick={teamOnEmojiClick}
+                    handleChooseFileIconTeam={handleChooseFileIconTeam}
+                    handleChooseFileIcon2Team={handleChooseFileIcon2Team}
+                    handleChooseFileTeam={handleChooseFileTeam}
+                    teamFileInput={teamFileInput}
+                    teamFileInput2={teamFileInput2}
+                    teamFiles={teamFiles}
                   />
                 </>
               ) : (
@@ -335,6 +376,13 @@ const SectionToDisplay = ({
   chatFiles,
   handleChooseFileIcon2,
   chatFileInput2,
+  // Teams
+  handleChooseFileIconTeam,
+  handleChooseFileIcon2Team,
+  handleChooseFileTeam,
+  teamFileInput,
+  teamFileInput2,
+  teamFiles,
 }) => {
   const router = useRouter();
   const id = router.query.id;
@@ -373,6 +421,12 @@ const SectionToDisplay = ({
             teamMessage={teamMessage}
             teamSendMessageHandle={teamSendMessageHandle}
             teamOnEmojiClick={teamOnEmojiClick}
+            handleChooseFileIconTeam={handleChooseFileIconTeam}
+            handleChooseFileIcon2Team={handleChooseFileIcon2Team}
+            handleChooseFileTeam={handleChooseFileTeam}
+            teamFileInput={teamFileInput}
+            teamFileInput2={teamFileInput2}
+            teamFiles={teamFiles}
           />
         ) : (
           <TeamSectionSkeleton />

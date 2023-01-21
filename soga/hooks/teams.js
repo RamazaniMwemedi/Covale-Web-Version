@@ -59,9 +59,10 @@ const useRecieveNewTeamMessage = (user, userId) => {
   useEffect(() => {
     teamSocket.on("receive_message_to_team", (data) => {
       if (data && data.sender != userId) {
+        console.log("Recieved new message from team", data);
         dispatch(
           addNewMessageToTeamIdFromSender({
-            teamId: data.teamRoom,
+            teamId: data.teamId,
             data: data,
           })
         );

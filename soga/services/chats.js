@@ -14,6 +14,21 @@ const sendMessege = async (token, id, formData) => {
   return response.data;
 };
 
+const sendMessageToColleague = async (token, colleaguesId, message) => {
+  const response = await axios.post(
+    `${SERVER_ADDRESS}/api/chats/message/colleague/${colleaguesId}`,
+    {
+      message,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
 // Get all chats
 const getChats = async (token) => {
   const response = await axios.get(`${SERVER_ADDRESS}/api/chats`, {
@@ -35,6 +50,7 @@ const getChatById = async (token, id) => {
 
 module.exports = {
   sendMessege,
+  sendMessageToColleague,
   getChats,
   getChatById,
 };

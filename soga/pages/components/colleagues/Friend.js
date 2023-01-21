@@ -20,14 +20,15 @@ const Friend = ({ friend, token }) => {
   const submitMessegeHandler = (e) => {
     e.preventDefault();
     if (messege.length > 0) {
-      chatServices.sendMessege(friend.id, token, messege).then(() => {
-        //  Alart message sent successfully
-        window.alert("Messege sent successfully");
-      }).catch(() => {
-        //  Alart message sent failed
-        window.alert("Messege sent failed");
-      }
-      );
+      chatServices
+        .sendMessageToColleague(token, friend.id, messege)
+        .then(() => {
+          setMessege("");
+        })
+        .catch(() => {
+          //  Alart message sent failed
+          window.alert("Messege sent failed");
+        });
     } else {
       window.alert("You can't send an empty message");
     }
@@ -51,7 +52,6 @@ const Friend = ({ friend, token }) => {
             },
           }}
         >
-          
           <Box
             sx={{
               marginTop: "25px",

@@ -21,7 +21,6 @@ const ImageComponent = React.memo(
       maxWidth: "100%",
       margin: displayFile ? "auto" : "none",
       position: "relative",
-      zIndex: 1,
       backgroundColor:
         theme.palette.mode === "dark"
           ? "rgba(0,0,0,0.6)"
@@ -62,7 +61,6 @@ const Video = React.memo(({ src, fileName, width, height, displayFile }) => {
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
     position: "relative",
-    zIndex: 1,
     backgroundColor:
       theme.palette.mode === "dark"
         ? "rgba(0,0,0,0.6)"
@@ -87,7 +85,14 @@ const Video = React.memo(({ src, fileName, width, height, displayFile }) => {
             }}
           >
             <VideoIcon width={width} height={height} />
-            <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontSize: "12px",
+                whiteSpace: "nowrap",
+                wordBreak: "keep-all",
+              }}
+            >
               {/* First 10 characters and .{fileExtension} */}
               {fileName.substring(0, 10)}...{fileName.split(".").pop()}
             </Typography>
@@ -104,7 +109,6 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
     position: "relative",
-    zIndex: 1,
     backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
     backdropFilter: "blur(40px)",
     display: "flex",
@@ -132,7 +136,6 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
               // position: "absolute",
               top: 0,
               left: 0,
-              zIndex: 0,
             }}
           >
             <iframe
@@ -196,16 +199,16 @@ const Audio = React.memo(({ src, width, height }) => {
 const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
   const Widget = styled("div")(({ theme }) => ({
     borderRadius: 6,
+    width: width,
     maxWidth: "100%",
+    margin: displayFile ? "auto" : "none",
     position: "relative",
-    backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
-    zIndex: 1,
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? "rgba(0,0,0,0.6)"
+        : "rgba(255,255,255,0.4)",
     backdropFilter: "blur(40px)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
   }));
-
   return (
     <Box
       sx={
@@ -263,7 +266,6 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
     position: "relative",
-    zIndex: 1,
     backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
     backdropFilter: "blur(40px)",
     display: "flex",
@@ -312,7 +314,6 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
     position: "relative",
-    zIndex: 1,
     backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
     backdropFilter: "blur(40px)",
     display: "flex",

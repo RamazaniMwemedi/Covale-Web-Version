@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box } from "@mui/system";
+import { Box, Stack } from "@mui/system";
 import {
   Avatar,
   Typography,
@@ -7,16 +7,29 @@ import {
   Button,
   List,
   ListItem,
+  Grow,
+  Paper,
+  ClickAwayListener,
+  MenuList,
+  MenuItem,
+  ListItemIcon,
+  Popper,
 } from "@mui/material";
 import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
+import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
+import GifRoundedIcon from "@mui/icons-material/GifRounded";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import TopicRoundedIcon from "@mui/icons-material/TopicRounded";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
-import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import BallotRoundedIcon from "@mui/icons-material/BallotRounded";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import AddIcon from "@mui/icons-material/Add";
+
 import { useTheme } from "@mui/material";
 import { purple } from "@mui/material/colors";
 
@@ -24,6 +37,9 @@ import { purple } from "@mui/material/colors";
 import { useSelector } from "react-redux";
 
 import dynamic from "next/dynamic";
+import FileIcone from "../mediaFiles/FileIcon";
+import FileComponent from "../mediaFiles/FileComponent";
+import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 
 const Picker = dynamic(
   () => {
@@ -42,13 +58,39 @@ const TeamSectionLeft = ({
   teamOnEmojiClick,
   showParticipant,
   showMenu,
+  // Files
+  handleChooseFileIconTeam,
+  handleChooseFileIcon2Team,
+  handleChooseFileTeam,
+  teamFileInput,
+  teamFileInput2,
+  teamFiles,
 }) => {
   const userStore = useSelector((state) => state.user);
   const user = userStore.user;
   const teamName = team ? team.teamName : "";
   const messages = team ? team.messages : [];
+  const [file, setFile] = useState(null);
+
+  const [showFile, setShowFile] = useState(false);
+  const handleShowTeamFile = (file) => {
+    // If file.fileUrl includes https:// then setFile to file and setShowVideoPlayer to true
+    if (file.fileUrl.includes("https://")) {
+      setFile(file);
+      setShowFile(true);
+    }
+  };
+  const handleCloseShowFile = () => {
+    setShowFile(false);
+  };
   return (
     <>
+      {showFile && (
+        <FileDisplayComponent
+          handleCloseShowVideoPlayer={handleCloseShowFile}
+          file={file}
+        />
+      )}
       {team && (
         <Box
           sx={{
@@ -74,12 +116,25 @@ const TeamSectionLeft = ({
               paddingBottom: "2px",
             }}
           >
-            {messages && <Mid user={user} messages={messages} />}
+            {messages && (
+              <Mid
+                user={user}
+                messages={messages}
+                handleShowTeamFile={handleShowTeamFile}
+              />
+            )}
             <Bottom
               teamMessageChangeHandler={teamMessageChangeHandler}
               teamSendMessageHandle={teamSendMessageHandle}
               teamMessage={teamMessage}
               teamOnEmojiClick={teamOnEmojiClick}
+              // Files
+              handleChooseFileIconTeam={handleChooseFileIconTeam}
+              handleChooseFileIcon2Team={handleChooseFileIcon2Team}
+              handleChooseFileTeam={handleChooseFileTeam}
+              teamFileInput={teamFileInput}
+              teamFileInput2={teamFileInput2}
+              teamFiles={teamFiles}
             />
           </Box>
         </Box>
@@ -172,7 +227,7 @@ const TopBar = ({
   );
 };
 
-const Mid = ({ user, messages }) => {
+const Mid = ({ user, messages, handleShowTeamFile }) => {
   const toBottomWhenNewMessage = useRef(null);
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
@@ -197,9 +252,16 @@ const Mid = ({ user, messages }) => {
       >
         {messages.map((message) => {
           return message.sender.id === user.id ? (
-            <UserMessage message={message} user={user} />
+            <UserMessage
+              message={message}
+              user={user}
+              handleShowTeamFile={handleShowTeamFile}
+            />
           ) : (
-            <FriendMessage message={message} />
+            <FriendMessage
+              message={message}
+              handleShowTeamFile={handleShowTeamFile}
+            />
           );
         })}
         <ListItem ref={toBottomWhenNewMessage} />
@@ -208,7 +270,7 @@ const Mid = ({ user, messages }) => {
   );
 };
 
-const UserMessage = ({ message, user }) => {
+const UserMessage = ({ message, user, handleShowTeamFile }) => {
   const purple1 = purple[700];
   const purple2 = purple[400];
   const idProvided = message.id ? true : false;
@@ -275,6 +337,36 @@ const UserMessage = ({ message, user }) => {
           >
             {`${user.firstname} ${user.lastname}`}
           </Typography>
+          <Box
+            sx={{
+              // If there are 3 or more files, display in grid
+              display: "flex",
+              flexDirection: "column",
+              gridGap: "5px",
+              // centerd
+              // alignItems: "center",
+              // textAlign: "center",
+            }}
+          >
+            {message.files.map((file) => {
+              return (
+                <Box
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor: theme.colors.textBackground,
+                    display: "flex",
+                    m: 1,
+                    // To be at the right of the message
+                    width: "200px",
+                    borderRadius: "5px",
+                  }}
+                  onClick={() => handleShowTeamFile(file)}
+                >
+                  <FileComponent file={file} />
+                </Box>
+              );
+            })}
+          </Box>
           <Typography variant="subtitle2" sx={{ color: "white" }}>
             {message.message}
           </Typography>
@@ -291,7 +383,7 @@ const UserMessage = ({ message, user }) => {
   );
 };
 
-const FriendMessage = ({ message }) => {
+const FriendMessage = ({ message, handleShowTeamFile }) => {
   const theme = useTheme();
   return (
     <Box
@@ -339,6 +431,33 @@ const FriendMessage = ({ message }) => {
             }}
             variant="subtitle2"
           >{`${message.sender.firstname} ${message.sender.lastname}`}</Typography>
+          <Box
+            sx={{
+              // If there are 3 or more files, display in grid
+              display: "flex",
+              flexDirection: "column",
+              gridGap: "5px",
+            }}
+          >
+            {message.files.map((file) => {
+              return (
+                <Box
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor: theme.colors.textBackground,
+                    display: "flex",
+                    m: 1,
+                    // To be at the right of the message
+                    width: "200px",
+                    borderRadius: "5px",
+                  }}
+                  onClick={() => handleShowTeamFile(file)}
+                >
+                  <FileComponent file={file} />
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
 
         <Box
@@ -359,6 +478,13 @@ const Bottom = ({
   teamSendMessageHandle,
   teamMessage,
   teamOnEmojiClick,
+  // Files
+  handleChooseFileIconTeam,
+  handleChooseFileIcon2Team,
+  handleChooseFileTeam,
+  teamFileInput,
+  teamFileInput2,
+  teamFiles,
 }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
   const theme = useTheme();
@@ -379,6 +505,91 @@ const Bottom = ({
         borderRadius: "5px",
       }}
     >
+      {" "}
+      {/* Selected files will be displayed here  */}
+      {teamFiles.length > 0 && (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: "60px",
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgba(0,0,0,0.6)"
+                : "rgba(255,255,255,0.4)",
+            marginBottom: "4px",
+            borderBottomRightRadius: "5px",
+            borderBottomLeftRadius: "5px",
+            width: "37vw",
+            marginLeft: "30px",
+            marginRight: "15px",
+            borderRadius: "5px",
+          }}
+        >
+          {/* Display only the first element */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "auto auto",
+            }}
+          >
+            {teamFiles.map((file, i) => (
+              <Box
+                key={i}
+                sx={{
+                  backgroundColor:
+                    theme.palette.mode === "dark"
+                      ? theme.colors.background1
+                      : theme.colors.background1,
+                  p: 1,
+                  mt: 0.3,
+                  ml: 0.3,
+                  borderRadius: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <FileIcone fileType={file.fileType} />
+                <Typography variant="body1">
+                  {file.fileName.length > 15
+                    ? file.fileName.substring(0, 15) + "..."
+                    : file.fileName}
+                </Typography>
+                <IconButton
+                  sx={{
+                    "&:hover": {
+                      color: "red",
+                    },
+                  }}
+                >
+                  <CancelRoundedIcon />
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
+          <Box
+            sx={{
+              m: 1,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              size="small"
+              onClick={(e) => handleChooseFileIcon2Team(e)}
+            >
+              <AddIcon />
+              <input
+                type="file"
+                hidden
+                ref={teamFileInput2}
+                onChange={(e) => handleChooseFileTeam(e)}
+              />
+            </Button>
+          </Box>
+        </Box>
+      )}
       {showEmojiPeaker === true && (
         <Box
           sx={{
@@ -416,10 +627,11 @@ const Bottom = ({
           />
         </Box>
       )}
-
-      <IconButton>
-        <ControlPointRoundedIcon color="secondary" />
-      </IconButton>
+      <MenuListComposition
+        handleChooseFileIconTeam={handleChooseFileIconTeam}
+        teamFileInput={teamFileInput}
+        handleChooseFileTeam={handleChooseFileTeam}
+      />
       {/* Communication */}
       <Box
         sx={{
@@ -480,3 +692,130 @@ const Bottom = ({
     </Box>
   );
 };
+
+function MenuListComposition({
+  handleChooseFileIconTeam,
+  teamFileInput,
+  handleChooseFileTeam,
+}) {
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+
+  const handleToggle = (e) => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (e) => {
+    e.stopPropagation();
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
+  return (
+    <Stack direction="row" spacing={2}>
+      <Box>
+        <IconButton
+          ref={anchorRef}
+          id="composition-button"
+          aria-controls={open ? "composition-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle}
+        >
+          <ControlPointRoundedIcon color="secondary" />
+        </IconButton>
+        <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement="bottom-start"
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === "bottom-start" ? "left top" : "left bottom",
+              }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={(e) => handleClose(e)}>
+                  <MenuList
+                    autoFocusItem={open}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    <MenuItem
+                      onClick={(e) => {
+                        handleChooseFileIconTeam(e);
+                      }}
+                    >
+                      <ListItemIcon>
+                        <FileUploadRoundedIcon
+                          fontSize="small"
+                          color="secondary"
+                        />
+                      </ListItemIcon>
+                      <input
+                        type={"file"}
+                        ref={teamFileInput}
+                        style={{
+                          display: "none",
+                        }}
+                        onChange={(e) => {
+                          handleClose(e);
+                          handleChooseFileTeam(e);
+                        }}
+                      />
+                      Upload file
+                    </MenuItem>
+                    {/* <MenuItem onClick={(e) => handleClose(e)}>
+                      <ListItemIcon>
+                        <TopicRoundedIcon fontSize="medium" color="secondary" />
+                      </ListItemIcon>
+                      Topic
+                    </MenuItem> */}
+                    {/* <MenuItem>
+                      <ListItemIcon>
+                        <BallotRoundedIcon
+                          fontSize="medium"
+                          color="secondary"
+                        />
+                      </ListItemIcon>
+                      Poll
+                    </MenuItem> */}
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </Box>
+    </Stack>
+  );
+}
