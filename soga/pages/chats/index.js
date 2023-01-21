@@ -239,7 +239,7 @@ export default function Chat() {
       },
       message: teamMessage,
       idFromClient: uuid,
-      files: teamFiles,
+      file: teamFiles,
     };
     setTeamFiles([]);
 

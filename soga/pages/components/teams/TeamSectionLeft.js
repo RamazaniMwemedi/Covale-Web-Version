@@ -348,7 +348,7 @@ const UserMessage = ({ message, user, handleShowTeamFile }) => {
               // textAlign: "center",
             }}
           >
-            {message.files.map((file) => {
+            {message.file.map((file) => {
               return (
                 <Box
                   sx={{
@@ -439,7 +439,7 @@ const FriendMessage = ({ message, handleShowTeamFile }) => {
               gridGap: "5px",
             }}
           >
-            {message.files.map((file) => {
+            {message.file.map((file) => {
               return (
                 <Box
                   sx={{

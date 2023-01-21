@@ -159,7 +159,7 @@ export default function Chat() {
       idFromClient: uuid,
       sender: user.id,
       message: chatMessage,
-      files: chatFiles,
+      file: chatFiles,
       chatRoom: id,
     };
     setChatFiles([]);

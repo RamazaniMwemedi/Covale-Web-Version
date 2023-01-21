@@ -12,6 +12,7 @@ import Image from "next/image";
 import VedeoOpen from "./VideoOpen";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import FileComponent from "../mediaFiles/FileComponent";
+import { purple } from "@mui/material/colors";
 
 const ChatSectionRight = ({ friendUsername, files }) => {
   const [showFile, setShowFile] = useState(false);
@@ -420,10 +421,10 @@ const MediaName = ({ name, show, toggleShow }) => {
         justifyContent: "space-between",
       }}
     >
-      <Typography variant="h6">{name}</Typography>
-      <Button onClick={toggleShow} color="secondary" size="small">
+      <Typography variant="body1">{name}</Typography>
+      <IconButton onClick={toggleShow} color="secondary" size="small">
         {show ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-      </Button>
+      </IconButton>
     </Box>
   );
 };
