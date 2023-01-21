@@ -53,7 +53,7 @@ const Participant = ({ team }) => {
       <br />
       <Directors directors={team.directors} />
       <AllMembers members={team.members} />
-      <InvitedMembers teamId={team.id} />
+      <InvitedMembers members={team.members}  teamId={team.id} />
     </Box>
   );
 };
@@ -346,7 +346,7 @@ const ParticipantItem = ({ participant }) => {
   );
 };
 
-const InvitedMembers = ({ teamId }) => {
+const InvitedMembers = ({ teamId, members }) => {
   // Show InviteMembers State
   const [showInviteMembers, setShowInviteMembers] = useState(false);
   // showInviteMembers handler
@@ -375,6 +375,7 @@ const InvitedMembers = ({ teamId }) => {
           // Show InviteMenbers Component
           showInviteMembers && (
             <InviteMembers
+              members={members}
               teamId={teamId}
               showInviteMembersHandler={showInviteMembersHandler}
             />

@@ -30,7 +30,8 @@ const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`, {
   },
 });
 
-const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
+const InviteMembers = ({ teamId, members, showInviteMembersHandler }) => {
+  const theme = useTheme();
   const [selectedColleagues, setSelectedColleagues] = useState([]);
   const userStore = useSelector((state) => state.user);
   const user = userStore.user;
@@ -44,7 +45,19 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
   // invitingBool state
   const [invitingBool, setInvitingBool] = useState(false);
   const friends = useGetFriends();
-  const theme = useTheme();
+  // Friends who are not in the team
+
+  const filteredColleagues = friends
+    ? friends.filter((friend) => {
+        const isMember = members.find((member) => {
+          return member.id == friend.id;
+        });
+        return !isMember;
+      })
+    : [];
+
+  // console.log("Friends", friends);
+  // console.log("filteredColleagues", filteredColleagues);
   const sendInvitation = async () => {
     if (token && selectedColleagues.length > 0 && teamId) {
       setInvitingBool(true);
@@ -100,16 +113,15 @@ const InviteMembers = ({ teamId, showInviteMembersHandler }) => {
               multiple
               limitTags={2}
               id="multiple-limit-tags"
-              options={friends}
-              getOptionLabel={
-                (person) => `${person.firstname} ${person.lastname}`
-                // <PersonOption person={person} />
+              options={filteredColleagues}
+              getOptionLabel={(colleague) =>
+                `${colleague.firstname} ${colleague.lastname}`
               }
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Coleages"
-                  placeholder="Search a Coleage"
+                  label="Colleague"
+                  placeholder="Search a Colleague"
                   color="secondary"
                   size="small"
                 />
