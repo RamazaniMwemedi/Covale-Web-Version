@@ -18,7 +18,7 @@ export default function Chat({ chat }) {
   // messages
   const messages = chat ? chat.messages : null;
   // last message
-  const lastMessage =messages? messages[messages.length - 1].message : "";
+  const lastMessage = messages ? messages[messages.length - 1].message : "";
 
   return (
     <List
@@ -34,19 +34,22 @@ export default function Chat({ chat }) {
               shallow: true,
             });
           }}
+          button
           sx={{
+            borderRadius: "0.5rem",
+            boxShadow: chat.id === id ? 1 : "unset",
+            backgroundColor:
+              chat.id === id ? theme.colors.background1 : "unset",
+            "&:hover": {
+              // backgroundColor: ,
+              // boxShadow: 1,
+            },
             // border style
             borderStyle: " solid ",
             // border color
             borderColor: theme.colors.background1,
             // border width
             borderWidth: "1px",
-            borderRadius: "0.5rem",
-            boxShadow: chat.id === id ? 1 : "unset",
-            backgroundColor: chat.id == id ? theme.colors.background1 : "unset",
-            "&:hover": {
-              boxShadow: 3,
-            },
             marginTop: "-8px",
           }}
         >

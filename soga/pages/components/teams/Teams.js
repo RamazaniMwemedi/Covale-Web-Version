@@ -43,6 +43,7 @@ const Teams = ({ openCreateTeam, toggleShowTeam }) => {
       <Box
         sx={{
           width: "100%",
+          backgroundColor: theme.colors.background1,
           borderRadius: "5px",
           marginBottom: "10px",
           alignItems: "center",
