@@ -16,6 +16,7 @@ const ChatSection = ({
   onEmojiClick,
   chatFileInput,
   handleChooseFileIcon,
+  handleRemoveFile,
   handleChooseFile,
   chatFiles,
   handleChooseFileIcon2,
@@ -64,6 +65,7 @@ const ChatSection = ({
               handleChooseFileIcon={handleChooseFileIcon}
               chatFileInput={chatFileInput}
               handleChooseFile={handleChooseFile}
+              handleRemoveFile={handleRemoveFile}
               chatFiles={chatFiles}
               chatFileInput2={chatFileInput2}
               handleChooseFileIcon2={handleChooseFileIcon2}

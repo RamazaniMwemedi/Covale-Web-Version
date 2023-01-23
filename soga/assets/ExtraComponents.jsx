@@ -42,7 +42,14 @@ const ImageComponent = React.memo(
               }}
             >
               <ImageIcon width={width} height={height} />
-              <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  fontSize: "12px",
+                  whiteSpace: "nowrap",
+                  wordBreak: "keep-all",
+                }}
+              >
                 {/* First 10 characters and .{fileExtension} */}
                 {fileName.substring(0, 10)}...{fileName.split(".").pop()}
               </Typography>

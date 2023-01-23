@@ -62,6 +62,7 @@ const TeamSectionLeft = ({
   handleChooseFileIconTeam,
   handleChooseFileIcon2Team,
   handleChooseFileTeam,
+  handleRemoveFileTeam,
   teamFileInput,
   teamFileInput2,
   teamFiles,
@@ -132,6 +133,7 @@ const TeamSectionLeft = ({
               handleChooseFileIconTeam={handleChooseFileIconTeam}
               handleChooseFileIcon2Team={handleChooseFileIcon2Team}
               handleChooseFileTeam={handleChooseFileTeam}
+              handleRemoveFileTeam={handleRemoveFileTeam}
               teamFileInput={teamFileInput}
               teamFileInput2={teamFileInput2}
               teamFiles={teamFiles}
@@ -482,6 +484,7 @@ const Bottom = ({
   handleChooseFileIconTeam,
   handleChooseFileIcon2Team,
   handleChooseFileTeam,
+  handleRemoveFileTeam,
   teamFileInput,
   teamFileInput2,
   teamFiles,
@@ -554,14 +557,8 @@ const Bottom = ({
                     ? file.fileName.substring(0, 15) + "..."
                     : file.fileName}
                 </Typography>
-                <IconButton
-                  sx={{
-                    "&:hover": {
-                      color: "red",
-                    },
-                  }}
-                >
-                  <CancelRoundedIcon />
+                <IconButton onClick={() => handleRemoveFileTeam(file)}>
+                  <CloseRoundedIcon />
                 </IconButton>
               </Box>
             ))}

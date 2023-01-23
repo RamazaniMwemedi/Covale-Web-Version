@@ -143,6 +143,10 @@ export default function Chat() {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  const handleRemoveFile = (file) => {
+    setChatFiles((prev) => prev.filter((f) => f !== file));
+  };
+
   const sendMessageHandle = async (event) => {
     event.preventDefault();
     const uuid = uuidv4();
@@ -213,6 +217,10 @@ export default function Chat() {
       ]);
     };
     reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const handleRemoveFileTeam = (file) => {
+    setTeamFiles((prev) => prev.filter((f) => f !== file));
   };
 
   const teamMessageChangeHandler = (e) => {
@@ -299,6 +307,7 @@ export default function Chat() {
                     chatFileInput2={chatFileInput2}
                     handleChooseFileIcon2={handleChooseFileIcon2}
                     handleChooseFile={handleChooseFile}
+                    handleRemoveFile={handleRemoveFile}
                     chatFiles={chatFiles}
                     // Teams
                     teamMessageChangeHandler={teamMessageChangeHandler}
@@ -308,6 +317,7 @@ export default function Chat() {
                     handleChooseFileIconTeam={handleChooseFileIconTeam}
                     handleChooseFileIcon2Team={handleChooseFileIcon2Team}
                     handleChooseFileTeam={handleChooseFileTeam}
+                    handleRemoveFileTeam={handleRemoveFileTeam}
                     teamFileInput={teamFileInput}
                     teamFileInput2={teamFileInput2}
                     teamFiles={teamFiles}
@@ -373,6 +383,7 @@ const SectionToDisplay = ({
   chatFileInput,
   handleChooseFileIcon,
   handleChooseFile,
+  handleRemoveFile,
   chatFiles,
   handleChooseFileIcon2,
   chatFileInput2,
@@ -380,6 +391,7 @@ const SectionToDisplay = ({
   handleChooseFileIconTeam,
   handleChooseFileIcon2Team,
   handleChooseFileTeam,
+  handleRemoveFileTeam,
   teamFileInput,
   teamFileInput2,
   teamFiles,
@@ -405,6 +417,7 @@ const SectionToDisplay = ({
             chatFiles={chatFiles}
             chatFileInput2={chatFileInput2}
             handleChooseFileIcon2={handleChooseFileIcon2}
+            handleRemoveFile={handleRemoveFile}
           />
         ) : (
           <ChatSectionSkeleton />
@@ -424,6 +437,7 @@ const SectionToDisplay = ({
             handleChooseFileIconTeam={handleChooseFileIconTeam}
             handleChooseFileIcon2Team={handleChooseFileIcon2Team}
             handleChooseFileTeam={handleChooseFileTeam}
+            handleRemoveFileTeam={handleRemoveFileTeam}
             teamFileInput={teamFileInput}
             teamFileInput2={teamFileInput2}
             teamFiles={teamFiles}

@@ -18,6 +18,7 @@ const TeamSection = ({
   handleChooseFileIconTeam,
   handleChooseFileIcon2Team,
   handleChooseFileTeam,
+  handleRemoveFileTeam,
   teamFileInput,
   teamFileInput2,
   teamFiles,
@@ -85,6 +86,7 @@ const TeamSection = ({
               handleChooseFileIconTeam={handleChooseFileIconTeam}
               handleChooseFileIcon2Team={handleChooseFileIcon2Team}
               handleChooseFileTeam={handleChooseFileTeam}
+              handleRemoveFileTeam={handleRemoveFileTeam}
               teamFileInput={teamFileInput}
               teamFileInput2={teamFileInput2}
               teamFiles={teamFiles}

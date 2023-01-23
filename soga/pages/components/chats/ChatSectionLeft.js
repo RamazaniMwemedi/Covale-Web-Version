@@ -25,8 +25,6 @@ import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
 import GifRoundedIcon from "@mui/icons-material/GifRounded";
 import AddIcon from "@mui/icons-material/Add";
-import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
-
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
@@ -65,6 +63,7 @@ const ChatSectionLeft = ({
   chatFileInput,
   handleChooseFileIcon,
   handleChooseFile,
+  handleRemoveFile,
   chatFiles,
   handleChooseFileIcon2,
   chatFileInput2,
@@ -129,6 +128,7 @@ const ChatSectionLeft = ({
               handleChooseFileIcon={handleChooseFileIcon}
               chatFileInput={chatFileInput}
               handleChooseFile={handleChooseFile}
+              handleRemoveFile={handleRemoveFile}
               chatFiles={chatFiles}
               chatFileInput2={chatFileInput2}
               handleChooseFileIcon2={handleChooseFileIcon2}
@@ -458,6 +458,7 @@ const Bottom = ({
   handleChooseFileIcon,
   chatFileInput,
   handleChooseFile,
+  handleRemoveFile,
   chatFiles,
   handleChooseFileIcon2,
   chatFileInput2,
@@ -515,14 +516,8 @@ const Bottom = ({
                     ? file.fileName.substring(0, 15) + "..."
                     : file.fileName}
                 </Typography>
-                <IconButton
-                  sx={{
-                    "&:hover": {
-                      color: "red",
-                    },
-                  }}
-                >
-                  <CancelRoundedIcon />
+                <IconButton onClick={() => handleRemoveFile(file)}>
+                  <CloseRoundedIcon />
                 </IconButton>
               </Box>
             ))}
