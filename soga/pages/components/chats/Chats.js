@@ -43,7 +43,10 @@ const Chats = ({
     }
     return state.chats.chats;
   });
+  const [filterChatName, setFilterChatName] = useState("");
+  const [allFilteredChats, setAllFilteredChats] = useState([]);
   const theme = useTheme();
+  console.log("allFilteredChats :>>", allFilteredChats);
   return (
     <>
       <Box
@@ -75,9 +78,21 @@ const Chats = ({
             }
             id="outlined-adornment-password"
             type="text"
-            value=""
+            value={filterChatName}
             label="Chats"
-            onChange={() => {}}
+            onChange={(e) => {
+              setFilterChatName(e.target.value);
+              setAllFilteredChats(
+                //  When the e.target.value is empty, this return an empty array otherwise it returns an array of filtered chats
+                e.target.value.length < 1
+                  ? []
+                  : chats.filter((chat) =>
+                      chat.friendUsername
+                        .toLowerCase()
+                        .includes(e.target.value.toLowerCase())
+                    )
+              );
+            }}
             sx={{
               height: "35px",
               borderRadius: "15px",
@@ -143,7 +158,24 @@ const Chats = ({
           </Stack>
         ) : (
           <>
+            {filterChatName.length > 0 && allFilteredChats.length > 0 ? (
+              <Box>
+                {allFilteredChats.map((chat) => {
+                  return <Chat key={chat.chatId} chat={chat} />;
+                })}
+              </Box>
+            ) : (
+              filterChatName.length > 0 && (
+                <Box sx={{ textAlign: "center", marginTop: "10px" }}>
+                  <Typography variant="h6" color="secondary">
+                    No chats found
+                  </Typography>
+                </Box>
+              )
+            )}
+
             {chats &&
+              filterChatName.length < 1 &&
               (chats.length > 0 ? (
                 <Box>
                   {showMoreFriends && (
@@ -210,3 +242,19 @@ const Chats = ({
 };
 
 export default Chats;
+
+// Filtered chats component
+const FilteredChats = ({ chats, filterChatName }) => {
+  const filteredChats = chats.filter((chat) => {
+    return chat.friendUsername
+      .toLowerCase()
+      .includes(filterChatName.toLowerCase());
+  });
+  return (
+    <>
+      {filteredChats.map((chat) => {
+        return <Chat key={chat.chatId} chat={chat} />;
+      })}
+    </>
+  );
+};

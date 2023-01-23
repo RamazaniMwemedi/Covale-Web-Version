@@ -29,6 +29,8 @@ import { useSelector } from "react-redux";
 
 const Teams = ({ openCreateTeam, toggleShowTeam }) => {
   const theme = useTheme();
+  const [filterTeamName, setfilterTeamName] = useState("");
+  const [allFilteredTeams, setAllFilteredTeams] = useState([]);
   let teamLoading = true;
   const teams = useSelector((state) => {
     if (state.teams.teams) {
@@ -66,9 +68,21 @@ const Teams = ({ openCreateTeam, toggleShowTeam }) => {
             }
             id="outlined-adornment-password"
             type="text"
-            value=""
+            value={filterTeamName}
             label="Team"
-            onChange={() => {}}
+            onChange={(e) => {
+              setfilterTeamName(e.target.value);
+              setAllFilteredTeams(
+                //  When the e.target.value is empty, this return an empty array otherwise it returns an array of filtered chats
+                e.target.value.length < 1
+                  ? []
+                  : teams.filter((team) =>
+                      team.teamName
+                        .toLowerCase()
+                        .includes(e.target.value.toLowerCase())
+                    )
+              );
+            }}
             sx={{
               height: "35px",
               borderRadius: "15px",
@@ -134,7 +148,23 @@ const Teams = ({ openCreateTeam, toggleShowTeam }) => {
           </Stack>
         ) : (
           <>
+            {filterTeamName.length > 0 && allFilteredTeams.length > 0 ? (
+              <Box>
+                {allFilteredTeams.map((team, i) => {
+                  return <Team key={i} team={team} />;
+                })}
+              </Box>
+            ) : (
+              filterTeamName.length > 0 && (
+                <Box sx={{ textAlign: "center", marginTop: "10px" }}>
+                  <Typography variant="h6" color="secondary">
+                    No Team found
+                  </Typography>
+                </Box>
+              )
+            )}
             {teams &&
+              filterTeamName.length < 1 &&
               //   If teams are greater than 0
               (teams.length > 0 ? (
                 <Box>
