@@ -20,7 +20,7 @@ import { useTheme } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
 
 // My components
-import AddMoreFriends from "./AddMoreFriends";
+import StartAChatWithColleague from "./StartAChatWithColleague";
 import Chat from "./Chat";
 import { useSelector } from "react-redux";
 
@@ -46,7 +46,6 @@ const Chats = ({
   const [filterChatName, setFilterChatName] = useState("");
   const [allFilteredChats, setAllFilteredChats] = useState([]);
   const theme = useTheme();
-  console.log("allFilteredChats :>>", allFilteredChats);
   return (
     <>
       <Box
@@ -179,7 +178,7 @@ const Chats = ({
               (chats.length > 0 ? (
                 <Box>
                   {showMoreFriends && (
-                    <AddMoreFriends
+                    <StartAChatWithColleague
                       closeMorePeopleHandler={closeMorePeopleHandler}
                       messageChangeHandler={messageChangeHandler}
                       sendMessage={sendMessage}
@@ -200,7 +199,7 @@ const Chats = ({
               ) : (
                 <Box sx={{ textAlign: "center", marginTop: "150px" }}>
                   {showMoreFriends && (
-                    <AddMoreFriends
+                    <StartAChatWithColleague
                       closeMorePeopleHandler={closeMorePeopleHandler}
                       messageChangeHandler={messageChangeHandler}
                       sendMessage={sendMessage}
@@ -242,19 +241,3 @@ const Chats = ({
 };
 
 export default Chats;
-
-// Filtered chats component
-const FilteredChats = ({ chats, filterChatName }) => {
-  const filteredChats = chats.filter((chat) => {
-    return chat.friendUsername
-      .toLowerCase()
-      .includes(filterChatName.toLowerCase());
-  });
-  return (
-    <>
-      {filteredChats.map((chat) => {
-        return <Chat key={chat.chatId} chat={chat} />;
-      })}
-    </>
-  );
-};

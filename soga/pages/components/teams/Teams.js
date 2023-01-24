@@ -21,7 +21,7 @@ import AddIcon from "@mui/icons-material/Add";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 // My components
-import AddMoreFriends from "../chats/AddMoreFriends";
+import StartAChatWithColleague from "../chats/StartAChatWithColleague";
 import Team from "./Team";
 import FloatingATeamB from "./FloatingATeamB";
 import CreateTeam from "./CreateTeam";
