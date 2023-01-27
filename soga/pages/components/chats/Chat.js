@@ -17,8 +17,9 @@ export default function Chat({ chat }) {
   const theme = useTheme();
   // messages
   const messages = chat ? chat.messages : null;
-  // last message
-  const lastMessage = messages ? messages[messages.length - 1].message : "";
+  // last message in messages array if there is a message else return an empty string using higher order function
+  const lastMessageObject = messages ? messages[messages.length - 1] : null;
+  const lastMessage = lastMessageObject ? lastMessageObject.message : "";
 
   return (
     <List

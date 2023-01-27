@@ -26,10 +26,6 @@ const StartAChatWithColleague = ({
   const theme = useTheme();
   const user = useSelector((state) => state.user);
 
-  const [showRight, setShowRight] = React.useState(false);
-  const showRightHandler = () => {
-    setShowRight(!showRight);
-  };
   return (
     <>
       {colleagues && (
@@ -89,7 +85,7 @@ const StartAChatWithColleague = ({
             {colleagues.length > 0 ? (
               <ColleaguesList
                 colleagues={colleagues}
-                clickFriendHandler={clickFriendHandler}
+                closeMorePeopleHandler={closeMorePeopleHandler}
               />
             ) : (
               <Typography variant="h6">No friends</Typography>
@@ -104,53 +100,7 @@ const StartAChatWithColleague = ({
 
 export default StartAChatWithColleague;
 
-const Loading = () => {
-  return (
-    <Stack spacing={1}>
-      {[...Array(5)].map((_, i) => (
-        <ListItem
-          key={i}
-          sx={{
-            display: "flex",
-            // border style
-            borderStyle: " solid ",
-            // border color
-            borderColor: "lightgrey",
-            // border width
-            borderWidth: "2px",
-            borderRadius: "0.5rem",
-          }}
-        >
-          {/* Avatar skeleton */}
-          <Skeleton
-            variant="circle"
-            width={40}
-            height={40}
-            style={{ borderRadius: "50%" }}
-          />
-          {/* Skeleton for user first and lastname */}
-          <Box sx={{}}>
-            <Skeleton
-              variant="rect"
-              width={185}
-              height={20}
-              style={{ marginLeft: "10px" }}
-            />
-            <Skeleton
-              variant="rect"
-              width={185}
-              height={8}
-              style={{ marginLeft: "10px", marginTop: "8px" }}
-            />
-          </Box>
-        </ListItem>
-      ))}
-      {/* A skeleton of ListItem skeleton for chat */}
-    </Stack>
-  );
-};
-
-const ColleaguesList = ({ colleagues, clickFriendHandler }) => {
+const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
   const theme = useTheme();
   const router = useRouter();
   return (
@@ -168,12 +118,13 @@ const ColleaguesList = ({ colleagues, clickFriendHandler }) => {
               onClick={(e) => {
                 e.preventDefault();
                 router.push(
-                  `/chats/?c=c&id=${friend.id}`,
-                  `/chats/c/${friend.id}`,
+                  `/chats/?c=c&id=${friend.chatId}`,
+                  `/chats/c/${friend.chatId}`,
                   {
                     shallow: true,
                   }
                 );
+                closeMorePeopleHandler();
               }}
               // onClick={() => {
               //   clickFriendHandler(friend);
