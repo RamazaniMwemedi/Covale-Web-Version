@@ -111,6 +111,7 @@ const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
             key={i}
             sx={{
               padding: "3px",
+              mt: 1,
             }}
           >
             <ListItem
@@ -132,9 +133,9 @@ const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
               sx={{
                 borderRadius: "0.5rem",
                 backgroundColor: theme.colors.textBackground,
+                boxShadow: 1,
                 "&:hover": {
                   // backgroundColor: ,
-                  // boxShadow: 1,
                 },
                 // border style
                 borderStyle: " solid ",
@@ -143,7 +144,7 @@ const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
                 // border width
                 borderWidth: "1px",
                 marginTop: "-8px",
-                alignItems: "flex-start",
+                alignItems: "center",
               }}
             >
               <Avatar

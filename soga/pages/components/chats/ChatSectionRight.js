@@ -13,6 +13,14 @@ import VedeoOpen from "./VideoOpen";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import FileComponent from "../mediaFiles/FileComponent";
 import { purple } from "@mui/material/colors";
+import {
+  DocxIcon,
+  ImageIcon,
+  PdfIcon,
+  PptIcon,
+  VideoIcon,
+  XlsIcon,
+} from "../../../assets/Icons";
 
 const ChatSectionRight = ({ friendUsername, files }) => {
   const [showFile, setShowFile] = useState(false);
@@ -116,6 +124,7 @@ const Friend = ({ friendUsername }) => {
 
 // Media
 const Media = ({ files, handleShowFile }) => {
+  const theme = useTheme();
   const imageFiles = files.filter((file) => file.fileType.includes("image"));
   const videoFiles = files.filter((file) => file.fileType.includes("video"));
   const documentFiles = files.filter((file) =>
@@ -144,8 +153,6 @@ const Media = ({ files, handleShowFile }) => {
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
         padding: "5px",
       }}
     >
@@ -153,28 +160,175 @@ const Media = ({ files, handleShowFile }) => {
         {" "}
         Media
       </Typography>
-      {imageFiles.length > 0 && (
-        <ImageMedia handleShowFile={handleShowFile} imageFiles={imageFiles} />
-      )}
-      {videoFiles.length > 0 && (
-        <MediaVideos handleShowFile={handleShowFile} videoFiles={videoFiles} />
-      )}
-      {documentFiles.length > 0 && (
-        <MediaDocuments
-          handleShowFile={handleShowFile}
-          documentFiles={documentFiles}
-        />
-      )}
-      {xlsFiles.length > 0 && (
-        <MediaXls handleShowFile={handleShowFile} xlsFiles={xlsFiles} />
-      )}
+      <Box
+        sx={{
+          display: imageFiles.length < 1 ? "flex" : "",
+          justifyContent: imageFiles.length < 1 ? "center" : "initial",
+        }}
+      >
+        {imageFiles.length > 0 ? (
+          <ImageMedia handleShowFile={handleShowFile} imageFiles={imageFiles} />
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: theme.colors.textBackground,
+              padding: "10px",
+              width: "280px",
+              borderRadius: "10px",
+            }}
+          >
+            <ImageIcon height={50} width={50} />
+            <Typography variant="body2" color="inherit">
+              No Images shared yet
+            </Typography>
+          </Box>
+        )}
+      </Box>
+      <Box
+        sx={{
+          display: videoFiles.length < 1 ? "flex" : "",
+          justifyContent: videoFiles.length < 1 ? "center" : "",
+          marginTop: "10px",
+        }}
+      >
+        {videoFiles.length > 0 ? (
+          <MediaVideos
+            handleShowFile={handleShowFile}
+            videoFiles={videoFiles}
+          />
+        ) : (
+          <Box
+            sx={{
+              width: "280px",
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: theme.colors.textBackground,
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <VideoIcon height={50} width={50} />
+            <Typography variant="body2" color="inherit">
+              No Videos shared yet
+            </Typography>
+          </Box>
+        )}
+      </Box>
+      <Box
+        sx={{
+          display: documentFiles.length < 1 ? "flex" : "inline-block",
+          justifyContent: documentFiles.length < 1 ? "center" : "",
+          marginTop: "10px",
+          width: "100%",
+        }}
+      >
+        {documentFiles.length > 0 ? (
+          <MediaDocuments
+            handleShowFile={handleShowFile}
+            documentFiles={documentFiles}
+          />
+        ) : (
+          <Box
+            sx={{
+              width: "280px",
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: theme.colors.textBackground,
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <DocxIcon height={50} width={50} />
+            <Typography variant="body2" color="inherit">
+              No Documents shared yet
+            </Typography>
+          </Box>
+        )}
+      </Box>
+      <Box
+        style={{
+          display: xlsFiles.length < 1 ? "flex" : "block",
+          justifyContent: xlsFiles.length < 1 ? "center" : "",
+          marginTop: "10px",
+        }}
+      >
+        {xlsFiles.length > 0 ? (
+          <MediaXls handleShowFile={handleShowFile} xlsFiles={xlsFiles} />
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: theme.colors.textBackground,
+              width: "280px",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <XlsIcon height={50} width={50} />
+            <Typography variant="body2" color="inherit">
+              No Xls shared yet
+            </Typography>
+          </Box>
+        )}
+      </Box>
 
-      {pdfFiles.length > 0 && (
-        <MediaPdf handleShowFile={handleShowFile} pdfFiles={pdfFiles} />
-      )}
-      {pptFile.length > 0 && (
-        <MediaPpt handleShowFile={handleShowFile} pptFiles={pptFile} />
-      )}
+      <Box
+        sx={{
+          display: pdfFiles.length < 1 ? "flex" : "block",
+          justifyContent: pdfFiles.length < 1 ? "center" : "inherit",
+          marginTop: "10px",
+        }}
+      >
+        {pdfFiles.length > 0 ? (
+          <MediaPdf handleShowFile={handleShowFile} pdfFiles={pdfFiles} />
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: theme.colors.textBackground,
+              width: "280px",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <PdfIcon height={50} width={50} />
+            <Typography variant="body2" color="inherit">
+              No Pdf shared yet
+            </Typography>
+          </Box>
+        )}
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: pptFile.length < 1 ? "center" : "",
+          marginTop: "10px",
+        }}
+      >
+        {pptFile.length > 0 ? (
+          <MediaPpt handleShowFile={handleShowFile} pptFiles={pptFile} />
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: theme.colors.textBackground,
+              width: "280px",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <PptIcon height={50} width={50} />
+            <Typography variant="body2" color="inherit">
+              No Pressentation shared yet
+            </Typography>
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 };

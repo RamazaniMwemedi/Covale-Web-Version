@@ -77,6 +77,7 @@ const ChatSection = ({
               sx={{
                 borderLeft: `2px solid ${theme.colors.background1}`,
                 width: "410px",
+                backgroundColor: theme.colors.background1,
               }}
             >
               <ChatSectionRight

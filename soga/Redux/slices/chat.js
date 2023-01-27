@@ -44,6 +44,11 @@ const chatSlice = createSlice({
             .messages.filter((message) => {
               return message.idFromClient == idFromClient;
             })[0].id = payload.id),
+          // Add the files to chat.files
+          chats: (state.chats.filter((chat) => chat.id === chatId)[0].files = [
+            ...state.chats.filter((chat) => chat.id === chatId)[0].files,
+            ...files,
+          ]),
         };
       }
     },
