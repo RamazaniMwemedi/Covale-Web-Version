@@ -193,11 +193,6 @@ const Chats = ({
                     <FloatingAButton buttonHandler={buttonHandler} />
                   )}
                   {chats.map((chat) => {
-                    // If the chat.message is empty, it means that the chat is not yet started
-                    // so we will not show it
-                    if (chat.messages.length < 1) {
-                      return null;
-                    }
                     return <Chat key={chat.chatId} chat={chat} />;
                   })}
                 </Box>

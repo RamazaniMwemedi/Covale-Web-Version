@@ -10,6 +10,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
+import { timeAgo } from "../../../tools/tools";
 
 export default function Chat({ chat }) {
   const router = useRouter();
@@ -20,6 +21,16 @@ export default function Chat({ chat }) {
   // last message in messages array if there is a message else return an empty string using higher order function
   const lastMessageObject = messages ? messages[messages.length - 1] : null;
   const lastMessage = lastMessageObject ? lastMessageObject.message : "";
+  const [lastMessageSentAt, setLastMessageSentAt] = useState("");
+
+  useEffect(() => {
+    if (lastMessageObject) {
+      const date = new Date(lastMessageObject.sentAt);
+      // Time ago function
+      const time = timeAgo(date);
+      setLastMessageSentAt(time);
+    }
+  }, [lastMessageObject]);
 
   return (
     <List
@@ -65,7 +76,21 @@ export default function Chat({ chat }) {
               marginLeft: "5px",
             }}
           >
-            <Typography variant="subtitle1">{chat.friendUsername}</Typography>
+            <Box
+              sx={{
+                // Separate the last message and the time
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                // gap: "80%",
+              }}
+            >
+              <Typography variant="subtitle1">{chat.friendUsername}</Typography>
+              {/* sentAt */}
+              {/* <Typography variant="body2">
+                {lastMessageObject ? lastMessageSentAt : ""}
+              </Typography> */}
+            </Box>
             {/* Show the first 25 characters only else add ... */}
             <Typography variant="body2">
               {lastMessage.length > 30
