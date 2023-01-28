@@ -39,7 +39,6 @@ const useCheckLogedinUser = () => {
 
     if (token) {
       findUserById(token, logedInUser.id).then((res) => {
-        console.log("Res :>>  ", res);
         if (res.status != 200) {
           router.push("/login");
         }

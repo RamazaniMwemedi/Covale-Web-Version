@@ -250,7 +250,6 @@ export default function Chat() {
       })
     );
     const sentMessage = await sendTeamMessege(token, id, formData);
-    console.log("Sent message: ", sentMessage);
 
     teamSocket.emit("send_message_to_team", {
       teamId: id,

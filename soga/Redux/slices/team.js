@@ -28,7 +28,6 @@ const teamSlice = createSlice({
     },
 
     updateTeamMessageId(state, { payload }) {
-      console.log("updateTeamMessageId :>>", payload);
       if (payload) {
         state = {
           ...state,
@@ -46,7 +45,6 @@ const teamSlice = createSlice({
       }
     },
     addNewMessageToTeamIdFromSender(state, { payload }) {
-      console.log("addNewMessageToTeamIdFromSender :>>", payload);
       // Add new message to team
       // IF the data.id is not in the team.messages array THEN add the new message to the team.messages array ELSE do nothing
       if (

@@ -54,10 +54,7 @@ const InviteMembers = ({ teamId, members, showInviteMembersHandler }) => {
         });
         return !isMember;
       })
-    : [];
-
-  // console.log("Friends", friends);
-  // console.log("filteredColleagues", filteredColleagues);
+    : []
   const sendInvitation = async () => {
     if (token && selectedColleagues.length > 0 && teamId) {
       setInvitingBool(true);
