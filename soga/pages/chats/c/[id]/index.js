@@ -260,7 +260,7 @@ export default function Chat() {
         teamId: id,
         id: sentMessage.id,
         idFromClient: sentMessage.idFromClient,
-        files: sentMessage.files,
+        file: sentMessage.files,
       })
     );
   };

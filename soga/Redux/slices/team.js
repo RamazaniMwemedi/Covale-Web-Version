@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {};
 let teams = new Array();
@@ -17,6 +17,7 @@ const teamSlice = createSlice({
       state.teams = teams;
     },
     addNewMessageToTeamId(state, { payload }) {
+      console.log("addNewMessageToTeamId", payload.teamNewMessage);
       if (payload) {
         state = {
           ...state,
@@ -35,7 +36,7 @@ const teamSlice = createSlice({
             .filter((team) => team.id === payload.teamId)[0]
             .messages.filter((message) => {
               return message.idFromClient == payload.idFromClient;
-            })[0].files = payload.files),
+            })[0].file = payload.file),
           teams: (state.teams
             .filter((team) => team.id === payload.teamId)[0]
             .messages.filter((message) => {
@@ -60,6 +61,14 @@ const teamSlice = createSlice({
         };
       }
     },
+    removeTeamFromTeamsById(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          teams: state.teams.filter((team) => team.id != payload),
+        };
+      }
+    },
   },
 });
 
@@ -68,6 +77,7 @@ const {
   addNewMessageToTeamId,
   addNewMessageToTeamIdFromSender,
   updateTeamMessageId,
+  removeTeamFromTeamsById,
 } = teamSlice.actions;
 const reducer = teamSlice.reducer;
 module.exports = {
@@ -76,4 +86,5 @@ module.exports = {
   addNewMessageToTeamId,
   addNewMessageToTeamIdFromSender,
   updateTeamMessageId,
+  removeTeamFromTeamsById,
 };

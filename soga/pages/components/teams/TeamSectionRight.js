@@ -12,7 +12,6 @@ import {
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/material";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Image from "next/image";
@@ -26,6 +25,7 @@ import InviteMembers from "./InviteMembers";
 import { styled } from "@mui/styles";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import FileComponent from "../mediaFiles/FileComponent";
+import TeamMenuOption from "./TeamMenuOption";
 
 const TeamSectionRight = ({ option, team }) => {
   switch (option) {
@@ -104,20 +104,7 @@ const Menu = ({ team }) => {
         }}
       >
         <Typography variant="h5">Menu</Typography>
-        <IconButton
-          sx={{
-            position: "fixed",
-            top: "1",
-            right: "0",
-            margin: "5px",
-            backgroundColor: theme.colors.itemBackground,
-            "&:hover": {
-              backgroundColor: theme.colors.background2,
-            },
-          }}
-        >
-          <MoreHorizIcon color="secondary" />
-        </IconButton>
+        <TeamMenuOption teamId={team.id} />
       </Box>
       <Box>
         <br />

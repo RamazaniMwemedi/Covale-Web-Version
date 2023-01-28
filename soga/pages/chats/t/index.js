@@ -255,14 +255,14 @@ export default function Chat() {
       teamId: id,
       message: sentMessage,
     });
-    dispatch(
-      updateTeamMessageId({
-        teamId: id,
-        id: sentMessage.id,
-        idFromClient: sentMessage.idFromClient,
-        files: sentMessage.files,
-      })
-    );
+   dispatch(
+     updateTeamMessageId({
+       teamId: id,
+       id: sentMessage.id,
+       idFromClient: sentMessage.idFromClient,
+       file: sentMessage.files,
+     })
+   );
   };
 
   return (

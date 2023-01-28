@@ -102,6 +102,18 @@ const sendTeamMessege = async (token, id, formData) => {
   }
 };
 
+// delete TEAM BY ID
+const deleteTeamById = async (token, id) => {
+  if (token) {
+    const response = await axios.delete(`${SERVER_ADDRESS}/api/team/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.status;
+  }
+};
+
 module.exports = {
   getTeams,
   createNewTeam,
@@ -110,4 +122,6 @@ module.exports = {
   acceptInvite,
   declineInvite,
   sendTeamMessege,
+  // Delete
+  deleteTeamById,
 };

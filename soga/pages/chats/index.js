@@ -250,7 +250,6 @@ export default function Chat() {
       file: teamFiles,
     };
     setTeamFiles([]);
-
     dispatch(
       addNewMessageToTeamId({
         teamId: id,
@@ -268,7 +267,7 @@ export default function Chat() {
         teamId: id,
         id: sentMessage.id,
         idFromClient: sentMessage.idFromClient,
-        files: sentMessage.files,
+        file: sentMessage.files,
       })
     );
   };

@@ -71,6 +71,10 @@ const TeamSectionLeft = ({
   const user = userStore.user;
   const teamName = team ? team.teamName : "";
   const messages = team ? team.messages : [];
+  const tl = messages.filter((message) => message.file).length;
+  const tls = messages.filter((message) => message.files).length;
+  console.log("tls", tls);
+  console.log("tl", tl);
   const [file, setFile] = useState(null);
 
   const [showFile, setShowFile] = useState(false);
@@ -277,7 +281,6 @@ const UserMessage = ({ message, user, handleShowTeamFile }) => {
   const purple2 = purple[400];
   const idProvided = message.id ? true : false;
   const theme = useTheme();
-
   return (
     <Box
       sx={{
