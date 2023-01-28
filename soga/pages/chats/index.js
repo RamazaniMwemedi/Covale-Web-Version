@@ -399,6 +399,8 @@ const SectionToDisplay = ({
   const router = useRouter();
   const id = router.query.id;
   const chat = useChatId(id);
+  console.log("ID: ", id);
+  console.log("Chat: ", chat);
   const team = useTeamId(id);
   if (router.asPath.includes("/chats/c")) {
     return (

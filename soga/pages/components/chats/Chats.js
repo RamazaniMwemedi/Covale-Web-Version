@@ -175,7 +175,7 @@ const Chats = ({
 
             {chats &&
               filterChatName.length < 1 &&
-              (chats.length > 0 ? (
+              (chats.filter((chat) => chat.messages.length > 0).length > 0 ? (
                 <Box>
                   {showMoreFriends && (
                     <StartAChatWithColleague
@@ -192,9 +192,12 @@ const Chats = ({
                   {showButton && (
                     <FloatingAButton buttonHandler={buttonHandler} />
                   )}
-                  {chats.map((chat) => {
-                    return <Chat key={chat.chatId} chat={chat} />;
-                  })}
+                  {/* Chats with messages.lenth is < 1 should not be displayed */}
+                  {chats
+                    .filter((chat) => chat.messages.length > 0)
+                    .map((chat) => {
+                      return <Chat key={chat.chatId} chat={chat} />;
+                    })}
                 </Box>
               ) : (
                 <Box sx={{ textAlign: "center", marginTop: "150px" }}>
