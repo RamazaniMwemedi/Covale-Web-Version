@@ -11,9 +11,10 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/material";
-import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import Image from "next/image";
 
 import React, { useState } from "react";
@@ -26,13 +27,50 @@ import { styled } from "@mui/styles";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import FileComponent from "../mediaFiles/FileComponent";
 import TeamMenuOption from "./TeamMenuOption";
+import { timeAgo } from "../../../tools/tools";
+import { Bottom, ColleagueMessage, UserMessage } from "./TeamSectionLeft";
 
-const TeamSectionRight = ({ option, team }) => {
+const TeamSectionRight = ({
+  option,
+  team,
+  handleClickedTopic,
+  clickedTopicId,
+  // Topic
+  topicMessage,
+  topicMessageChangeHandler,
+  topicSendMessageHandle,
+  topicOnEmojiClick,
+  handleChooseFileIconTopic,
+  handleChooseFileTopic,
+  handleRemoveFileTopic,
+  topicFilesChangeHandler,
+  topicFileInput,
+  topicFiles,
+}) => {
   switch (option) {
     case "PARTICIPANT":
       return <Participant team={team} />;
     case "MENU":
       return <Menu team={team} />;
+    case "TOPIC":
+      return (
+        <TopicsParent
+          topics={team.topics}
+          handleClickedTopic={handleClickedTopic}
+          clickedTopicId={clickedTopicId}
+          // Topic
+          topicMessage={topicMessage}
+          topicMessageChangeHandler={topicMessageChangeHandler}
+          topicSendMessageHandle={topicSendMessageHandle}
+          topicOnEmojiClick={topicOnEmojiClick}
+          handleChooseFileIconTopic={handleChooseFileIconTopic}
+          handleChooseFileTopic={handleChooseFileTopic}
+          handleRemoveFileTopic={handleRemoveFileTopic}
+          topicFilesChangeHandler={topicFilesChangeHandler}
+          topicFileInput={topicFileInput}
+          topicFiles={topicFiles}
+        />
+      );
     default:
       break;
   }
@@ -110,6 +148,330 @@ const Menu = ({ team }) => {
         <br />
       </Box>
       <Media handleShowFile={handleShowFile} team={team} files={team.files} />
+    </Box>
+  );
+};
+
+const TopicsParent = ({
+  topics,
+  handleClickedTopic,
+  clickedTopicId,
+  // Topic
+  topicMessage,
+  topicMessageChangeHandler,
+  topicSendMessageHandle,
+  topicOnEmojiClick,
+  handleChooseFileIconTopic,
+  handleChooseFileTopic,
+  handleRemoveFileTopic,
+  topicFilesChangeHandler,
+  topicFileInput,
+  topicFiles,
+}) => {
+  console.log("clickedTopicId", clickedTopicId);
+  if (clickedTopicId) {
+    const clickedTopic = topics.find((topic) => topic.id === clickedTopicId);
+    return (
+      <TopicSection
+        topic={clickedTopic}
+        handleClickedTopic={handleClickedTopic}
+        // Topic
+        topicMessage={topicMessage}
+        topicMessageChangeHandler={topicMessageChangeHandler}
+        topicSendMessageHandle={topicSendMessageHandle}
+        topicOnEmojiClick={topicOnEmojiClick}
+        handleChooseFileIconTopic={handleChooseFileIconTopic}
+        handleChooseFileTopic={handleChooseFileTopic}
+        handleRemoveFileTopic={handleRemoveFileTopic}
+        topicFilesChangeHandler={topicFilesChangeHandler}
+        topicFileInput={topicFileInput}
+        topicFiles={topicFiles}
+      />
+    );
+  } else {
+    return <Topics topics={topics} handleClickedTopic={handleClickedTopic} />;
+  }
+};
+
+const Topics = ({
+  topics,
+  handleClickedTopic,
+  // Topic
+  topicMessage,
+  topicMessageChangeHandler,
+  topicSendMessageHandle,
+  topicOnEmojiClick,
+  handleChooseFileIconTopic,
+  handleChooseFileTopic,
+  handleRemoveFileTopic,
+  topicFilesChangeHandler,
+  topicFileInput,
+  topicFiles,
+}) => {
+  const theme = useTheme();
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: theme.colors.background1,
+        padding: "10px",
+        height: "100vh",
+        // Scrollable
+        overflowY: "scroll",
+      }}
+    >
+      <Typography variant="subtitle1">Topics</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: theme.colors.background1,
+          padding: "10px",
+        }}
+      >
+        {topics.map((topic) => (
+          <Topic
+            topic={topic}
+            handleClickedTopic={handleClickedTopic}
+            // Topic
+            topicMessage={topicMessage}
+            topicMessageChangeHandler={topicMessageChangeHandler}
+            topicSendMessageHandle={topicSendMessageHandle}
+            topicOnEmojiClick={topicOnEmojiClick}
+            handleChooseFileIconTopic={handleChooseFileIconTopic}
+            handleChooseFileTopic={handleChooseFileTopic}
+            handleRemoveFileTopic={handleRemoveFileTopic}
+            topicFilesChangeHandler={topicFilesChangeHandler}
+            topicFileInput={topicFileInput}
+            topicFiles={topicFiles}
+          />
+        ))}
+      </Box>
+    </Box>
+  );
+};
+
+const Topic = ({ topic, handleClickedTopic }) => {
+  const theme = useTheme();
+  // last message
+  const lastMessage = topic.messages
+    ? topic.messages[topic.messages.length - 1]
+    : null;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        p: "6px",
+        mt: "5px",
+        backgroundColor: theme.colors.textBackground2,
+        borderRadius: "8px",
+        cursor: "pointer",
+        // Box shadow
+        boxShadow: "0px 5px 5px 0px rgba(0,0,0,0.1)",
+        "&:hover": {
+          backgroundColor: theme.colors.textBackground,
+        },
+      }}
+      onClick={() => handleClickedTopic(topic.id)}
+    >
+      {/* Topic Title */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="subtitle1">
+          {topic.title.length > 20
+            ? topic.title.substring(0, 20) + "..."
+            : topic.title}
+        </Typography>
+        {/* If createdAt */}
+        {topic.createdAt && (
+          <Typography variant="subtitle2">
+            {timeAgo(topic.createdAt)}
+          </Typography>
+        )}
+      </Box>
+      {/* Topic Description */}
+      <Typography variant="body2">
+        {topic.description.length > 20
+          ? topic.description.substring(0, 20) + "..."
+          : topic.description}
+      </Typography>
+      {/* Last Message  */}
+      {lastMessage && (
+        <MessageComponentForTopic message={lastMessage} user={null} />
+      )}
+    </Box>
+  );
+};
+
+const TopicSection = ({
+  topic,
+  handleClickedTopic,
+  // Topic
+  topicMessage,
+  topicMessageChangeHandler,
+  topicSendMessageHandle,
+  topicOnEmojiClick,
+  handleChooseFileIconTopic,
+  handleChooseFileTopic,
+  handleRemoveFileTopic,
+  topicFilesChangeHandler,
+  topicFileInput,
+  topicFiles,
+}) => {
+  const theme = useTheme();
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user ? userStore.user : null;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: theme.colors.background1,
+
+        // Scrollable
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleClickedTopic(null)}
+          >
+            <ArrowBackRoundedIcon />
+          </IconButton>
+          <Typography variant="h6">Topic</Typography>{" "}
+        </Box>
+        <IconButton aria-label="delete">
+          <MoreHorizRoundedIcon />
+        </IconButton>
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: theme.colors.textBackground,
+          padding: "8px",
+          height: "100vh",
+          m: "8px",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            // scrollable
+            overflowY: "scroll",
+            height: "100%",
+          }}
+        >
+          {/* Display the first 37 letters of the title and display all letter on mouse onver the Typography */}
+          <Typography variant="subtitle2" title={topic.title}>
+            Title :{" "}
+            {topic.title.length > 37
+              ? topic.title.substring(0, 37) + "..."
+              : topic.title}
+          </Typography>
+          <br />
+          <Typography variant="subtitle2" title={topic.description}>
+            Description :{" "}
+            {topic.description.length > 240
+              ? topic.description.substring(0, 240) + "..."
+              : topic.description}
+          </Typography>
+          <br />
+          <Typography variant="subtitle2">
+            Created At : {timeAgo(topic.createdAt)}
+          </Typography>
+          <br />
+          <Typography variant="subtitle2">
+            Messages : {topic.messages.length}
+          </Typography>
+          <br />
+          {/* Map through the messages */}
+          <Box
+            sx={{
+              backgroundColor: theme.colors.background,
+              p: 1,
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              paddingBottom: "45px",
+            }}
+          >
+            {topic.messages.map((message) => {
+              return message.sender.id === user.id ? (
+                <UserMessage message={message} user={user} />
+              ) : (
+                <ColleagueMessage message={message} user={user} />
+              );
+            })}
+            <Bottom
+              handleChooseFileIcon2Team={handleChooseFileIconTopic}
+              handleChooseFileIconTeam={handleChooseFileTopic}
+              handleChooseFileTeam={handleChooseFileTopic}
+              handleRemoveFileTeam={handleRemoveFileTopic}
+              teamFileInput={topicFileInput}
+              teamFiles={topicFiles}
+              teamFilesChangeHandler={topicFilesChangeHandler}
+              teamMessage={topicMessage}
+              teamMessageChangeHandler={topicMessageChangeHandler}
+              teamOnEmojiClick={topicOnEmojiClick}
+              teamSendMessageHandle={topicSendMessageHandle}
+            />
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+const MessageComponentForTopic = ({ message }) => {
+  const theme = useTheme();
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        backgroundColor: theme.colors.textBackground,
+        p: "10px",
+        borderRadius: "8px",
+      }}
+    >
+      <Avatar
+        sx={{ bgcolor: purple[500], width: 15, height: 15, marginRight: "6px" }}
+        aria-label="recipe"
+      />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Typography variant="caption">
+          {message.sender.firstname} {message.sender.lastname}
+        </Typography>
+        {/* Message Content  */}
+        <Typography variant="caption">
+          {message.message
+            ? message.message.substring(0, 40) + "..."
+            : message.message}
+        </Typography>
+      </Box>
+      {/* Message sender  */}
     </Box>
   );
 };

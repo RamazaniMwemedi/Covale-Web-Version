@@ -114,6 +114,36 @@ const deleteTeamById = async (token, id) => {
   }
 };
 
+const createATopic = async (token, teamId, topicObject) => {
+  if (token) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/team/${teamId}/topics/new`,
+      topicObject,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
+const sendMessageInTopic = async (token, topicId, messageObject) => {
+  if (token) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/team/topics/${topicId}/messages/new`,
+      messageObject,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
 module.exports = {
   getTeams,
   createNewTeam,
@@ -122,6 +152,8 @@ module.exports = {
   acceptInvite,
   declineInvite,
   sendTeamMessege,
+  createATopic,
+  sendMessageInTopic,
   // Delete
   deleteTeamById,
 };

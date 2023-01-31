@@ -14,6 +14,9 @@ import {
   MenuItem,
   ListItemIcon,
   Popper,
+  TextField,
+  Link,
+  Tooltip,
 } from "@mui/material";
 import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
@@ -40,6 +43,7 @@ import dynamic from "next/dynamic";
 import FileIcone from "../mediaFiles/FileIcon";
 import FileComponent from "../mediaFiles/FileComponent";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
+import { timeAgo } from "../../../tools/tools";
 
 const Picker = dynamic(
   () => {
@@ -56,6 +60,7 @@ const TeamSectionLeft = ({
   teamMessageChangeHandler,
   teamSendMessageHandle,
   teamOnEmojiClick,
+  showTopics,
   showParticipant,
   showMenu,
   // Files
@@ -66,6 +71,14 @@ const TeamSectionLeft = ({
   teamFileInput,
   teamFileInput2,
   teamFiles,
+  topicTitle,
+  topicTitleChangeHandler,
+  topicDescriptionChangeHandler,
+  createTopicHandler,
+  startTopic,
+  toggleTopicHandler,
+  // Topic
+  handleClickedTopic,
 }) => {
   const userStore = useSelector((state) => state.user);
   const user = userStore.user;
@@ -109,6 +122,7 @@ const TeamSectionLeft = ({
             teamName={teamName}
             showRightHandler={showRightHandler}
             showRight={showRight}
+            showTopics={showTopics}
             showMenu={showMenu}
             showParticipant={showParticipant}
           />
@@ -141,6 +155,13 @@ const TeamSectionLeft = ({
               teamFileInput={teamFileInput}
               teamFileInput2={teamFileInput2}
               teamFiles={teamFiles}
+              // Topic
+              topicTitle={topicTitle}
+              topicTitleChangeHandler={topicTitleChangeHandler}
+              topicDescriptionChangeHandler={topicDescriptionChangeHandler}
+              createTopicHandler={createTopicHandler}
+              startTopic={startTopic}
+              toggleTopicHandler={toggleTopicHandler}
             />
           </Box>
         </Box>
@@ -155,6 +176,7 @@ const TopBar = ({
   showRightHandler,
   showRight,
   teamName,
+  showTopics,
   showParticipant,
   showMenu,
 }) => {
@@ -216,6 +238,13 @@ const TopBar = ({
       >
         <IconButton
           onClick={() => {
+            showTopics();
+          }}
+        >
+          <TopicRoundedIcon color={showRight ? "secondary" : "action"} />
+        </IconButton>
+        <IconButton
+          onClick={() => {
             showParticipant();
           }}
         >
@@ -264,7 +293,7 @@ const Mid = ({ user, messages, handleShowTeamFile }) => {
               handleShowTeamFile={handleShowTeamFile}
             />
           ) : (
-            <FriendMessage
+            <ColleagueMessage
               message={message}
               handleShowTeamFile={handleShowTeamFile}
             />
@@ -272,6 +301,256 @@ const Mid = ({ user, messages, handleShowTeamFile }) => {
         })}
         <ListItem ref={toBottomWhenNewMessage} />
       </List>
+    </Box>
+  );
+};
+
+const TopicMessage = ({ message, user, handleShowTeamFile }) => {
+  const purple1 = purple[800];
+  const idProvided = message.id ? true : false;
+  const theme = useTheme();
+  // last message in  a topic
+  const lastMessage = message.topic.messages[message.topic.messages.length - 1];
+
+  return (
+    <Box
+      sx={{
+        backgroundColor: purple1,
+        // centered
+        display: "flex",
+        paddingLeft: "5px",
+        paddingRight: "5px",
+        paddingTop: "5px",
+        paddingBottom: "5px",
+        borderRadius: "12px",
+        width: "50%",
+        height: "auto",
+        marginBottom: "10px",
+        borderBottomRightRadius: "0px",
+        // max width 80%
+        maxWidth: "80%",
+        marginRight: "6px",
+      }}
+    >
+      <Box
+        sx={{
+          width: "100%",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Tooltip title={"Topic Title"} placement="left-start">
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: theme.colors.text1,
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              {message.topic.title}
+            </Typography>
+          </Tooltip>{" "}
+          {/* If createdAt */}
+          {message.topic.createdAt && (
+            <Typography variant="subtitle2">
+              {timeAgo(message.topic.createdAt)}
+            </Typography>
+          )}
+        </Box>
+        <Tooltip title={"Topic Description"} placement="left-start">
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: theme.colors.text1,
+              color: "white",
+            }}
+          >
+            {message.topic.description}
+          </Typography>
+        </Tooltip>
+        {message.topic.messages.length > 0 && (
+          <>
+            <Box
+              sx={{
+                marginLeft: "40px",
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{
+                  color: theme.colors.text1,
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+              >
+                Recent Message
+              </Typography>
+              {lastMessage && (
+                <MessageComponentForTopic
+                  message={lastMessage}
+                  user={user}
+                  handleShowTeamFile={handleShowTeamFile}
+                />
+              )}
+              {/* Link To other messages */}
+              {/* <Typography variant="subtitle2" sx={{ color: theme.colors.text1 }}>
+              {message.topic.messages.length} messages
+            </Typography> */}
+            </Box>
+          </>
+        )}
+        <Link
+          underline="hover"
+          sx={{
+            cursor: "pointer",
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: theme.colors.text1,
+              fontWeight: "bold",
+            }}
+          >
+            Go to topic
+          </Typography>
+        </Link>
+      </Box>
+    </Box>
+  );
+};
+
+const MessageComponentForTopic = ({ message, user, handleShowTeamFile }) => {
+  const idProvided = message.id ? true : false;
+  const theme = useTheme();
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        backgroundColor: theme.colors.textBackground2,
+        p: 0.7,
+        borderRadius: "8px",
+        flex: 1,
+      }}
+    >
+      {/* Message */}
+      {message.topic ? (
+        <TopicMessage
+          message={message}
+          user={user}
+          handleShowTeamFile={handleShowTeamFile}
+        />
+      ) : (
+        <>
+          <Avatar
+            sx={{
+              width: 25,
+              height: 25,
+              marginRight: "6px",
+            }}
+          />
+          <Box
+            sx={
+              idProvided
+                ? {
+                    // centered
+                    display: "flex",
+                    paddingLeft: "5px",
+                    paddingRight: "5px",
+                    paddingBottom: "5px",
+                    borderRadius: "12px",
+                    width: "100%",
+                    height: "auto",
+                    borderBottomRightRadius: "0px",
+                    // max width 80%
+                    maxWidth: "80%",
+                    marginRight: "6px",
+                  }
+                : {
+                    display: "flex",
+                    paddingLeft: "5px",
+                    paddingRight: "5px",
+                    paddingBottom: "5px",
+                    borderRadius: "12px",
+                    width: "80%",
+                    height: "auto",
+                    borderBottomRightRadius: "0px",
+                    // max width 80%
+                    maxWidth: "80%",
+                    marginRight: "6px",
+                  }
+            }
+          >
+            <Box sx={{ width: "100%" }}>
+              {/* User name */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {`${user.firstname} ${user.lastname}`}
+                </Typography>
+                {/* Time ago */}
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: theme.colors.text1,
+                    color: "white",
+                  }}
+                >
+                  {timeAgo(message.sentAt)} ago
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  // If there are 3 or more files, display in grid
+                  display: "flex",
+                  flexDirection: "column",
+                  gridGap: "5px",
+                  // centerd
+                  // alignItems: "center",
+                  // textAlign: "center",
+                }}
+              >
+                {message.file.map((file) => {
+                  return (
+                    <Box
+                      sx={{
+                        cursor: "pointer",
+                        backgroundColor: theme.colors.textBackground,
+                        display: "flex",
+                        m: 1,
+                        // To be at the right of the message
+                        width: "200px",
+                        borderRadius: "5px",
+                      }}
+                      onClick={() => handleShowTeamFile(file)}
+                    >
+                      <FileComponent file={file} />
+                    </Box>
+                  );
+                })}
+              </Box>
+              <Typography variant="subtitle2" sx={{ color: "white" }}>
+                {message.message}
+              </Typography>
+            </Box>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
@@ -289,106 +568,116 @@ const UserMessage = ({ message, user, handleShowTeamFile }) => {
       }}
     >
       {/* Message */}
-      <Box
-        sx={
-          idProvided
-            ? {
-                backgroundColor: purple1,
-                // centered
-                display: "flex",
-                paddingLeft: "5px",
-                paddingRight: "5px",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                borderRadius: "12px",
-                width: "auto",
-                height: "auto",
-                marginBottom: "10px",
-                borderBottomRightRadius: "0px",
-                // max width 80%
-                maxWidth: "80%",
-                marginRight: "6px",
-              }
-            : {
-                backgroundColor: purple2,
-                display: "flex",
-                paddingLeft: "5px",
-                paddingRight: "5px",
-                paddingTop: "5px",
-                paddingBottom: "5px",
-                borderRadius: "12px",
-                width: "auto",
-                height: "auto",
-                marginBottom: "10px",
-                borderBottomRightRadius: "0px",
-                // max width 80%
-                maxWidth: "80%",
-                marginRight: "6px",
-              }
-        }
-      >
-        <Box>
-          {/* User name */}
-          <Typography
-            variant="subtitle2"
-            sx={{
-              color: "white",
-              // paddingRight: "5px",
-              // paddingTop: "5px",
-              // paddingBottom: "5px",
-              // to be bold
-              fontWeight: "bold",
-            }}
-          >
-            {`${user.firstname} ${user.lastname}`}
-          </Typography>
+      {message.topic ? (
+        <TopicMessage
+          message={message}
+          user={user}
+          handleShowTeamFile={handleShowTeamFile}
+        />
+      ) : (
+        <>
           <Box
-            sx={{
-              // If there are 3 or more files, display in grid
-              display: "flex",
-              flexDirection: "column",
-              gridGap: "5px",
-              // centerd
-              // alignItems: "center",
-              // textAlign: "center",
-            }}
-          >
-            {message.file.map((file) => {
-              return (
-                <Box
-                  sx={{
-                    cursor: "pointer",
-                    backgroundColor: theme.colors.textBackground,
+            sx={
+              idProvided
+                ? {
+                    backgroundColor: purple1,
+                    // centered
                     display: "flex",
-                    m: 1,
-                    // To be at the right of the message
-                    width: "200px",
-                    borderRadius: "5px",
-                  }}
-                  onClick={() => handleShowTeamFile(file)}
-                >
-                  <FileComponent file={file} />
-                </Box>
-              );
-            })}
+                    paddingLeft: "5px",
+                    paddingRight: "5px",
+                    paddingTop: "5px",
+                    paddingBottom: "5px",
+                    borderRadius: "12px",
+                    width: "auto",
+                    height: "auto",
+                    marginBottom: "10px",
+                    borderBottomRightRadius: "0px",
+                    // max width 80%
+                    maxWidth: "80%",
+                    marginRight: "6px",
+                  }
+                : {
+                    backgroundColor: purple2,
+                    display: "flex",
+                    paddingLeft: "5px",
+                    paddingRight: "5px",
+                    paddingTop: "5px",
+                    paddingBottom: "5px",
+                    borderRadius: "12px",
+                    width: "auto",
+                    height: "auto",
+                    marginBottom: "10px",
+                    borderBottomRightRadius: "0px",
+                    // max width 80%
+                    maxWidth: "80%",
+                    marginRight: "6px",
+                  }
+            }
+          >
+            <Box>
+              {/* User name */}
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  color: "white",
+                  // paddingRight: "5px",
+                  // paddingTop: "5px",
+                  // paddingBottom: "5px",
+                  // to be bold
+                  fontWeight: "bold",
+                }}
+              >
+                {`${user.firstname} ${user.lastname}`}
+              </Typography>
+              <Box
+                sx={{
+                  // If there are 3 or more files, display in grid
+                  display: "flex",
+                  flexDirection: "column",
+                  gridGap: "5px",
+                  // centerd
+                  // alignItems: "center",
+                  // textAlign: "center",
+                }}
+              >
+                {message.file.map((file) => {
+                  return (
+                    <Box
+                      sx={{
+                        cursor: "pointer",
+                        backgroundColor: theme.colors.textBackground,
+                        display: "flex",
+                        m: 1,
+                        // To be at the right of the message
+                        width: "200px",
+                        borderRadius: "5px",
+                      }}
+                      onClick={() => handleShowTeamFile(file)}
+                    >
+                      <FileComponent file={file} />
+                    </Box>
+                  );
+                })}
+              </Box>
+              <Typography variant="subtitle2" sx={{ color: "white" }}>
+                {message.message}
+              </Typography>
+            </Box>
           </Box>
-          <Typography variant="subtitle2" sx={{ color: "white" }}>
-            {message.message}
-          </Typography>
-        </Box>
-      </Box>
-      <Avatar
-        sx={{
-          width: 25,
-          height: 25,
-          marginRight: "6px",
-        }}
-      />
+          <Avatar
+            sx={{
+              width: 25,
+              height: 25,
+              marginRight: "6px",
+            }}
+          />
+        </>
+      )}
     </Box>
   );
 };
 
-const FriendMessage = ({ message, handleShowTeamFile }) => {
+const ColleagueMessage = ({ message, handleShowTeamFile }) => {
   const theme = useTheme();
   return (
     <Box
@@ -491,6 +780,14 @@ const Bottom = ({
   teamFileInput,
   teamFileInput2,
   teamFiles,
+  // Topic
+  topicTitle,
+  topicTitleChangeHandler,
+  topicDescription,
+  topicDescriptionChangeHandler,
+  createTopicHandler,
+  startTopic,
+  toggleTopicHandler,
 }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
   const theme = useTheme();
@@ -509,101 +806,183 @@ const Bottom = ({
         marginLeft: "10px",
         marginRight: "15px",
         borderRadius: "5px",
+        gap: 5,
+        justifyContent: "space-between",
       }}
     >
       {" "}
       {/* Selected files will be displayed here  */}
-      {teamFiles.length > 0 && (
-        <Box
-          sx={{
-            position: "fixed",
-            bottom: "60px",
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? "rgba(0,0,0,0.6)"
-                : "rgba(255,255,255,0.4)",
-            marginBottom: "4px",
-            borderBottomRightRadius: "5px",
-            borderBottomLeftRadius: "5px",
-            width: "37vw",
-            marginLeft: "30px",
-            marginRight: "15px",
-            borderRadius: "5px",
-          }}
-        >
-          {/* Display only the first element */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "auto auto",
-            }}
-          >
-            {teamFiles.map((file, i) => (
+      {/* Top dialogs */}
+      <Box
+        sx={{
+          display: "flex",
+          position: "fixed",
+          bottom: "60px",
+          marginBottom: "4px",
+          borderBottomRightRadius: "5px",
+          borderBottomLeftRadius: "5px",
+          width: "50%",
+          marginLeft: "30px",
+          marginRight: "15px",
+          borderRadius: "5px",
+        }}
+      >
+        <Box>
+          {teamFiles.length > 0 && (
+            <Box
+              sx={{
+                backgroundColor:
+                  theme.palette.mode === "dark"
+                    ? "rgba(0,0,0,0.6)"
+                    : "rgba(255,255,255,0.4)",
+                borderBottomRightRadius: "5px",
+                borderBottomLeftRadius: "5px",
+                // width: "100%",
+                borderRadius: "5px",
+                height: "180px",
+                textAlign: "center",
+                // Blur background
+                backdropFilter: "blur(5px)",
+              }}
+            >
+              {/* Display only the first element */}
               <Box
-                key={i}
                 sx={{
-                  backgroundColor:
-                    theme.palette.mode === "dark"
-                      ? theme.colors.background1
-                      : theme.colors.background1,
-                  p: 1,
-                  mt: 0.3,
-                  ml: 0.3,
-                  borderRadius: 2,
+                  display: "grid",
+                  gridTemplateColumns: "auto auto",
+                }}
+              >
+                {teamFiles.map((file, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      backgroundColor:
+                        theme.palette.mode === "dark"
+                          ? theme.colors.background1
+                          : theme.colors.background1,
+                      p: 1,
+                      mt: 0.3,
+                      ml: 0.3,
+                      borderRadius: 2,
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <FileIcone fileType={file.fileType} />
+                    <Typography variant="body1">
+                      {file.fileName.length > 15
+                        ? file.fileName.substring(0, 15) + "..."
+                        : file.fileName}
+                    </Typography>
+                    <IconButton onClick={() => handleRemoveFileTeam(file)}>
+                      <CloseRoundedIcon />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+              <Box
+                sx={{
+                  m: 1,
                   display: "flex",
                   justifyContent: "space-between",
                 }}
               >
-                <FileIcone fileType={file.fileType} />
-                <Typography variant="body1">
-                  {file.fileName.length > 15
-                    ? file.fileName.substring(0, 15) + "..."
-                    : file.fileName}
-                </Typography>
-                <IconButton onClick={() => handleRemoveFileTeam(file)}>
-                  <CloseRoundedIcon />
-                </IconButton>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={(e) => handleChooseFileIcon2Team(e)}
+                >
+                  <AddIcon />
+                  <input
+                    type="file"
+                    hidden
+                    ref={teamFileInput2}
+                    onChange={(e) => handleChooseFileTeam(e)}
+                  />
+                </Button>
               </Box>
-            ))}
-          </Box>
+            </Box>
+          )}
+        </Box>
+        {startTopic === true && (
           <Box
             sx={{
-              m: 1,
-              display: "flex",
-              justifyContent: "space-between",
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? "rgba(0,0,0,0.6)"
+                  : "rgba(255,255,255,0.4)",
+              borderBottomRightRadius: "5px",
+              borderBottomLeftRadius: "5px",
+              width: "50%",
+              borderRadius: "5px",
+              height: "180px",
+              alignItems: "center",
+              p: 1,
+              // Blur background
+              backdropFilter: "blur(5px)",
             }}
           >
-            <Button
-              variant="contained"
-              color="secondary"
-              size="small"
-              onClick={(e) => handleChooseFileIcon2Team(e)}
+            {/* Topic */}
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h6">Start a topic</Typography>
+              <IconButton onClick={toggleTopicHandler}>
+                <CloseRoundedIcon />
+              </IconButton>
+            </Box>
+            <Box
+              sx={
+                {
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  // textAlign: "center",
+                }
+              }
             >
-              <AddIcon />
-              <input
-                type="file"
-                hidden
-                ref={teamFileInput2}
-                onChange={(e) => handleChooseFileTeam(e)}
+              <TextField
+                sx={{
+                  width: "90%",
+                  backgroundColor: theme.colors.textBackground,
+                  borderStyle: "none",
+                }}
+                label="Title"
+                variant="outlined"
+                size="small"
+                color="secondary"
+                value={topicTitle}
+                onChange={(e) => topicTitleChangeHandler(e)}
               />
-            </Button>
+              <TextField
+                sx={{
+                  width: "90%",
+                  backgroundColor: theme.colors.textBackground,
+                  borderStyle: "none",
+                  marginTop: 1,
+                }}
+                label="Description"
+                variant="outlined"
+                size="small"
+                color="secondary"
+                value={topicDescription}
+                onChange={(e) => topicDescriptionChangeHandler(e)}
+              />
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                onClick={createTopicHandler}
+                sx={{
+                  marginTop: 1,
+                }}
+              >
+                Start
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      )}
+        )}
+      </Box>
       {showEmojiPeaker === true && (
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "53px",
-            marginLeft: "30px",
-            backgroundColor: theme.colors.textBackground,
-            borderRadius: "15px",
-
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-          }}
-        >
+        <Box sx={{}}>
           <IconButton
             sx={{
               marginLeft: "250px",
@@ -631,6 +1010,7 @@ const Bottom = ({
         handleChooseFileIconTeam={handleChooseFileIconTeam}
         teamFileInput={teamFileInput}
         handleChooseFileTeam={handleChooseFileTeam}
+        toggleTopicHandler={toggleTopicHandler}
       />
       {/* Communication */}
       <Box
@@ -697,6 +1077,7 @@ function MenuListComposition({
   handleChooseFileIconTeam,
   teamFileInput,
   handleChooseFileTeam,
+  toggleTopicHandler,
 }) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -794,12 +1175,17 @@ function MenuListComposition({
                       />
                       Upload file
                     </MenuItem>
-                    {/* <MenuItem onClick={(e) => handleClose(e)}>
+                    <MenuItem
+                      onClick={(e) => {
+                        handleClose(e);
+                        toggleTopicHandler();
+                      }}
+                    >
                       <ListItemIcon>
                         <TopicRoundedIcon fontSize="medium" color="secondary" />
                       </ListItemIcon>
                       Topic
-                    </MenuItem> */}
+                    </MenuItem>
                     {/* <MenuItem>
                       <ListItemIcon>
                         <BallotRoundedIcon
@@ -819,3 +1205,6 @@ function MenuListComposition({
     </Stack>
   );
 }
+
+// export userMessage component and friendMessage component
+export { UserMessage, ColleagueMessage, Bottom };

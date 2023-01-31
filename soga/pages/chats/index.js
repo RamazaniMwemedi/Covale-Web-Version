@@ -51,7 +51,11 @@ import {
 import { useRef, useState } from "react";
 import axios from "axios";
 import { sendMessege } from "../../services/chats";
-import { sendTeamMessege } from "../../services/teams";
+import {
+  sendTeamMessege,
+  createATopic,
+  sendMessageInTopic,
+} from "../../services/teams";
 // Socket.IO
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
@@ -75,12 +79,20 @@ export default function Chat() {
 
   // Teams States
   // team message state
+  // Message states
   const [teamMessage, setTeamMessage] = useState("");
+  // File states
   const teamFileInput = useRef(null);
   const teamFileInput2 = useRef(null);
   const [teamFiles, setTeamFiles] = useState([]);
-  //      Bools
-  const [teamBoolForSent, setTeamBoolForSent] = useState(true);
+  // Topic States
+  const [startTopic, setStartTopic] = useState(false);
+  const [topicTitle, setTopicTitle] = useState("");
+  const [topicDescription, setTopicDescription] = useState("");
+  const [topicMessage, setTopicMessage] = useState("");
+  const topicFileInput = useRef(null);
+  const [topicFiles, setTopicFiles] = useState([]);
+
   const userId = user ? user.id : null;
 
   // HOOKS WILL BE HERE
@@ -272,6 +284,154 @@ export default function Chat() {
     );
   };
 
+  // Topic state handlers
+  // Topic title onChange handler
+  const topicTitleChangeHandler = (e) => {
+    setTopicTitle(e.target.value);
+  };
+
+  // Topic description onChange handler
+  const topicDescriptionChangeHandler = (e) => {
+    setTopicDescription(e.target.value);
+  };
+
+  // Topic files onChange handler
+  const topicFilesChangeHandler = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setTopicFiles((prev) => [
+        ...prev,
+        {
+          file: file,
+          fileName: file.name,
+          fileUrl: reader.result,
+          fileUri: reader.result,
+          fileType: file.type,
+          fileSize: file.size,
+        },
+      ]);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const handleChooseFileIconTopic = (e) => {
+    topicFileInput.current.click();
+  };
+  const handleChooseFileTopic = (e) => {
+    // input change handler
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setTopicFiles((prev) => [
+        ...prev,
+        {
+          file: file,
+          fileName: file.name,
+          fileUrl: reader.result,
+          fileUri: reader.result,
+          fileType: file.type,
+          fileSize: file.size,
+        },
+      ]);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const handleRemoveFileTopic = (file) => {
+    setTopicFiles((prev) => prev.filter((f) => f !== file));
+  };
+
+  // Topic Message onChange handler
+  const topicMessageChangeHandler = (e) => {
+    setTopicMessage(e.target.value);
+  };
+
+  // Topic Message onEmojiClick handler
+  const topicOnEmojiClick = (event, emojiObject) => {
+    setTopicMessage(topicMessage + emojiObject.emoji);
+  };
+
+  // Topic Message send handler
+  const topicSendMessageHandle = async () => {
+    const uuid = uuidv4();
+    const formData = new FormData();
+
+    for (const file of topicFiles) {
+      formData.append("files", file.file);
+    }
+
+    formData.append("message", topicMessage);
+    formData.append("idFromClient", uuid);
+    setTopicMessage("");
+    const topicNewMessage = {
+      sender: {
+        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        id: user.id,
+      },
+      message: topicNewMessage,
+      idFromClient: uuid,
+      file: topicFiles,
+    };
+    setTopicFiles([]);
+    // dispatch(
+    //   addNewMessageToTopicId({
+    //     topicId: id,
+    //     topicNewMessage,
+    //   })
+    // );
+    const sendMessageToTopic = await sendMessageInTopic(token, id, formData);
+
+    teamSocket.emit("send_message_to_topic", {
+      teamId: id,
+      message: sendMessageToTopic,
+    });
+    // dispatch(
+    //   updateTopicMessageId({
+    //     topicId: id,
+    //     id: sendMessageToTopic.id,
+    //     idFromClient: sendMessageToTopic.idFromClient,
+    //     file: sendMessageToTopic.files,
+    //   })
+    // );
+  };
+
+  //  Toggle topic handler
+  const toggleTopicHandler = () => {
+    setStartTopic((prev) => !prev);
+  };
+  // Craete topic handler
+  const createTopicHandler = () => {
+    const uuid = uuidv4();
+
+    const newTopic = {
+      title: topicTitle,
+      description: topicDescription,
+    };
+    const teamNewMessage = {
+      sender: {
+        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        id: user.id,
+      },
+      message: "",
+      idFromClient: uuid,
+      file: [],
+      topic: newTopic,
+    };
+    dispatch(
+      addNewMessageToTeamId({
+        teamId: id,
+        teamNewMessage,
+      })
+    );
+    console.log(newTopic);
+    const topicFromServer = createATopic(token, id, newTopic);
+  };
+
   return (
     <>
       {userLoading ? (
@@ -319,6 +479,25 @@ export default function Chat() {
                     teamFileInput={teamFileInput}
                     teamFileInput2={teamFileInput2}
                     teamFiles={teamFiles}
+                    // Topic
+                    topicTitle={topicTitle}
+                    topicTitleChangeHandler={topicTitleChangeHandler}
+                    topicDescriptionChangeHandler={
+                      topicDescriptionChangeHandler
+                    }
+                    createTopicHandler={createTopicHandler}
+                    startTopic={startTopic}
+                    toggleTopicHandler={toggleTopicHandler}
+                    topicMessage={topicMessage}
+                    topicMessageChangeHandler={topicMessageChangeHandler}
+                    topicSendMessageHandle={topicSendMessageHandle}
+                    topicOnEmojiClick={topicOnEmojiClick}
+                    handleChooseFileIconTopic={handleChooseFileIconTopic}
+                    handleChooseFileTopic={handleChooseFileTopic}
+                    handleRemoveFileTopic={handleRemoveFileTopic}
+                    topicFilesChangeHandler={topicFilesChangeHandler}
+                    topicFileInput={topicFileInput}
+                    topicFiles={topicFiles}
                   />
                 </>
               ) : (
@@ -393,6 +572,23 @@ const SectionToDisplay = ({
   teamFileInput,
   teamFileInput2,
   teamFiles,
+  // Topic
+  topicTitle,
+  topicTitleChangeHandler,
+  topicDescriptionChangeHandler,
+  createTopicHandler,
+  startTopic,
+  toggleTopicHandler,
+  topicMessage,
+  topicMessageChangeHandler,
+  topicSendMessageHandle,
+  topicOnEmojiClick,
+  handleChooseFileIconTopic,
+  handleChooseFileTopic,
+  handleRemoveFileTopic,
+  topicFilesChangeHandler,
+  topicFileInput,
+  topicFiles,
 }) => {
   const router = useRouter();
   const id = router.query.id;
@@ -439,6 +635,23 @@ const SectionToDisplay = ({
             teamFileInput={teamFileInput}
             teamFileInput2={teamFileInput2}
             teamFiles={teamFiles}
+            // Topic
+            topicTitle={topicTitle}
+            topicTitleChangeHandler={topicTitleChangeHandler}
+            topicDescriptionChangeHandler={topicDescriptionChangeHandler}
+            createTopicHandler={createTopicHandler}
+            startTopic={startTopic}
+            toggleTopicHandler={toggleTopicHandler}
+            topicMessage={topicMessage}
+            topicMessageChangeHandler={topicMessageChangeHandler}
+            topicSendMessageHandle={topicSendMessageHandle}
+            topicOnEmojiClick={topicOnEmojiClick}
+            handleChooseFileIconTopic={handleChooseFileIconTopic}
+            handleChooseFileTopic={handleChooseFileTopic}
+            handleRemoveFileTopic={handleRemoveFileTopic}
+            topicFilesChangeHandler={topicFilesChangeHandler}
+            topicFileInput={topicFileInput}
+            topicFiles={topicFiles}
           />
         ) : (
           <TeamSectionSkeleton />

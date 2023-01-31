@@ -22,10 +22,41 @@ const TeamSection = ({
   teamFileInput,
   teamFileInput2,
   teamFiles,
+  // Topic
+  topicTitle,
+  topicTitleChangeHandler,
+  topicDescriptionChangeHandler,
+  createTopicHandler,
+  startTopic,
+  toggleTopicHandler,
+  topicMessage,
+  topicMessageChangeHandler,
+  topicSendMessageHandle,
+  topicOnEmojiClick,
+  handleChooseFileIconTopic,
+  handleChooseFileTopic,
+  handleRemoveFileTopic,
+  topicFilesChangeHandler,
+  topicFileInput,
+  topicFiles,
 }) => {
   const [option, setOption] = useState("");
-
   const [showRight, setShowRight] = React.useState(false);
+  const [clickedTopicId, setClickedTopicId] = useState(null);
+
+  const showTopics = () => {
+    if (showRight) {
+      setOption("TOPIC");
+    } else {
+      setShowRight(!showRight);
+      setOption("TOPIC");
+    }
+    if (option === "TOPIC") {
+      setShowRight(!showRight);
+    } else {
+      setShowRight(!showRight);
+    }
+  };
 
   const showMenu = () => {
     if (showRight) {
@@ -48,6 +79,11 @@ const TeamSection = ({
     if (option === "PARTICIPANT") {
       setShowRight(!showRight);
     }
+  };
+
+  // handle clicked topic
+  const handleClickedTopic = (topicId) => {
+    setClickedTopicId(topicId);
   };
 
   const theme = useTheme();
@@ -80,6 +116,7 @@ const TeamSection = ({
               teamSendMessageHandle={teamSendMessageHandle}
               teamMessage={teamMessage}
               teamOnEmojiClick={teamOnEmojiClick}
+              showTopics={showTopics}
               showMenu={showMenu}
               showParticipant={showParticipant}
               //
@@ -90,6 +127,12 @@ const TeamSection = ({
               teamFileInput={teamFileInput}
               teamFileInput2={teamFileInput2}
               teamFiles={teamFiles}
+              topicTitle={topicTitle}
+              topicTitleChangeHandler={topicTitleChangeHandler}
+              topicDescriptionChangeHandler={topicDescriptionChangeHandler}
+              createTopicHandler={createTopicHandler}
+              startTopic={startTopic}
+              toggleTopicHandler={toggleTopicHandler}
             />
           </Box>
           {/* Team Section Right */}
@@ -104,6 +147,20 @@ const TeamSection = ({
                 option={option}
                 team={team}
                 showRight={showRight}
+                setShowRight={setShowRight}
+                handleClickedTopic={handleClickedTopic}
+                clickedTopicId={clickedTopicId}
+                // Topic
+                topicMessage={topicMessage}
+                topicMessageChangeHandler={topicMessageChangeHandler}
+                topicSendMessageHandle={topicSendMessageHandle}
+                topicOnEmojiClick={topicOnEmojiClick}
+                handleChooseFileIconTopic={handleChooseFileIconTopic}
+                handleChooseFileTopic={handleChooseFileTopic}
+                handleRemoveFileTopic={handleRemoveFileTopic}
+                topicFilesChangeHandler={topicFilesChangeHandler}
+                topicFileInput={topicFileInput}
+                topicFiles={topicFiles}
               />
             </Box>
           )}
