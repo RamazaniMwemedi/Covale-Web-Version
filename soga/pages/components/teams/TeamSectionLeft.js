@@ -891,7 +891,10 @@ const Bottom = ({
                   variant="contained"
                   color="secondary"
                   size="small"
-                  onClick={(e) => handleChooseFileIcon2Team(e)}
+                  onClick={(e) => {
+                    handleChooseFileIcon2Team(e);
+                    console.log(teamFileInput);
+                  }}
                 >
                   <AddIcon />
                   <input
@@ -899,8 +902,7 @@ const Bottom = ({
                     hidden
                     ref={teamFileInput2}
                     onChange={(e) => {
-                      //click the file input using event
-                      e.target.click();
+                      handleChooseFileTeam(e);
                     }}
                   />
                 </Button>
@@ -1088,7 +1090,6 @@ const Bottom = ({
   );
 };
 
-
 function MenuListComposition({
   handleChooseFileIconTeam,
   teamFileInput,
@@ -1131,11 +1132,7 @@ function MenuListComposition({
   }, [open]);
 
   return (
-    <Stack
-      direction="row"
-      spacing={2}
-      
-    >
+    <Stack direction="row" spacing={2}>
       <Box>
         <IconButton
           ref={anchorRef}

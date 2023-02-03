@@ -210,6 +210,7 @@ export default function Chat() {
   };
   const handleChooseFileIcon2Team = (e) => {
     teamFileInput2.current.click();
+    console.log("Team file input 2", teamFileInput2);
   };
 
   const handleChooseFileTeam = (e) => {
@@ -320,8 +321,8 @@ export default function Chat() {
     topicFileInput.current.click();
   };
   const handleChooseFileIcon2Topic = (e) => {
-    // topicFileInput2.current.click();
-    console.log("handleChooseFileIcon2Topic :>> ", topicFileInput2);
+    topicFileInput2.current.click();
+    console.log("Topic file input 2", topicFileInput2);
   };
   const handleChooseFileTopic = (e) => {
     // input change handler

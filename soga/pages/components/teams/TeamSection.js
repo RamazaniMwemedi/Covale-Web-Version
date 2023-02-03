@@ -38,7 +38,8 @@ const TeamSection = ({
   handleChooseFileTopic,
   handleRemoveFileTopic,
   topicFilesChangeHandler,
-  topicFileInput,topicFileInput2,
+  topicFileInput,
+  topicFileInput2,
   topicFiles,
 }) => {
   const [option, setOption] = useState("");

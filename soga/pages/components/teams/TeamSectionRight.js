@@ -47,6 +47,7 @@ const TeamSectionRight = ({
   topicFilesChangeHandler,
   topicFileInput,
   topicFiles,
+  topicFileInput2,
 }) => {
   switch (option) {
     case "PARTICIPANT":
@@ -71,6 +72,7 @@ const TeamSectionRight = ({
           topicFilesChangeHandler={topicFilesChangeHandler}
           topicFileInput={topicFileInput}
           topicFiles={topicFiles}
+          topicFileInput2={topicFileInput2}
         />
       );
     default:
