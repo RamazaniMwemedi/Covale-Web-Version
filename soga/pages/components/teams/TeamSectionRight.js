@@ -41,6 +41,7 @@ const TeamSectionRight = ({
   topicSendMessageHandle,
   topicOnEmojiClick,
   handleChooseFileIconTopic,
+  handleChooseFileIcon2Topic,
   handleChooseFileTopic,
   handleRemoveFileTopic,
   topicFilesChangeHandler,
@@ -64,6 +65,7 @@ const TeamSectionRight = ({
           topicSendMessageHandle={topicSendMessageHandle}
           topicOnEmojiClick={topicOnEmojiClick}
           handleChooseFileIconTopic={handleChooseFileIconTopic}
+          handleChooseFileIcon2Topic={handleChooseFileIcon2Topic}
           handleChooseFileTopic={handleChooseFileTopic}
           handleRemoveFileTopic={handleRemoveFileTopic}
           topicFilesChangeHandler={topicFilesChangeHandler}
@@ -162,10 +164,12 @@ const TopicsParent = ({
   topicSendMessageHandle,
   topicOnEmojiClick,
   handleChooseFileIconTopic,
+  handleChooseFileIcon2Topic,
   handleChooseFileTopic,
   handleRemoveFileTopic,
   topicFilesChangeHandler,
   topicFileInput,
+  topicFileInput2,
   topicFiles,
 }) => {
   console.log("clickedTopicId", clickedTopicId);
@@ -181,10 +185,12 @@ const TopicsParent = ({
         topicSendMessageHandle={topicSendMessageHandle}
         topicOnEmojiClick={topicOnEmojiClick}
         handleChooseFileIconTopic={handleChooseFileIconTopic}
+        handleChooseFileIcon2Topic={handleChooseFileIcon2Topic}
         handleChooseFileTopic={handleChooseFileTopic}
         handleRemoveFileTopic={handleRemoveFileTopic}
         topicFilesChangeHandler={topicFilesChangeHandler}
         topicFileInput={topicFileInput}
+        topicFileInput2={topicFileInput2}
         topicFiles={topicFiles}
       />
     );
@@ -193,21 +199,7 @@ const TopicsParent = ({
   }
 };
 
-const Topics = ({
-  topics,
-  handleClickedTopic,
-  // Topic
-  topicMessage,
-  topicMessageChangeHandler,
-  topicSendMessageHandle,
-  topicOnEmojiClick,
-  handleChooseFileIconTopic,
-  handleChooseFileTopic,
-  handleRemoveFileTopic,
-  topicFilesChangeHandler,
-  topicFileInput,
-  topicFiles,
-}) => {
+const Topics = ({ topics, handleClickedTopic }) => {
   const theme = useTheme();
   return (
     <Box
@@ -231,21 +223,7 @@ const Topics = ({
         }}
       >
         {topics.map((topic) => (
-          <Topic
-            topic={topic}
-            handleClickedTopic={handleClickedTopic}
-            // Topic
-            topicMessage={topicMessage}
-            topicMessageChangeHandler={topicMessageChangeHandler}
-            topicSendMessageHandle={topicSendMessageHandle}
-            topicOnEmojiClick={topicOnEmojiClick}
-            handleChooseFileIconTopic={handleChooseFileIconTopic}
-            handleChooseFileTopic={handleChooseFileTopic}
-            handleRemoveFileTopic={handleRemoveFileTopic}
-            topicFilesChangeHandler={topicFilesChangeHandler}
-            topicFileInput={topicFileInput}
-            topicFiles={topicFiles}
-          />
+          <Topic topic={topic} handleClickedTopic={handleClickedTopic} />
         ))}
       </Box>
     </Box>
@@ -318,10 +296,12 @@ const TopicSection = ({
   topicSendMessageHandle,
   topicOnEmojiClick,
   handleChooseFileIconTopic,
+  handleChooseFileIcon2Topic,
   handleChooseFileTopic,
   handleRemoveFileTopic,
   topicFilesChangeHandler,
   topicFileInput,
+  topicFileInput2,
   topicFiles,
 }) => {
   const theme = useTheme();
@@ -421,11 +401,12 @@ const TopicSection = ({
               );
             })}
             <Bottom
-              handleChooseFileIcon2Team={handleChooseFileIconTopic}
-              handleChooseFileIconTeam={handleChooseFileTopic}
+              handleChooseFileIconTeam={handleChooseFileIconTopic}
+              handleChooseFileIcon2Team={handleChooseFileIcon2Topic}
               handleChooseFileTeam={handleChooseFileTopic}
               handleRemoveFileTeam={handleRemoveFileTopic}
               teamFileInput={topicFileInput}
+              teamFileInput2={topicFileInput2}
               teamFiles={topicFiles}
               teamFilesChangeHandler={topicFilesChangeHandler}
               teamMessage={topicMessage}

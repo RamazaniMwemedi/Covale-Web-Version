@@ -898,7 +898,10 @@ const Bottom = ({
                     type="file"
                     hidden
                     ref={teamFileInput2}
-                    onChange={(e) => handleChooseFileTeam(e)}
+                    onChange={(e) => {
+                      //click the file input using event
+                      e.target.click();
+                    }}
                   />
                 </Button>
               </Box>
@@ -982,7 +985,19 @@ const Bottom = ({
         )}
       </Box>
       {showEmojiPeaker === true && (
-        <Box sx={{}}>
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: "53px",
+            marginLeft: "30px",
+            backgroundColor: theme.colors.textBackground,
+            borderRadius: "15px",
+
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >
           <IconButton
             sx={{
               marginLeft: "250px",
@@ -1073,6 +1088,7 @@ const Bottom = ({
   );
 };
 
+
 function MenuListComposition({
   handleChooseFileIconTeam,
   teamFileInput,
@@ -1115,7 +1131,11 @@ function MenuListComposition({
   }, [open]);
 
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack
+      direction="row"
+      spacing={2}
+      
+    >
       <Box>
         <IconButton
           ref={anchorRef}

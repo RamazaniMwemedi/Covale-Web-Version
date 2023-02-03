@@ -91,6 +91,7 @@ export default function Chat() {
   const [topicDescription, setTopicDescription] = useState("");
   const [topicMessage, setTopicMessage] = useState("");
   const topicFileInput = useRef(null);
+  const topicFileInput2 = useRef(null);
   const [topicFiles, setTopicFiles] = useState([]);
 
   const userId = user ? user.id : null;
@@ -318,6 +319,10 @@ export default function Chat() {
   const handleChooseFileIconTopic = (e) => {
     topicFileInput.current.click();
   };
+  const handleChooseFileIcon2Topic = (e) => {
+    // topicFileInput2.current.click();
+    console.log("handleChooseFileIcon2Topic :>> ", topicFileInput2);
+  };
   const handleChooseFileTopic = (e) => {
     // input change handler
     const file = e.target.files[0];
@@ -371,23 +376,24 @@ export default function Chat() {
         lastname: user.lastname,
         id: user.id,
       },
-      message: topicNewMessage,
+      message: topicMessage,
       idFromClient: uuid,
       file: topicFiles,
     };
     setTopicFiles([]);
+    console.log("Topic New Message", topicNewMessage);
     // dispatch(
     //   addNewMessageToTopicId({
     //     topicId: id,
     //     topicNewMessage,
     //   })
     // );
-    const sendMessageToTopic = await sendMessageInTopic(token, id, formData);
+    // const sendMessageToTopic = await sendMessageInTopic(token, id, formData);
 
-    teamSocket.emit("send_message_to_topic", {
-      teamId: id,
-      message: sendMessageToTopic,
-    });
+    // teamSocket.emit("send_message_to_topic", {
+    //   teamId: id,
+    //   message: sendMessageToTopic,
+    // });
     // dispatch(
     //   updateTopicMessageId({
     //     topicId: id,
@@ -493,10 +499,12 @@ export default function Chat() {
                     topicSendMessageHandle={topicSendMessageHandle}
                     topicOnEmojiClick={topicOnEmojiClick}
                     handleChooseFileIconTopic={handleChooseFileIconTopic}
+                    handleChooseFileIcon2Topic={handleChooseFileIcon2Topic}
                     handleChooseFileTopic={handleChooseFileTopic}
                     handleRemoveFileTopic={handleRemoveFileTopic}
                     topicFilesChangeHandler={topicFilesChangeHandler}
                     topicFileInput={topicFileInput}
+                    topicFileInput2={topicFileInput2}
                     topicFiles={topicFiles}
                   />
                 </>
@@ -584,10 +592,12 @@ const SectionToDisplay = ({
   topicSendMessageHandle,
   topicOnEmojiClick,
   handleChooseFileIconTopic,
+  handleChooseFileIcon2Topic,
   handleChooseFileTopic,
   handleRemoveFileTopic,
   topicFilesChangeHandler,
   topicFileInput,
+  topicFileInput2,
   topicFiles,
 }) => {
   const router = useRouter();
@@ -647,10 +657,12 @@ const SectionToDisplay = ({
             topicSendMessageHandle={topicSendMessageHandle}
             topicOnEmojiClick={topicOnEmojiClick}
             handleChooseFileIconTopic={handleChooseFileIconTopic}
+            handleChooseFileIcon2Topic={handleChooseFileIcon2Topic}
             handleChooseFileTopic={handleChooseFileTopic}
             handleRemoveFileTopic={handleRemoveFileTopic}
             topicFilesChangeHandler={topicFilesChangeHandler}
             topicFileInput={topicFileInput}
+            topicFileInput2={topicFileInput2}
             topicFiles={topicFiles}
           />
         ) : (

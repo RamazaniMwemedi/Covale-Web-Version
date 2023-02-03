@@ -34,10 +34,11 @@ const TeamSection = ({
   topicSendMessageHandle,
   topicOnEmojiClick,
   handleChooseFileIconTopic,
+  handleChooseFileIcon2Topic,
   handleChooseFileTopic,
   handleRemoveFileTopic,
   topicFilesChangeHandler,
-  topicFileInput,
+  topicFileInput,topicFileInput2,
   topicFiles,
 }) => {
   const [option, setOption] = useState("");
@@ -156,10 +157,12 @@ const TeamSection = ({
                 topicSendMessageHandle={topicSendMessageHandle}
                 topicOnEmojiClick={topicOnEmojiClick}
                 handleChooseFileIconTopic={handleChooseFileIconTopic}
+                handleChooseFileIcon2Topic={handleChooseFileIcon2Topic}
                 handleChooseFileTopic={handleChooseFileTopic}
                 handleRemoveFileTopic={handleRemoveFileTopic}
                 topicFilesChangeHandler={topicFilesChangeHandler}
                 topicFileInput={topicFileInput}
+                topicFileInput2={topicFileInput2}
                 topicFiles={topicFiles}
               />
             </Box>
