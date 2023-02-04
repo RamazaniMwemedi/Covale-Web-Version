@@ -410,7 +410,7 @@ export default function Chat() {
     setStartTopic((prev) => !prev);
   };
   // Craete topic handler
-  const createTopicHandler = () => {
+  const createTopicHandler = async () => {
     const uuid = uuidv4();
 
     const newTopic = {
@@ -436,7 +436,22 @@ export default function Chat() {
       })
     );
     console.log(newTopic);
-    const topicFromServer = createATopic(token, id, newTopic);
+    const topicFromServer = await createATopic(token, id, newTopic);
+    teamSocket.emit("send_message_to_team", {
+      teamId: id,
+      message: teamNewMessage,
+    });
+    console.log("Topic from server", topicFromServer);
+    dispatch(
+      updateTeamMessageId({
+        teamId: id,
+        id: topicFromServer.id,
+        idFromClient: topicFromServer.idFromClient,
+        file: topicFromServer.file,
+        topic: topicFromServer.topic,
+      })
+    );
+    setStartTopic(false);
   };
 
   return (

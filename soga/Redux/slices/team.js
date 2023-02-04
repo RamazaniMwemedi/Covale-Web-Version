@@ -29,6 +29,7 @@ const teamSlice = createSlice({
     },
 
     updateTeamMessageId(state, { payload }) {
+      console.log("Topic from updateTeamMessageId", payload.topic)
       if (payload) {
         state = {
           ...state,
@@ -42,6 +43,10 @@ const teamSlice = createSlice({
             .messages.filter((message) => {
               return message.idFromClient == payload.idFromClient;
             })[0].id = payload.id),
+          // add the message topic to the topic array
+          teams: state.teams
+            .filter((team) => team.id === payload.teamId)[0]
+            .topics.push(payload.topic),
         };
       }
     },

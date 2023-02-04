@@ -327,7 +327,9 @@ const TopicMessage = ({
   const idProvided = message.id ? true : false;
   const theme = useTheme();
   // last message in  a topic
-  const lastMessage = message.topic.messages[message.topic.messages.length - 1];
+  const lastMessage = message.topic.messages
+    ? message.topic.messages[message.topic.messages.length - 1]
+    : null;
 
   return (
     <Box
@@ -390,36 +392,42 @@ const TopicMessage = ({
             {message.topic.description}
           </Typography>
         </Tooltip>
-        {message.topic.messages.length > 0 && (
-          <>
-            <Box
-              sx={{
-                marginLeft: "40px",
-              }}
-            >
-              <Typography
-                variant="caption"
+        {message.topic.messages ? (
+          message.topic.messages.length > 0 && (
+            <>
+              <Box
                 sx={{
-                  color: theme.colors.text1,
-                  color: "white",
-                  fontWeight: "bold",
+                  marginLeft: "40px",
                 }}
               >
-                Recent Message
-              </Typography>
-              {lastMessage && (
-                <MessageComponentForTopic
-                  message={lastMessage}
-                  user={user}
-                  handleShowTeamFile={handleShowTeamFile}
-                />
-              )}
-              {/* Link To other messages */}
-              {/* <Typography variant="subtitle2" sx={{ color: theme.colors.text1 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: theme.colors.text1,
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Recent Message
+                </Typography>
+                {lastMessage && (
+                  <MessageComponentForTopic
+                    message={lastMessage}
+                    user={user}
+                    handleShowTeamFile={handleShowTeamFile}
+                  />
+                )}
+                {/* Link To other messages */}
+                {/* <Typography variant="subtitle2" sx={{ color: theme.colors.text1 }}>
               {message.topic.messages.length} messages
             </Typography> */}
-            </Box>
-          </>
+              </Box>
+            </>
+          )
+        ) : (
+          <Typography variant="subtitle2" sx={{ color: theme.colors.text1 }}>
+            No messages
+          </Typography>
         )}
         <Link
           underline="hover"
