@@ -32,6 +32,7 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import BallotRoundedIcon from "@mui/icons-material/BallotRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import AddIcon from "@mui/icons-material/Add";
+import LeaderboardRoundedIcon from "@mui/icons-material/LeaderboardRounded";
 
 import { useTheme } from "@mui/material";
 import { purple } from "@mui/material/colors";
@@ -241,6 +242,15 @@ const TopBar = ({
           }}
         >
           <TopicRoundedIcon color={showRight ? "secondary" : "action"} />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+          }}
+        >
+          <LeaderboardRoundedIcon
+            fontSize="medium"
+            color={showRight ? "secondary" : "action"}
+          />
         </IconButton>
         <IconButton
           onClick={() => {

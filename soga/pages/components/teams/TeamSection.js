@@ -67,6 +67,18 @@ const TeamSection = ({
     setOption("TOPIC");
   };
 
+  const showProjects = () => {
+    if (showRight) {
+      setOption("");
+    } else {
+      setShowRight(!showRight);
+      setOption("PROJECTS");
+    }
+    if (option === "PROJECTS") {
+      setShowRight(!showRight);
+    }
+  };
+
   const showMenu = () => {
     if (showRight) {
       setOption("MENU");
