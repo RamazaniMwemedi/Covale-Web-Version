@@ -75,6 +75,8 @@ const TeamSectionRight = ({
           topicFileInput2={topicFileInput2}
         />
       );
+    case "PROJECTS":
+      return <Projects team={team} />;
     default:
       break;
   }
@@ -1031,3 +1033,22 @@ const UnReadNotificationsBadge = styled(Badge)(({ theme }) => ({
     border: `2px solid ${theme.palette.background.paper}`,
   },
 }));
+
+// Projects
+const Projects = ({ projects }) => {
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItem: "center",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="subtitle1">Projects</Typography>
+      </Box>
+      <List></List>
+    </Box>
+  );
+};

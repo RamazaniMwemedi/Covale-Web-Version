@@ -62,7 +62,8 @@ const TeamSectionLeft = ({
   teamSendMessageHandle,
   teamOnEmojiClick,
   showTopics,
-  goToTopic,
+  // Projects
+  showProjects,
   showParticipant,
   showMenu,
   // Files
@@ -81,6 +82,7 @@ const TeamSectionLeft = ({
   toggleTopicHandler,
   // Topic
   handleClickedTopic,
+  goToTopic,
 }) => {
   const userStore = useSelector((state) => state.user);
   const user = userStore.user;
@@ -121,6 +123,8 @@ const TeamSectionLeft = ({
             showRightHandler={showRightHandler}
             showRight={showRight}
             showTopics={showTopics}
+            // Projects
+            showProjects={showProjects}
             showMenu={showMenu}
             showParticipant={showParticipant}
           />
@@ -177,6 +181,8 @@ const TopBar = ({
   showRight,
   teamName,
   showTopics,
+  // Projects
+  showProjects,
   showParticipant,
   showMenu,
 }) => {
@@ -245,6 +251,7 @@ const TopBar = ({
         </IconButton>
         <IconButton
           onClick={() => {
+            showProjects();
           }}
         >
           <LeaderboardRoundedIcon

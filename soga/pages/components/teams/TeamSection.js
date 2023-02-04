@@ -141,6 +141,8 @@ const TeamSection = ({
               goToTopic={goToTopic}
               showMenu={showMenu}
               showParticipant={showParticipant}
+              // Projects
+              showProjects={showProjects}
               //
               handleChooseFileIconTeam={handleChooseFileIconTeam}
               handleChooseFileIcon2Team={handleChooseFileIcon2Team}
