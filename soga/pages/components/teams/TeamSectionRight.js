@@ -393,15 +393,27 @@ const TopicSection = ({
               flexDirection: "column",
               justifyContent: "space-between",
               paddingBottom: "45px",
+              borderRadius: "8px",
             }}
           >
-            {topic.messages.map((message) => {
-              return message.sender.id === user.id ? (
-                <UserMessage message={message} user={user} />
-              ) : (
-                <ColleagueMessage message={message} user={user} />
-              );
-            })}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+
+                // scrollable
+                overflowY: "scroll",
+                height: "100%",
+              }}
+            >
+              {topic.messages.map((message) => {
+                return message.sender.id === user.id ? (
+                  <UserMessage message={message} user={user} />
+                ) : (
+                  <ColleagueMessage message={message} user={user} />
+                );
+              })}
+            </Box>
             <Bottom
               handleChooseFileIconTeam={handleChooseFileIconTopic}
               handleChooseFileIcon2Team={handleChooseFileIcon2Topic}

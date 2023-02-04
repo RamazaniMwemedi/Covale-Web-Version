@@ -61,6 +61,7 @@ const TeamSectionLeft = ({
   teamSendMessageHandle,
   teamOnEmojiClick,
   showTopics,
+  goToTopic,
   showParticipant,
   showMenu,
   // Files
@@ -140,6 +141,8 @@ const TeamSectionLeft = ({
                 user={user}
                 messages={messages}
                 handleShowTeamFile={handleShowTeamFile}
+                handleClickedTopic={handleClickedTopic}
+                goToTopic={goToTopic}
               />
             )}
             <Bottom
@@ -262,7 +265,13 @@ const TopBar = ({
   );
 };
 
-const Mid = ({ user, messages, handleShowTeamFile }) => {
+const Mid = ({
+  user,
+  messages,
+  handleShowTeamFile,
+  handleClickedTopic,
+  goToTopic,
+}) => {
   const toBottomWhenNewMessage = useRef(null);
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
@@ -291,6 +300,8 @@ const Mid = ({ user, messages, handleShowTeamFile }) => {
               message={message}
               user={user}
               handleShowTeamFile={handleShowTeamFile}
+              handleClickedTopic={handleClickedTopic}
+              goToTopic={goToTopic}
             />
           ) : (
             <ColleagueMessage
@@ -305,7 +316,13 @@ const Mid = ({ user, messages, handleShowTeamFile }) => {
   );
 };
 
-const TopicMessage = ({ message, user, handleShowTeamFile }) => {
+const TopicMessage = ({
+  message,
+  user,
+  handleShowTeamFile,
+  handleClickedTopic,
+  goToTopic,
+}) => {
   const purple1 = purple[800];
   const idProvided = message.id ? true : false;
   const theme = useTheme();
@@ -408,6 +425,10 @@ const TopicMessage = ({ message, user, handleShowTeamFile }) => {
           underline="hover"
           sx={{
             cursor: "pointer",
+          }}
+          onClick={() => {
+            goToTopic();
+            handleClickedTopic(message.topic.id);
           }}
         >
           <Typography
@@ -555,7 +576,13 @@ const MessageComponentForTopic = ({ message, user, handleShowTeamFile }) => {
   );
 };
 
-const UserMessage = ({ message, user, handleShowTeamFile }) => {
+const UserMessage = ({
+  message,
+  user,
+  handleShowTeamFile,
+  handleClickedTopic,
+  goToTopic,
+}) => {
   const purple1 = purple[700];
   const purple2 = purple[400];
   const idProvided = message.id ? true : false;
@@ -573,6 +600,8 @@ const UserMessage = ({ message, user, handleShowTeamFile }) => {
           message={message}
           user={user}
           handleShowTeamFile={handleShowTeamFile}
+          handleClickedTopic={handleClickedTopic}
+          goToTopic={goToTopic}
         />
       ) : (
         <>
@@ -837,7 +866,7 @@ const Bottom = ({
                     : "rgba(255,255,255,0.4)",
                 borderBottomRightRadius: "5px",
                 borderBottomLeftRadius: "5px",
-                // width: "100%",
+                width: "80%",
                 borderRadius: "5px",
                 height: "180px",
                 textAlign: "center",
@@ -849,7 +878,7 @@ const Bottom = ({
               <Box
                 sx={{
                   display: "grid",
-                  gridTemplateColumns: "auto auto",
+                  gridTemplateColumns: "50% 50%",
                 }}
               >
                 {teamFiles.map((file, i) => (
@@ -869,11 +898,19 @@ const Bottom = ({
                     }}
                   >
                     <FileIcone fileType={file.fileType} />
-                    <Typography variant="body1">
-                      {file.fileName.length > 15
-                        ? file.fileName.substring(0, 15) + "..."
-                        : file.fileName}
+                    {/* File name should fit inside the typography other wise add ... at the end */}
+                    <Typography
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        width: "100px",
+                      }}
+                      variant="subtitle2"
+                    >
+                      {file.fileName}
                     </Typography>
+
                     <IconButton onClick={() => handleRemoveFileTeam(file)}>
                       <CloseRoundedIcon />
                     </IconButton>
@@ -991,7 +1028,7 @@ const Bottom = ({
           sx={{
             position: "absolute",
             bottom: "53px",
-            marginLeft: "30px",
+            // marginLeft: "10px",
             backgroundColor: theme.colors.textBackground,
             borderRadius: "15px",
 
@@ -1023,12 +1060,6 @@ const Bottom = ({
           />
         </Box>
       )}
-      <MenuListComposition
-        handleChooseFileIconTeam={handleChooseFileIconTeam}
-        teamFileInput={teamFileInput}
-        handleChooseFileTeam={handleChooseFileTeam}
-        toggleTopicHandler={toggleTopicHandler}
-      />
       {/* Communication */}
       <Box
         sx={{
@@ -1041,10 +1072,19 @@ const Bottom = ({
             startAdornment={
               <InputAdornment
                 sx={{
-                  marginLeft: "-15px",
+                  marginLeft: "-19px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
                 position="start"
               >
+                <MenuListComposition
+                  handleChooseFileIconTeam={handleChooseFileIconTeam}
+                  teamFileInput={teamFileInput}
+                  handleChooseFileTeam={handleChooseFileTeam}
+                  toggleTopicHandler={toggleTopicHandler}
+                />
                 <IconButton>
                   <EmojiEmotionsRoundedIcon
                     color="secondary"
@@ -1052,7 +1092,7 @@ const Bottom = ({
                       setShowEmojiPeaker(true);
                     }}
                   />
-                </IconButton>
+                </IconButton>{" "}
               </InputAdornment>
             }
             id="outlined-adornment-password"

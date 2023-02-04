@@ -47,17 +47,24 @@ const TeamSection = ({
   const [clickedTopicId, setClickedTopicId] = useState(null);
 
   const showTopics = () => {
+    //  if showRight is true, setOption to "TOPIC" and setShowRight to true
     if (showRight) {
       setOption("TOPIC");
-    } else {
+    }
+    // if showRight is false, setOption to "TOPIC" and setShowRight to true
+    else {
       setShowRight(!showRight);
       setOption("TOPIC");
     }
+    // if option is "TOPIC", setOption to "TOPIC" and setShowRight to true
     if (option === "TOPIC") {
       setShowRight(!showRight);
-    } else {
-      setShowRight(!showRight);
     }
+  };
+
+  const goToTopic = () => {
+    setShowRight(true);
+    setOption("TOPIC");
   };
 
   const showMenu = () => {
@@ -102,7 +109,7 @@ const TeamSection = ({
         >
           <Box
             sx={{
-              flex: "65%",
+              flex: "60%",
               display: "flex",
               justifyContent: "flex-end",
               flexDirection: "column",
@@ -119,6 +126,7 @@ const TeamSection = ({
               teamMessage={teamMessage}
               teamOnEmojiClick={teamOnEmojiClick}
               showTopics={showTopics}
+              goToTopic={goToTopic}
               showMenu={showMenu}
               showParticipant={showParticipant}
               //
@@ -135,13 +143,14 @@ const TeamSection = ({
               createTopicHandler={createTopicHandler}
               startTopic={startTopic}
               toggleTopicHandler={toggleTopicHandler}
+              handleClickedTopic={handleClickedTopic}
             />
           </Box>
           {/* Team Section Right */}
           {showRight && (
             <Box
               sx={{
-                flex: "35%",
+                flex: "40%",
                 borderLeft: `2px solid ${theme.colors.background1}`,
               }}
             >
