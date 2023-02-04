@@ -32,6 +32,8 @@ import {
 import {
   addNewMessageToTeamId,
   updateTeamMessageId,
+  replyToTopicId,
+  updateTopicMessageId,
 } from "../../Redux/slices/team";
 import { removeUser } from "../../Redux/slices/user";
 
@@ -54,7 +56,7 @@ import { sendMessege } from "../../services/chats";
 import {
   sendTeamMessege,
   createATopic,
-  sendMessageInTopic,
+  replyToTopic,
 } from "../../services/teams";
 // Socket.IO
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
@@ -359,7 +361,7 @@ export default function Chat() {
   };
 
   // Topic Message send handler
-  const topicSendMessageHandle = async () => {
+  const topicSendMessageHandle = async (topicId) => {
     const uuid = uuidv4();
     const formData = new FormData();
 
@@ -383,26 +385,29 @@ export default function Chat() {
     };
     setTopicFiles([]);
     console.log("Topic New Message", topicNewMessage);
-    // dispatch(
-    //   addNewMessageToTopicId({
-    //     topicId: id,
-    //     topicNewMessage,
-    //   })
-    // );
-    // const sendMessageToTopic = await sendMessageInTopic(token, id, formData);
+    dispatch(
+      replyToTopicId({
+        topicId: topicId,
+        teamId: id,
+        topicNewMessage,
+      })
+    );
+    const sendMessageToTopic = await replyToTopic(token, topicId, formData);
+    console.log("Send Message To Topic", sendMessageToTopic);
 
-    // teamSocket.emit("send_message_to_topic", {
-    //   teamId: id,
-    //   message: sendMessageToTopic,
-    // });
-    // dispatch(
-    //   updateTopicMessageId({
-    //     topicId: id,
-    //     id: sendMessageToTopic.id,
-    //     idFromClient: sendMessageToTopic.idFromClient,
-    //     file: sendMessageToTopic.files,
-    //   })
-    // );
+    teamSocket.emit("send_message_to_topic", {
+      teamId: id,
+      message: sendMessageToTopic,
+    });
+    dispatch(
+      updateTopicMessageId({
+        topicId: topicId,
+        teamId: id,
+        id: sendMessageToTopic.id,
+        idFromClient: sendMessageToTopic.idFromClient,
+        file: sendMessageToTopic.files,
+      })
+    );
   };
 
   //  Toggle topic handler

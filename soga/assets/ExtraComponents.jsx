@@ -122,6 +122,7 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
     justifyContent: "center",
     alignItems: "center",
   }));
+  console.log(src);
 
   return (
     <Box
@@ -130,7 +131,6 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
         display: "flex",
         // justifyContent: "center",
         // alignItems: "center",
-        // width: "100%",
         overflow: "hidden",
       }}
     >
@@ -147,10 +147,10 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
           >
             <iframe
               // className={filetype}
-              width="100%"
+              width="1000"
               height="600"
               frameborder="0"
-              src={`https://docs.google.com/gview?url=${src}&embedded=true`}
+              src={src}
             ></iframe>
           </Box>
         ) : (

@@ -29,7 +29,6 @@ const teamSlice = createSlice({
     },
 
     updateTeamMessageId(state, { payload }) {
-      console.log("Topic from updateTeamMessageId", payload.topic)
       if (payload) {
         state = {
           ...state,
@@ -74,6 +73,40 @@ const teamSlice = createSlice({
         };
       }
     },
+    replyToTopicId(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          teams: state.teams
+            .filter((team) => team.id === payload.teamId)[0]
+            .topics.filter((topic) => topic.id === payload.topicId)[0]
+            .messages.push(payload.topicNewMessage),
+        };
+      }
+    },
+    updateTopicMessageId(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          teams: (state.teams
+            .filter((team) => team.id === payload.teamId)[0]
+            .topics.filter((topic) => topic.id === payload.topicId)[0]
+            .messages.filter(
+              (message) => message.idFromClient === payload.idFromClient
+            )[0].id = payload.id),
+          teams: (state.teams
+            .filter((team) => team.id === payload.teamId)[0]
+            .topics.filter((topic) => topic.id === payload.topicId)[0]
+            .messages.filter(
+              (message) => message.idFromClient === payload.idFromClient
+            )[0].file = payload.file),
+          // Add files to the team
+          teams: state.teams
+            .filter((team) => team.id === payload.teamId)[0]
+            .files.push(payload.file),
+        };
+      }
+    },
   },
 });
 
@@ -83,6 +116,8 @@ const {
   addNewMessageToTeamIdFromSender,
   updateTeamMessageId,
   removeTeamFromTeamsById,
+  replyToTopicId,
+  updateTopicMessageId,
 } = teamSlice.actions;
 const reducer = teamSlice.reducer;
 module.exports = {
@@ -92,4 +127,6 @@ module.exports = {
   addNewMessageToTeamIdFromSender,
   updateTeamMessageId,
   removeTeamFromTeamsById,
+  replyToTopicId,
+  updateTopicMessageId,
 };

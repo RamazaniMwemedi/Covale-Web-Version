@@ -174,7 +174,6 @@ const TopicsParent = ({
   topicFileInput2,
   topicFiles,
 }) => {
-  console.log("clickedTopicId", clickedTopicId);
   if (clickedTopicId) {
     const clickedTopic = topics.find((topic) => topic.id === clickedTopicId);
     return (
@@ -309,6 +308,19 @@ const TopicSection = ({
   const theme = useTheme();
   const userStore = useSelector((state) => state.user);
   const user = userStore.user ? userStore.user : null;
+  const [file, setFile] = useState(null);
+
+  const [showFile, setShowFile] = useState(false);
+  const handleShowTeamFile = (file) => {
+    // If file.fileUrl includes https:// then setFile to file and setShowVideoPlayer to true
+    if (file.fileUrl.includes("https://")) {
+      setFile(file);
+      setShowFile(true);
+    }
+  };
+  const handleCloseShowFile = () => {
+    setShowFile(false);
+  };
   return (
     <Box
       sx={{
@@ -319,6 +331,19 @@ const TopicSection = ({
         // Scrollable
       }}
     >
+      {" "}
+      {showFile && (
+        <FileDisplayComponent
+          handleCloseShowVideoPlayer={handleCloseShowFile}
+          file={file}
+        />
+      )}{" "}
+      {showFile && (
+        <FileDisplayComponent
+          handleCloseShowVideoPlayer={handleCloseShowFile}
+          file={file}
+        />
+      )}
       <Box
         sx={{
           display: "flex",
@@ -392,8 +417,9 @@ const TopicSection = ({
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              paddingBottom: "45px",
+              // paddingBottom: "45px",
               borderRadius: "8px",
+              mb: 5,
             }}
           >
             <Box
@@ -408,7 +434,11 @@ const TopicSection = ({
             >
               {topic.messages.map((message) => {
                 return message.sender.id === user.id ? (
-                  <UserMessage message={message} user={user} />
+                  <UserMessage
+                    message={message}
+                    user={user}
+                    handleShowTeamFile={handleShowTeamFile}
+                  />
                 ) : (
                   <ColleagueMessage message={message} user={user} />
                 );
@@ -427,6 +457,7 @@ const TopicSection = ({
               teamMessageChangeHandler={topicMessageChangeHandler}
               teamOnEmojiClick={topicOnEmojiClick}
               teamSendMessageHandle={topicSendMessageHandle}
+              topicId={topic.id}
             />
           </Box>
         </Box>

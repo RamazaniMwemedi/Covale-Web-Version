@@ -85,10 +85,6 @@ const TeamSectionLeft = ({
   const user = userStore.user;
   const teamName = team ? team.teamName : "";
   const messages = team ? team.messages : [];
-  const tl = messages.filter((message) => message.file).length;
-  const tls = messages.filter((message) => message.files).length;
-  console.log("tls", tls);
-  console.log("tl", tl);
   const [file, setFile] = useState(null);
 
   const [showFile, setShowFile] = useState(false);
@@ -825,6 +821,7 @@ const Bottom = ({
   createTopicHandler,
   startTopic,
   toggleTopicHandler,
+  topicId,
 }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
   const theme = useTheme();
@@ -1117,7 +1114,10 @@ const Bottom = ({
             color="secondary"
             endAdornment={
               <InputAdornment position="end">
-                <IconButton onClick={() => teamSendMessageHandle()} edge="end">
+                <IconButton
+                  onClick={() => teamSendMessageHandle(topicId)}
+                  edge="end"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"

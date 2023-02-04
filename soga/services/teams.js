@@ -129,10 +129,11 @@ const createATopic = async (token, teamId, topicObject) => {
   }
 };
 
-const sendMessageInTopic = async (token, topicId, messageObject) => {
+// /topics/:topicId/reply
+const replyToTopic = async (token, topicId, messageObject) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/team/topics/${topicId}/messages/new`,
+      `${SERVER_ADDRESS}/api/team/topics/${topicId}/reply`,
       messageObject,
       {
         headers: {
@@ -153,7 +154,7 @@ module.exports = {
   declineInvite,
   sendTeamMessege,
   createATopic,
-  sendMessageInTopic,
+  replyToTopic,
   // Delete
   deleteTeamById,
 };
