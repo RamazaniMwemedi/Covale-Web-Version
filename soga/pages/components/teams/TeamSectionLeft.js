@@ -318,8 +318,9 @@ const TopicMessage = ({
   handleShowTeamFile,
   handleClickedTopic,
   goToTopic,
+  color,
+  textColor,
 }) => {
-  const purple1 = purple[800];
   const idProvided = message.id ? true : false;
   const theme = useTheme();
   // last message in  a topic
@@ -330,8 +331,8 @@ const TopicMessage = ({
   return (
     <Box
       sx={{
-        backgroundColor: purple1,
         // centered
+        backgroundColor: color,
         display: "flex",
         paddingLeft: "5px",
         paddingRight: "5px",
@@ -364,7 +365,7 @@ const TopicMessage = ({
               sx={{
                 color: theme.colors.text1,
                 fontWeight: "bold",
-                color: "white",
+                color: textColor ? textColor : "white",
               }}
             >
               {message.topic.title}
@@ -382,7 +383,7 @@ const TopicMessage = ({
             variant="subtitle2"
             sx={{
               color: theme.colors.text1,
-              color: "white",
+              color: textColor ? textColor : "white",
             }}
           >
             {message.topic.description}
@@ -400,7 +401,7 @@ const TopicMessage = ({
                   variant="caption"
                   sx={{
                     color: theme.colors.text1,
-                    color: "white",
+                    color: textColor ? textColor : "white",
                     fontWeight: "bold",
                   }}
                 >
@@ -411,6 +412,7 @@ const TopicMessage = ({
                     message={lastMessage}
                     user={user}
                     handleShowTeamFile={handleShowTeamFile}
+                    textColor="black"
                   />
                 )}
                 {/* Link To other messages */}
@@ -421,11 +423,15 @@ const TopicMessage = ({
             </>
           )
         ) : (
-          <Typography variant="subtitle2" sx={{ color: theme.colors.text1 }}>
+          <Typography
+            variant="subtitle2"
+            sx={{ color: textColor ? textColor : theme.colors.text1 }}
+          >
             No messages
           </Typography>
         )}
         <Link
+          color="primary"
           underline="hover"
           sx={{
             cursor: "pointer",
@@ -437,8 +443,8 @@ const TopicMessage = ({
         >
           <Typography
             variant="subtitle2"
+            color="primary"
             sx={{
-              color: theme.colors.text1,
               fontWeight: "bold",
             }}
           >
@@ -450,7 +456,12 @@ const TopicMessage = ({
   );
 };
 
-const MessageComponentForTopic = ({ message, user, handleShowTeamFile }) => {
+const MessageComponentForTopic = ({
+  message,
+  user,
+  handleShowTeamFile,
+  textColor,
+}) => {
   const idProvided = message.id ? true : false;
   const theme = useTheme();
   return (
@@ -522,18 +533,18 @@ const MessageComponentForTopic = ({ message, user, handleShowTeamFile }) => {
                 <Typography
                   variant="subtitle2"
                   sx={{
-                    color: "white",
+                    color: textColor ? textColor : "white",
                     fontWeight: "bold",
                   }}
                 >
-                  {`${user.firstname} ${user.lastname}`}
+                  {`${message.sender.firstname} ${message.sender.lastname}`}
                 </Typography>
                 {/* Time ago */}
                 <Typography
                   variant="caption"
                   sx={{
-                    color: theme.colors.text1,
-                    color: "white",
+                    color: textColor ? textColor : theme.colors.text1,
+                    color: textColor ? textColor : "white",
                   }}
                 >
                   {timeAgo(message.sentAt)} ago
@@ -569,7 +580,10 @@ const MessageComponentForTopic = ({ message, user, handleShowTeamFile }) => {
                   );
                 })}
               </Box>
-              <Typography variant="subtitle2" sx={{ color: "white" }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: textColor ? textColor : "white" }}
+              >
                 {message.message}
               </Typography>
             </Box>
@@ -599,14 +613,17 @@ const UserMessage = ({
       }}
     >
       {/* Message */}
+
       {message.topic ? (
-        <TopicMessage
-          message={message}
-          user={user}
-          handleShowTeamFile={handleShowTeamFile}
-          handleClickedTopic={handleClickedTopic}
-          goToTopic={goToTopic}
-        />
+        <>
+          <TopicMessage
+            message={message}
+            handleShowTeamFile={handleShowTeamFile}
+            handleClickedTopic={handleClickedTopic}
+            goToTopic={goToTopic}
+            color={purple[800]}
+          />
+        </>
       ) : (
         <>
           <Box
@@ -722,80 +739,93 @@ const ColleagueMessage = ({ message, handleShowTeamFile }) => {
         justifyContent: "flex-start",
       }}
     >
-      {/* Avatar */}
-      <Avatar
-        sx={{
-          width: 25,
-          height: 25,
-          marginRight: "6px",
-        }}
-      />
-      {/* Message */}
-      <Box
-        sx={{
-          backgroundColor: theme.colors.textBackground,
-          paddingLeft: "5px",
-          paddingRight: "5px",
-          paddingTop: "5px",
-          paddingBottom: "5px",
-          borderRadius: "7px",
-          width: "auto",
-          height: "auto",
-          marginBottom: "10px",
-          borderBottomLeftRadius: "0px",
-          // max width 80%
-          maxWidth: "80%",
-        }}
-      >
-        <Box
-          sx={{
-            backgroundColor: theme.palette.grey,
-          }}
-        >
-          <Typography
+      {message.topic ? (
+        <>
+          <TopicMessage
+            message={message}
+            handleShowTeamFile={handleShowTeamFile}
+            color={theme.colors.textBackground}
+            textColor="black"
+          />
+        </>
+      ) : (
+        <>
+          {/* Avatar */}
+          <Avatar
             sx={{
-              fontWeight: "bold",
+              width: 25,
+              height: 25,
+              marginRight: "6px",
             }}
-            variant="subtitle2"
-          >{`${message.sender.firstname} ${message.sender.lastname}`}</Typography>
+          />
+          {/* Message */}
           <Box
             sx={{
-              // If there are 3 or more files, display in grid
-              display: "flex",
-              flexDirection: "column",
-              gridGap: "5px",
+              backgroundColor: theme.colors.textBackground,
+              paddingLeft: "5px",
+              paddingRight: "5px",
+              paddingTop: "5px",
+              paddingBottom: "5px",
+              borderRadius: "7px",
+              width: "auto",
+              height: "auto",
+              marginBottom: "10px",
+              borderBottomLeftRadius: "0px",
+              // max width 80%
+              maxWidth: "80%",
             }}
           >
-            {message.file.map((file) => {
-              return (
-                <Box
-                  sx={{
-                    cursor: "pointer",
-                    backgroundColor: theme.colors.textBackground,
-                    display: "flex",
-                    m: 1,
-                    // To be at the right of the message
-                    width: "200px",
-                    borderRadius: "5px",
-                  }}
-                  onClick={() => handleShowTeamFile(file)}
-                >
-                  <FileComponent file={file} />
-                </Box>
-              );
-            })}
-          </Box>
-        </Box>
+            <Box
+              sx={{
+                backgroundColor: theme.palette.grey,
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                }}
+                variant="subtitle2"
+              >{`${message.sender.firstname} ${message.sender.lastname}`}</Typography>
+              <Box
+                sx={{
+                  // If there are 3 or more files, display in grid
+                  display: "flex",
+                  flexDirection: "column",
+                  gridGap: "5px",
+                }}
+              >
+                {message.file.map((file) => {
+                  return (
+                    <Box
+                      sx={{
+                        cursor: "pointer",
+                        backgroundColor: theme.colors.textBackground,
+                        display: "flex",
+                        m: 1,
+                        // To be at the right of the message
+                        width: "200px",
+                        borderRadius: "5px",
+                      }}
+                      onClick={() => handleShowTeamFile(file)}
+                    >
+                      <FileComponent file={file} />
+                    </Box>
+                  );
+                })}
+              </Box>
+            </Box>
 
-        <Box
-          sx={{
-            // centered
-            display: "flex",
-          }}
-        >
-          <Typography variant="subtitle2">{message.message}</Typography>
-        </Box>
-      </Box>
+            <Box
+              sx={{
+                // centered
+                display: "flex",
+              }}
+            >
+              <Typography variant="subtitle2">{message.message}</Typography>
+            </Box>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
