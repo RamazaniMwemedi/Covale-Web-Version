@@ -9,6 +9,7 @@ import {
   Docx,
   Xls,
   Ppt,
+  OtherFile,
 } from "../../../assets/ExtraComponents";
 
 const FileComponent = ({ file, height, width, controls, displayFile }) => {
@@ -129,23 +130,13 @@ const FileComponent = ({ file, height, width, controls, displayFile }) => {
         );
       } else {
         return (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
-              backgroundColor: "background.paper",
-              p: 1,
-              borderRadius: "5px",
-            }}
-          >
-            <Typography variant="caption" fontSize={9} color="text.secondary">
-              {/* the first 5 characters */}
-              {file.fileName.substring(0, 10)}...
-            </Typography>
-          </Box>
+          <OtherFile
+            height={height ? height : 40}
+            src={file.fileUrl}
+            fileName={file.fileName}
+            width={width ? width : 40}
+            displayFile={displayFile}
+          />
         );
       }
     }

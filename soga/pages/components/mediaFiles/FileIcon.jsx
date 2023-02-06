@@ -6,6 +6,7 @@ import {
   DocxIcon,
   XlsIcon,
   PptIcon,
+  File,
 } from "../../../assets/Icons";
 
 const FileIcone = ({ fileType }) => {
@@ -43,7 +44,7 @@ const FileIcone = ({ fileType }) => {
     } else if (fileType.includes("audio")) {
       return <AudioIcon height={25} width={25} />;
     }
-    return "Hello";
+    return <File height={25} width={25} />;
   }
 };
 

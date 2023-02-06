@@ -8,6 +8,7 @@ import ProjectSectionTop from "./ProjectSectionTop";
 import ProjectSectionBottom from "./ProjectSectionBottom";
 import TasksViews from "./TasksViews";
 import { useProject, useSubProjectsTasks } from "../../../hooks/projects";
+import { useTheme } from "@mui/styles";
 
 // Get a projects which much the Project Id
 
@@ -19,6 +20,8 @@ const ProjectSection = () => {
   const tasks = useSubProjectsTasks(projectId, subProjectId);
   const [tabValue, setTabValue] = useState("Tasks");
   const [taskViewValue, setTaskViewValue] = useState("kanban");
+
+  const theme = useTheme();
 
   const valueChangeHandler = (e, newValue) => {
     setTabValue(newValue);
@@ -33,6 +36,7 @@ const ProjectSection = () => {
       sx={{
         height: "100vh",
         width: "100vw",
+        backgroundColor: theme.colors.background,
       }}
     >
       {project ? (

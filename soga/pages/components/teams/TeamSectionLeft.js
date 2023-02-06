@@ -249,7 +249,7 @@ const TopBar = ({
         >
           <TopicRoundedIcon color={showRight ? "secondary" : "action"} />
         </IconButton>
-        <IconButton
+        {/* <IconButton
           onClick={() => {
             showProjects();
           }}
@@ -258,7 +258,7 @@ const TopBar = ({
             fontSize="medium"
             color={showRight ? "secondary" : "action"}
           />
-        </IconButton>
+        </IconButton> */}
         <IconButton
           onClick={() => {
             showParticipant();
@@ -587,7 +587,7 @@ const MessageComponentForTopic = ({
                         display: "flex",
                         m: 1,
                         // To be at the right of the message
-                        width: "200px",
+                        width: "100%",
                         borderRadius: "5px",
                       }}
                       onClick={() => handleShowTeamFile(file)}

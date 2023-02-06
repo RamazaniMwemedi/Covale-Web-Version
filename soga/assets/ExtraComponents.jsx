@@ -7,6 +7,7 @@ const {
   PptIcon,
   ImageIcon,
   VideoIcon,
+  File,
 } = require("./Icons");
 
 import * as React from "react";
@@ -359,6 +360,41 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
   );
 });
 
+const OtherFile = React.memo(
+  ({ src, fileName, width, height, displayFile }) => {
+    const Widget = styled("div")(({ theme }) => ({
+      borderRadius: 6,
+      maxWidth: "100%",
+      margin: displayFile ? "auto" : "none",
+      position: "relative",
+      backgroundColor: displayFile
+        ? theme.colors.textBackground
+        : "transparent",
+      backdropFilter: "blur(40px)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }));
+    return (
+      <Widget>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <File height={height} width={width} />
+          <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
+            {/* First 10 characters and .{fileExtension} */}
+            {fileName.substring(0, 10)}...{fileName.split(".").pop()}
+          </Typography>
+        </Box>
+      </Widget>
+    );
+  }
+);
+
 module.exports = {
   ImageComponent,
   Video,
@@ -367,4 +403,5 @@ module.exports = {
   Docx,
   Xls,
   Ppt,
+  OtherFile,
 };
