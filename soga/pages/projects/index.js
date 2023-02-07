@@ -25,7 +25,11 @@ const Project = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const token = userStore.user ? userStore.user.token : null;
-  const projects = useGetProjects(token);
+  const projectsStore = useSelector((state) => state.projects);
+  const projects = projectsStore ? projectsStore.projects : [];
+
+  // Hooks
+  useGetProjects(token);
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");

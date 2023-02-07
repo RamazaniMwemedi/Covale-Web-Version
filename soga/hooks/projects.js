@@ -7,21 +7,15 @@ const { addProjects } = require("../Redux/slices/projects");
 
 const useGetProjects = (token) => {
   const dispatch = useDispatch();
-  const [projects, setProjects] = useState(null);
 
   useEffect(() => {
     if (token) {
       getProjects(token).then((res) => {
         dispatch(addProjects(res));
-        setProjects(res);
       });
     }
 
-    return () => {
-      setProjects(null);
-    };
   }, [token]);
-  return projects;
 };
 
 const useProject = (id) => {

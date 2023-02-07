@@ -15,8 +15,10 @@ import Image from "next/image";
 import StyledTreeItem from "./StyledItemRoot";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
+import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import NewProject from "./NewProject";
 
 const closedMixin = (theme) => ({
   //
@@ -58,6 +60,9 @@ const Drawer = styled(MuiDrawer, {
 export default function ProjectLeft() {
   const projectStore = useSelector((state) => state.projects);
   const theme = useTheme();
+  const [showPinnedProjects, setShowPinnedProjects] = React.useState(true);
+  const [showAllProjects, setShowAllProjects] = React.useState(true);
+
   return (
     <Box
       sx={{
@@ -97,40 +102,59 @@ export default function ProjectLeft() {
             {/* Pinned projects */}
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography variant="h6">Pinned</Typography>
-              <IconButton>
-                <ExpandMoreIcon />
+              <IconButton
+                onClick={() => {
+                  setShowPinnedProjects(!showPinnedProjects);
+                }}
+              >
+                {showPinnedProjects ? (
+                  <ExpandLessRoundedIcon />
+                ) : (
+                  <ExpandMoreIcon />
+                )}
               </IconButton>
             </Box>
             <br />
             {/* All projects */}
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography variant="h6">All Projects</Typography>
-              <IconButton>
-                <ExpandMoreIcon />
+              <IconButton
+                onClick={() => {
+                  setShowAllProjects(!showAllProjects);
+                }}
+              >
+                {showAllProjects ? (
+                  <ExpandLessRoundedIcon />
+                ) : (
+                  <ExpandMoreIcon />
+                )}
               </IconButton>
             </Box>
             {/* Tree */}
             <Box>
-              {projectStore.projects ? (
-                <ProjectTrees projects={projectStore.projects} />
-              ) : (
-                "Loading ..."
-              )}
+              {showAllProjects ? (
+                projectStore.projects ? (
+                  <ProjectTrees projects={projectStore.projects} />
+                ) : (
+                  "Loading ..."
+                )
+              ) : null}
             </Box>
           </Box>
-          <Button
+
+          <Box
             sx={{
               position: "absolute",
               bottom: 8,
               width: "98%",
-              marginLeft: 0.3,
-              textTransform: "none",
+              display: "flex",
+              justifyContent: "center",
             }}
             variant="contained"
             color="secondary"
           >
-            New Project
-          </Button>
+            <NewProject />
+          </Box>
         </Box>
       </Drawer>
     </Box>
@@ -152,30 +176,31 @@ function ProjectTrees({ projects }) {
         overflowY: "auto",
       }}
     >
-      {projects.map((project) => {
-        return (
-          <StyledTreeItem
-            key={project.id}
-            nodeId={project.id}
-            label={<ProjectLabel name={project.title} />}
-            onClick={(e) => {
-              e.preventDefault();
-              router.push(
-                `/projects/?project=${project.id}`,
-                `/projects/${project.id}`,
-                {
-                  shallow: true,
+      {projects.length > 0 ? (
+        projects.map((project) => {
+          return (
+            <StyledTreeItem
+              key={project.id}
+              nodeId={project.id}
+              label={<ProjectLabel name={project.title} />}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(
+                  `/projects/?project=${project.id}`,
+                  `/projects/${project.id}`,
+                  {
+                    shallow: true,
+                  }
+                );
+              }}
+              onDoubleClick={() => {
+                if (project.subProjects.length == 0) {
+                  alert("Its one");
                 }
-              );
-            }}
-            onDoubleClick={() => {
-              if (project.subProjects.length == 0) {
-                alert("Its one");
-              }
-            }}
-          >
-            {project.subProjects.length > 1
-              ? project.subProjects.map((sub) => {
+              }}
+            >
+              {project.subProjects.length > 1 ? (
+                project.subProjects.map((sub) => {
                   return (
                     <StyledTreeItem
                       onClick={(e) => {
@@ -194,10 +219,40 @@ function ProjectTrees({ projects }) {
                     />
                   );
                 })
-              : null}
-          </StyledTreeItem>
-        );
-      })}
+              ) : (
+                <Box>
+                  <Typography variant="h6">No Sub Projects</Typography>
+                </Box>
+              )}
+            </StyledTreeItem>
+          );
+        })
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            width: "100%",
+            backgroundColor: theme.colors.textBackground,
+            borderRadius: "8px",
+            p: 1,
+          }}
+        >
+          <Typography variant="h6">No Projects</Typography>
+          <br />
+          <Box>
+            <Typography variant="subtitle1">
+              Click the "New Project" button
+            </Typography>
+            <Typography variant="subtitle1">
+              below to create a new project.
+            </Typography>
+          </Box>
+        </Box>
+      )}
     </TreeView>
   );
 }

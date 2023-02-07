@@ -10,7 +10,7 @@ const getProjects = async (token) => {
   return response.data;
 };
 
-const createNewProjeect = async (token, title, description) => {
+const createNewProject = async (token, title, description) => {
   const response = await axios.post(
     `${SERVER_ADDRESS}/api/project`,
     { title, description },
@@ -25,5 +25,5 @@ const createNewProjeect = async (token, title, description) => {
 
 module.exports = {
   getProjects,
-  createNewProjeect,
+  createNewProject,
 };
