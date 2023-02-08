@@ -19,6 +19,7 @@ import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import NewProject from "./NewProject";
+import NewSubProject from "./NewSubProject";
 
 const closedMixin = (theme) => ({
   //
@@ -62,7 +63,6 @@ export default function ProjectLeft() {
   const theme = useTheme();
   const [showPinnedProjects, setShowPinnedProjects] = React.useState(true);
   const [showAllProjects, setShowAllProjects] = React.useState(true);
-
   return (
     <Box
       sx={{
@@ -72,10 +72,13 @@ export default function ProjectLeft() {
       <CssBaseline />
       <Drawer variant="permanent">
         {/* Main Box */}
+
         <Box
           sx={{
             backgroundColor: theme.colors.background1,
-            height: "100vh",
+            // height: "100vh",
+            // No scrallbar
+            overflow: "hidden",
           }}
         >
           {/* Project box */}
@@ -130,32 +133,42 @@ export default function ProjectLeft() {
                 )}
               </IconButton>
             </Box>
-            {/* Tree */}
+            <br />
             <Box>
-              {showAllProjects ? (
-                projectStore.projects ? (
-                  <ProjectTrees projects={projectStore.projects} />
-                ) : (
-                  "Loading ..."
-                )
-              ) : null}
+              {/* Tree */}
+              <Box
+                sx={{
+                  // a list of elements that will be scrolled
+                  // overflow: "auto",
+                  height: "100%",
+                  maxHeight: "100%",
+                  width: "100%",
+                  maxWidth: "100%",
+                  // position: "relative",
+                  // display: "flex",
+                  // flexDirection: "column",
+                  // alignItems: "stretch",
+                  // justifyContent: "flex-start",
+                  // gap: "10px",
+                  // padding: "10px",
+                  backgroundColor: theme.colors.background1,
+                  // borderRadius: "8px",
+                  // border: "1px solid darkgray",
+                }}
+              >
+                {showAllProjects ? (
+                  projectStore.projects ? (
+                    <ProjectTrees projects={projectStore.projects} />
+                  ) : (
+                    "Loading ..."
+                  )
+                ) : null}
+              </Box>
             </Box>
           </Box>
-
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: 8,
-              width: "98%",
-              display: "flex",
-              justifyContent: "center",
-            }}
-            variant="contained"
-            color="secondary"
-          >
-            <NewProject />
-          </Box>
         </Box>
+        {/* New Project */}
+        <NewProject />
       </Drawer>
     </Box>
   );
@@ -170,10 +183,11 @@ function ProjectTrees({ projects }) {
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
       sx={{
-        height: "auto",
+        height: "650px",
         flexGrow: 1,
         maxWidth: 400,
-        overflowY: "auto",
+        // scrallbar
+        overflow: "auto",
       }}
     >
       {projects.length > 0 ? (
@@ -220,8 +234,34 @@ function ProjectTrees({ projects }) {
                   );
                 })
               ) : (
-                <Box>
-                  <Typography variant="h6">No Sub Projects</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "80%",
+                    width: "100%",
+                    borderRadius: "8px",
+                    p: 1,
+                  }}
+                >
+                  <Typography variant="body1">No Sub projects</Typography>
+                  <Box>
+                    <Typography variant="caption">
+                      Click the button below to
+                    </Typography>
+                    <br />
+                    <Typography variant="caption">
+                      create a new sub project.
+                    </Typography>
+                  </Box>
+                  <NewSubProject
+                    project={{
+                      id: project.id,
+                      title: project.title,
+                    }}
+                  />
                 </Box>
               )}
             </StyledTreeItem>

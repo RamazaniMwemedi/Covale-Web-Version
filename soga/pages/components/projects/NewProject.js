@@ -14,8 +14,12 @@ import Select from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 import { TextField } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createNewProject } from "../../../services/projects";
+import { addProject } from "../../../Redux/slices/projects";
+import { useRouter } from "next/router";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SaveIcon from "@mui/icons-material/Save";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,11 +53,12 @@ export default function NewProject() {
     <React.Fragment>
       <Button
         sx={{
-          position: "absolute",
+          position: "fixed",
           bottom: 8,
-          width: "98%",
+          width: "20%",
           marginLeft: 0.3,
           textTransform: "none",
+          ml: 2,
         }}
         variant="contained"
         color="secondary"
@@ -95,13 +100,28 @@ function ProjectForm({ handleClose }) {
   const classes = useStyles();
   const [projectName, setProjectName] = React.useState("");
   const [projectDescription, setProjectDescription] = React.useState("");
+  const [creating, setCreating] = React.useState(true);
+  const dispatch = useDispatch();
+  const router = useRouter();
   //   Loged in user token from redux
   const userStore = useSelector((state) => state.user);
   const token = userStore ? userStore.user.token : null;
 
   //   Create Project Function
-  const createProject = () => {
-    createNewProject(token, projectName, projectDescription);
+  const createProject = async () => {
+    setCreating(true);
+    const respose = await createNewProject(
+      token,
+      projectName,
+      projectDescription
+    );
+    if (respose) {
+      console.log(respose);
+      dispatch(addProject(respose));
+      router.push(`/projects/${respose.id}`);
+      setCreating(false);
+      handleClose();
+    }
   };
 
   return (
@@ -140,14 +160,26 @@ function ProjectForm({ handleClose }) {
         >
           Cancel
         </Button>
-        <Button
-          className={classes.button}
-          variant="contained"
-          color="secondary"
-          onClick={createProject}
-        >
-          Create
-        </Button>
+        {creating ? (
+          <LoadingButton
+            loading
+            loadingPosition="start"
+            className={classes.button}
+            startIcon={<SaveIcon />}
+            variant="outlined"
+          >
+            Creating
+          </LoadingButton>
+        ) : (
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="secondary"
+            onClick={createProject}
+          >
+            Create
+          </Button>
+        )}
       </Box>
     </form>
   );

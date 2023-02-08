@@ -76,7 +76,7 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
             <Breadcrumbs aria-label="breadcrumb">
               {/* <Link underline="hover" color="inherit" href="/">
           </Link> */}
-              {project.subProjects.length != 0
+              {project.subProjects.length > 0
                 ? project.subProjects.map((subProject) => (
                     <Typography
                       sx={{
@@ -89,9 +89,7 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
                   ))
                 : null}
               {}
-              {/* <Typography>Sub 1</Typography>
-          <Typography>Sub 2</Typography>
-          <Typography>Sub 3</Typography> */}
+              <Typography>No sub projects</Typography>
             </Breadcrumbs>
           </Box>
           {/* Third Box */}
