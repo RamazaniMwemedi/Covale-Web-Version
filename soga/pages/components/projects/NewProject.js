@@ -100,7 +100,7 @@ function ProjectForm({ handleClose }) {
   const classes = useStyles();
   const [projectName, setProjectName] = React.useState("");
   const [projectDescription, setProjectDescription] = React.useState("");
-  const [creating, setCreating] = React.useState(true);
+  const [creating, setCreating] = React.useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   //   Loged in user token from redux

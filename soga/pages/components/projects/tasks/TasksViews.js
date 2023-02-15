@@ -4,12 +4,24 @@ import React from "react";
 import KanbanView from "./KanbanView";
 import ListView from "./ListView";
 import TableView from "./TableView";
+import TasksTabPanel from "./TasksTabPanel";
 
 const TasksViews = ({ taskViewValue }) => {
+  const [value, setValue] = React.useState("kanban");
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
-    <Box>
+    <Box sx={{
+      width: "100%",
+    }}>
+      <TasksTabPanel
+        taskViewValue={value}
+        taskViewValueChangeHandler={handleChange}
+      />
       <Box>
-        <ViewToReturn taskViewValue={taskViewValue} />
+        <ViewToReturn taskViewValue={value} />
       </Box>
     </Box>
   );
@@ -17,7 +29,8 @@ const TasksViews = ({ taskViewValue }) => {
 
 export default TasksViews;
 
-const ViewToReturn = ({taskViewValue}) => {
+const ViewToReturn = ({ taskViewValue }) => {
+  console.log("taskViewValue", taskViewValue);
   switch (taskViewValue) {
     case "kanban":
       return <KanbanView />;

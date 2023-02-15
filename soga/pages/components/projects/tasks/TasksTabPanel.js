@@ -35,6 +35,9 @@ export default function TasksTabPanel({
         <Tab
           value="list"
           sx={{ textTransform: "none", borderRadius: "10px" }}
+          onClick={() => {
+            console.log("ListPanelLable clicked");
+          }}
           label={<ListPanelLable value={taskViewValue} />}
         />
       </Tabs>

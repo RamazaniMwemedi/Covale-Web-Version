@@ -6,7 +6,7 @@ const { useSelector } = require("react-redux");
 
 import ProjectSectionTop from "./ProjectSectionTop";
 import ProjectSectionBottom from "./ProjectSectionBottom";
-import TasksViews from "./TasksViews";
+import TasksViews from "./tasks/TasksViews";
 import { useProject, useSubProjectsTasks } from "../../../hooks/projects";
 import { useTheme } from "@mui/styles";
 
@@ -18,12 +18,13 @@ const ProjectSection = () => {
   const subProjectId = router.query.subproject;
   const project = useProject(projectId);
   const tasks = useSubProjectsTasks(projectId, subProjectId);
-  const [tabValue, setTabValue] = useState("Tasks");
+  const [tabValue, setTabValue] = useState("Overview");
   const [taskViewValue, setTaskViewValue] = useState("kanban");
 
   const theme = useTheme();
 
   const valueChangeHandler = (e, newValue) => {
+    e.preventDefault();
     setTabValue(newValue);
   };
 
@@ -34,8 +35,8 @@ const ProjectSection = () => {
   return (
     <Box
       sx={{
-        height: "100vh",
-        width: "100vw",
+        height: "100%",
+        width: "100%",
         backgroundColor: theme.colors.background,
       }}
     >
@@ -52,11 +53,6 @@ const ProjectSection = () => {
             taskViewValueChangeHandler={taskViewValueChangeHandler}
             project={project}
           />
-          <ComponetToDisplayTasks
-            tabValue={tabValue}
-            taskViewValue={taskViewValue}
-            project={project}
-          />
         </>
       ) : (
         <Box>
@@ -67,13 +63,3 @@ const ProjectSection = () => {
   );
 };
 export default ProjectSection;
-
-const ComponetToDisplayTasks = ({ tabValue, taskViewValue, project }) => {
-  switch (tabValue) {
-    case "Tasks":
-      return <TasksViews taskViewValue={taskViewValue} project={project} />;
-
-    default:
-      return null;
-  }
-};

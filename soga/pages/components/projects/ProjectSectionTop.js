@@ -76,20 +76,38 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
             <Breadcrumbs aria-label="breadcrumb">
               {/* <Link underline="hover" color="inherit" href="/">
           </Link> */}
-              {project.subProjects.length > 0
-                ? project.subProjects.map((subProject) => (
-                    <Typography
-                      sx={{
-                        color: subProjectId == subProject.id ? "red" : "blue",
-                      }}
-                      key={subProject.id}
-                    >
-                      {subProject.title}{" "}
-                    </Typography>
-                  ))
-                : null}
-              {}
-              <Typography>No sub projects</Typography>
+              {project.subProjects.length > 0 ? (
+                project.subProjects.map((subProject) => (
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: subProjectId == subProject.id ? "white" : "black",
+                      // Appear like a button
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      backgroundColor:
+                        subProjectId == subProject.id
+                          ? theme.palette.secondary.main
+                          : "white",
+                      p: 0.5,
+                    }}
+                    key={subProject.id}
+                    onClick={() => {
+                      router.push(
+                        `/projects/${project.id}/${subProject.id}`,
+                        `/projects/${project.id}/${subProject.id}`,
+                        {
+                          shallow: true,
+                        }
+                      );
+                    }}
+                  >
+                    {subProject.title}{" "}
+                  </Typography>
+                ))
+              ) : (
+                <Typography>No sub projects</Typography>
+              )}
             </Breadcrumbs>
           </Box>
           {/* Third Box */}
@@ -142,13 +160,18 @@ function ProjectTopTabs({ valueChangeHandler, value }) {
         aria-label="secondary tabs example"
       >
         <Tab
+          value="Overview"
+          label={<Typography>Overview</Typography>}
+          sx={{ textTransform: "none" }}
+        />
+        <Tab
           value="Tasks"
           label={<Typography>Tasks</Typography>}
           sx={{ textTransform: "none" }}
         />
         <Tab
-          value="Overview"
-          label={<Typography>Overview</Typography>}
+          value="Files"
+          label={<Typography>Files</Typography>}
           sx={{ textTransform: "none" }}
         />
       </Tabs>

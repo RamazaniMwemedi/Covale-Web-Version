@@ -9,7 +9,7 @@ const TablePanelLabbel = ({ value }) => {
       sx={{
         display: "flex",
         backgroundColor: theme.colors.background1,
-        p: 0.6,
+        // p: 0.6,
         borderRadius: 2,
         color: value === "table" ? "#9c27b0" : "GrayText",
       }}

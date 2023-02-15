@@ -2,7 +2,7 @@ const axios = require("axios");
 const { SERVER_ADDRESS } = require("../config/index");
 
 const getProjects = async (token) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/project`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/project`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -12,7 +12,7 @@ const getProjects = async (token) => {
 
 const createNewProject = async (token, title, description) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/project`,
+    `${SERVER_ADDRESS}/api/v1/project`,
     { title, description },
     {
       headers: {
@@ -31,7 +31,7 @@ const createNewSubProject = async (
   options
 ) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/subproject/${projectId}`,
+    `${SERVER_ADDRESS}/api/v1/subproject/${projectId}`,
     {
       title,
       description,

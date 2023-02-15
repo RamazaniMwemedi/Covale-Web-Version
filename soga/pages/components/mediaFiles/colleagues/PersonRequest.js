@@ -12,13 +12,13 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import userServices from "../../../services/user";
 
-const PersonRequest = ({ user, token }) => {
+const PersonRequest = ({ user: colleague, token }) => {
   const theme = useTheme();
   const [accepting, setAccepeting] = useState(false);
   const [showCommunication, setShowCommunication] = useState(false);
   return (
     <>
-      {user && (
+      {colleague && (
         <Box
           sx={{
             width: "300px",
@@ -54,10 +54,10 @@ const PersonRequest = ({ user, token }) => {
                   gap: 1,
                 }}
               >
-                <Typography variant="h6">{user.firstname}</Typography>
-                <Typography variant="h6">{user.lastname}</Typography>
+                <Typography variant="h6">{colleague.firstname}</Typography>
+                <Typography variant="h6">{colleague.lastname}</Typography>
               </Box>
-              <Typography variant="caption">@{user.username}</Typography>
+              <Typography variant="caption">@{colleague.username}</Typography>
             </Box>
           </Box>
           <br />
@@ -94,7 +94,7 @@ const PersonRequest = ({ user, token }) => {
                     onClick={() => {
                       setAccepeting(true);
                       userServices
-                        .acceptFriendRequest(user.id, token)
+                        .acceptFriendRequest(colleague.id, token)
                         .then((res) => {
                           setShowCommunication(true);
                         });
@@ -111,7 +111,7 @@ const PersonRequest = ({ user, token }) => {
                   width: "120px",
                 }}
                 onClick={() => {
-                  userServices.removeFriendRequest(user.id, token);
+                  userServices.removeFriendRequest(colleague.id, token);
                 }}
               >
                 {" "}

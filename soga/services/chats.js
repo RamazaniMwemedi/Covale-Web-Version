@@ -3,7 +3,7 @@ const { SERVER_ADDRESS } = require("../config/index");
 // http://localhost:3000/
 const sendMessege = async (token, id, formData) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/chats/message/${id}`,
+    `${SERVER_ADDRESS}/api/v1/chats/message/${id}`,
     formData,
     {
       headers: {
@@ -16,7 +16,7 @@ const sendMessege = async (token, id, formData) => {
 
 const sendMessageToColleague = async (token, colleaguesId, message) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/chats/message/colleague/${colleaguesId}`,
+    `${SERVER_ADDRESS}/api/v1/chats/message/colleague/${colleaguesId}`,
     {
       message,
     },
@@ -31,16 +31,17 @@ const sendMessageToColleague = async (token, colleaguesId, message) => {
 
 // Get all chats
 const getChats = async (token) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/chats`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/chats`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log("response.data", response);
   return response.data;
 };
 
 const getChatById = async (token, id) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/chats/${id}`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/chats/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

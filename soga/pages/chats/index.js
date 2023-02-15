@@ -66,8 +66,8 @@ export default function Chat() {
   // Global States
   const dispatch = useDispatch();
   const theme = useTheme();
-  const userStore = useSelector((state) => state.user);
   const userLoading = useCheckLogedinUser();
+  const userStore = useSelector((state) => state.user);
   const user = userStore ? userStore.user : null;
   const router = useRouter();
   const id = router.query.id;

@@ -1,9 +1,9 @@
 import axios from "axios";
-const { SERVER_ADDRESS } = require("../config/index");
+const { SERVER_ADDRESS, SECRETE_SERVER_ADDRESS } = require("../config/index");
 
 const allUsers = async (token) => {
   const response = await axios.get(
-    `${SERVER_ADDRESS}/api/authorizeduser/friend/explore`,
+    `${SERVER_ADDRESS}/api/v1/users/colleague/explore`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -16,7 +16,7 @@ const allUsers = async (token) => {
 // Add a friend
 const addFriendById = async (id, token) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/authorizeduser/friend/add/${id}`,
+    `${SERVER_ADDRESS}/api/v1/users/colleague/add/${id}`,
     {},
     {
       headers: {
@@ -29,7 +29,7 @@ const addFriendById = async (id, token) => {
 
 const myFriends = async (token) => {
   const response = await axios.get(
-    `${SERVER_ADDRESS}/api/authorizeduser/friend/myFriends`,
+    `${SERVER_ADDRESS}/api/v1/users/colleague/mycolleagues`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ const myFriends = async (token) => {
 // Friend Requests Received
 const friendReqRecieved = async (token) => {
   const response = await axios.get(
-    `${SERVER_ADDRESS}/api/authorizeduser/friend/friendReqRecieved`,
+    `${SERVER_ADDRESS}/api/v1/users/colleague/colleaguesReqRecieved`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ const friendReqRecieved = async (token) => {
 // Friend Requests Sent
 const friendReqSent = async (token) => {
   const response = await axios.get(
-    `${SERVER_ADDRESS}/api/authorizeduser/friend/friendReqSent`,
+    `${SERVER_ADDRESS}/api/v1/users/colleague/colleagueReqSent`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -67,23 +67,51 @@ const friendReqSent = async (token) => {
 };
 
 // Accept Friend Request
-const acceptFriendRequest = async (id, token) => {
-  const response = await axios.post(
-    `${SERVER_ADDRESS}/api/authorizeduser/friend/accept/${id}`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+const acceptFriendRequest = async (id, token, secreteServerToken) => {
+  if (token && secreteServerToken && id) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/v1/users/colleague/accept//${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status === 201) {
+      // Request for asymmetric keys
+      const response2 = await axios.post(
+        `${SECRETE_SERVER_ADDRESS}/api/v1/keys`,
+        {
+          modelName: "Chat",
+          modelId: response.data.chatId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${secreteServerToken}`,
+          },
+        }
+      );
+      console.log("res from PersonReq Services :>>", {
+        status: response.status,
+        data: response.data,
+        keys: response2.data,
+      });
+
+      // Return
+      return {
+        status: response.status,
+        data: response.data,
+        keys: response2.data,
+      };
     }
-  );
-  return response.status;
+  }
 };
 
 // Remove Friend Request
 const removeFriendRequest = async (id, token) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/authorizeduser/friend/remove/${id}`,
+    `${SERVER_ADDRESS}/api/v1/users/colleague/remove/${id}`,
     {},
     {
       headers: {
@@ -97,7 +125,7 @@ const removeFriendRequest = async (id, token) => {
 //Cancel Friend Request
 const cancelFriendRequest = async (id, token) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/authorizeduser/friend/cancel/${id}`,
+    `${SERVER_ADDRESS}/api/v1/users/colleague/cancel/${id}`,
     {},
     {
       headers: {
@@ -112,7 +140,7 @@ const cancelFriendRequest = async (id, token) => {
 const findUserById = async (token, id) => {
   if (token) {
     try {
-      const response = await axios.get(`${SERVER_ADDRESS}/api/users/${id}`, {
+      const response = await axios.get(`${SERVER_ADDRESS}/api/v1/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -120,7 +148,8 @@ const findUserById = async (token, id) => {
       return response;
     } catch (error) {
       // Redirect to the login page
-      window.location.href = "/login";
+      console.log("Error in findUserById", error);
+      // window.location.href = "/login";
     }
   }
 };

@@ -2,7 +2,7 @@ import axios from "axios";
 const { SERVER_ADDRESS } = require("../config/index");
 
 const getTeams = async (token) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/team`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/team`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -11,7 +11,7 @@ const getTeams = async (token) => {
 };
 
 const getTeamById = async (token, id) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/team/${id}`, {
+  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/team/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -28,7 +28,7 @@ const createNewTeam = async (
 ) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/team`,
+      `${SERVER_ADDRESS}/api/v1/team`,
       { teamName, isPrivate, teamMission, teamVission },
       {
         headers: {
@@ -43,7 +43,7 @@ const inviteFriends = async (token, teamId, friends) => {
   if (token) {
     if (friends.length > 0) {
       const response = await axios.post(
-        `${SERVER_ADDRESS}/api/team/invite`,
+        `${SERVER_ADDRESS}/api/v1/team/invite`,
         { teamId, friends },
         {
           headers: {
@@ -59,7 +59,7 @@ const inviteFriends = async (token, teamId, friends) => {
 const acceptInvite = async (userToken, invitationToken) => {
   if (userToken && invitationToken) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/team/invite/accept`,
+      `${SERVER_ADDRESS}/api/v1/team/invite/accept`,
       { token: invitationToken },
       {
         headers: {
@@ -74,7 +74,7 @@ const acceptInvite = async (userToken, invitationToken) => {
 const declineInvite = async (userToken, invitationToken) => {
   if (userToken && invitationToken) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/team/decline`,
+      `${SERVER_ADDRESS}/api/v1/team/decline`,
       { token: invitationToken },
       {
         headers: {
@@ -90,7 +90,7 @@ const declineInvite = async (userToken, invitationToken) => {
 const sendTeamMessege = async (token, id, formData) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/team/messages/new/${id}`,
+      `${SERVER_ADDRESS}/api/v1/team/messages/new/${id}`,
       formData,
       {
         headers: {
@@ -105,7 +105,7 @@ const sendTeamMessege = async (token, id, formData) => {
 // delete TEAM BY ID
 const deleteTeamById = async (token, id) => {
   if (token) {
-    const response = await axios.delete(`${SERVER_ADDRESS}/api/team/${id}`, {
+    const response = await axios.delete(`${SERVER_ADDRESS}/api/v1/team/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -117,7 +117,7 @@ const deleteTeamById = async (token, id) => {
 const createATopic = async (token, teamId, topicObject) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/team/${teamId}/topics/new`,
+      `${SERVER_ADDRESS}/api/v1/team/${teamId}/topics/new`,
       topicObject,
       {
         headers: {
@@ -133,7 +133,7 @@ const createATopic = async (token, teamId, topicObject) => {
 const replyToTopic = async (token, topicId, messageObject) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/team/topics/${topicId}/reply`,
+      `${SERVER_ADDRESS}/api/v1/team/topics/${topicId}/reply`,
       messageObject,
       {
         headers: {

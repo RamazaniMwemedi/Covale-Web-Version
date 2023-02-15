@@ -213,7 +213,7 @@ function ProjectTrees({ projects }) {
                 }
               }}
             >
-              {project.subProjects.length > 1 ? (
+              {project.subProjects.length > 0 ? (
                 project.subProjects.map((sub) => {
                   return (
                     <StyledTreeItem

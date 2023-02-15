@@ -17,18 +17,15 @@ export default function Explore() {
 
   const token = user ? user.token : null;
 
-  React.useEffect(
-    (router, user) => {
-      // Loged in user from localStorage
-      const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
-      if (!signedInUser) {
-        router.push("/");
-      } else {
-        setUser(signedInUser);
-      }
-    },
-    [user]
-  );
+  React.useEffect(() => {
+    // Loged in user from localStorage
+    const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
+    if (!signedInUser) {
+      router.push("/");
+    } else {
+      setUser(signedInUser);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (token) {

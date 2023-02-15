@@ -4,7 +4,7 @@ const { SERVER_ADDRESS } = require("../config/index");
 const getallNotifications = async (token) => {
   if (token) {
     try {
-      const response = await axios.get(`${SERVER_ADDRESS}/api/notification`, {
+      const response = await axios.get(`${SERVER_ADDRESS}/api/v1/notification`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -19,7 +19,7 @@ const getallNotifications = async (token) => {
 const deleteNotification = async (token, id) => {
   try {
     const response = await axios.delete(
-      `${SERVER_ADDRESS}/api/notification/${id}`,
+      `${SERVER_ADDRESS}/api/v1/notification/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -3,7 +3,7 @@ const baseUrl = "https://covale.herokuapp.com";
 
 const sendMessege = async (friendId, token, messege) => {
   const response = await axios.post(
-    `${baseUrl}/api/messege`,
+    `${baseUrl}/api/v1/messege`,
     { messege, friendId },
     {
       headers: {

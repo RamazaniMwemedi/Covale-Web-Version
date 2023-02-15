@@ -12,13 +12,17 @@ const userSlice = createSlice({
     removeUser(state) {
       state.user = initialState;
     },
+    addKeys(state, { payload }) {
+      state.user.keys = [payload];
+    },
   },
 });
 
-const { addUser, removeUser } = userSlice.actions;
+const { addUser, removeUser, addKeys } = userSlice.actions;
 const reducer = userSlice.reducer;
 module.exports = {
   reducer,
   addUser,
+  addKeys,
   removeUser,
 };
