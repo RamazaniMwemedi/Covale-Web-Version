@@ -39,21 +39,23 @@ const useCheckLogedinUser = () => {
 
     if (token) {
       findUserById(token, logedInUser.id).then((res) => {
-        if (res.status != 200) {
+        if (!res) {
           router.push("/login");
         }
-        userObject = {
-          id: res.data.id,
-          token,
-          username: res.data.username,
-          firstname: res.data.firstname,
-          lastname: res.data.lastname,
-          birthday: res.data.birthday,
-          gender: res.data.gender,
-          email: res.data.email,
-        };
-        dispatch(addUser(userObject));
-        setloading(false);
+        if (res) {
+          userObject = {
+            id: res.data.id,
+            token,
+            username: res.data.username,
+            firstname: res.data.firstname,
+            lastname: res.data.lastname,
+            birthday: res.data.birthday,
+            gender: res.data.gender,
+            email: res.data.email,
+          };
+          dispatch(addUser(userObject));
+          setloading(false);
+        }
       });
     }
     return () => {

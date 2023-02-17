@@ -29,236 +29,9 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-const tasks = [
-  // In Pending
-  {
-    title: "Task 1",
-    description: "Description of task 1",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-14"),
-    endDate: new Date("2023-02-15"),
-    status: "In Pending",
-    createdAt: new Date("2023-02-14"),
-    flag: "High",
-    subtasks: [
-      {
-        title: "Subtask 1",
-        description: "Description of subtask 1",
-        assignor: "user1",
-        assignees: ["user2", "user3"],
-        startDate: new Date("2023-02-14"),
-        endDate: new Date("2023-02-15"),
-      },
-    ],
-  },
-  {
-    title: "Task 2",
-    description: "Description of task 2",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-14"),
-    endDate: new Date("2023-02-16"),
-    status: "In Pending",
-    createdAt: new Date("2023-02-14"),
-  },
-  {
-    title: "Task 3",
-    description: "Description of task 3",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-15"),
-    endDate: new Date("2023-02-17"),
-    status: "In Pending",
-    createdAt: new Date("2023-02-15"),
-  },
-  {
-    title: "Task 4",
-    description: "Description of task 4",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-16"),
-    endDate: new Date("2023-02-18"),
-    status: "In Pending",
-    createdAt: new Date("2023-02-16"),
-  },
-  {
-    title: "Task 5",
-    description: "Description of task 5",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-17"),
-    endDate: new Date("2023-02-19"),
-    status: "In Pending",
-    createdAt: new Date("2023-02-17"),
-  },
-  {
-    title: "Task 6",
-    description: "Description of task 6",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-18"),
-    endDate: new Date("2023-02-20"),
-    status: "In Pending",
-    createdAt: new Date("2023-02-18"),
-  },
-  {
-    title: "Task 7",
-    description: "Description of task 7",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-19"),
-    endDate: new Date("2023-02-21"),
-    status: "In Pending",
-    createdAt: new Date("2023-02-19"),
-  },
+import AttachFileRoundedIcon from "@mui/icons-material/AttachFileRounded";
 
-  // In Progress
-  {
-    title: "Task 8",
-    description: "Description of task 8",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-10"),
-    endDate: new Date("2023-02-12"),
-    status: "In Progress",
-    createdAt: new Date("2023-02-10"),
-    flag: "Medium",
-  },
-  {
-    title: "Task 9",
-    description: "Description of task 9",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-10"),
-    endDate: new Date("2023-02-13"),
-    status: "In Progress",
-    createdAt: new Date("2023-02-10"),
-  },
-  {
-    title: "Task 10",
-    description: "Description of task 10",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-12"),
-    endDate: new Date("2023-02-15"),
-    status: "In Progress",
-    createdAt: new Date("2023-02-12"),
-  },
-  {
-    title: "Task 11",
-    description: "Description of task 11",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-14"),
-    endDate: new Date("2023-02-17"),
-    status: "In Progress",
-    createdAt: new Date("2023-02-14"),
-  },
-  {
-    title: "Task 12",
-    description: "Description of task 12",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-16"),
-    endDate: new Date("2023-02-19"),
-    status: "In Progress",
-    createdAt: new Date("2023-02-16"),
-  },
-  {
-    title: "Task 13",
-    description: "Description of task 13",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-18"),
-    endDate: new Date("2023-02-21"),
-    status: "In Progress",
-    createdAt: new Date("2023-02-18"),
-  },
-  {
-    title: "Task 14",
-    description: "Description of task 14",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-20"),
-    endDate: new Date("2023-02-23"),
-    status: "In Progress",
-    createdAt: new Date("2023-02-20"),
-  },
-  {
-    title: "Task 15",
-    description: "Description of task 15",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-22"),
-    endDate: new Date("2023-02-25"),
-    status: "In Progress",
-    createdAt: new Date("2023-02-22"),
-  },
-  // Completed
-  {
-    title: "Task 16",
-    description: "Description of task 16",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-01"),
-    endDate: new Date("2023-02-03"),
-    status: "Completed",
-    createdAt: new Date("2023-02-01"),
-  },
-  {
-    title: "Task 17",
-    description: "Description of task 17",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-04"),
-    endDate: new Date("2023-02-06"),
-    status: "Completed",
-    createdAt: new Date("2023-02-04"),
-  },
-  {
-    title: "Task 18",
-    description: "Description of task 18",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-07"),
-    endDate: new Date("2023-02-09"),
-    status: "Completed",
-    createdAt: new Date("2023-02-07"),
-  },
-  {
-    title: "Task 19",
-    description: "Description of task 19",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-10"),
-    endDate: new Date("2023-02-12"),
-    status: "Completed",
-    createdAt: new Date("2023-02-10"),
-    flag: "Low",
-  },
-  {
-    title: "Task 20",
-    description: "Description of task 20",
-    assignor: "user1",
-    assignees: ["user2", "user3"],
-    startDate: new Date("2023-02-13"),
-    endDate: new Date("2023-02-15"),
-    status: "Completed",
-    createdAt: new Date("2023-02-13"),
-  },
-  {
-    title: "Task 21",
-    description: "Description of task 21",
-    assignor: "user1",
-    assignees: ["user2"],
-    startDate: new Date("2023-02-16"),
-    endDate: new Date("2023-02-18"),
-    status: "Completed",
-    createdAt: new Date("2023-02-16"),
-  },
-  { status: "New State" },
-];
+const tasks = [];
 
 const KanbanView = ({ taskViewValue }) => {
   const states = ["In Pending", "In Progress", "Completed", "Add Status"];
@@ -306,7 +79,6 @@ const TaskBlock = ({ state, tasks }) => {
           top: 0,
           zIndex: 1,
           padding: "10px",
-          borderBottom: "1px solid #eee",
           backgroundColor: theme.colors.background,
         }}
       >
@@ -325,7 +97,7 @@ const TaskBlock = ({ state, tasks }) => {
           }}
           color="secondary"
         >
-          +
+          <AddRoundedIcon />
         </Button>
       </Box>
       {/* Scrollable container */}
@@ -430,8 +202,56 @@ const TaskComponent = ({ task }) => {
         <Typography variant="body2">Add Sub Task</Typography>
       </Box>
       <Divider sx={{ margin: "10px 0" }} />
-
-      {/* Add more task details as needed */}
+      {/* Assignees */}
+      <Box
+        sx={{
+          display: "flex",
+          gap: "5px",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <AvatarGroup
+          total={
+            task.assignees && task.assignees.length > 3
+              ? task.assignees.length
+              : 3
+          }
+          max={3}
+          sx={{
+            display: "flex",
+            gap: "5px",
+            alignItems: "center",
+            "& .MuiAvatar-root": { width: 30, height: 30, fontSize: 10 },
+          }}
+        >
+          {task.assignees &&
+            task.assignees.map((assignee) => (
+              <Avatar
+                sx={{
+                  width: 30,
+                  height: 30,
+                  fontSize: 10,
+                }}
+              >
+                {assignee}
+              </Avatar>
+            ))}
+        </AvatarGroup>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "5px",
+          }}
+        >
+          <IconButton size="small">
+            <CommentRoundedIcon />
+          </IconButton>
+          <IconButton size="small">
+            <AttachFileRoundedIcon />
+          </IconButton>
+        </Box>
+      </Box>
     </Box>
   );
 };

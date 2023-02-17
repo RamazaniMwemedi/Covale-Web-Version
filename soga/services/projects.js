@@ -10,10 +10,10 @@ const getProjects = async (token) => {
   return response.data;
 };
 
-const createNewProject = async (token, title, description) => {
+const createNewProject = async (project, token) => {
   const response = await axios.post(
     `${SERVER_ADDRESS}/api/v1/project`,
-    { title, description },
+    project,
     {
       headers: {
         Authorization: `Bearer ${token}`,

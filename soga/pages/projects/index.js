@@ -17,6 +17,7 @@ import { removeUser } from "../../Redux/slices/user";
 // Redux
 import PropTypes from "prop-types";
 import { useGetProjects } from "../../hooks/projects";
+import { useGetTeams } from "../../hooks/teams";
 
 const Project = (props) => {
   const theme = useTheme();
@@ -30,6 +31,7 @@ const Project = (props) => {
 
   // Hooks
   useGetProjects(token);
+  useGetTeams(token);
 
   const signoutHandler = () => {
     localStorage.removeItem("logedinUser");
