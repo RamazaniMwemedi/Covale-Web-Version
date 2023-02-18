@@ -5,11 +5,19 @@ import Box from "@mui/material/Box";
 import KanbanLabbel from "./KanbanLabel";
 import TableLabbel from "./TablePanelLabbel";
 import ListPanelLable from "./ListTabLable";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 export default function TasksTabPanel({
   taskViewValue,
   taskViewValueChangeHandler,
+  subProjectId,
 }) {
+   const router = useRouter();
+   const projectId = router.query.project;
+   const project = useSelector((state) =>
+     state.projects.projects.find((project) => project.id === projectId)
+   );
   return (
     <Box sx={{ width: "100%" }}>
       <Tabs
@@ -25,7 +33,9 @@ export default function TasksTabPanel({
         <Tab
           value="kanban"
           sx={{ textTransform: "none", borderRadius: "10px" }}
-          label={<KanbanLabbel value={taskViewValue} />}
+          label={
+            <KanbanLabbel value={taskViewValue} subProjectId={subProjectId} />
+          }
         />
         <Tab
           value="table"

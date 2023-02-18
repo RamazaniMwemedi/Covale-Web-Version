@@ -1,4 +1,4 @@
-const { createSlice } = require("@reduxjs/toolkit");
+const { createSlice, current } = require("@reduxjs/toolkit");
 
 let initialProjectsState = {};
 
@@ -24,15 +24,32 @@ const projectsSlice = createSlice({
           .subProjects.push(payload.subProject),
       };
     },
-
+    // Add task to sub project by id
+    addTaskToSubProject(state, { payload }) {
+      // Add the task to the sub project on top of the array
+      state = {
+        ...state,
+        projects: state.projects
+          .filter((project) => project.id === payload.projectId)[0]
+          .subProjects.filter(
+            (subProject) => subProject.id === payload.subProjectId
+          )[0]
+          .tasks.unshift(payload.task),
+      };
+    },
     clearProjects(state) {
       state.projects = initialProjectsState;
     },
   },
 });
 
-const { addProjects, clearProjects, addProject, addSubProjectId } =
-  projectsSlice.actions;
+const {
+  addProjects,
+  clearProjects,
+  addProject,
+  addSubProjectId,
+  addTaskToSubProject,
+} = projectsSlice.actions;
 const reducer = projectsSlice.reducer;
 module.exports = {
   reducer,
@@ -40,4 +57,5 @@ module.exports = {
   addProject,
   addSubProjectId,
   clearProjects,
+  addTaskToSubProject,
 };

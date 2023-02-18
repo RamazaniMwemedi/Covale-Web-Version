@@ -5,9 +5,21 @@ import Typography from "@mui/material/Typography";
 import TasksTabPanel from "./tasks/TasksTabPanel";
 import TasksViews from "./tasks/TasksViews";
 import ProjectMember from "./ProjectMember";
+import { useRouter } from "next/router";
 const ProjectSectionBottom = ({ value, project }) => {
+  const router = useRouter();
+
+  const subProject = router.query.subproject
+    ? project.subProjects.find(
+        (subProject) => subProject.id === router.query.subproject
+      )
+    : project.subProjects[0];
+
+  // taskStatus
+  const taskStatus = project.taskStatus;
+
   return (
-    <Box sx={{ width: "100%", typography: "body1" , overflow:"hidden"}}>
+    <Box sx={{ width: "100%", typography: "body1", overflow: "hidden" }}>
       <TabContext value={value}>
         <TabPanel value="Tasks">
           <Box
@@ -16,7 +28,11 @@ const ProjectSectionBottom = ({ value, project }) => {
             }}
           >
             {" "}
-            <TasksViews project={project} />
+            <TasksViews
+              subProject={subProject}
+              taskStatus={taskStatus}
+              project={project}
+            />
           </Box>
         </TabPanel>
         <TabPanel value="Overview">

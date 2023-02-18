@@ -93,12 +93,11 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
                     }}
                     key={subProject.id}
                     onClick={() => {
+                      // Change the url to the sub project without reloading the page
                       router.push(
                         `/projects/${project.id}/${subProject.id}`,
-                        `/projects/${project.id}/${subProject.id}`,
-                        {
-                          shallow: true,
-                        }
+                        undefined,
+                        { shallow: true }
                       );
                     }}
                   >
