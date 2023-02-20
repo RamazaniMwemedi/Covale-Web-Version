@@ -9,9 +9,11 @@ import {
   FormControlLabel,
   FormLabel,
   IconButton,
+  InputAdornment,
   InputLabel,
   Menu,
   MenuItem,
+  OutlinedInput,
   Paper,
   Radio,
   RadioGroup,
@@ -34,6 +36,7 @@ import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import InsertInvitationRoundedIcon from "@mui/icons-material/InsertInvitationRounded";
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 import { addTaskToSubProject } from "../../../../Redux/slices/projects";
 
@@ -334,21 +337,28 @@ const AddTaskForm = ({
   const [description, setDescription] = React.useState("");
   const [flag, setFlag] = React.useState("");
   const [assignees, setAssignees] = React.useState([]);
+
+  // Subtask state
   const [subtasks, setSubtasks] = React.useState([]);
-  const [subtaskTitle, setSubtaskTitle] = React.useState("");
-  const [subtaskDescription, setSubtaskDescription] = React.useState("");
+  const [showSubtaskForm, setShowSubtaskForm] = React.useState(false);
 
   // Subtask handlers
-  const addSubtaskHandler = () => {
-    setSubtasks((prev) => [
-      ...prev,
-      {
-        title: subtaskTitle,
-        description: subtaskDescription,
-      },
-    ]);
-    setSubtaskTitle("");
-    setSubtaskDescription("");
+  const addSubtaskHandler = (subtask) => {
+    // If subtask is an empty string or a space, return
+    if (subtask.trim() === "") {
+      return;
+    }
+    // If subtask is already added, remove it
+    if (subtasks.includes(subtask)) {
+      setSubtasks((prev) => prev.filter((s) => s !== subtask));
+      return;
+    }
+
+    setSubtasks((prev) => [...prev, subtask]);
+  };
+
+  const removeSubtaskHandler = (subtask) => {
+    setSubtasks((prev) => prev.filter((s) => s !== subtask));
   };
 
   // Assignee handlers
@@ -371,21 +381,11 @@ const AddTaskForm = ({
       status: state,
     };
     addTheTaskToReduxHandler(task);
-    // addTheTaskToReduxHandler({
-    //   title,
-    //   description,
-    //   flag,
-    //   assignees,
-    //   subtasks,
-    //   state,
-    // });
     setTitle("");
     setDescription("");
     setFlag("");
     setAssignees([]);
     setSubtasks([]);
-    setSubtaskTitle("");
-    setSubtaskDescription("");
     addNewTaskToggleHandler(state);
   };
 
@@ -439,7 +439,12 @@ const AddTaskForm = ({
             />
           </Tooltip>
           <Tooltip title="Add Sub Task" placement="top">
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={() => {
+                setShowSubtaskForm((prev) => !prev);
+              }}
+            >
               <AddTaskRoundedIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -460,6 +465,10 @@ const AddTaskForm = ({
           </Tooltip>
           {/* Vertical Divider */}
         </Box>
+        {/* Subtasks */}
+        {showSubtaskForm && (
+          <AddSubtaskForm addSubtaskHandler={addSubtaskHandler} />
+        )}
         {/* Assignees */}
         <Box
           sx={{
@@ -518,7 +527,52 @@ const AddTaskForm = ({
               </Box>
             ))}
         </Box>
-        {/* Subtasks */}
+
+        {/* All Sub tasks */}
+        <Box
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
+            maxHeight: 90,
+            overflowY: "auto",
+            mb: 1,
+          }}
+        >
+          {subtasks &&
+            subtasks.map((subtask) => (
+              <Box
+                key={subtask.id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: theme.colors.textBackground,
+                  padding: 1,
+                  borderRadius: "5px",
+                  mt: 1,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "5px",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="caption">{subtask}</Typography>
+                </Box>
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => {
+                    removeSubtaskHandler(subtask);
+                  }}
+                >
+                  <RemoveIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            ))}
+        </Box>
         {/* Select Flag and Add task */}
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <FormControl variant="outlined" size="small">
@@ -644,3 +698,48 @@ function AddAssignees({ members, addAssigneeHandler, assignees }) {
     </div>
   );
 }
+
+// Add subtask
+const AddSubtaskForm = ({ addSubtaskHandler }) => {
+  const [subtask, setSubtask] = React.useState("");
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        padding: 1,
+        borderRadius: "5px",
+        mt: 1,
+      }}
+    >
+      <FormControl sx={{ width: "90%" }} color="secondary" variant="outlined">
+        <OutlinedInput
+          id="outlined-adornment-password"
+          type="text"
+          value={subtask}
+          onChange={(e) => {
+            setSubtask(e.target.value);
+          }}
+          sx={{
+            height: "35px",
+          }}
+          color="secondary"
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                color="secondary"
+                size="small"
+                onClick={() => {
+                  addSubtaskHandler(subtask);
+                  setSubtask("");
+                }}
+              >
+                <AddCircleOutlineRoundedIcon fontSize="small" />
+              </IconButton>
+            </InputAdornment>
+          }
+        />
+      </FormControl>
+    </Box>
+  );
+};
