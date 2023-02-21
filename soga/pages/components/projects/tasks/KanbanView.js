@@ -3,7 +3,9 @@ import Box from "@mui/material/Box";
 import {
   Avatar,
   AvatarGroup,
+  Badge,
   Button,
+  Checkbox,
   Divider,
   FormControl,
   FormControlLabel,
@@ -37,9 +39,15 @@ import InsertInvitationRoundedIcon from "@mui/icons-material/InsertInvitationRou
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import Moment from "moment";
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 
 import { addTaskToSubProject } from "../../../../Redux/slices/projects";
 import FileIcone from "../../mediaFiles/FileIcon";
+import dayjs from "dayjs";
 
 const KanbanView = ({
   project: { members },
@@ -190,7 +198,7 @@ const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, members }) => {
 
 const TaskComponent = ({ task }) => {
   const theme = useTheme();
-
+  console.log(task);
   let flagColor;
   if (task.flag === "High") {
     flagColor = theme.palette.error.main;
@@ -237,6 +245,7 @@ const TaskComponent = ({ task }) => {
       <Typography variant="caption">{task.title}</Typography>
       <br />
       <Typography variant="caption">{task.description}</Typography>
+      <br />
 
       {/* Sub Tasks */}
       {task.subtasks && task.subtasks.length > 0 && (
@@ -250,9 +259,9 @@ const TaskComponent = ({ task }) => {
           >
             {task.subtasks.map((subtask) => (
               <FormControlLabel
-                value={subtask.title}
-                control={<Radio size="small" color="secondary" />}
-                label={subtask.title}
+                value={subtask}
+                control={<Checkbox size="small" color="secondary" />}
+                label={subtask}
               />
             ))}
           </RadioGroup>
@@ -272,6 +281,26 @@ const TaskComponent = ({ task }) => {
         </IconButton>
         <Typography variant="caption">Add Sub Task</Typography>
       </Box>
+      {/* Time remaining startDate substract dueDate dayjs*/}
+      <Box
+        sx={{
+          display: "flex",
+          gap: "5px",
+          alignItems: "center",
+        }}
+      >
+        <IconButton size="small">
+          <AccessTimeRoundedIcon />
+        </IconButton>
+        <Typography variant="caption">
+          {/* date and time should be in Days, Hours:Minute format */}
+          {task.startDate && task.dueDate
+            ? dayjs(task.dueDate).diff(dayjs(task.startDate), "day")
+            : "Time Remaining"}{" "}
+          Days Remaining
+        </Typography>
+      </Box>
+
       <Divider sx={{ margin: "10px 0" }} />
       {/* Assignees */}
       <Box
@@ -317,9 +346,16 @@ const TaskComponent = ({ task }) => {
           <IconButton size="small">
             <CommentRoundedIcon />
           </IconButton>
-          <IconButton size="small">
-            <AttachFileRoundedIcon />
-          </IconButton>
+          <Badge
+            badgeContent={
+              task.files && task.files.length > 0 ? task.files.length : 0
+            }
+            color="secondary"
+          >
+            <IconButton size="small">
+              <AttachFileRoundedIcon />
+            </IconButton>
+          </Badge>
         </Box>
       </Box>
     </Box>
@@ -348,6 +384,21 @@ const AddTaskForm = ({
   const fileInput = React.useRef(null);
   const fileInput2 = React.useRef(null);
   console.log(files);
+  // Date
+  const [startDate, setValueStartDate] = React.useState(
+    Moment(new Date()).format("lll")
+  );
+  const [dueDate, setValueDueDate] = React.useState(
+    Moment(new Date()).format("lll")
+  );
+
+  //  Date handlers
+  const onStartDateChange = (date) => {
+    setValueStartDate(date);
+  };
+  const onDueDateChange = (date) => {
+    setValueDueDate(date);
+  };
 
   // Subtask handlers
   const addSubtaskHandler = (subtask) => {
@@ -409,12 +460,30 @@ const AddTaskForm = ({
   };
 
   const addTask = () => {
+    // If title is an empty string or a space, return
+    if (title.trim() === "") {
+      return;
+    }
+
+    if (assignees.length === 0) {
+      return;
+    }
+
+    // Date
+    if (startDate > dueDate) {
+      return;
+    }
+
     const task = {
       title: title,
       description: description,
       flag: flag,
       assignees: assignees,
       status: state,
+      files,
+      subtasks,
+      startDate,
+      dueDate,
     };
     addTheTaskToReduxHandler(task);
     setTitle("");
@@ -500,16 +569,12 @@ const AddTaskForm = ({
               />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Start date" placement="top">
-            <IconButton size="small">
-              <InsertInvitationRoundedIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Due date" placement="top">
-            <IconButton size="small">
-              <EventAvailableRoundedIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+          <DateTimePickerForm
+            startDate={startDate}
+            dueDate={dueDate}
+            onStartDateChange={onStartDateChange}
+            onDueDateChange={onDueDateChange}
+          />
           {/* Vertical Divider */}
         </Box>
         {/* Subtasks */}
@@ -678,6 +743,34 @@ const AddTaskForm = ({
                 </IconButton>
               </Box>
             ))}
+        </Box>
+        {/* Date start date and due date */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 1,
+            gap: "15px",
+          }}
+        >
+          <Typography variant="caption">Start Date</Typography>
+          <Typography variant="caption">Due Date</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 1,
+          }}
+        >
+          <Typography variant="caption">
+            {startDate ? startDate.toString() : "No Date"}
+          </Typography>
+          <Typography variant="caption">
+            {dueDate ? dueDate.toString() : "No Date"}
+          </Typography>
         </Box>
         {/* Select Flag and Add task */}
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -850,4 +943,108 @@ const AddSubtaskForm = ({ addSubtaskHandler }) => {
   );
 };
 
-// Attach FIles Form
+// Date time picker from for start and end date
+function DateTimePickerForm({
+  startDate,
+  dueDate,
+  onDueDateChange,
+  onStartDateChange,
+}) {
+  const [anchorElForStartDate, setAnchorElForStartDate] = React.useState(null);
+  const openForStartDate = Boolean(anchorElForStartDate);
+
+  const handleClickForStartDate = (event) => {
+    setAnchorElForStartDate(event.currentTarget);
+  };
+  const handleCloseForStartDate = () => {
+    setAnchorElForStartDate(null);
+  };
+
+  const [anchorElForDueDate, setAnchorElForDueDate] = React.useState(null);
+  const openForDueDate = Boolean(anchorElForDueDate);
+  const handleClickForDueDate = (event) => {
+    setAnchorElForDueDate(event.currentTarget);
+  };
+  const handleCloseForDueDate = () => {
+    setAnchorElForDueDate(null);
+  };
+  console.log(dayjs(startDate).format("YYYY-MM-DD HH:mm:ss"));
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+        }}
+      >
+        <Tooltip title="Start date" placement="top">
+          <IconButton size="small" onClick={handleClickForStartDate}>
+            <InsertInvitationRoundedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Due date" placement="top">
+          <IconButton size="small" onClick={handleClickForDueDate}>
+            <EventAvailableRoundedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Box>
+
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorElForStartDate}
+        open={openForStartDate}
+        onClose={handleCloseForStartDate}
+        PaperProps={{
+          style: {
+            maxHeight: 48 * 4.5,
+            width: "auto",
+            color: "red",
+          },
+        }}
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            renderInput={(props) => <TextField color="secondary" {...props} />}
+            label="DateTimePicker"
+            value={startDate}
+            onChange={(newValue) => {
+              onStartDateChange(newValue);
+            }}
+            minDate={new Date()}
+          />
+        </LocalizationProvider>
+      </Menu>
+
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorElForDueDate}
+        open={openForDueDate}
+        onClose={handleCloseForDueDate}
+        PaperProps={{
+          style: {
+            maxHeight: 48 * 4.5,
+            width: "auto",
+          },
+        }}
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            renderInput={(props) => <TextField color="secondary" {...props} />}
+            label="DateTimePicker"
+            value={dueDate}
+            onChange={(newValue) => {
+              onDueDateChange(newValue);
+            }}
+            minDate={startDate}
+          />
+        </LocalizationProvider>
+      </Menu>
+    </Box>
+  );
+}
