@@ -39,6 +39,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 import { addTaskToSubProject } from "../../../../Redux/slices/projects";
+import FileIcone from "../../mediaFiles/FileIcon";
 
 const KanbanView = ({
   project: { members },
@@ -342,6 +343,12 @@ const AddTaskForm = ({
   const [subtasks, setSubtasks] = React.useState([]);
   const [showSubtaskForm, setShowSubtaskForm] = React.useState(false);
 
+  // File states
+  const [files, setFiles] = React.useState([]);
+  const fileInput = React.useRef(null);
+  const fileInput2 = React.useRef(null);
+  console.log(files);
+
   // Subtask handlers
   const addSubtaskHandler = (subtask) => {
     // If subtask is an empty string or a space, return
@@ -359,6 +366,35 @@ const AddTaskForm = ({
 
   const removeSubtaskHandler = (subtask) => {
     setSubtasks((prev) => prev.filter((s) => s !== subtask));
+  };
+
+  const handleChooseFileIcon = (e) => {
+    fileInput.current.click();
+  };
+  const handleChooseFileIcon2 = (e) => {
+    fileInput2.current.click();
+  };
+
+  const handleChooseFile = (e) => {
+    // input change handler
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFiles((prev) => [
+        ...prev,
+        {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          data: e.target.result,
+        },
+      ]);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveFile = (file) => {
+    setFiles((prev) => prev.filter((f) => f !== file));
   };
 
   // Assignee handlers
@@ -449,8 +485,19 @@ const AddTaskForm = ({
             </IconButton>
           </Tooltip>
           <Tooltip title="Add Attachment" placement="top">
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                handleChooseFileIcon(e);
+              }}
+            >
               <AttachFileRoundedIcon fontSize="small" />
+              <input
+                type="file"
+                ref={fileInput}
+                onChange={(e) => handleChooseFile(e)}
+                style={{ display: "none" }}
+              />
             </IconButton>
           </Tooltip>
           <Tooltip title="Start date" placement="top">
@@ -470,6 +517,9 @@ const AddTaskForm = ({
           <AddSubtaskForm addSubtaskHandler={addSubtaskHandler} />
         )}
         {/* Assignees */}
+        {assignees && assignees.length > 0 && (
+          <Typography variant="caption">Assignees</Typography>
+        )}
         <Box
           sx={{
             alignItems: "center",
@@ -529,6 +579,9 @@ const AddTaskForm = ({
         </Box>
 
         {/* All Sub tasks */}
+        {subtasks && subtasks.length > 0 && (
+          <Typography variant="caption">Subtasks</Typography>
+        )}
         <Box
           sx={{
             alignItems: "center",
@@ -566,6 +619,59 @@ const AddTaskForm = ({
                   size="small"
                   onClick={() => {
                     removeSubtaskHandler(subtask);
+                  }}
+                >
+                  <RemoveIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            ))}
+        </Box>
+        {/* Files */}
+        {files && files.length > 0 && (
+          <Typography variant="caption">Files</Typography>
+        )}
+        <Box
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
+            maxHeight: 90,
+            overflowY: "auto",
+            mb: 1,
+          }}
+        >
+          {files &&
+            files.map((file) => (
+              <Box
+                key={file.id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: theme.colors.textBackground,
+                  padding: 1,
+                  borderRadius: "5px",
+                  mt: 1,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "5px",
+                    alignItems: "center",
+                  }}
+                >
+                  <FileIcone fileType={file.type} />
+                  <Typography variant="caption">
+                    {file.name.length > 10
+                      ? file.name.slice(0, 10) + "..."
+                      : file.name}
+                  </Typography>
+                </Box>
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => {
+                    handleRemoveFile(file);
                   }}
                 >
                   <RemoveIcon fontSize="small" />
@@ -743,3 +849,5 @@ const AddSubtaskForm = ({ addSubtaskHandler }) => {
     </Box>
   );
 };
+
+// Attach FIles Form
