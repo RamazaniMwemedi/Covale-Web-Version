@@ -46,13 +46,10 @@ const createNewSubProject = async (
   return response.data;
 };
 
-const createNewTask = async (token, task, state, subProjectId) => {
+const createNewTask = async (token, formData, subProjectId) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/task/${subProjectId}`,
-    {
-      task,
-      state,
-    },
+    `${SERVER_ADDRESS}/api/v1/subproject/${subProjectId}/task/new`,
+    formData,
     {
       headers: {
         Authorization: `Bearer ${token}`,

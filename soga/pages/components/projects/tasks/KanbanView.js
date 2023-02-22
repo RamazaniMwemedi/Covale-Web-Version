@@ -3,7 +3,9 @@ import Box from "@mui/material/Box";
 import {
   Avatar,
   AvatarGroup,
+  Badge,
   Button,
+  Checkbox,
   Divider,
   FormControl,
   FormControlLabel,
@@ -30,15 +32,24 @@ import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import AttachFileRoundedIcon from "@mui/icons-material/AttachFileRounded";
 import AddTaskRoundedIcon from "@mui/icons-material/AddTaskRounded";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import RemoveIcon from "@mui/icons-material/Remove";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import InsertInvitationRoundedIcon from "@mui/icons-material/InsertInvitationRounded";
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import Moment from "moment";
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import SaveIcon from "@mui/icons-material/Save";
 
 import { addTaskToSubProject } from "../../../../Redux/slices/projects";
+import FileIcone from "../../mediaFiles/FileIcon";
+import dayjs from "dayjs";
+import { createNewTask } from "../../../../services/projects";
 
 const KanbanView = ({
   project: { members },
@@ -64,6 +75,7 @@ const KanbanView = ({
         tasks={tasks}
         taskStatus={taskStatus}
         addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+        id={id}
         members={members}
       />
     </Box>
@@ -72,7 +84,13 @@ const KanbanView = ({
 
 export default KanbanView;
 
-function TaskStates({ tasks, taskStatus, addTheTaskToReduxHandler, members }) {
+function TaskStates({
+  tasks,
+  taskStatus,
+  addTheTaskToReduxHandler,
+  id,
+  members,
+}) {
   // Copy the values from the taskStatus to states and add "New State" to the end
   const states = [...taskStatus, "New State"];
   const categorizedTasks = {};
@@ -95,6 +113,7 @@ function TaskStates({ tasks, taskStatus, addTheTaskToReduxHandler, members }) {
           key={state}
           state={state}
           addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+          id={id}
           tasks={categorizedTasks[state]}
           members={members}
         />
@@ -103,7 +122,7 @@ function TaskStates({ tasks, taskStatus, addTheTaskToReduxHandler, members }) {
   );
 }
 
-const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, members }) => {
+const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, id, members }) => {
   const theme = useTheme();
   const [addNewTask, setAddNewTask] = React.useState(false);
 
@@ -166,6 +185,7 @@ const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, members }) => {
       {addNewTask && (
         <AddTaskForm
           addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+          id={id}
           addNewTaskToggleHandler={addNewTaskToggleHandler}
           state={state}
           members={members}
@@ -189,7 +209,6 @@ const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, members }) => {
 
 const TaskComponent = ({ task }) => {
   const theme = useTheme();
-
   let flagColor;
   if (task.flag === "High") {
     flagColor = theme.palette.error.main;
@@ -197,6 +216,8 @@ const TaskComponent = ({ task }) => {
     flagColor = theme.palette.warning.main;
   } else if (task.flag === "Low") {
     flagColor = theme.palette.success.main;
+  } else {
+    flagColor = "lightgray";
   }
   return (
     <Box
@@ -215,7 +236,7 @@ const TaskComponent = ({ task }) => {
         }}
       >
         {/* Flag */}
-        <Tooltip title={task.flag} placement="top" arrow>
+        <Tooltip title={task.flag ? task.flag : "None"} placement="top" arrow>
           <Box
             sx={{
               width: "12px",
@@ -223,19 +244,24 @@ const TaskComponent = ({ task }) => {
               borderRadius: "25%",
               backgroundColor: flagColor,
             }}
-          >
-            {/* {task.flag && task.flag} */}
-          </Box>
+          />
         </Tooltip>
         <IconButton size="small">
-          <MoreVertIcon />
+          <MoreVertIcon fontSize="small" />
         </IconButton>
       </Box>
       {/* Task details */}
 
-      <Typography variant="caption">{task.title}</Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          fontWeight: "bold",
+        }}
+      >
+        {task.title}
+      </Typography>
+      <Typography variant="body2">{task.description}</Typography>
       <br />
-      <Typography variant="caption">{task.description}</Typography>
 
       {/* Sub Tasks */}
       {task.subtasks && task.subtasks.length > 0 && (
@@ -249,15 +275,15 @@ const TaskComponent = ({ task }) => {
           >
             {task.subtasks.map((subtask) => (
               <FormControlLabel
-                value={subtask.title}
-                control={<Radio size="small" color="secondary" />}
-                label={subtask.title}
+                value={subtask}
+                control={<Checkbox size="small" color="secondary" />}
+                label={subtask}
               />
             ))}
           </RadioGroup>
+          <Divider sx={{ margin: "10px 0" }} />
         </FormControl>
       )}
-      <Divider sx={{ margin: "10px 0" }} />
       {/* Add sub task */}
       <Box
         sx={{
@@ -271,6 +297,26 @@ const TaskComponent = ({ task }) => {
         </IconButton>
         <Typography variant="caption">Add Sub Task</Typography>
       </Box>
+      {/* Time remaining startDate substract dueDate dayjs*/}
+      <Box
+        sx={{
+          display: "flex",
+          gap: "5px",
+          alignItems: "center",
+        }}
+      >
+        <IconButton size="small">
+          <AccessTimeRoundedIcon />
+        </IconButton>
+        <Typography variant="caption">
+          {/* date and time should be in Days, Hours:Minute format */}
+          {task.startDate && task.dueDate
+            ? dayjs(task.dueDate).diff(dayjs(task.startDate), "day")
+            : "Time Remaining"}{" "}
+          Days Remaining
+        </Typography>
+      </Box>
+
       <Divider sx={{ margin: "10px 0" }} />
       {/* Assignees */}
       <Box
@@ -281,21 +327,227 @@ const TaskComponent = ({ task }) => {
           justifyContent: "space-between",
         }}
       >
-        <AvatarGroup
-          total={
-            task.assignees && task.assignees.length > 3
-              ? task.assignees.length
-              : 0
-          }
+        <TaskAssignees task={task} />
+        <Box
           sx={{
             display: "flex",
             gap: "5px",
-            alignItems: "center",
-            "& .MuiAvatar-root": { width: 30, height: 30, fontSize: 10 },
           }}
         >
-          {task.assignees &&
-            task.assignees.map((assignee) => (
+          <TasksComments />
+          <Badge
+            badgeContent={
+              task.files && task.files.length > 0 ? task.files.length : 0
+            }
+            color="default"
+            sx={{
+              "& .MuiBadge-badge": {
+                margin: "7px",
+              },
+            }}
+          >
+            <TaskFiles files={task.files} />
+          </Badge>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+const options = [
+  "None",
+  "Atria",
+  "Callisto",
+  "Dione",
+  "Ganymede",
+  "Hangouts Call",
+  "Luna",
+  "Oberon",
+  "Phobos",
+  "Pyxis",
+  "Sedna",
+  "Titania",
+  "Triton",
+  "Umbriel",
+];
+
+const ITEM_HEIGHT = 48;
+function TasksComments() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+        size="small"
+      >
+        <CommentRoundedIcon />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "40ch",
+          },
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem key={option} selected={option === "Pyxis"}>
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  );
+}
+
+function TaskFiles({ files }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <div>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+        size="small"
+      >
+        <AttachFileRoundedIcon />{" "}
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "30ch",
+          },
+        }}
+      >
+        {files.map((file) => (
+          <MenuItem
+            sx={{
+              display: "flex",
+              gap: "5px",
+            }}
+            key={file}
+            selected={file === "Pyxis"}
+          >
+            <FileIcone fileType={file.fileType} />
+            <Typography variant="caption">
+              {file.fileName.length > 20
+                ? file.fileName.substring(0, 20) + "..."
+                : file.fileName}
+            </Typography>
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  );
+}
+function TaskAssignees({ task }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <div>
+      <AvatarGroup
+        total={
+          task.assignees && task.assignees.length > 3
+            ? task.assignees.length
+            : 0
+        }
+        sx={{
+          display: "flex",
+          gap: "5px",
+          alignItems: "center",
+          "& .MuiAvatar-root": { width: 30, height: 30, fontSize: 10 },
+        }}
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+        size="small"
+      >
+        {task.assignees &&
+          task.assignees.map((assignee) => (
+            <Avatar
+              sx={{
+                width: 30,
+                height: 30,
+                fontSize: 10,
+              }}
+            >
+              {assignee.username[0]} {assignee.lastname[0]}
+            </Avatar>
+          ))}
+      </AvatarGroup>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "30ch",
+          },
+        }}
+      >
+        {task.assignees &&
+          task.assignees.map((assignee) => (
+            <MenuItem
+              key={assignee._id}
+              selected={assignee === "Pyxis"}
+              onClick={handleClose}
+              sx={{
+                display: "flex",
+                gap: "5px",
+              }}
+            >
               <Avatar
                 sx={{
                   width: 30,
@@ -303,44 +555,60 @@ const TaskComponent = ({ task }) => {
                   fontSize: 10,
                 }}
               >
-                {assignee.name}
+                {assignee.username[0]}
+                {assignee.lastname[0]}
               </Avatar>
-            ))}
-        </AvatarGroup>
-        <Box
-          sx={{
-            display: "flex",
-            gap: "5px",
-          }}
-        >
-          <IconButton size="small">
-            <CommentRoundedIcon />
-          </IconButton>
-          <IconButton size="small">
-            <AttachFileRoundedIcon />
-          </IconButton>
-        </Box>
-      </Box>
-    </Box>
+
+              <Typography variant="body2" color="text.secondary">
+                {assignee.username} {assignee.lastname}
+              </Typography>
+            </MenuItem>
+          ))}
+      </Menu>
+    </div>
   );
-};
+}
 
 // Form for adding new task
 const AddTaskForm = ({
   addTheTaskToReduxHandler,
+  id,
   state,
   addNewTaskToggleHandler,
   members,
 }) => {
+  // userStore
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user ? userStore.user : null;
+  const token = user ? user.token : null;
   const theme = useTheme();
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [flag, setFlag] = React.useState("");
   const [assignees, setAssignees] = React.useState([]);
-
+  const [addingTask, setAddingTask] = React.useState(false);
   // Subtask state
   const [subtasks, setSubtasks] = React.useState([]);
   const [showSubtaskForm, setShowSubtaskForm] = React.useState(false);
+
+  // File states
+  const [files, setFiles] = React.useState([]);
+  const fileInput = React.useRef(null);
+  // Date
+  const [startDate, setValueStartDate] = React.useState(
+    Moment(new Date()).format("lll")
+  );
+  const [dueDate, setValueDueDate] = React.useState(
+    Moment(new Date()).format("lll")
+  );
+
+  //  Date handlers
+  const onStartDateChange = (date) => {
+    setValueStartDate(date);
+  };
+  const onDueDateChange = (date) => {
+    setValueDueDate(date);
+  };
 
   // Subtask handlers
   const addSubtaskHandler = (subtask) => {
@@ -361,6 +629,33 @@ const AddTaskForm = ({
     setSubtasks((prev) => prev.filter((s) => s !== subtask));
   };
 
+  const handleChooseFileIcon = (e) => {
+    fileInput.current.click();
+  };
+
+  const handleChooseFile = (e) => {
+    // input change handler
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFiles((prev) => [
+        ...prev,
+        {
+          file: file,
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          data: e.target.result,
+        },
+      ]);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveFile = (file) => {
+    setFiles((prev) => prev.filter((f) => f !== file));
+  };
+
   // Assignee handlers
   const addAssigneeHandler = (assignee) => {
     // If assignee is already added, remove it
@@ -372,21 +667,53 @@ const AddTaskForm = ({
     setAssignees((prev) => [...prev, assignee]);
   };
 
-  const addTask = () => {
-    const task = {
-      title: title,
-      description: description,
-      flag: flag,
-      assignees: assignees,
-      status: state,
-    };
-    addTheTaskToReduxHandler(task);
+  const addTask = async () => {
+    // If title is an empty string or a space, return
+    if (title.trim() === "") {
+      return;
+    }
+
+    if (assignees.length === 0) {
+      return;
+    }
+
+    // Date
+    if (startDate > dueDate) {
+      return;
+    }
+
+    setAddingTask(true);
+    console.log("subtasks", subtasks);
+    const formData = new FormData();
+
+    for (const file of files) {
+      formData.append("files", file.file);
+    }
+    for (const assignee of assignees) {
+      formData.append("assignees", assignee.id);
+    }
+    for (const subtask of subtasks) {
+      formData.append("subtasks", subtask);
+    }
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("flag", flag);
+    formData.append("status", state);
+    formData.append("subtasks", subtasks);
+    formData.append("startDate", startDate);
+    formData.append("dueDate", dueDate);
+
+    console.log("The form data", formData);
+    const sentTasktoServer = await createNewTask(token, formData, id);
+
+    addTheTaskToReduxHandler(sentTasktoServer);
     setTitle("");
     setDescription("");
     setFlag("");
     setAssignees([]);
     setSubtasks([]);
     addNewTaskToggleHandler(state);
+    setAddingTask(false);
   };
 
   return (
@@ -449,20 +776,27 @@ const AddTaskForm = ({
             </IconButton>
           </Tooltip>
           <Tooltip title="Add Attachment" placement="top">
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                handleChooseFileIcon(e);
+              }}
+            >
               <AttachFileRoundedIcon fontSize="small" />
+              <input
+                type="file"
+                ref={fileInput}
+                onChange={(e) => handleChooseFile(e)}
+                style={{ display: "none" }}
+              />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Start date" placement="top">
-            <IconButton size="small">
-              <InsertInvitationRoundedIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Due date" placement="top">
-            <IconButton size="small">
-              <EventAvailableRoundedIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+          <DateTimePickerForm
+            startDate={startDate}
+            dueDate={dueDate}
+            onStartDateChange={onStartDateChange}
+            onDueDateChange={onDueDateChange}
+          />
           {/* Vertical Divider */}
         </Box>
         {/* Subtasks */}
@@ -470,6 +804,9 @@ const AddTaskForm = ({
           <AddSubtaskForm addSubtaskHandler={addSubtaskHandler} />
         )}
         {/* Assignees */}
+        {assignees && assignees.length > 0 && (
+          <Typography variant="caption">Assignees</Typography>
+        )}
         <Box
           sx={{
             alignItems: "center",
@@ -529,6 +866,9 @@ const AddTaskForm = ({
         </Box>
 
         {/* All Sub tasks */}
+        {subtasks && subtasks.length > 0 && (
+          <Typography variant="caption">Subtasks</Typography>
+        )}
         <Box
           sx={{
             alignItems: "center",
@@ -572,6 +912,87 @@ const AddTaskForm = ({
                 </IconButton>
               </Box>
             ))}
+        </Box>
+        {/* Files */}
+        {files && files.length > 0 && (
+          <Typography variant="caption">Files</Typography>
+        )}
+        <Box
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
+            maxHeight: 90,
+            overflowY: "auto",
+            mb: 1,
+          }}
+        >
+          {files &&
+            files.map((file) => (
+              <Box
+                key={file.id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: theme.colors.textBackground,
+                  padding: 1,
+                  borderRadius: "5px",
+                  mt: 1,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "5px",
+                    alignItems: "center",
+                  }}
+                >
+                  <FileIcone fileType={file.type} />
+                  <Typography variant="caption">
+                    {file.name.length > 10
+                      ? file.name.slice(0, 10) + "..."
+                      : file.name}
+                  </Typography>
+                </Box>
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => {
+                    handleRemoveFile(file);
+                  }}
+                >
+                  <RemoveIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            ))}
+        </Box>
+        {/* Date start date and due date */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 1,
+            gap: "15px",
+          }}
+        >
+          <Typography variant="caption">Start Date</Typography>
+          <Typography variant="caption">Due Date</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 1,
+          }}
+        >
+          <Typography variant="caption">
+            {startDate ? startDate.toString() : "No Date"}
+          </Typography>
+          <Typography variant="caption">
+            {dueDate ? dueDate.toString() : "No Date"}
+          </Typography>
         </Box>
         {/* Select Flag and Add task */}
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -618,14 +1039,16 @@ const AddTaskForm = ({
               </MenuItem>
             </Select>
           </FormControl>
+
           <LoadingButton
             size="small"
             variant="contained"
             color="secondary"
+            loading={addingTask}
             sx={{
               mt: 1,
             }}
-            startIcon={<AddCircleRoundedIcon />}
+            startIcon={addingTask ? <SaveIcon /> : <AddCircleRoundedIcon />}
             onClick={addTask}
           >
             Add Task
@@ -743,3 +1166,108 @@ const AddSubtaskForm = ({ addSubtaskHandler }) => {
     </Box>
   );
 };
+
+// Date time picker from for start and end date
+function DateTimePickerForm({
+  startDate,
+  dueDate,
+  onDueDateChange,
+  onStartDateChange,
+}) {
+  const [anchorElForStartDate, setAnchorElForStartDate] = React.useState(null);
+  const openForStartDate = Boolean(anchorElForStartDate);
+
+  const handleClickForStartDate = (event) => {
+    setAnchorElForStartDate(event.currentTarget);
+  };
+  const handleCloseForStartDate = () => {
+    setAnchorElForStartDate(null);
+  };
+
+  const [anchorElForDueDate, setAnchorElForDueDate] = React.useState(null);
+  const openForDueDate = Boolean(anchorElForDueDate);
+  const handleClickForDueDate = (event) => {
+    setAnchorElForDueDate(event.currentTarget);
+  };
+  const handleCloseForDueDate = () => {
+    setAnchorElForDueDate(null);
+  };
+  return (
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+        }}
+      >
+        <Tooltip title="Start date" placement="top">
+          <IconButton size="small" onClick={handleClickForStartDate}>
+            <InsertInvitationRoundedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Due date" placement="top">
+          <IconButton size="small" onClick={handleClickForDueDate}>
+            <EventAvailableRoundedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Box>
+
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorElForStartDate}
+        open={openForStartDate}
+        onClose={handleCloseForStartDate}
+        PaperProps={{
+          style: {
+            maxHeight: 48 * 4.5,
+            width: "auto",
+            color: "red",
+          },
+        }}
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            renderInput={(props) => <TextField color="secondary" {...props} />}
+            label="DateTimePicker"
+            value={startDate}
+            onChange={(newValue) => {
+              onStartDateChange(newValue);
+            }}
+            minDate={new Date()}
+          />
+        </LocalizationProvider>
+      </Menu>
+
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorElForDueDate}
+        open={openForDueDate}
+        onClose={handleCloseForDueDate}
+        PaperProps={{
+          style: {
+            maxHeight: 48 * 4.5,
+            width: "auto",
+          },
+        }}
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            renderInput={(props) => <TextField color="secondary" {...props} />}
+            label="DateTimePicker"
+            value={dueDate}
+            onChange={(newValue) => {
+              onDueDateChange(newValue);
+            }}
+            minDate={startDate}
+          />
+        </LocalizationProvider>
+      </Menu>
+    </Box>
+  );
+}

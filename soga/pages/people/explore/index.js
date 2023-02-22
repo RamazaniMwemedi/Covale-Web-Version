@@ -217,14 +217,7 @@ const Person = ({ user, logedinUser }) => {
             justifyContent: "space-evenly",
           }}
         >
-          <Typography
-            sx={{
-              fontWeight: "bold",
-            }}
-            variant="caption"
-          >
-            Age: {age}
-          </Typography>
+         
           <Typography
             sx={{
               fontWeight: "bold",
@@ -233,14 +226,7 @@ const Person = ({ user, logedinUser }) => {
           >
             Gender: {user.gender}
           </Typography>
-          <Typography
-            sx={{
-              fontWeight: "bold",
-            }}
-            variant="caption"
-          >
-            Friends: {user.friends.length}
-          </Typography>
+         
         </Box>
         <Box
           sx={{

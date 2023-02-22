@@ -70,7 +70,7 @@ const friendReqSent = async (token) => {
 const acceptFriendRequest = async (id, token, secreteServerToken) => {
   if (token && secreteServerToken && id) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/users/colleague/accept//${id}`,
+      `${SERVER_ADDRESS}/api/v1/users/colleague/accept/${id}`,
       {},
       {
         headers: {

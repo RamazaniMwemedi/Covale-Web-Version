@@ -206,8 +206,6 @@ const ProfileDialog = ({ user, handleChange, value }) => {
           <Box>
             {" "}
             <Avatar
-              alt="Remy Sharp"
-              src="https://material-ui.com/static/images/avatar/1.jpg"
             >
               {user && user.username[0]}
             </Avatar>{" "}
