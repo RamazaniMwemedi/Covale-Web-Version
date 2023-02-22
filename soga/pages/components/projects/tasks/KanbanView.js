@@ -346,7 +346,7 @@ const TaskComponent = ({ task }) => {
               },
             }}
           >
-            <TaskFiles />
+            <TaskFiles files={task.files} />
           </Badge>
         </Box>
       </Box>
@@ -420,7 +420,7 @@ function TasksComments() {
   );
 }
 
-function TaskFiles() {
+function TaskFiles({ files }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -453,17 +453,25 @@ function TaskFiles() {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: "40ch",
+            width: "30ch",
           },
         }}
       >
-        {options.map((option) => (
+        {files.map((file) => (
           <MenuItem
-            key={option}
-            selected={option === "Pyxis"}
-            onClick={handleClose}
+            sx={{
+              display: "flex",
+              gap: "5px",
+            }}
+            key={file}
+            selected={file === "Pyxis"}
           >
-            {option}
+            <FileIcone fileType={file.fileType} />
+            <Typography variant="caption">
+              {file.fileName.length > 20
+                ? file.fileName.substring(0, 20) + "..."
+                : file.fileName}
+            </Typography>
           </MenuItem>
         ))}
       </Menu>
