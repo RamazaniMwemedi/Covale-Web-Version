@@ -59,7 +59,6 @@ const Friend = ({ friend, token }) => {
             }}
           >
             <Avatar
-              alt="Remy Sharp"
               sx={{
                 width: "70px",
                 height: "70px",

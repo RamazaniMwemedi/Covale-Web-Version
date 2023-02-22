@@ -32,7 +32,7 @@ import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import AttachFileRoundedIcon from "@mui/icons-material/AttachFileRounded";
 import AddTaskRoundedIcon from "@mui/icons-material/AddTaskRounded";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import RemoveIcon from "@mui/icons-material/Remove";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import InsertInvitationRoundedIcon from "@mui/icons-material/InsertInvitationRounded";
@@ -48,6 +48,7 @@ import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import { addTaskToSubProject } from "../../../../Redux/slices/projects";
 import FileIcone from "../../mediaFiles/FileIcon";
 import dayjs from "dayjs";
+import { createNewTask } from "../../../../services/projects";
 
 const KanbanView = ({
   project: { members },
@@ -73,6 +74,7 @@ const KanbanView = ({
         tasks={tasks}
         taskStatus={taskStatus}
         addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+        id={id}
         members={members}
       />
     </Box>
@@ -81,7 +83,13 @@ const KanbanView = ({
 
 export default KanbanView;
 
-function TaskStates({ tasks, taskStatus, addTheTaskToReduxHandler, members }) {
+function TaskStates({
+  tasks,
+  taskStatus,
+  addTheTaskToReduxHandler,
+  id,
+  members,
+}) {
   // Copy the values from the taskStatus to states and add "New State" to the end
   const states = [...taskStatus, "New State"];
   const categorizedTasks = {};
@@ -104,6 +112,7 @@ function TaskStates({ tasks, taskStatus, addTheTaskToReduxHandler, members }) {
           key={state}
           state={state}
           addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+          id={id}
           tasks={categorizedTasks[state]}
           members={members}
         />
@@ -112,7 +121,7 @@ function TaskStates({ tasks, taskStatus, addTheTaskToReduxHandler, members }) {
   );
 }
 
-const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, members }) => {
+const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, id, members }) => {
   const theme = useTheme();
   const [addNewTask, setAddNewTask] = React.useState(false);
 
@@ -175,6 +184,7 @@ const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, members }) => {
       {addNewTask && (
         <AddTaskForm
           addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+          id={id}
           addNewTaskToggleHandler={addNewTaskToggleHandler}
           state={state}
           members={members}
@@ -198,7 +208,6 @@ const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, members }) => {
 
 const TaskComponent = ({ task }) => {
   const theme = useTheme();
-  console.log(task);
   let flagColor;
   if (task.flag === "High") {
     flagColor = theme.palette.error.main;
@@ -365,10 +374,15 @@ const TaskComponent = ({ task }) => {
 // Form for adding new task
 const AddTaskForm = ({
   addTheTaskToReduxHandler,
+  id,
   state,
   addNewTaskToggleHandler,
   members,
 }) => {
+  // userStore
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user ? userStore.user : null;
+  const token = user ? user.token : null;
   const theme = useTheme();
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -382,8 +396,6 @@ const AddTaskForm = ({
   // File states
   const [files, setFiles] = React.useState([]);
   const fileInput = React.useRef(null);
-  const fileInput2 = React.useRef(null);
-  console.log(files);
   // Date
   const [startDate, setValueStartDate] = React.useState(
     Moment(new Date()).format("lll")
@@ -422,9 +434,6 @@ const AddTaskForm = ({
   const handleChooseFileIcon = (e) => {
     fileInput.current.click();
   };
-  const handleChooseFileIcon2 = (e) => {
-    fileInput2.current.click();
-  };
 
   const handleChooseFile = (e) => {
     // input change handler
@@ -434,6 +443,7 @@ const AddTaskForm = ({
       setFiles((prev) => [
         ...prev,
         {
+          file: file,
           name: file.name,
           type: file.type,
           size: file.size,
@@ -459,7 +469,7 @@ const AddTaskForm = ({
     setAssignees((prev) => [...prev, assignee]);
   };
 
-  const addTask = () => {
+  const addTask = async () => {
     // If title is an empty string or a space, return
     if (title.trim() === "") {
       return;
@@ -474,18 +484,30 @@ const AddTaskForm = ({
       return;
     }
 
-    const task = {
-      title: title,
-      description: description,
-      flag: flag,
-      assignees: assignees,
-      status: state,
-      files,
-      subtasks,
-      startDate,
-      dueDate,
-    };
-    addTheTaskToReduxHandler(task);
+    console.log("subtasks", subtasks);
+    const formData = new FormData();
+
+    for (const file of files) {
+      formData.append("files", file.file);
+    }
+    for (const assignee of assignees) {
+      formData.append("assignees", assignee.id);
+    }
+    for (const subtask of subtasks) {
+      formData.append("subtasks", subtask);
+    }
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("flag", flag);
+    formData.append("status", state);
+    formData.append("subtasks", subtasks);
+    formData.append("startDate", startDate);
+    formData.append("dueDate", dueDate);
+
+    console.log("The form data", formData);
+    const sentTasktoServer = await createNewTask(token, formData, id);
+
+    addTheTaskToReduxHandler(sentTasktoServer);
     setTitle("");
     setDescription("");
     setFlag("");
@@ -968,7 +990,6 @@ function DateTimePickerForm({
   const handleCloseForDueDate = () => {
     setAnchorElForDueDate(null);
   };
-  console.log(dayjs(startDate).format("YYYY-MM-DD HH:mm:ss"));
   return (
     <Box>
       <Box

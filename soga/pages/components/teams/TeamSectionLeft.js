@@ -220,7 +220,7 @@ const TopBar = ({
           textAlign: "center",
         }}
       >
-        <Avatar alt={"Team Name"} sx={{ width: 45, height: 45 }} />
+        <Avatar  sx={{ width: 45, height: 45 }} />
         {teamName && (
           <Typography
             variant="h6"
@@ -320,6 +320,8 @@ const Mid = ({
             <ColleagueMessage
               message={message}
               handleShowTeamFile={handleShowTeamFile}
+              handleClickedTopic={handleClickedTopic}
+              goToTopic={goToTopic}
             />
           );
         })}
@@ -707,24 +709,25 @@ const UserMessage = ({
                   // textAlign: "center",
                 }}
               >
-                {message.file.map((file) => {
-                  return (
-                    <Box
-                      sx={{
-                        cursor: "pointer",
-                        backgroundColor: theme.colors.textBackground,
-                        display: "flex",
-                        m: 1,
-                        // To be at the right of the message
-                        width: "200px",
-                        borderRadius: "5px",
-                      }}
-                      onClick={() => handleShowTeamFile(file)}
-                    >
-                      <FileComponent file={file} />
-                    </Box>
-                  );
-                })}
+                {message.file &&
+                  message.file.map((file) => {
+                    return (
+                      <Box
+                        sx={{
+                          cursor: "pointer",
+                          backgroundColor: theme.colors.textBackground,
+                          display: "flex",
+                          m: 1,
+                          // To be at the right of the message
+                          width: "200px",
+                          borderRadius: "5px",
+                        }}
+                        onClick={() => handleShowTeamFile(file)}
+                      >
+                        <FileComponent file={file} />
+                      </Box>
+                    );
+                  })}
               </Box>
               <Typography variant="subtitle2" sx={{ color: "white" }}>
                 {message.message}
@@ -744,7 +747,12 @@ const UserMessage = ({
   );
 };
 
-const ColleagueMessage = ({ message, handleShowTeamFile }) => {
+const ColleagueMessage = ({
+  message,
+  handleShowTeamFile,
+  handleClickedTopic,
+  goToTopic,
+}) => {
   const theme = useTheme();
   return (
     <Box
@@ -763,6 +771,8 @@ const ColleagueMessage = ({ message, handleShowTeamFile }) => {
             handleShowTeamFile={handleShowTeamFile}
             color={theme.colors.textBackground}
             textColor="black"
+            handleClickedTopic={handleClickedTopic}
+            goToTopic={goToTopic}
           />
         </>
       ) : (
@@ -811,24 +821,25 @@ const ColleagueMessage = ({ message, handleShowTeamFile }) => {
                   gridGap: "5px",
                 }}
               >
-                {message.file.map((file) => {
-                  return (
-                    <Box
-                      sx={{
-                        cursor: "pointer",
-                        backgroundColor: theme.colors.textBackground,
-                        display: "flex",
-                        m: 1,
-                        // To be at the right of the message
-                        width: "200px",
-                        borderRadius: "5px",
-                      }}
-                      onClick={() => handleShowTeamFile(file)}
-                    >
-                      <FileComponent file={file} />
-                    </Box>
-                  );
-                })}
+                {message.file &&
+                  message.file.map((file) => {
+                    return (
+                      <Box
+                        sx={{
+                          cursor: "pointer",
+                          backgroundColor: theme.colors.textBackground,
+                          display: "flex",
+                          m: 1,
+                          // To be at the right of the message
+                          width: "200px",
+                          borderRadius: "5px",
+                        }}
+                        onClick={() => handleShowTeamFile(file)}
+                      >
+                        <FileComponent file={file} />
+                      </Box>
+                    );
+                  })}
               </Box>
             </Box>
 

@@ -149,7 +149,6 @@ const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
             >
               <Avatar
                 alt={friend.username[0]}
-                src="https://material-ui.com/static/images/avatar/1.jpg"
               >
                 {friend.username[0]}
               </Avatar>

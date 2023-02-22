@@ -39,12 +39,12 @@ const createNewTeam = async (
     return response.data;
   }
 };
-const inviteFriends = async (token, teamId, friends) => {
+const inviteFriends = async (token, teamId, colleagues) => {
   if (token) {
-    if (friends.length > 0) {
+    if (colleagues.length > 0) {
       const response = await axios.post(
         `${SERVER_ADDRESS}/api/v1/team/invite`,
-        { teamId, friends },
+        { teamId, colleagues },
         {
           headers: {
             Authorization: `Bearer ${token}`,

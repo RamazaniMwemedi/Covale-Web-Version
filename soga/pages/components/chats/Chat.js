@@ -67,7 +67,6 @@ export default function Chat({ chat }) {
         >
           <Avatar
             alt={chat.friendUsername[0]}
-            src="https://material-ui.com/static/images/avatar/1.jpg"
           >
             {chat.friendUsername[0]}
           </Avatar>

@@ -200,16 +200,10 @@ function TotalAvatars({ valueChangeHandler, value }) {
               total={24}
             >
               <Avatar
-                alt="Travis Howard"
-                src="https://mui.com/static/images/avatar/2.jpg"
               />
               <Avatar
-                alt="Agnes Walker"
-                src="https://mui.com/static/images/avatar/4.jpg"
               />
               <Avatar
-                alt="Trevor Henderson"
-                src="https://mui.com/static/images/avatar/5.jpg"
               />
             </AvatarGroup>
           }
