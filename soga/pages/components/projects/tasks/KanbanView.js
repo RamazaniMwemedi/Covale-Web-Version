@@ -44,6 +44,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import Moment from "moment";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import SaveIcon from "@mui/icons-material/Save";
 
 import { addTaskToSubProject } from "../../../../Redux/slices/projects";
 import FileIcone from "../../mediaFiles/FileIcon";
@@ -215,6 +216,8 @@ const TaskComponent = ({ task }) => {
     flagColor = theme.palette.warning.main;
   } else if (task.flag === "Low") {
     flagColor = theme.palette.success.main;
+  } else {
+    flagColor = "lightgray";
   }
   return (
     <Box
@@ -233,7 +236,7 @@ const TaskComponent = ({ task }) => {
         }}
       >
         {/* Flag */}
-        <Tooltip title={task.flag} placement="top" arrow>
+        <Tooltip title={task.flag ? task.flag : "None"} placement="top" arrow>
           <Box
             sx={{
               width: "12px",
@@ -241,19 +244,23 @@ const TaskComponent = ({ task }) => {
               borderRadius: "25%",
               backgroundColor: flagColor,
             }}
-          >
-            {/* {task.flag && task.flag} */}
-          </Box>
+          />
         </Tooltip>
         <IconButton size="small">
-          <MoreVertIcon />
+          <MoreVertIcon fontSize="small" />
         </IconButton>
       </Box>
       {/* Task details */}
 
-      <Typography variant="caption">{task.title}</Typography>
-      <br />
-      <Typography variant="caption">{task.description}</Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          fontWeight: "bold",
+        }}
+      >
+        {task.title}
+      </Typography>
+      <Typography variant="body2">{task.description}</Typography>
       <br />
 
       {/* Sub Tasks */}
@@ -274,9 +281,9 @@ const TaskComponent = ({ task }) => {
               />
             ))}
           </RadioGroup>
+          <Divider sx={{ margin: "10px 0" }} />
         </FormControl>
       )}
-      <Divider sx={{ margin: "10px 0" }} />
       {/* Add sub task */}
       <Box
         sx={{
@@ -320,21 +327,219 @@ const TaskComponent = ({ task }) => {
           justifyContent: "space-between",
         }}
       >
-        <AvatarGroup
-          total={
-            task.assignees && task.assignees.length > 3
-              ? task.assignees.length
-              : 0
-          }
+        <TaskAssignees task={task} />
+        <Box
           sx={{
             display: "flex",
             gap: "5px",
-            alignItems: "center",
-            "& .MuiAvatar-root": { width: 30, height: 30, fontSize: 10 },
           }}
         >
-          {task.assignees &&
-            task.assignees.map((assignee) => (
+          <TasksComments />
+          <Badge
+            badgeContent={
+              task.files && task.files.length > 0 ? task.files.length : 0
+            }
+            color="default"
+            sx={{
+              "& .MuiBadge-badge": {
+                margin: "7px",
+              },
+            }}
+          >
+            <TaskFiles />
+          </Badge>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+const options = [
+  "None",
+  "Atria",
+  "Callisto",
+  "Dione",
+  "Ganymede",
+  "Hangouts Call",
+  "Luna",
+  "Oberon",
+  "Phobos",
+  "Pyxis",
+  "Sedna",
+  "Titania",
+  "Triton",
+  "Umbriel",
+];
+
+const ITEM_HEIGHT = 48;
+function TasksComments() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+        size="small"
+      >
+        <CommentRoundedIcon />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "40ch",
+          },
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem key={option} selected={option === "Pyxis"}>
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  );
+}
+
+function TaskFiles() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <div>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+        size="small"
+      >
+        <AttachFileRoundedIcon />{" "}
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "40ch",
+          },
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem
+            key={option}
+            selected={option === "Pyxis"}
+            onClick={handleClose}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  );
+}
+function TaskAssignees({ task }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <div>
+      <AvatarGroup
+        total={
+          task.assignees && task.assignees.length > 3
+            ? task.assignees.length
+            : 0
+        }
+        sx={{
+          display: "flex",
+          gap: "5px",
+          alignItems: "center",
+          "& .MuiAvatar-root": { width: 30, height: 30, fontSize: 10 },
+        }}
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+        size="small"
+      >
+        {task.assignees &&
+          task.assignees.map((assignee) => (
+            <Avatar
+              sx={{
+                width: 30,
+                height: 30,
+                fontSize: 10,
+              }}
+            >
+              {assignee.username[0]} {assignee.lastname[0]}
+            </Avatar>
+          ))}
+      </AvatarGroup>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "30ch",
+          },
+        }}
+      >
+        {task.assignees &&
+          task.assignees.map((assignee) => (
+            <MenuItem
+              key={assignee._id}
+              selected={assignee === "Pyxis"}
+              onClick={handleClose}
+              sx={{
+                display: "flex",
+                gap: "5px",
+              }}
+            >
               <Avatar
                 sx={{
                   width: 30,
@@ -342,34 +547,19 @@ const TaskComponent = ({ task }) => {
                   fontSize: 10,
                 }}
               >
-                {assignee.name}
+                {assignee.username[0]}
+                {assignee.lastname[0]}
               </Avatar>
-            ))}
-        </AvatarGroup>
-        <Box
-          sx={{
-            display: "flex",
-            gap: "5px",
-          }}
-        >
-          <IconButton size="small">
-            <CommentRoundedIcon />
-          </IconButton>
-          <Badge
-            badgeContent={
-              task.files && task.files.length > 0 ? task.files.length : 0
-            }
-            color="secondary"
-          >
-            <IconButton size="small">
-              <AttachFileRoundedIcon />
-            </IconButton>
-          </Badge>
-        </Box>
-      </Box>
-    </Box>
+
+              <Typography variant="body2" color="text.secondary">
+                {assignee.username} {assignee.lastname}
+              </Typography>
+            </MenuItem>
+          ))}
+      </Menu>
+    </div>
   );
-};
+}
 
 // Form for adding new task
 const AddTaskForm = ({
@@ -388,7 +578,7 @@ const AddTaskForm = ({
   const [description, setDescription] = React.useState("");
   const [flag, setFlag] = React.useState("");
   const [assignees, setAssignees] = React.useState([]);
-
+  const [addingTask, setAddingTask] = React.useState(false);
   // Subtask state
   const [subtasks, setSubtasks] = React.useState([]);
   const [showSubtaskForm, setShowSubtaskForm] = React.useState(false);
@@ -484,6 +674,7 @@ const AddTaskForm = ({
       return;
     }
 
+    setAddingTask(true);
     console.log("subtasks", subtasks);
     const formData = new FormData();
 
@@ -514,6 +705,7 @@ const AddTaskForm = ({
     setAssignees([]);
     setSubtasks([]);
     addNewTaskToggleHandler(state);
+    setAddingTask(false);
   };
 
   return (
@@ -839,14 +1031,16 @@ const AddTaskForm = ({
               </MenuItem>
             </Select>
           </FormControl>
+
           <LoadingButton
             size="small"
             variant="contained"
             color="secondary"
+            loading={addingTask}
             sx={{
               mt: 1,
             }}
-            startIcon={<AddCircleRoundedIcon />}
+            startIcon={addingTask ? <SaveIcon /> : <AddCircleRoundedIcon />}
             onClick={addTask}
           >
             Add Task
