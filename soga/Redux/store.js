@@ -4,6 +4,7 @@ const teamReducer = require("./slices/team");
 const userReducer = require("./slices/user");
 const projectsReducer = require("./slices/projects");
 const notificationsReducer = require("./slices/notifications");
+const calendarReducer = require("./slices/calendar");
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     user: userReducer.reducer,
     projects: projectsReducer.reducer,
     notifications: notificationsReducer.reducer,
+    calendar: calendarReducer.reducer,
   },
 });
 module.exports = store;
