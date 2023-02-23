@@ -6,7 +6,20 @@ const calendarSlice = createSlice({
   name: "calendar",
   initialState: initialChatsState,
   reducers: {
-    allEvents(state, { payload }) {},
+    allEvents(state, { payload }) {
+      if (payload) {
+        state.calendar.events = payload;
+      }
+    },
+    addNewEvent(state, { payload }) {
+      if (payload) {
+        // Add new event
+        state = {
+          ...state,
+          calendar: state.calendar.events.push(payload),
+        };
+      }
+    },
   },
 });
 
