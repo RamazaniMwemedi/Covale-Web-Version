@@ -1,187 +1,76 @@
 import * as React from "react";
 import { Box, Typography } from "@mui/material";
 import AddEvent from "./AddEvent";
-import {useTheme} from "@mui/styles";
+import { useTheme } from "@mui/styles";
+import MonthView from "./MonthView";
+import WeekView from "./WeekView";
+import DayView from "./DayView";
+import CalendarTop from "./CalendarTop";
 
-function getDaysArray(year, month) {
-  var numDaysInMonth, daysInWeek, daysIndex, index, i, l, daysArray;
-
-  numDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  daysInWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  daysIndex = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-  index = daysIndex[new Date(year, month - 1, 1).toString().split(" ")[0]];
-  daysArray = [];
-
-  for (i = 0, l = numDaysInMonth[month - 1]; i < l; i++) {
-    const fullDayDetail = new Date(year, month - 1, i + 1);
-
-    daysArray.push({
-      date: i + 1,
-      day: daysInWeek[index++],
-      year,
-      month,
-      fullDayDetail,
-    });
-    if (index == 7) index = 0;
-  }
-  return daysArray;
-}
-
-export default function StaticDatePickerDemo({ value, handleChange }) {
+export default function CalendaeSectionLeft({
+  handleDateChange,
+  selectedDate,
+  handleViewChange,
+  handlePrevWeek,
+  handleNextWeek,
+  handlePrevDay,
+  handleNextDay,
+  view
+}) {
   const theme = useTheme();
-  const [showAddEvent, setShowAddEvent] = React.useState(false);
-  const [clickedDay, setClickedDay] = React.useState(null);
-  const showAddEventHandler = () => {
-    setShowAddEvent(true);
-  };
-  const hideAddEventHandler = () => {
-    setShowAddEvent(false);
-  };
-
-  const clickedDayHandler = (day) => {
-    setClickedDay(day);
-  };
-
-  const todayDayHandler = (day) => {
-    setTodayDay(day);
-  };
-
-  const [todayDay, setTodayDay] = React.useState("");
-
-  const clickedDayDate = new Date(value);
-  const clickedDate = clickedDayDate.getDate();
-  const clickedMonthDate = clickedDayDate.getMonth();
-  const clickedYearDate = clickedDayDate.getFullYear();
 
   return (
-    <Box sx={{
-                  backgroundColor: theme.colors.background1,
-
-    }}>
-      {/* Table for days of a month */}
-      {value && (
+    <Box
+      sx={{
+        backgroundColor: theme.colors.background1,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+          // padding: "10px",
+          flex: "0.8",
+          height: "97vh",
+          overflow: "hidden",
+        }}
+      >
         <Box
           sx={{
+            display: "flex",
             flexDirection: "column",
-            border: "1px solid #e0e0e0 ",
-            margin: "1px",
-            height: "100%",
-            padding: "12px",
-            
+            backgroundColor: "#fafafa",
+            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+            padding: "20px",
+            borderRadius: "10px",
           }}
         >
-          {showAddEvent && (
-            <AddEvent
-              hideAddEventHandler={hideAddEventHandler}
-              clickedDay={clickedDay}
-            />
-          )}
-
-          <Typography variant="h3">
-            {value.toString().split(" ")[2]} {value.toString().split(" ")[1]} ,
-            {todayDay}
-          </Typography>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(7, 1fr)",
-              gap: "5px",
-              width: "100%",
-              paddingTop: "15px",
-            }}
-          >
-            {getDaysArray(value.getFullYear(), value.getMonth() + 1).map(
-              (day, index) => {
-                const today = new Date();
-                // Todays valus
-                const todaysDay = today.getDate();
-                const todaysMonth = today.getMonth();
-                const todaysYear = today.getFullYear();
-
-                return (
-                  <Box key={index}>
-                    {/* Days of the week */}
-                    <Box
-                      sx={{
-                        //  arranged as in calendar
-
-                        width: "80px",
-                        height: "110px",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        margin: "1px",
-                        fontSize: "12px",
-                        textAlign: "center",
-                        cursor: "pointer",
-                        "&:hover": {
-                          backgroundColor:
-                            `${day.date} ${day.month} ${day.year}` ===
-                            `${clickedDate} ${
-                              clickedMonthDate + 1
-                            } ${clickedYearDate}`
-                              ? " rgba(221, 160, 221, 0.863)"
-                              : theme.colors.hoverDate,
-                          color: "black",
-                          fontWeight: "bold",
-                        },
-                        borderRadius: "5px",
-                        borderTop:
-                          `${day.date} ${day.month} ${day.year}` ===
-                          `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
-                            ? "6px solid plum"
-                            : "",
-                        //Styled components for the days of the week
-                        "& .MuiTypography-root": {
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        },
-                        paddingTop: "10px",
-                        backgroundColor:
-                          `${day.date} ${day.month} ${day.year}` ===
-                          `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
-                            ? " plum"
-                            : " ",
-
-                        border:
-                          `${day.date} ${day.month} ${day.year}` ===
-                          `${todaysDay} ${todaysMonth + 1} ${todaysYear}`
-                            ? " 2px solid plum"
-                            : " 1px dotted gray",
-                        backgroundColor:
-                          `${day.date} ${day.month} ${day.year}` ===
-                          `${clickedDate} ${
-                            clickedMonthDate + 1
-                          } ${clickedYearDate}`
-                            ? " plum"
-                            : " ",
-                      }}
-                      onClick={() => {
-                        handleChange(day.fullDayDetail);
-                        clickedDayHandler(day.fullDayDetail);
-                        todayDayHandler(day.day);
-                      }}
-                      onDoubleClick={() => {
-                        showAddEventHandler();
-                      }}
-                    >
-                      <Typography variant="body2">{day.day}</Typography>
-                      <Typography variant="button">{day.date}</Typography>
-                    </Box>
-                  </Box>
-                );
-              }
-            )}
-          </Box>
+          <CalendarTop handleViewChange={handleViewChange} view={view} />
         </Box>
-      )}
+        {view === "day" && (
+          <DayView
+            selectedDate={selectedDate}
+            handleDateChange={handleDateChange}
+            handleNextDay={handleNextDay}
+            handlePrevDay={handlePrevDay}
+          />
+        )}
+        {view === "week" && (
+          <WeekView
+            selectedDate={selectedDate}
+            handleDateChange={handleDateChange}
+            handleNextWeek={handleNextWeek}
+            handlePrevWeek={handlePrevWeek}
+          />
+        )}
+        {view === "month" && (
+          <MonthView
+            selectedDate={selectedDate}
+            handleDateChange={handleDateChange}
+          />
+        )}
+      </Box>
     </Box>
   );
 }

@@ -3,8 +3,23 @@ import { useTheme } from "@mui/styles";
 import CalendarSectionLeft from "./CalendarSectionLeft";
 import CalendarSectionRight from "./CalendarSectionRight";
 
-export default function CalendarSection({ handleChange, value }) {
+export default function CalendarSection({
+  handleDateChange,
+  selectedDate,
+  handleViewChange,
+  handlePrevWeek,
+  handleNextWeek,
+  handlePrevDay,
+  handleNextDay,
+  view,
+  // Event
+  events,
+  selectedEvent,
+  selectEventHandler,
+  removeEvent,
+}) {
   const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -20,14 +35,30 @@ export default function CalendarSection({ handleChange, value }) {
           flex: "65%",
         }}
       >
-        <CalendarSectionLeft handleChange={handleChange} value={value} />
+        <CalendarSectionLeft
+          view={view}
+          handleDateChange={handleDateChange}
+          selectedDate={selectedDate}
+          handleViewChange={handleViewChange}
+          handlePrevWeek={handlePrevWeek}
+          handleNextWeek={handleNextWeek}
+          handlePrevDay={handlePrevDay}
+          handleNextDay={handleNextDay}
+        />
       </Box>
       <Box
         sx={{
           flex: "35%",
         }}
       >
-        <CalendarSectionRight value={value} />
+        {/* Events */}
+        <CalendarSectionRight
+          selectedDate={selectedDate}
+          events={events}
+          selectedEvent={selectedEvent}
+          selectEventHandler={selectEventHandler}
+          removeEvent={removeEvent}
+        />
       </Box>
     </Box>
   );
