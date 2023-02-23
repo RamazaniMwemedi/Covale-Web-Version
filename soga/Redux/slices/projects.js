@@ -37,6 +37,18 @@ const projectsSlice = createSlice({
           .tasks.unshift(payload.task),
       };
     },
+    addCommentToTask(state, { payload }) {
+      state = {
+        ...state,
+        projects: state.projects
+          .filter((project) => project.id === payload.projectId)[0]
+          .subProjects.filter(
+            (subProject) => subProject.id === payload.subProjectId
+          )[0]
+          .tasks.filter((task) => task.id == payload.taskId)[0]
+          .comments.unshift(payload.comment),
+      };
+    },
     clearProjects(state) {
       state.projects = initialProjectsState;
     },
@@ -49,6 +61,7 @@ const {
   addProject,
   addSubProjectId,
   addTaskToSubProject,
+  addCommentToTask,
 } = projectsSlice.actions;
 const reducer = projectsSlice.reducer;
 module.exports = {
@@ -58,4 +71,5 @@ module.exports = {
   addSubProjectId,
   clearProjects,
   addTaskToSubProject,
+  addCommentToTask,
 };

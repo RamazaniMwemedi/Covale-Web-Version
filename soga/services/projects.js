@@ -59,9 +59,23 @@ const createNewTask = async (token, formData, subProjectId) => {
   return response.data;
 };
 
+const commmentTask = async (token, taskId, content) => {
+  const response = await axios.post(
+    `${SERVER_ADDRESS}/api/v1/subproject/tasks/${taskId}/comment`,
+    { content },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
 module.exports = {
   getProjects,
   createNewProject,
   createNewSubProject,
   createNewTask,
+  commmentTask,
 };

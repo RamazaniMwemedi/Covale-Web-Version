@@ -46,10 +46,14 @@ import Moment from "moment";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import SaveIcon from "@mui/icons-material/Save";
 
-import { addTaskToSubProject } from "../../../../Redux/slices/projects";
+import {
+  addCommentToTask,
+  addTaskToSubProject,
+} from "../../../../Redux/slices/projects";
 import FileIcone from "../../mediaFiles/FileIcon";
 import dayjs from "dayjs";
-import { createNewTask } from "../../../../services/projects";
+import { commmentTask, createNewTask } from "../../../../services/projects";
+import moment from "moment";
 
 const KanbanView = ({
   project: { members },
@@ -77,6 +81,7 @@ const KanbanView = ({
         addTheTaskToReduxHandler={addTheTaskToReduxHandler}
         id={id}
         members={members}
+        projectId={project}
       />
     </Box>
   );
@@ -90,6 +95,7 @@ function TaskStates({
   addTheTaskToReduxHandler,
   id,
   members,
+  projectId,
 }) {
   // Copy the values from the taskStatus to states and add "New State" to the end
   const states = [...taskStatus, "New State"];
@@ -116,13 +122,21 @@ function TaskStates({
           id={id}
           tasks={categorizedTasks[state]}
           members={members}
+          projectId={projectId}
         />
       ))}
     </Box>
   );
 }
 
-const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, id, members }) => {
+const TaskBlock = ({
+  state,
+  tasks,
+  addTheTaskToReduxHandler,
+  id,
+  members,
+  projectId,
+}) => {
   const theme = useTheme();
   const [addNewTask, setAddNewTask] = React.useState(false);
 
@@ -200,14 +214,14 @@ const TaskBlock = ({ state, tasks, addTheTaskToReduxHandler, id, members }) => {
         }}
       >
         {tasks.map((task) => (
-          <TaskComponent key={task.title} task={task} />
+          <TaskComponent key={task.title} task={task} projectId={projectId} />
         ))}
       </Box>
     </Box>
   );
 };
 
-const TaskComponent = ({ task }) => {
+const TaskComponent = ({ task, projectId }) => {
   const theme = useTheme();
   let flagColor;
   if (task.flag === "High") {
@@ -332,7 +346,12 @@ const TaskComponent = ({ task }) => {
             gap: "5px",
           }}
         >
-          <TasksComments />
+          <TasksComments
+            comments={task.comments}
+            taskId={task.id}
+            subProjectId={task.subProject}
+            projectId={projectId}
+          />
           <Badge
             badgeContent={
               task.files && task.files.length > 0 ? task.files.length : 0
@@ -355,12 +374,14 @@ const TaskComponent = ({ task }) => {
 const options = ["None", "Atria", "Callisto", "Dione"];
 
 const ITEM_HEIGHT = 48;
-function TasksComments() {
+function TasksComments({ comments, taskId, subProjectId, projectId }) {
   // userStore
   const userStore = useSelector((state) => state.user);
   const user = userStore.user ? userStore.user : null;
+  const token = user ? user.token : null;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [content, setContent] = React.useState("");
+  const dispatch = useDispatch();
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -368,6 +389,7 @@ function TasksComments() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const theme = useTheme();
 
   return (
     <div>
@@ -419,11 +441,54 @@ function TasksComments() {
             overflowY: "scroll",
           }}
         >
-          {options.map((option) => (
-            <MenuItem key={option} selected={option === "Pyxis"}>
-              {option}
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <Box
+                key={comment.id}
+                sx={{
+                  display: "flex",
+                  gap: "10px",
+                  backgroundColor: theme.colors.textBackground,
+                  mt: "5px",
+                  ml: "5px",
+                  p: "5px",
+                  borderRadius: "5px",
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    fontSize: 10,
+                  }}
+                >
+                  {/* {comment.author.firstname[0]} {comment.author.lastname[0]} */}
+                </Avatar>
+                <Box>
+                  <Typography variant="body2">{comment.content}</Typography>
+
+                  <Typography variant="caption">
+                    On{" "}
+                    {moment(comment.createdAt).format("MMMM Do YYYY HH:mm:ss ")}
+                  </Typography>
+                </Box>
+              </Box>
+            ))
+          ) : (
+            <MenuItem
+              sx={{
+                display: "flex",
+                gap: "5px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography variant="caption">
+                No comments on this task yet.
+              </Typography>
             </MenuItem>
-          ))}
+          )}
         </Box>
         <FormControl sx={{ p: 1, width: "100%" }} variant="outlined">
           <OutlinedInput
@@ -459,7 +524,21 @@ function TasksComments() {
             color="secondary"
             endAdornment={
               <InputAdornment position="end">
-                <IconButton edge="end">
+                <IconButton
+                  onClick={async () => {
+                    setContent("");
+                    const comment = await commmentTask(token, taskId, content);
+                    dispatch(
+                      addCommentToTask({
+                        projectId,
+                        subProjectId,
+                        taskId,
+                        comment,
+                      })
+                    );
+                  }}
+                  edge="end"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -561,6 +640,9 @@ function TaskFiles({ files }) {
               sx={{
                 display: "flex",
                 gap: "5px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <Typography variant="caption">No attached files</Typography>
