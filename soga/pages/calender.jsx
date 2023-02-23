@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
 
@@ -8,6 +9,7 @@ import { useTheme } from "@mui/styles";
 import DrawerComponent from "./components/others/DrawerComponent";
 import CalenderLeft from "./components/calender/CalenderLeft";
 import CalenderSection from "./components/calender/CalenderSection";
+import Moment from "moment";
 
 export default function Calendar() {
   const theme = useTheme();
@@ -15,12 +17,11 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(Moment());
 
   // Events
- const [events, setEvents] = useState([]);
- const [selectedEvent, setSelectedEvent] = useState(null);
- const selectEventHandler = (event) => setSelectedEvent(event);
- const removeEvent = () => setSelectedEvent(null);
+  const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const selectEventHandler = (event) => setSelectedEvent(event);
+  const removeEvent = () => setSelectedEvent(null);
 
- 
   const handleViewChange = (newView) => {
     setView(newView);
   };

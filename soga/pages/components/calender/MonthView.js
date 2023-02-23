@@ -9,8 +9,8 @@ import TableRow from "@mui/material/TableRow";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 
 import Moment from "moment";
-import MonthPicker from "./MonthPicker";
-import EventsComponent from "./EventsComponent";
+// import MonthPicker from "./MonthPicker";
+// import EventsComponent from "./EventsComponent";
 
 export default function MonthView({
   selectedDate,
@@ -81,6 +81,7 @@ export default function MonthView({
     <Box
       sx={{
         height: "100vh",
+        bgcolor: "red",
       }}
     >
       <Box
@@ -130,10 +131,17 @@ export default function MonthView({
           </IconButton>
         </Box>
       </Box>
-      <Box sx={{ maxHeight: 500, display: "flex", height: "100vh" }}>
+      <Box sx={{ maxHeight: 500, flexGrow: 1, display: "flex" }}>
         <TableContainer
-          sx={{ flex: selectedEvent ? "0.72" : "1" }}
-          component={Paper}
+          sx={{
+            flex: selectedEvent ? "0.72" : "1",
+            bgcolor: "green",
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+          component={Box}
+          lexGrow={1}
         >
           <Table
             style={{
@@ -145,6 +153,7 @@ export default function MonthView({
             <TableHead
               style={{
                 border: "1px solid #ccc",
+                height: "50px",
               }}
             >
               <TableRow
@@ -168,6 +177,7 @@ export default function MonthView({
               style={{
                 border: "1px solid #ccc",
                 overflowX: "scroll",
+                height: "100px",
               }}
             >
               {[0, 1, 2, 3, 4, 5].map((week) => (
@@ -206,6 +216,7 @@ export default function MonthView({
                           borderLeft: "1px solid #ccc",
                           borderBottom: "1px solid #ccc",
                           borderRight: "1px solid #ccc",
+                          height: "100px",
                         }}
                         onClick={() => {
                           const toDateEvents = events.filter((event) =>
@@ -236,7 +247,6 @@ export default function MonthView({
             </TableBody>
           </Table>
         </TableContainer>
-        
       </Box>
     </Box>
   );

@@ -264,26 +264,24 @@ const TaskComponent = ({ task }) => {
       <br />
 
       {/* Sub Tasks */}
-      {task.subtasks && task.subtasks.length > 0 && (
+      {task.subTasks && task.subTasks.length > 0 && (
         <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label" color="secondary">
-            Sub Tasks
-          </FormLabel>
+          <Typography variant="body2">Sub Tasks</Typography>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             name="radio-buttons-group"
           >
-            {task.subtasks.map((subtask) => (
+            {task.subTasks.map((subtask) => (
               <FormControlLabel
-                value={subtask}
+                value={subtask.done}
                 control={<Checkbox size="small" color="secondary" />}
-                label={subtask}
+                label={subtask.title}
               />
             ))}
           </RadioGroup>
-          <Divider sx={{ margin: "10px 0" }} />
         </FormControl>
       )}
+      {task.subTasks.length > 0 && <Divider sx={{ margin: "10px 0" }} />}
       {/* Add sub task */}
       <Box
         sx={{
@@ -457,23 +455,34 @@ function TaskFiles({ files }) {
           },
         }}
       >
-        {files.map((file) => (
+        {files.length > 0 ? (
+          files.map((file) => (
+            <MenuItem
+              sx={{
+                display: "flex",
+                gap: "5px",
+              }}
+              key={file}
+              selected={file === "Pyxis"}
+            >
+              <FileIcone fileType={file.fileType} />
+              <Typography variant="caption">
+                {file.fileName.length > 20
+                  ? file.fileName.substring(0, 20) + "..."
+                  : file.fileName}
+              </Typography>
+            </MenuItem>
+          ))
+        ) : (
           <MenuItem
             sx={{
               display: "flex",
               gap: "5px",
             }}
-            key={file}
-            selected={file === "Pyxis"}
           >
-            <FileIcone fileType={file.fileType} />
-            <Typography variant="caption">
-              {file.fileName.length > 20
-                ? file.fileName.substring(0, 20) + "..."
-                : file.fileName}
-            </Typography>
+            <Typography variant="caption">No attached files</Typography>
           </MenuItem>
-        ))}
+        )}
       </Menu>
     </div>
   );
@@ -518,7 +527,7 @@ function TaskAssignees({ task }) {
                 fontSize: 10,
               }}
             >
-              {assignee.username[0]} {assignee.lastname[0]}
+              {assignee.firstname[0]} {assignee.lastname[0]}
             </Avatar>
           ))}
       </AvatarGroup>
@@ -555,12 +564,12 @@ function TaskAssignees({ task }) {
                   fontSize: 10,
                 }}
               >
-                {assignee.username[0]}
+                {assignee.firstname[0]}
                 {assignee.lastname[0]}
               </Avatar>
 
               <Typography variant="body2" color="text.secondary">
-                {assignee.username} {assignee.lastname}
+                {assignee.firstname} {assignee.lastname}
               </Typography>
             </MenuItem>
           ))}
@@ -689,8 +698,11 @@ const AddTaskForm = ({
     for (const file of files) {
       formData.append("files", file.file);
     }
-    for (const assignee of assignees) {
-      formData.append("assignees", assignee.id);
+    const allAsignees = new Array();
+    for (let index = 0; index < assignees.length; index++) {
+      const element = assignees[index];
+
+      allAsignees.push(element.id);
     }
     for (const subtask of subtasks) {
       formData.append("subtasks", subtask);
@@ -698,6 +710,7 @@ const AddTaskForm = ({
     formData.append("title", title);
     formData.append("description", description);
     formData.append("flag", flag);
+    formData.append("assignees", JSON.stringify(allAsignees));
     formData.append("status", state);
     formData.append("subtasks", subtasks);
     formData.append("startDate", startDate);

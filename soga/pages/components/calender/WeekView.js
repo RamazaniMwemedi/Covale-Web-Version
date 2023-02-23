@@ -10,7 +10,6 @@ import { Box, IconButton } from "@mui/material";
 
 import Moment from "moment";
 import WeekPicker from "./WeekPicker";
-import EventsComponent from "./EventsComponent";
 
 export default function WeekView({
   selectedDate,
@@ -205,25 +204,6 @@ export default function WeekView({
             </TableBody>
           </Table>
         </TableContainer>
-        {selectedEvent && (
-          <Box
-            sx={{
-              backgroundColor: "red",
-              flex: "0.28",
-            }}
-          >
-            <IconButton
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-              onClick={removeEvent}
-            >
-              {"<"}
-            </IconButton>
-            <EventsComponent events={selectedEvent} />
-          </Box>
-        )}
       </Box>
     </Paper>
   );
