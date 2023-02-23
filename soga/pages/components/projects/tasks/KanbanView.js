@@ -352,26 +352,15 @@ const TaskComponent = ({ task }) => {
   );
 };
 
-const options = [
-  "None",
-  "Atria",
-  "Callisto",
-  "Dione",
-  "Ganymede",
-  "Hangouts Call",
-  "Luna",
-  "Oberon",
-  "Phobos",
-  "Pyxis",
-  "Sedna",
-  "Titania",
-  "Triton",
-  "Umbriel",
-];
+const options = ["None", "Atria", "Callisto", "Dione"];
 
 const ITEM_HEIGHT = 48;
 function TasksComments() {
+  // userStore
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user ? userStore.user : null;
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [content, setContent] = React.useState("");
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -391,8 +380,9 @@ function TasksComments() {
         onClick={handleClick}
         size="small"
       >
-        <CommentRoundedIcon />
+        <CommentRoundedIcon color="secondary" />
       </IconButton>
+
       <Menu
         id="long-menu"
         MenuListProps={{
@@ -403,16 +393,88 @@ function TasksComments() {
         onClose={handleClose}
         PaperProps={{
           style: {
-            maxHeight: ITEM_HEIGHT * 4.5,
-            width: "40ch",
+            width: "30ch",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            maxHeight: "400px",
+            borderRadius: "10px",
           },
         }}
       >
-        {options.map((option) => (
-          <MenuItem key={option} selected={option === "Pyxis"}>
-            {option}
-          </MenuItem>
-        ))}
+        <Typography
+          variant="body1"
+          sx={{
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Task Comments
+        </Typography>
+        <Box
+          sx={{
+            height: "310px",
+            overflowY: "scroll",
+          }}
+        >
+          {options.map((option) => (
+            <MenuItem key={option} selected={option === "Pyxis"}>
+              {option}
+            </MenuItem>
+          ))}
+        </Box>
+        <FormControl sx={{ p: 1, width: "100%" }} variant="outlined">
+          <OutlinedInput
+            startAdornment={
+              <InputAdornment
+                sx={{
+                  marginLeft: "-10px",
+                }}
+                position="start"
+              >
+                <Avatar
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    fontSize: 10,
+                  }}
+                >
+                  {user.firstname[0]} {user.lastname[0]}
+                </Avatar>
+              </InputAdornment>
+            }
+            id="outlined-adornment-password"
+            type="text"
+            value={content}
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+            sx={{
+              height: "35px",
+              borderRadius: "15px",
+            }}
+            placeholder="Add a comment..."
+            color="secondary"
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton edge="end">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="purple"
+                    // class="bi bi-send-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                  </svg>
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
       </Menu>
     </div>
   );
@@ -438,7 +500,7 @@ function TaskFiles({ files }) {
         onClick={handleClick}
         size="small"
       >
-        <AttachFileRoundedIcon />{" "}
+        <AttachFileRoundedIcon color="secondary" />{" "}
       </IconButton>
       <Menu
         id="long-menu"
@@ -450,39 +512,61 @@ function TaskFiles({ files }) {
         onClose={handleClose}
         PaperProps={{
           style: {
-            maxHeight: ITEM_HEIGHT * 4.5,
             width: "30ch",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            maxHeight: "400px",
+            borderRadius: "10px",
           },
         }}
       >
-        {files.length > 0 ? (
-          files.map((file) => (
+        <Typography
+          variant="body1"
+          sx={{
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Task Comments
+        </Typography>
+        <Box
+          sx={{
+            height: "310px",
+            overflowY: "scroll",
+          }}
+        >
+          {files.length > 0 ? (
+            files.map((file) => (
+              <MenuItem
+                sx={{
+                  display: "flex",
+                  gap: "5px",
+                }}
+                key={file}
+                selected={file === "Pyxis"}
+              >
+                <FileIcone fileType={file.fileType} />
+                <Typography variant="caption">
+                  {file.fileName.length > 20
+                    ? file.fileName.substring(0, 20) + "..."
+                    : file.fileName}
+                </Typography>
+              </MenuItem>
+            ))
+          ) : (
             <MenuItem
               sx={{
                 display: "flex",
                 gap: "5px",
               }}
-              key={file}
-              selected={file === "Pyxis"}
             >
-              <FileIcone fileType={file.fileType} />
-              <Typography variant="caption">
-                {file.fileName.length > 20
-                  ? file.fileName.substring(0, 20) + "..."
-                  : file.fileName}
-              </Typography>
+              <Typography variant="caption">No attached files</Typography>
             </MenuItem>
-          ))
-        ) : (
-          <MenuItem
-            sx={{
-              display: "flex",
-              gap: "5px",
-            }}
-          >
-            <Typography variant="caption">No attached files</Typography>
-          </MenuItem>
-        )}
+          )}
+        </Box>
       </Menu>
     </div>
   );
