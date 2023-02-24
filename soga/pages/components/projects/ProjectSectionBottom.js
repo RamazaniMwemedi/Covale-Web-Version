@@ -8,6 +8,7 @@ import ProjectMember from "./ProjectMember";
 import { useRouter } from "next/router";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import { useState } from "react";
+import Files from "./files";
 const ProjectSectionBottom = ({ value, project }) => {
   const router = useRouter();
 
@@ -74,7 +75,7 @@ const ProjectSectionBottom = ({ value, project }) => {
             }}
           >
             {" "}
-            <Typography>Files</Typography>
+            <Files files={project.files} handleShowFile={handleShowFile} />
           </Box>
         </TabPanel>
 

@@ -55,8 +55,19 @@ const ProjectSection = () => {
           />
         </>
       ) : (
-        <Box>
-          <Typography variant="h1">Click a project</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignContent: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            flexDirection: "column",
+            pt: "45%",
+          }}
+        >
+          <Typography variant="h3">Choose a project to</Typography>
+
+          <Typography variant="h3"> begin working on it</Typography>
         </Box>
       )}
     </Box>
