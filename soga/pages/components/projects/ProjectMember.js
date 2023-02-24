@@ -7,152 +7,48 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { Avatar } from "@mui/material";
+import { Avatar, Typography } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
+function getUserTaskStatus(userId, allTasks, taskStatus) {
+  // Filter tasks by assignor or assignees
+  console.log("allTasks :>>", allTasks);
+  const userTasks = allTasks.filter(
+    (task) =>
+      task.assignor.id === userId ||
+      task.assignees.map((assignee) => assignee.id)[0].includes(userId)
+  );
+  console.log("UserTasks :>>", userTasks);
 
-const columns = [
-  { id: "fullName", label: "Ful name", minWidth: 170 },
+  // Count tasks by status
+  const taskCounts = taskStatus.reduce((acc, status) => {
+    const count = userTasks.filter((task) => task.status === status).length;
+    acc[status.toLowerCase().replace(/\s/g, "") + "Tasks"] = count;
+    return acc;
+  }, {});
 
-  {
-    id: "numberOfTaskPending",
-    label: "Tasks pending",
-    minWidth: 170,
-    align: "center",
-  },
-  {
-    id: "numberOfTaskInProgress",
-    label: "Tasks in progress",
-    minWidth: 170,
-    align: "center",
-  },
-  {
-    id: "numberOfTaskDone",
-    label: "Tasks done",
-    minWidth: 100,
-    align: "center",
-  },
-  {
-    id: "numberOfSubProjects",
-    label: "Sub projects",
-    minWidth: 170,
-    align: "center",
-  },
-];
+  // Return object with user's task status
+  return { userId, ...taskCounts };
+}
 
-const rows = [
-  {
-    fullName: "John Doe",
-    numberOfTaskDone: 10,
-    numberOfTaskInProgress: 5,
-    numberOfTaskPending: 2,
-    numberOfSubProjects: 3,
-  },
-  {
-    fullName: "Jane Doe",
-    numberOfTaskDone: 8,
-    numberOfTaskInProgress: 7,
-    numberOfTaskPending: 5,
-    numberOfSubProjects: 4,
-  },
-  {
-    fullName: "Michael Smith",
-    numberOfTaskDone: 12,
-    numberOfTaskInProgress: 3,
-    numberOfTaskPending: 1,
-    numberOfSubProjects: 2,
-  },
-  {
-    fullName: "Emily Davis",
-    numberOfTaskDone: 9,
-    numberOfTaskInProgress: 6,
-    numberOfTaskPending: 4,
-    numberOfSubProjects: 5,
-  },
-  {
-    fullName: "William Johnson",
-    numberOfTaskDone: 11,
-    numberOfTaskInProgress: 4,
-    numberOfTaskPending: 3,
-    numberOfSubProjects: 2,
-  },
-  {
-    fullName: "Daniel Martinez",
-    numberOfTaskDone: 13,
-    numberOfTaskInProgress: 2,
-    numberOfTaskPending: 1,
-    numberOfSubProjects: 4,
-  },
-  {
-    fullName: "Sophia Lee",
-    numberOfTaskDone: 8,
-    numberOfTaskInProgress: 5,
-    numberOfTaskPending: 7,
-    numberOfSubProjects: 3,
-  },
-  {
-    fullName: "Emily Brown",
-    numberOfTaskDone: 12,
-    numberOfTaskInProgress: 4,
-    numberOfTaskPending: 2,
-    numberOfSubProjects: 5,
-  },
-  {
-    fullName: "Olivia Davis",
-    numberOfTaskDone: 10,
-    numberOfTaskInProgress: 6,
-    numberOfTaskPending: 4,
-    numberOfSubProjects: 4,
-  },
-  {
-    fullName: "Mia Anderson",
-    numberOfTaskDone: 9,
-    numberOfTaskInProgress: 7,
-    numberOfTaskPending: 3,
-    numberOfSubProjects: 2,
-  },
-  {
-    fullName: "Ava Thomas",
-    numberOfTaskDone: 11,
-    numberOfTaskInProgress: 5,
-    numberOfTaskPending: 2,
-    numberOfSubProjects: 3,
-  },
-  {
-    fullName: "Isabella Johnson",
-    numberOfTaskDone: 8,
-    numberOfTaskInProgress: 6,
-    numberOfTaskPending: 6,
-    numberOfSubProjects: 4,
-  },
-  {
-    fullName: "Charlotte Lee",
-    numberOfTaskDone: 12,
-    numberOfTaskInProgress: 4,
-    numberOfTaskPending: 1,
-    numberOfSubProjects: 5,
-  },
-  {
-    fullName: "Avery Davis",
-    numberOfTaskDone: 10,
-    numberOfTaskInProgress: 7,
-    numberOfTaskPending: 2,
-    numberOfSubProjects: 4,
-  },
-];
+export default function ProjectMember({ members, taskStatus, allTasks }) {
+  // const taskStatus = ["Pending", "In Progress", "Completed", "Delayed"];
+  const columnMap = taskStatus.reduce((acc, status) => {
+    const id = status.toLowerCase().replace(/\s/g, "") + "Tasks";
+    const label = status + " tasks";
+    acc[id] = { id, label, minWidth: 170, align: "center" };
+    return acc;
+  }, {});
 
-export default function ProjectMember() {
+  const columns = [
+    { id: "firstName", label: "First name", minWidth: 170 },
+    ...Object.values(columnMap),
+  ];
+
+  console.log("columns :>>", columns);
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(60);
   const theme = useTheme();
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
 
   return (
     <Paper
@@ -162,7 +58,7 @@ export default function ProjectMember() {
         backgroundColor: theme.colors.textBackground,
       }}
     >
-      <TableContainer sx={{ maxHeight: "76vh" }}>
+      <TableContainer sx={{ maxHeight: "71vh" }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -178,13 +74,26 @@ export default function ProjectMember() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {members
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((member) => {
+                const taskStatusCount = getUserTaskStatus(
+                  member.id,
+                  allTasks,
+                  taskStatus
+                );
+                console.log("LLL :>>", taskStatusCount);
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={member.code}
+                  >
                     {columns.map((column) => {
-                      const value = row[column.id];
+                      console.log("column >>", column);
+                      const value = members[column.id];
+                      console.log("Value :>> ", value);
                       return (
                         <TableCell key={column.id} align={column.align}>
                           <Box
@@ -193,14 +102,35 @@ export default function ProjectMember() {
                               gap: "10px",
                               alignItems: "center",
                               justifyContent:
-                                column.id !== "fullName" && "center",
+                                column.id !== "firstName" && "center",
                               textAlign: "center",
                             }}
                           >
-                            {column.id === "fullName" && <Avatar />}
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
+                            {column.id === "firstName" && (
+                              <Avatar
+                                sx={{
+                                  width: 30,
+                                  height: 30,
+                                  fontSize: 10,
+                                }}
+                              >
+                                {member.firstname[0]}
+                                {member.lastname[0]}
+                              </Avatar>
+                            )}
+                            {column.id === "firstName" && (
+                              <Typography variant="body2">
+                                {member.firstname}
+                                {"  "}
+                                {member.lastname}
+                              </Typography>
+                            )}
+                            {column.id === "pendingTasks" &&
+                              taskStatusCount.pendingTasks}
+                            {column.id === "inprogressTasks" &&
+                              taskStatusCount.inprogressTasks}
+                            {column.id === "completedTasks" &&
+                              taskStatusCount.completedTasks}
                           </Box>
                         </TableCell>
                       );
@@ -211,15 +141,6 @@ export default function ProjectMember() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Paper>
   );
 }

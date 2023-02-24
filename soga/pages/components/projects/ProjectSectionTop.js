@@ -56,18 +56,18 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
                 gap: "10px",
               }}
             >
-              <IconButton>
+              {/* <IconButton>
                 <SearchRoundedIcon fontSize="small" />
-              </IconButton>
-              <IconButton>
+              </IconButton> */}
+              {/* <IconButton>
                 <PushPinRoundedIcon fontSize="small" />
-              </IconButton>
-              <IconButton>
+              </IconButton> */}
+              {/* <IconButton>
                 <ChatBubbleRoundedIcon fontSize="small" />
               </IconButton>
               <IconButton>
                 <MoreVertRoundedIcon fontSize="small" />
-              </IconButton>
+              </IconButton> */}
             </Box>
           </Box>
           {/* Second Box  */}
@@ -137,6 +137,7 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
               <TotalAvatars
                 valueChangeHandler={valueChangeHandler}
                 value={value}
+                project={project}
               />
             </Box>
           </Box>
@@ -178,7 +179,7 @@ function ProjectTopTabs({ valueChangeHandler, value }) {
   );
 }
 
-function TotalAvatars({ valueChangeHandler, value }) {
+function TotalAvatars({ valueChangeHandler, value, project }) {
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
       <Tabs
@@ -197,23 +198,21 @@ function TotalAvatars({ valueChangeHandler, value }) {
                 // width: "24px",
                 "& .MuiAvatar-root": { width: 30, height: 30, fontSize: 10 },
               }}
-              total={24}
+              total={project.members.length}
             >
-              <Avatar
-              />
-              <Avatar
-              />
-              <Avatar
-              />
+              {project.members.map((member) => (
+                <Avatar>
+                  {member.firstname[0]}
+                  {member.lastname[0]}
+                </Avatar>
+              ))}
             </AvatarGroup>
           }
           sx={{ textTransform: "none" }}
         />
       </Tabs>
       <Divider orientation="vertical" sx={{ width: "1px" }} flexItem />
-      <IconButton>
-        <PersonAddAlt1RoundedIcon fontSize="small" />
-      </IconButton>
+     
     </Box>
   );
 }

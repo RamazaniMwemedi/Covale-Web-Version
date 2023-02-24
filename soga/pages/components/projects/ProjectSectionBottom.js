@@ -21,6 +21,16 @@ const ProjectSectionBottom = ({ value, project }) => {
   // taskStatus
   const taskStatus = project.taskStatus;
 
+  // All Tasks
+  const allTasks = new Array();
+  for (let index = 0; index < project.subProjects.length; index++) {
+    const subProjectFromProject = project.subProjects[index];
+    for (let index = 0; index < subProjectFromProject.tasks.length; index++) {
+      const task = subProjectFromProject.tasks[index];
+      allTasks.push(task);
+    }
+  }
+
   const [showFile, setShowFile] = useState(false);
   const [file, setFile] = useState(null);
   const handleShowFile = (file) => {
@@ -87,7 +97,12 @@ const ProjectSectionBottom = ({ value, project }) => {
           >
             {" "}
             <Typography variant="h2">Members</Typography>
-            <ProjectMember />
+            <ProjectMember
+              members={project.members}
+              managers={project.managers}
+              taskStatus={project.taskStatus}
+              allTasks={allTasks}
+            />
           </Box>
         </TabPanel>
       </TabContext>
