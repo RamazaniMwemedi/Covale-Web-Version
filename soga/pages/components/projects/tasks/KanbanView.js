@@ -49,10 +49,15 @@ import SaveIcon from "@mui/icons-material/Save";
 import {
   addCommentToTask,
   addTaskToSubProject,
+  updateTasks,
 } from "../../../../Redux/slices/projects";
 import FileIcone from "../../mediaFiles/FileIcon";
 import dayjs from "dayjs";
-import { commmentTask, createNewTask } from "../../../../services/projects";
+import {
+  commmentTask,
+  createNewTask,
+  modifyTask,
+} from "../../../../services/projects";
 import moment from "moment";
 import FileComponent from "../../mediaFiles/FileComponent";
 
@@ -104,10 +109,42 @@ function TaskStates({
   // Copy the values from the taskStatus to states and add "New State" to the end
   const states = [...taskStatus, "New State"];
   const categorizedTasks = {};
-
+  const dispatch = useDispatch();
   states.forEach((state) => {
     categorizedTasks[state] = tasks.filter((task) => task.status === state);
   });
+  // userStore
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user ? userStore.user : null;
+  const token = user ? user.token : null;
+
+  const handleDrop = async (event, newStatus) => {
+    event.preventDefault();
+    if (newStatus !== "New State") {
+      const taskId = event.dataTransfer.getData("taskId");
+      const updatedTasks = tasks.map((task) => {
+        if (task.id.toString() === taskId) {
+          return { ...task, status: newStatus };
+        } else {
+          return task;
+        }
+      });
+      dispatch(
+        updateTasks({
+          projectId,
+          subProjectId: id,
+          newTasks: updatedTasks,
+        })
+      );
+      const data = await modifyTask(token, taskId, {
+        status: newStatus,
+      });
+    }
+  };
+  const handleDragStart = (event, taskId) => {
+    event.dataTransfer.setData("taskId", taskId.toString());
+  };
+
   return (
     <Box
       sx={{
@@ -119,16 +156,23 @@ function TaskStates({
       }}
     >
       {states.map((state) => (
-        <TaskBlock
+        <div
           key={state}
-          state={state}
-          addTheTaskToReduxHandler={addTheTaskToReduxHandler}
-          id={id}
-          tasks={categorizedTasks[state]}
-          members={members}
-          projectId={projectId}
-          handleShowFile={handleShowFile}
-        />
+          onDrop={(event) => handleDrop(event, state)}
+          onDragOver={(event) => event.preventDefault()}
+        >
+          <TaskBlock
+            key={state}
+            state={state}
+            addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+            id={id}
+            tasks={categorizedTasks[state]}
+            members={members}
+            projectId={projectId}
+            handleShowFile={handleShowFile}
+            handleDragStart={handleDragStart}
+          />
+        </div>
       ))}
     </Box>
   );
@@ -142,6 +186,7 @@ const TaskBlock = ({
   members,
   projectId,
   handleShowFile,
+  handleDragStart,
 }) => {
   const theme = useTheme();
   const [addNewTask, setAddNewTask] = React.useState(false);
@@ -219,20 +264,27 @@ const TaskBlock = ({
           padding: "10px",
         }}
       >
-        {tasks.map((task) => (
-          <TaskComponent
-            key={task.title}
-            task={task}
-            projectId={projectId}
-            handleShowFile={handleShowFile}
-          />
+        {tasks.map((task, i) => (
+          <div
+            key={task.id}
+            draggable
+            onDragStart={(event) => handleDragStart(event, task.id)}
+          >
+            <TaskComponent
+              key={task.id}
+              task={task}
+              projectId={projectId}
+              handleShowFile={handleShowFile}
+              index={i}
+            />
+          </div>
         ))}
       </Box>
     </Box>
   );
 };
 
-const TaskComponent = ({ task, projectId, handleShowFile }) => {
+const TaskComponent = ({ task, projectId, handleShowFile, index }) => {
   const theme = useTheme();
   let flagColor;
   if (task.flag === "High") {
@@ -271,9 +323,7 @@ const TaskComponent = ({ task, projectId, handleShowFile }) => {
             }}
           />
         </Tooltip>
-        <IconButton size="small">
-          <MoreVertIcon fontSize="small" />
-        </IconButton>
+        <MoreMenu />
       </Box>
       {/* Task details */}
 
@@ -395,8 +445,6 @@ const TaskComponent = ({ task, projectId, handleShowFile }) => {
     </Box>
   );
 };
-
-const options = ["None", "Atria", "Callisto", "Dione"];
 
 const ITEM_HEIGHT = 48;
 function TasksComments({ comments, taskId, subProjectId, projectId }) {
@@ -1480,5 +1528,49 @@ function DateTimePickerForm({
         </LocalizationProvider>
       </Menu>
     </Box>
+  );
+}
+
+function MoreMenu() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+        size="small"
+      >
+        <MoreVertIcon fontSize="small" />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "20ch",
+          },
+        }}
+      >
+        <MenuItem>Move to</MenuItem>
+      </Menu>
+    </div>
   );
 }

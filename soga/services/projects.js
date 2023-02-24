@@ -72,10 +72,27 @@ const commmentTask = async (token, taskId, content) => {
   return response.data;
 };
 
+const modifyTask = async (token, taskId, data) => {
+  //  flag, status;
+  if (token && taskId) {
+    const response = await axios.patch(
+      `${SERVER_ADDRESS}/api/v1/subproject/tasks/${taskId}/modify`,
+      { flag: data.flag, status: data.status },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
 module.exports = {
   getProjects,
   createNewProject,
   createNewSubProject,
   createNewTask,
   commmentTask,
+  modifyTask,
 };
