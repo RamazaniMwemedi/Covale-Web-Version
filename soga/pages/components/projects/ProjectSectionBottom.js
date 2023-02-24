@@ -9,9 +9,31 @@ import { useRouter } from "next/router";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import { useState } from "react";
 import Files from "./files";
+import TeamChats from "./teamMessages";
+import { useSelector } from "react-redux";
+import { useTheme } from "@mui/styles";
+import { Avatar } from "@mui/material";
+import FileIcone from "../mediaFiles/FileIcon";
+import moment from "moment";
 const ProjectSectionBottom = ({ value, project, showChats }) => {
-  const router = useRouter();
+  const theme = useTheme();
+  const teamStore = useSelector((state) => state.teams);
+  const teamList = teamStore ? teamStore.teams : null;
+  const allProjectTeams = new Array();
 
+  for (let index = 0; index < project.teams.length; index++) {
+    const teamId = project.teams[index];
+    const team = teamList.find((team) => team.id == teamId);
+    allProjectTeams.push(team);
+  }
+
+  const [selectedTeam, setSelectedTeam] = useState(null);
+
+  const handleSelectTeam = (teamId) => {
+    setSelectedTeam(allProjectTeams.find(team.id == teamId));
+  };
+
+  const router = useRouter();
   const subProject = router.query.subproject
     ? project.subProjects.find(
         (subProject) => subProject.id === router.query.subproject
@@ -125,11 +147,92 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
         <Box
           sx={{
             flex: 0.4,
-            height: "85vh",
-            width: "40%",
-            bgcolor: "red",
+            height: "80vh",
+            // width: "40%",
+            bgcolor: theme.colors.background1,
           }}
-        ></Box>
+        >
+          {!selectedTeam && (
+            <Box>
+              {allProjectTeams.map((team) => {
+                const lastMessageObject = team.messages
+                  ? team.messages[team.messages.length - 1]
+                  : null;
+                console.log("Last message :>>", lastMessageObject);
+                const lastMessage = lastMessageObject
+                  ? lastMessageObject.message
+                  : "";
+                return (
+                  <Box
+                    sx={{
+                      bgcolor: theme.colors.textBackground,
+                      p: 1,
+                      m: 1,
+                      boxShadow: 1,
+                      borderRadius: "5px",
+                      display: "flex",
+                    }}
+                  >
+                    <Avatar>{team.teamName[0]}</Avatar>
+                    <Box>
+                      <Typography variant="body1">{team.teamName}</Typography>
+                      <Box
+                        sx={{
+                          bgcolor: theme.colors.textBackground2,
+                          p: 1,
+                          m: 1,
+                          boxShadow: 1,
+                          borderRadius: "5px",
+                          width: "240px",
+                          display: "flex",
+                          gap: 2,
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            height: 20,
+                            width: 20,
+                            fontSize: "10px",
+                          }}
+                        >
+                          {lastMessageObject.sender.firstname[0]}
+                          {lastMessageObject.sender.lastname[0]}
+                        </Avatar>
+                        <Box>
+                          <Typography variant="body2">
+                            {lastMessageObject.sender.firstname}{" "}
+                            {lastMessageObject.sender.lastname}
+                          </Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: "5px",
+                            }}
+                          >
+                            {lastMessageObject.file.map((file) => (
+                              <FileIcone
+                                fileType={file.fileType}
+                                height={20}
+                                width={20}
+                              />
+                            ))}
+                            <Typography variant="body2">
+                              {lastMessage}
+                            </Typography>
+                            <Typography variant="caption">
+                              {moment(lastMessage.createdAt).format("dd DD, MMMM")}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+              })}
+            </Box>
+          )}
+          {selectedTeam && <TeamChats />}
+        </Box>
       )}
     </Box>
   );
