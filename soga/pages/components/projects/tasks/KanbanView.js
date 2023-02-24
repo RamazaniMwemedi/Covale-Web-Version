@@ -54,11 +54,13 @@ import FileIcone from "../../mediaFiles/FileIcon";
 import dayjs from "dayjs";
 import { commmentTask, createNewTask } from "../../../../services/projects";
 import moment from "moment";
+import FileComponent from "../../mediaFiles/FileComponent";
 
 const KanbanView = ({
   project: { members },
   subProject: { tasks, id, project, title },
   taskStatus,
+  handleShowFile,
 }) => {
   const dispatch = useDispatch();
   // Add tasks handlers
@@ -82,6 +84,7 @@ const KanbanView = ({
         id={id}
         members={members}
         projectId={project}
+        handleShowFile={handleShowFile}
       />
     </Box>
   );
@@ -96,6 +99,7 @@ function TaskStates({
   id,
   members,
   projectId,
+  handleShowFile,
 }) {
   // Copy the values from the taskStatus to states and add "New State" to the end
   const states = [...taskStatus, "New State"];
@@ -123,6 +127,7 @@ function TaskStates({
           tasks={categorizedTasks[state]}
           members={members}
           projectId={projectId}
+          handleShowFile={handleShowFile}
         />
       ))}
     </Box>
@@ -136,6 +141,7 @@ const TaskBlock = ({
   id,
   members,
   projectId,
+  handleShowFile,
 }) => {
   const theme = useTheme();
   const [addNewTask, setAddNewTask] = React.useState(false);
@@ -214,14 +220,19 @@ const TaskBlock = ({
         }}
       >
         {tasks.map((task) => (
-          <TaskComponent key={task.title} task={task} projectId={projectId} />
+          <TaskComponent
+            key={task.title}
+            task={task}
+            projectId={projectId}
+            handleShowFile={handleShowFile}
+          />
         ))}
       </Box>
     </Box>
   );
 };
 
-const TaskComponent = ({ task, projectId }) => {
+const TaskComponent = ({ task, projectId, handleShowFile }) => {
   const theme = useTheme();
   let flagColor;
   if (task.flag === "High") {
@@ -363,7 +374,7 @@ const TaskComponent = ({ task, projectId }) => {
               },
             }}
           >
-            <TaskFiles files={task.files} />
+            <TaskFiles files={task.files} handleShowFile={handleShowFile} />
           </Badge>
         </Box>
       </Box>
@@ -462,7 +473,7 @@ function TasksComments({ comments, taskId, subProjectId, projectId }) {
                     fontSize: 10,
                   }}
                 >
-                  {/* {comment.author.firstname[0]} {comment.author.lastname[0]} */}
+                  {comment.author.firstname[0]} {comment.author.lastname[0]}
                 </Avatar>
                 <Box>
                   <Typography variant="body2">{comment.content}</Typography>
@@ -559,7 +570,7 @@ function TasksComments({ comments, taskId, subProjectId, projectId }) {
   );
 }
 
-function TaskFiles({ files }) {
+function TaskFiles({ files, handleShowFile }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -626,8 +637,10 @@ function TaskFiles({ files }) {
                 }}
                 key={file}
                 selected={file === "Pyxis"}
+                onClick={() => handleShowFile(file)}
               >
-                <FileIcone fileType={file.fileType} />
+                <FileComponent file={file} />
+                {/* <FileIcone fileType={file.fileType} /> */}
                 <Typography variant="caption">
                   {file.fileName.length > 20
                     ? file.fileName.substring(0, 20) + "..."

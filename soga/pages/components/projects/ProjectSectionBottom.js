@@ -6,6 +6,7 @@ import TasksTabPanel from "./tasks/TasksTabPanel";
 import TasksViews from "./tasks/TasksViews";
 import ProjectMember from "./ProjectMember";
 import { useRouter } from "next/router";
+import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 const ProjectSectionBottom = ({ value, project }) => {
   const router = useRouter();
 
@@ -18,8 +19,27 @@ const ProjectSectionBottom = ({ value, project }) => {
   // taskStatus
   const taskStatus = project.taskStatus;
 
+  const [showFile, setShowFile] = useState(false);
+  const [file, setFile] = useState(null);
+  const handleShowFile = (file) => {
+    // If file.fileUrl includes https:// then setFile to file and setShowVideoPlayer to true
+    if (file.fileUrl.includes("https://")) {
+      setFile(file);
+      setShowFile(true);
+    }
+  };
+  const handleCloseShowFile = () => {
+    setShowFile(false);
+  };
+
   return (
     <Box sx={{ width: "100%", typography: "body1", overflow: "hidden" }}>
+      {showFile && (
+        <FileDisplayComponent
+          handleCloseShowVideoPlayer={handleCloseShowFile}
+          file={file}
+        />
+      )}
       <TabContext value={value}>
         <TabPanel value="Tasks">
           <Box
@@ -32,6 +52,7 @@ const ProjectSectionBottom = ({ value, project }) => {
               subProject={subProject}
               taskStatus={taskStatus}
               project={project}
+              handleShowFile={handleShowFile}
             />
           </Box>
         </TabPanel>

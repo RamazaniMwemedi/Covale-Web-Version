@@ -6,7 +6,7 @@ import ListView from "./ListView";
 import TableView from "./TableView";
 import TasksTabPanel from "./TasksTabPanel";
 
-const TasksViews = ({ subProject, taskStatus, project }) => {
+const TasksViews = ({ subProject, taskStatus, project, handleShowFile }) => {
   const [value, setValue] = React.useState("kanban");
 
   const handleChange = (event, newValue) => {
@@ -28,6 +28,7 @@ const TasksViews = ({ subProject, taskStatus, project }) => {
           subProject={subProject}
           taskStatus={taskStatus}
           project={project}
+          handleShowFile={handleShowFile}
         />
       </Box>
     </Box>
@@ -36,15 +37,46 @@ const TasksViews = ({ subProject, taskStatus, project }) => {
 
 export default TasksViews;
 
-const ViewToReturn = ({ taskViewValue, subProject, taskStatus, project }) => {
+const ViewToReturn = ({
+  taskViewValue,
+  subProject,
+  taskStatus,
+  project,
+  handleShowFile,
+}) => {
   switch (taskViewValue) {
     case "kanban":
-      return <KanbanView subProject={subProject} taskStatus={taskStatus} project={project} />;
+      return (
+        <KanbanView
+          subProject={subProject}
+          taskStatus={taskStatus}
+          project={project}
+          handleShowFile={handleShowFile}
+        />
+      );
     case "table":
-      return <TableView subProject={subProject} taskStatus={taskStatus} project={project} />;
+      return (
+        <TableView
+          subProject={subProject}
+          taskStatus={taskStatus}
+          project={project}
+        />
+      );
     case "list":
-      return <ListView subProject={subProject} taskStatus={taskStatus} project={project} />;
+      return (
+        <ListView
+          subProject={subProject}
+          taskStatus={taskStatus}
+          project={project}
+        />
+      );
     default:
-      return <KanbanView subProject={subProject} taskStatus={taskStatus} project={project} />;
+      return (
+        <KanbanView
+          subProject={subProject}
+          taskStatus={taskStatus}
+          project={project}
+        />
+      );
   }
 };
