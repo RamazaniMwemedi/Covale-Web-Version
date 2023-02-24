@@ -6,18 +6,20 @@ import ListView from "./ListView";
 import TableView from "./TableView";
 import TasksTabPanel from "./TasksTabPanel";
 
-const TasksViews = ({ subProject, taskStatus, project, handleShowFile }) => {
+const TasksViews = ({
+  subProject,
+  taskStatus,
+  project,
+  handleShowFile,
+  showChats,
+}) => {
   const [value, setValue] = React.useState("kanban");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   return (
-    <Box
-      sx={{
-        width: "100%",
-      }}
-    >
+    <Box sx={{}}>
       <TasksTabPanel
         taskViewValue={value}
         taskViewValueChangeHandler={handleChange}
@@ -29,6 +31,7 @@ const TasksViews = ({ subProject, taskStatus, project, handleShowFile }) => {
           taskStatus={taskStatus}
           project={project}
           handleShowFile={handleShowFile}
+          showChats={showChats}
         />
       </Box>
     </Box>
@@ -43,6 +46,7 @@ const ViewToReturn = ({
   taskStatus,
   project,
   handleShowFile,
+  showChats,
 }) => {
   switch (taskViewValue) {
     case "kanban":
@@ -52,6 +56,7 @@ const ViewToReturn = ({
           taskStatus={taskStatus}
           project={project}
           handleShowFile={handleShowFile}
+          showChats={showChats}
         />
       );
     case "table":

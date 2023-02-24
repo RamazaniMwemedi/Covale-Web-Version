@@ -15,7 +15,13 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import { useRouter } from "next/router";
 
-const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
+const ProjectSectionTop = ({
+  valueChangeHandler,
+  value,
+  project,
+  showChats,
+  toggleShowChat,
+}) => {
   const theme = useTheme();
   const router = useRouter();
   const subProjectId = router.query.subproject;
@@ -62,10 +68,13 @@ const ProjectSectionTop = ({ valueChangeHandler, value, project }) => {
               {/* <IconButton>
                 <PushPinRoundedIcon fontSize="small" />
               </IconButton> */}
-              {/* <IconButton>
-                <ChatBubbleRoundedIcon fontSize="small" />
+              <IconButton onClick={() => toggleShowChat()}>
+                <ChatBubbleRoundedIcon
+                  color={showChats ? "secondary" : "action"}
+                  fontSize="small"
+                />
               </IconButton>
-              <IconButton>
+              {/* <IconButton>
                 <MoreVertRoundedIcon fontSize="small" />
               </IconButton> */}
             </Box>
@@ -212,7 +221,6 @@ function TotalAvatars({ valueChangeHandler, value, project }) {
         />
       </Tabs>
       <Divider orientation="vertical" sx={{ width: "1px" }} flexItem />
-     
     </Box>
   );
 }

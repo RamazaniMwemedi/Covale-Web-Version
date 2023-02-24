@@ -20,7 +20,9 @@ const ProjectSection = () => {
   const tasks = useSubProjectsTasks(projectId, subProjectId);
   const [tabValue, setTabValue] = useState("Tasks");
   const [taskViewValue, setTaskViewValue] = useState("kanban");
+  const [showChats, setShowChats] = useState(false);
 
+  const toggleShowChat = () => setShowChats((prev) => !prev);
   const theme = useTheme();
 
   const valueChangeHandler = (e, newValue) => {
@@ -46,11 +48,14 @@ const ProjectSection = () => {
             project={project}
             valueChangeHandler={valueChangeHandler}
             value={tabValue}
+            toggleShowChat={toggleShowChat}
+            showChats={showChats}
           />
           <ProjectSectionBottom
             taskViewValue={taskViewValue}
             value={tabValue}
             taskViewValueChangeHandler={taskViewValueChangeHandler}
+            showChats={showChats}
             project={project}
           />
         </>

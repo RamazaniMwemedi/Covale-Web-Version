@@ -66,6 +66,7 @@ const KanbanView = ({
   subProject: { tasks, id, project, title },
   taskStatus,
   handleShowFile,
+  showChats,
 }) => {
   const dispatch = useDispatch();
   // Add tasks handlers
@@ -80,7 +81,7 @@ const KanbanView = ({
     );
   };
   return (
-    <Box sx={{ width: "300px" }}>
+    <Box sx={{ width: showChats ? "600px" : "900px" }}>
       <Typography variant="h6">{title}</Typography>
       <TaskStates
         tasks={tasks}
@@ -148,7 +149,7 @@ function TaskStates({
   return (
     <Box
       sx={{
-        width: "72vw",
+        width: "100%",
         height: "75vh",
         overflowY: "hidden",
         display: "flex",

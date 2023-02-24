@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import { useState } from "react";
 import Files from "./files";
-const ProjectSectionBottom = ({ value, project }) => {
+const ProjectSectionBottom = ({ value, project, showChats }) => {
   const router = useRouter();
 
   const subProject = router.query.subproject
@@ -45,30 +45,44 @@ const ProjectSectionBottom = ({ value, project }) => {
   };
 
   return (
-    <Box sx={{ width: "100%", typography: "body1", overflow: "hidden" }}>
+    <Box
+      sx={{
+        width: "100%",
+        typography: "body1",
+        overflow: "hidden",
+        display: "flex",
+      }}
+    >
       {showFile && (
         <FileDisplayComponent
           handleCloseShowVideoPlayer={handleCloseShowFile}
           file={file}
         />
       )}
-      <TabContext value={value}>
-        <TabPanel value="Tasks">
-          <Box
-            sx={{
-              margin: "-20px",
-            }}
-          >
-            {" "}
-            <TasksViews
-              subProject={subProject}
-              taskStatus={taskStatus}
-              project={project}
-              handleShowFile={handleShowFile}
-            />
-          </Box>
-        </TabPanel>
-        {/* <TabPanel value="Overview">
+
+      <Box
+        sx={{
+          flex: 0.6,
+        }}
+      >
+        <TabContext value={value}>
+          <TabPanel value="Tasks">
+            <Box
+              sx={{
+                margin: "-20px",
+              }}
+            >
+              {" "}
+              <TasksViews
+                subProject={subProject}
+                taskStatus={taskStatus}
+                project={project}
+                handleShowFile={handleShowFile}
+                showChats={showChats}
+              />
+            </Box>
+          </TabPanel>
+          {/* <TabPanel value="Overview">
           <Box
             sx={{
               margin: "-20px",
@@ -78,34 +92,45 @@ const ProjectSectionBottom = ({ value, project }) => {
             <Typography>Overviews</Typography>
           </Box>
         </TabPanel> */}
-        <TabPanel value="Files">
-          <Box
-            sx={{
-              margin: "-20px",
-            }}
-          >
-            {" "}
-            <Files files={project.files} handleShowFile={handleShowFile} />
-          </Box>
-        </TabPanel>
+          <TabPanel value="Files">
+            <Box
+              sx={{
+                margin: "-20px",
+              }}
+            >
+              {" "}
+              <Files files={project.files} handleShowFile={handleShowFile} />
+            </Box>
+          </TabPanel>
 
-        <TabPanel value="Members">
-          <Box
-            sx={{
-              margin: "-20px",
-            }}
-          >
-            {" "}
-            <Typography variant="h2">Members</Typography>
-            <ProjectMember
-              members={project.members}
-              managers={project.managers}
-              taskStatus={project.taskStatus}
-              allTasks={allTasks}
-            />
-          </Box>
-        </TabPanel>
-      </TabContext>
+          <TabPanel value="Members">
+            <Box
+              sx={{
+                margin: "-20px",
+              }}
+            >
+              {" "}
+              <Typography variant="h2">Members</Typography>
+              <ProjectMember
+                members={project.members}
+                managers={project.managers}
+                taskStatus={project.taskStatus}
+                allTasks={allTasks}
+              />
+            </Box>
+          </TabPanel>
+        </TabContext>
+      </Box>
+      {showChats && (
+        <Box
+          sx={{
+            flex: 0.4,
+            height: "85vh",
+            width: "40%",
+            bgcolor: "red",
+          }}
+        ></Box>
+      )}
     </Box>
   );
 };
