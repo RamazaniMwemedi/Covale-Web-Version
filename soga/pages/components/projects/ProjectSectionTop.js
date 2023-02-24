@@ -158,11 +158,11 @@ function ProjectTopTabs({ valueChangeHandler, value }) {
         indicatorColor="secondary"
         aria-label="secondary tabs example"
       >
-        <Tab
+        {/* <Tab
           value="Overview"
           label={<Typography>Overview</Typography>}
           sx={{ textTransform: "none" }}
-        />
+        /> */}
         <Tab
           value="Tasks"
           label={<Typography>Tasks</Typography>}

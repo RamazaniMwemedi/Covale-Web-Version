@@ -57,7 +57,7 @@ const ProjectSectionBottom = ({ value, project }) => {
             />
           </Box>
         </TabPanel>
-        <TabPanel value="Overview">
+        {/* <TabPanel value="Overview">
           <Box
             sx={{
               margin: "-20px",
@@ -66,7 +66,7 @@ const ProjectSectionBottom = ({ value, project }) => {
             {" "}
             <Typography>Overviews</Typography>
           </Box>
-        </TabPanel>
+        </TabPanel> */}
         <TabPanel value="Files">
           <Box
             sx={{
