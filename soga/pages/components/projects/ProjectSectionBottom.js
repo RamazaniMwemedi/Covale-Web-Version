@@ -7,6 +7,7 @@ import TasksViews from "./tasks/TasksViews";
 import ProjectMember from "./ProjectMember";
 import { useRouter } from "next/router";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
+import { useState } from "react";
 const ProjectSectionBottom = ({ value, project }) => {
   const router = useRouter();
 

@@ -357,17 +357,31 @@ const TaskComponent = ({ task, projectId, handleShowFile }) => {
             gap: "5px",
           }}
         >
-          <TasksComments
-            comments={task.comments}
-            taskId={task.id}
-            subProjectId={task.subProject}
-            projectId={projectId}
-          />
+          <Badge
+            badgeContent={
+              task.comments && task.comments.length > 0
+                ? task.comments.length
+                : 0
+            }
+            color="secondary"
+            sx={{
+              "& .MuiBadge-badge": {
+                margin: "5px",
+              },
+            }}
+          >
+            <TasksComments
+              comments={task.comments}
+              taskId={task.id}
+              subProjectId={task.subProject}
+              projectId={projectId}
+            />
+          </Badge>
           <Badge
             badgeContent={
               task.files && task.files.length > 0 ? task.files.length : 0
             }
-            color="default"
+            color="secondary"
             sx={{
               "& .MuiBadge-badge": {
                 margin: "7px",
@@ -464,6 +478,8 @@ function TasksComments({ comments, taskId, subProjectId, projectId }) {
                   ml: "5px",
                   p: "5px",
                   borderRadius: "5px",
+                  // box shadow
+                  boxShadow: 3,
                 }}
               >
                 <Avatar
@@ -476,6 +492,15 @@ function TasksComments({ comments, taskId, subProjectId, projectId }) {
                   {comment.author.firstname[0]} {comment.author.lastname[0]}
                 </Avatar>
                 <Box>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {" "}
+                    {comment.author.firstname} {comment.author.lastname}
+                  </Typography>
                   <Typography variant="body2">{comment.content}</Typography>
 
                   <Typography variant="caption">
@@ -640,12 +665,6 @@ function TaskFiles({ files, handleShowFile }) {
                 onClick={() => handleShowFile(file)}
               >
                 <FileComponent file={file} />
-                {/* <FileIcone fileType={file.fileType} /> */}
-                <Typography variant="caption">
-                  {file.fileName.length > 20
-                    ? file.fileName.substring(0, 20) + "..."
-                    : file.fileName}
-                </Typography>
               </MenuItem>
             ))
           ) : (
