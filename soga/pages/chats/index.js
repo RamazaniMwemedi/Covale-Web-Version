@@ -44,7 +44,6 @@ import {
   useRecieveNewTeamMessage,
   useTeamId,
 } from "../../hooks/teams";
-import { RTC_ADDRESS } from "../../config";
 import {
   useGetNotification,
   useJoinNotificationRoom,
@@ -58,9 +57,10 @@ import {
   createATopic,
   replyToTopic,
 } from "../../services/teams";
+import { RTC_ADDRESS } from "../../config";
 // Socket.IO
-const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
+const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 
 export default function Chat() {
   // Global States

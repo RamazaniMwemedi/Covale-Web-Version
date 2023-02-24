@@ -30,7 +30,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
   const [selectedTeam, setSelectedTeam] = useState(null);
 
   const handleSelectTeam = (teamId) => {
-    setSelectedTeam(allProjectTeams.find(team.id == teamId));
+    setSelectedTeam(allProjectTeams.find((team) => team.id == teamId));
   };
 
   const router = useRouter();
@@ -147,9 +147,10 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
         <Box
           sx={{
             flex: 0.4,
-            height: "80vh",
+            height: "85vh",
             // width: "40%",
             bgcolor: theme.colors.background1,
+            borderTop: `1px solid ${theme.colors.border}`,
           }}
         >
           {!selectedTeam && (
@@ -172,6 +173,8 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                       borderRadius: "5px",
                       display: "flex",
                     }}
+                    key={team.id}
+                    onClick={() => handleSelectTeam(team.id)}
                   >
                     <Avatar>{team.teamName[0]}</Avatar>
                     <Box>
@@ -220,7 +223,9 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                               {lastMessage}
                             </Typography>
                             <Typography variant="caption">
-                              {moment(lastMessage.createdAt).format("dd DD, MMMM")}
+                              {moment(lastMessage.createdAt).format(
+                                "dd DD, MMMM"
+                              )}
                             </Typography>
                           </Box>
                         </Box>
@@ -231,7 +236,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
               })}
             </Box>
           )}
-          {selectedTeam && <TeamChats />}
+          {selectedTeam && <TeamChats selectedTeam={selectedTeam} />}
         </Box>
       )}
     </Box>

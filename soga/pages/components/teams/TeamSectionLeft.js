@@ -220,7 +220,7 @@ const TopBar = ({
           textAlign: "center",
         }}
       >
-        <Avatar  sx={{ width: 45, height: 45 }} />
+        <Avatar sx={{ width: 45, height: 45 }} />
         {teamName && (
           <Typography
             variant="h6"
@@ -339,6 +339,7 @@ const TopicMessage = ({
   goToTopic,
   color,
   textColor,
+  noShowTopicThings,
 }) => {
   const idProvided = message.id ? true : false;
   const theme = useTheme();
@@ -449,27 +450,29 @@ const TopicMessage = ({
             No messages
           </Typography>
         )}
-        <Link
-          color="primary"
-          underline="hover"
-          sx={{
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            goToTopic();
-            handleClickedTopic(message.topic.id);
-          }}
-        >
-          <Typography
-            variant="subtitle2"
+        {!noShowTopicThings && (
+          <Link
             color="primary"
+            underline="hover"
             sx={{
-              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              goToTopic();
+              handleClickedTopic(message.topic.id);
             }}
           >
-            Go to topic
-          </Typography>
-        </Link>
+            <Typography
+              variant="subtitle2"
+              color="primary"
+              sx={{
+                fontWeight: "bold",
+              }}
+            >
+              Go to topic
+            </Typography>
+          </Link>
+        )}
       </Box>
     </Box>
   );
@@ -493,6 +496,7 @@ const MessageComponentForTopic = ({
         flex: 1,
       }}
     >
+      {/*  */}
       {/* Message */}
       {message.topic ? (
         <TopicMessage
@@ -619,6 +623,7 @@ const UserMessage = ({
   handleShowTeamFile,
   handleClickedTopic,
   goToTopic,
+  noShowTopicThings,
 }) => {
   const purple1 = purple[700];
   const purple2 = purple[400];
@@ -641,6 +646,7 @@ const UserMessage = ({
             handleClickedTopic={handleClickedTopic}
             goToTopic={goToTopic}
             color={purple[800]}
+            noShowTopicThings={noShowTopicThings}
           />
         </>
       ) : (
@@ -880,6 +886,7 @@ const Bottom = ({
   startTopic,
   toggleTopicHandler,
   topicId,
+  noShowTopicThings,
 }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
   const theme = useTheme();
@@ -1010,7 +1017,7 @@ const Bottom = ({
             </Box>
           )}
         </Box>
-        {startTopic === true && (
+        {!noShowTopicThings && startTopic === true && (
           <Box
             sx={{
               backgroundColor:
@@ -1029,6 +1036,7 @@ const Bottom = ({
             }}
           >
             {/* Topic */}
+
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography variant="h6">Start a topic</Typography>
               <IconButton onClick={toggleTopicHandler}>
@@ -1147,6 +1155,7 @@ const Bottom = ({
                   teamFileInput={teamFileInput}
                   handleChooseFileTeam={handleChooseFileTeam}
                   toggleTopicHandler={toggleTopicHandler}
+                  noShowTopicThings={noShowTopicThings}
                 />
                 <IconButton>
                   <EmojiEmotionsRoundedIcon
@@ -1201,6 +1210,7 @@ function MenuListComposition({
   teamFileInput,
   handleChooseFileTeam,
   toggleTopicHandler,
+  noShowTopicThings,
 }) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -1298,17 +1308,22 @@ function MenuListComposition({
                       />
                       Upload file
                     </MenuItem>
-                    <MenuItem
-                      onClick={(e) => {
-                        handleClose(e);
-                        toggleTopicHandler();
-                      }}
-                    >
-                      <ListItemIcon>
-                        <TopicRoundedIcon fontSize="medium" color="secondary" />
-                      </ListItemIcon>
-                      Topic
-                    </MenuItem>
+                    {!noShowTopicThings && (
+                      <MenuItem
+                        onClick={(e) => {
+                          handleClose(e);
+                          toggleTopicHandler();
+                        }}
+                      >
+                        <ListItemIcon>
+                          <TopicRoundedIcon
+                            fontSize="medium"
+                            color="secondary"
+                          />
+                        </ListItemIcon>
+                        Topic
+                      </MenuItem>
+                    )}
                     {/* <MenuItem>
                       <ListItemIcon>
                         <BallotRoundedIcon
