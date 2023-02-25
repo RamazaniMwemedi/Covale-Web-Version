@@ -23,7 +23,9 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
   if (project) {
     for (let index = 0; index < project.teams.length; index++) {
       const teamId = project.teams[index];
-      const team = teamList.find((team) => team.id == teamId);
+      const team = teamList
+        ? teamList.find((team) => team && team.id == teamId)
+        : [];
       allProjectTeams.push(team);
     }
   }
@@ -31,7 +33,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
   const [selectedTeam, setSelectedTeam] = useState(null);
 
   const handleSelectTeam = (teamId) => {
-    setSelectedTeam(allProjectTeams.find((team) => team.id == teamId));
+    setSelectedTeam(allProjectTeams.find((team) => team && team.id == teamId));
   };
 
   const router = useRouter();
@@ -153,7 +155,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
               </TabPanel>
             </TabContext>
           </Box>
-          {showChats && (
+          {showChats && allProjectTeams.length > 0 && (
             <Box
               sx={{
                 flex: 0.4,
@@ -166,9 +168,11 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
               {!selectedTeam && (
                 <Box>
                   {allProjectTeams.map((team) => {
-                    const lastMessageObject = team.messages
-                      ? team.messages[team.messages.length - 1]
-                      : null;
+                    const lastMessageObject =
+                      team && team.messages
+                        ? team &&
+                          team.messages[team && team.messages.length - 1]
+                        : null;
                     console.log("Last message :>>", lastMessageObject);
                     const lastMessage = lastMessageObject
                       ? lastMessageObject.message
@@ -183,65 +187,67 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                           borderRadius: "5px",
                           display: "flex",
                         }}
-                        key={team.id}
-                        onClick={() => handleSelectTeam(team.id)}
+                        key={team && team.id}
+                        onClick={() => handleSelectTeam(team && team.id)}
                       >
-                        <Avatar>{team.teamName[0]}</Avatar>
+                        <Avatar>{team.teamName && team.teamName[0]}</Avatar>
                         <Box>
                           <Typography variant="body1">
-                            {team.teamName}
+                            {team && team.teamName}
                           </Typography>
-                          <Box
-                            sx={{
-                              bgcolor: theme.colors.textBackground2,
-                              p: 1,
-                              m: 1,
-                              boxShadow: 1,
-                              borderRadius: "5px",
-                              width: "240px",
-                              display: "flex",
-                              gap: 2,
-                            }}
-                          >
-                            <Avatar
+                          {lastMessageObject && (
+                            <Box
                               sx={{
-                                height: 20,
-                                width: 20,
-                                fontSize: "10px",
+                                bgcolor: theme.colors.textBackground2,
+                                p: 1,
+                                m: 1,
+                                boxShadow: 1,
+                                borderRadius: "5px",
+                                width: "240px",
+                                display: "flex",
+                                gap: 2,
                               }}
                             >
-                              {lastMessageObject.sender.firstname[0]}
-                              {lastMessageObject.sender.lastname[0]}
-                            </Avatar>
-                            <Box>
-                              <Typography variant="body2">
-                                {lastMessageObject.sender.firstname}{" "}
-                                {lastMessageObject.sender.lastname}
-                              </Typography>
-                              <Box
+                              <Avatar
                                 sx={{
-                                  display: "flex",
-                                  gap: "5px",
+                                  height: 20,
+                                  width: 20,
+                                  fontSize: "10px",
                                 }}
                               >
-                                {lastMessageObject.file.map((file) => (
-                                  <FileIcone
-                                    fileType={file.fileType}
-                                    height={20}
-                                    width={20}
-                                  />
-                                ))}
+                                {lastMessageObject.sender.firstname[0]}
+                                {lastMessageObject.sender.lastname[0]}
+                              </Avatar>
+                              <Box>
                                 <Typography variant="body2">
-                                  {lastMessage}
+                                  {lastMessageObject.sender.firstname}{" "}
+                                  {lastMessageObject.sender.lastname}
                                 </Typography>
-                                <Typography variant="caption">
-                                  {moment(lastMessage.createdAt).format(
-                                    "dd DD, MMMM"
-                                  )}
-                                </Typography>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    gap: "5px",
+                                  }}
+                                >
+                                  {lastMessageObject.file.map((file) => (
+                                    <FileIcone
+                                      fileType={file.fileType}
+                                      height={20}
+                                      width={20}
+                                    />
+                                  ))}
+                                  <Typography variant="body2">
+                                    {lastMessage}
+                                  </Typography>
+                                  <Typography variant="caption">
+                                    {moment(lastMessage.createdAt).format(
+                                      "dd DD, MMMM"
+                                    )}
+                                  </Typography>
+                                </Box>
                               </Box>
                             </Box>
-                          </Box>
+                          )}
                         </Box>
                       </Box>
                     );
