@@ -79,7 +79,7 @@ const People = ({ users, loading, logedinUser }) => {
           top: "0",
         }}
       >
-        <h1 style={{ color: "purple" }}>Discover new Friends</h1>
+        <h1 style={{ color: "purple" }}>Connect with Colleagues</h1>
         <div
           className="redirectToSentReq"
           onClick={() => {
@@ -104,10 +104,9 @@ const People = ({ users, loading, logedinUser }) => {
         sx={{
           // Display Grid
           display: "grid",
-          gridTemplateColumns: "200px 200px 200px 200px ",
-          gridGap: "40px",
-          marginLeft: "20px",
-          marginTop: "30px",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "10px",
+          pl: 1,
         }}
       >
         {loading ? (
@@ -116,9 +115,7 @@ const People = ({ users, loading, logedinUser }) => {
           <NoDiscToShow />
         ) : (
           users.map((user) => (
-            <Box key={user.id}>
-              <Person user={user} logedinUser={logedinUser} />
-            </Box>
+            <Person user={user} key={user.id} logedinUser={logedinUser} />
           ))
         )}
       </Box>
@@ -153,43 +150,30 @@ const Person = ({ user, logedinUser }) => {
     <>
       <Box
         sx={{
-          borderRadius: "10px",
-          width: "115%",
-          padding: "3px",
-          borderStyle: "solid",
-          borderWidth: "1px",
-          borderColor: "lightgray",
-          "&:hover": {
-            boxShadow: 4,
-          },
-          backgroundColor: theme.colors.background1,
+          width: "200px",
+          borderRadius: "15px",
+          boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+          backgroundColor: theme.colors.textBackground,
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Box
           sx={{
-            backgroundImage: `linear-gradient(to right, purple, green)`,
-            width: "100%",
-            height: "55px",
-            display: "flex",
-            marginTop: "10px",
-            borderTopRightRadius: "5px",
-            borderTopLeftRadius: "5px",
-          }}
-        />
-        <Box
-          sx={{
+            p: 1,
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-evenly",
-            gap: 2,
-            marginTop: "-10px",
-            padding: "-10px",
+            flexDirection: "column",
           }}
         >
-          <Avatar sx={{ width: 48, height: 48 }} />
+          <Avatar sx={{ width: 58, height: 58, textTransform: "uppercase" }}>
+            {user.firstname[0]}
+            {user.lastname[0]}
+          </Avatar>
           <Box
             sx={{
-              marginTop: "7px",
+              pt: "10px",
               marginLeft: "-10px",
             }}
           >
@@ -206,28 +190,25 @@ const Person = ({ user, logedinUser }) => {
             </Box>
             <Box sx={{ textAlign: "left" }}>
               <Typography variant="caption">@{user.username}</Typography>
+              <br />
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                }}
+                variant="caption"
+              >
+                Gender: {user.gender}
+              </Typography>
             </Box>
           </Box>
         </Box>
         <br />
         <Box
           sx={{
-            display: "flex",
             alignItems: "center",
             justifyContent: "space-evenly",
           }}
-        >
-         
-          <Typography
-            sx={{
-              fontWeight: "bold",
-            }}
-            variant="caption"
-          >
-            Gender: {user.gender}
-          </Typography>
-         
-        </Box>
+        ></Box>
         <Box
           sx={{
             display: "flow",
@@ -258,7 +239,6 @@ const Person = ({ user, logedinUser }) => {
                   variant="contained"
                   color="secondary"
                   sx={{
-                    width: "95%",
                     margin: "5px",
                     height: "35px",
                     alignSelf: "center",
@@ -268,11 +248,12 @@ const Person = ({ user, logedinUser }) => {
                 <Button
                   variant="contained"
                   sx={{
-                    width: "95%",
+                    width: "100px",
+                    height: "30px",
                     margin: "5px",
-                    alignSelf: "center",
+                    textTransform: "unset",
                   }}
-                  color="success"
+                  color="secondary"
                   onClick={() => {
                     setSending(true);
                     userServices
@@ -287,15 +268,6 @@ const Person = ({ user, logedinUser }) => {
                 </Button>
               )}
               <br />
-              <Button
-                sx={{
-                  width: "95%",
-                  margin: "5px",
-                }}
-                variant="outlined"
-              >
-                Remove
-              </Button>
             </>
           )}
         </Box>

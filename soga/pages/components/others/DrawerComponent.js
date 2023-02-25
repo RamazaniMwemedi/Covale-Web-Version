@@ -22,6 +22,7 @@ import Logo from "../../../assets/Logo";
 import NewMeet from "../meets/NewMeet";
 import Signout from "../login/Signout";
 import Notification from "./Notification";
+import Groups3Icon from "@mui/icons-material/Groups3";
 
 const closedMixin = (theme) => ({
   transition: theme.transitions.create("width", {
@@ -229,7 +230,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   }}
                 >
                   <ListItemIcon>
-                    <PeopleAltIcon fontSize="medium" color={peopleColor} />
+                    <Groups3Icon fontSize="medium" color={peopleColor} />
                   </ListItemIcon>
                   <ListItemText primary="People" />
                 </ListItemButton>
