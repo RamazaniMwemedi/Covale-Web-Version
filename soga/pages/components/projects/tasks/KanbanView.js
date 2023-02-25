@@ -78,7 +78,7 @@ const KanbanView = ({
   const addTheTaskToReduxHandler = (task) => {
     dispatch(
       addTaskToSubProject({
-        projectId: project,
+        projectId: project.id,
         subProjectId: id,
         task,
       })
@@ -851,6 +851,7 @@ const AddTaskForm = ({
   const [flag, setFlag] = React.useState("");
   const [assignees, setAssignees] = React.useState([]);
   const [addingTask, setAddingTask] = React.useState(false);
+  const [addingTaskError, setAddingTaskError] = React.useState("");
   // Subtask state
   const [subtasks, setSubtasks] = React.useState([]);
   const [showSubtaskForm, setShowSubtaskForm] = React.useState(false);
@@ -934,15 +935,28 @@ const AddTaskForm = ({
   const addTask = async () => {
     // If title is an empty string or a space, return
     if (title.trim() === "") {
+      setAddingTaskError("Task title cannot be empty");
+      setTimeout(() => {
+        setAddingTaskError("");
+      }, 2000);
+
       return;
     }
 
     if (assignees.length === 0) {
+      setAddingTaskError("Assignees cannot be empty");
+      setTimeout(() => {
+        setAddingTaskError("");
+      }, 2000);
       return;
     }
 
     // Date
     if (startDate > dueDate) {
+      setAddingTaskError("Start date cannot be after due date");
+      setTimeout(() => {
+        setAddingTaskError("");
+      }, 2000);
       return;
     }
 
@@ -1001,6 +1015,9 @@ const AddTaskForm = ({
           padding: "20px",
         }}
       >
+        <Typography variant="caption" color="error">
+          {addingTaskError}
+        </Typography>
         <Box sx={{ display: "flex", gap: "10px" }}>
           <TextField
             label="Title"

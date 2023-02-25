@@ -257,7 +257,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 </ListItemButton>
               </Tooltip>
               {/* Calendar */}
-              <Tooltip title="Calendar" placement="right-start">
+              {/* <Tooltip title="Calendar" placement="right-start">
                 <ListItemButton
                   button
                   onClick={() => {
@@ -277,7 +277,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                   </ListItemIcon>
                   <ListItemText primary="Calender" />
                 </ListItemButton>
-              </Tooltip>
+              </Tooltip> */}
               {/* Meet */}
               {/* <Tooltip title="Meet" placement="right-start">
                 <ListItemButton
@@ -308,9 +308,9 @@ export default function DrawerComponent({ signoutHandler, user }) {
           >
             <Notification />
             <Box>
-              <Tooltip title="Join">
+              {/* <Tooltip title="Join">
                 <NewMeet />
-              </Tooltip>
+              </Tooltip> */}
               <Signout signoutHandler={signoutHandler} user={user} />
             </Box>
           </Box>
