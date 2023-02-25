@@ -67,8 +67,8 @@ const friendReqSent = async (token) => {
 };
 
 // Accept Friend Request
-const acceptFriendRequest = async (id, token, secreteServerToken) => {
-  if (token && secreteServerToken && id) {
+const acceptFriendRequest = async (id, token) => {
+  if (token && id) {
     const response = await axios.post(
       `${SERVER_ADDRESS}/api/v1/users/colleague/accept/${id}`,
       {},
@@ -78,8 +78,8 @@ const acceptFriendRequest = async (id, token, secreteServerToken) => {
         },
       }
     );
+    return response.data;
   }
-  return response.data;
 };
 
 // Remove Friend Request

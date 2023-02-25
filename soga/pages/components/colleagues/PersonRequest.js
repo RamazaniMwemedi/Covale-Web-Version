@@ -19,17 +19,13 @@ const PersonRequest = ({ user, token }) => {
   const theme = useTheme();
   const [accepting, setAccepeting] = useState(false);
   const [showCommunication, setShowCommunication] = useState(false);
-  const [secreteToken, setSecreteToken] = useState(null);
   const dispatch = useDispatch();
 
-  console.log("Secrete token :>>", secreteToken);
   React.useEffect(() => {
     // Loged in user from localStorage
     const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
     if (!signedInUser) {
       router.push("/");
-    } else {
-      setSecreteToken(signedInUser.secreteServerToken.secretToken);
     }
   }, []);
   return (
@@ -110,7 +106,7 @@ const PersonRequest = ({ user, token }) => {
                     onClick={() => {
                       setAccepeting(true);
                       userServices
-                        .acceptFriendRequest(user.id, token, secreteToken)
+                        .acceptFriendRequest(user.id, token)
                         .then((res) => {
                           console.log("res from PersonReq component :>>", res);
                           dispatch(addKeys(res.keys));

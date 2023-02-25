@@ -239,7 +239,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 <ListItemButton
                   button
                   onClick={() => {
-                    router.push("/projects");
+                    router.push("/projects/explore");
                   }}
                   sx={{
                     borderRadius: "10px",
