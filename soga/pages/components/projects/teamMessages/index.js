@@ -64,7 +64,7 @@ const TeamChats = ({ selectedTeam }) => {
   const [topicFiles, setTopicFiles] = useState([]);
   const theme = useTheme();
   const userId = user ? user.id : null;
-  useJoinTeamRoom(selectedTeam.id);
+  useJoinTeamRoom(selectedTeam && selectedTeam.id);
   useGetNotification(token);
   useJoinNotificationRoom(userId);
 
@@ -346,148 +346,152 @@ const TeamChats = ({ selectedTeam }) => {
 
   if (!selectedTeam) return null;
   return (
-    <Box>
-      {showFile && (
-        <FileDisplayComponent
-          handleCloseShowVideoPlayer={handleCloseShowFile}
-          file={file}
-        />
-      )}
-      <Box
-        sx={{
-          fontWeight: "bold",
-          display: "flex",
-          p: 1,
-          height: "85vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          // paddingBottom: "45px",
-          borderRadius: "8px",
-          mb: 5,
-        }}
-      >
-        <Box
-          sx={{
-            height: "4rem",
-            // centered
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            textAlign: "center",
-            paddingLeft: "5px",
-            // z-index
-            zIndex: "1",
-            // border
-            borderRight: `1px solid ${theme.colors.background1}`,
-            webkitBackdropFilter: "blur(10px)",
-            position: "sticky",
-            top: "0px",
-            borderBottom: `1px solid ${theme.colors.background1}`,
-            backgroundColor: theme.colors.background1,
-          }}
-        >
-          {/* Left */}
+    <>
+      {selectedTeam && (
+        <Box>
+          {showFile && (
+            <FileDisplayComponent
+              handleCloseShowVideoPlayer={handleCloseShowFile}
+              file={file}
+            />
+          )}
           <Box
             sx={{
+              fontWeight: "bold",
               display: "flex",
-              // centerd
+              p: 1,
+              height: "85vh",
+              display: "flex",
+              flexDirection: "column",
               justifyContent: "space-between",
-              alignItems: "center",
-              textAlign: "center",
+              // paddingBottom: "45px",
+              borderRadius: "8px",
+              mb: 5,
             }}
           >
-            <Avatar sx={{ width: 30, height: 30 }}>
-              {selectedTeam.teamName[0]}
-            </Avatar>
-            {selectedTeam.teamName && (
-              <Typography
-                variant="h6"
-                sx={{
-                  paddingLeft: "10px",
-                }}
-              >
-                {selectedTeam.teamName}
-              </Typography>
-            )}
-          </Box>
-          {/* Right */}
-          <Box
-            sx={{
-              display: "flex",
-              // centerd
-              justifyContent: "space-between",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-          >
-            <IconButton
-              onClick={() => {
-                router.push(`/chats/t/${selectedTeam.id}`);
+            <Box
+              sx={{
+                height: "4rem",
+                // centered
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                textAlign: "center",
+                paddingLeft: "5px",
+                // z-index
+                zIndex: "1",
+                // border
+                borderRight: `1px solid ${theme.colors.background1}`,
+                webkitBackdropFilter: "blur(10px)",
+                position: "sticky",
+                top: "0px",
+                borderBottom: `1px solid ${theme.colors.background1}`,
+                backgroundColor: theme.colors.background1,
               }}
             >
-              {" "}
-              <ChatBubbleOutlineRoundedIcon />
-            </IconButton>
+              {/* Left */}
+              <Box
+                sx={{
+                  display: "flex",
+                  // centerd
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  textAlign: "center",
+                }}
+              >
+                <Avatar sx={{ width: 30, height: 30 }}>
+                  {selectedTeam.teamName[0]}
+                </Avatar>
+                {selectedTeam.teamName && (
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      paddingLeft: "10px",
+                    }}
+                  >
+                    {selectedTeam.teamName}
+                  </Typography>
+                )}
+              </Box>
+              {/* Right */}
+              <Box
+                sx={{
+                  display: "flex",
+                  // centerd
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  textAlign: "center",
+                }}
+              >
+                <IconButton
+                  onClick={() => {
+                    router.push(`/chats/t/${selectedTeam.id}`);
+                  }}
+                >
+                  {" "}
+                  <ChatBubbleOutlineRoundedIcon />
+                </IconButton>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+
+                // scrollable
+                overflowY: "scroll",
+                height: "100%",
+              }}
+            >
+              {selectedTeam.messages.map((message) => {
+                return message.sender.id === user.id ? (
+                  <UserMessage
+                    message={message}
+                    user={user}
+                    handleShowTeamFile={handleShowTeamFile}
+                    // handleClickedTopic={handleClickedTopic}
+                    // goToTopic={goToTopic}
+                    noShowTopicThings={true}
+                  />
+                ) : (
+                  <ColleagueMessage
+                    message={message}
+                    handleShowTeamFile={handleShowTeamFile}
+                    noShowTopicThings={true}
+
+                    // handleClickedTopic={handleClickedTopic}
+                    // goToTopic={goToTopic}
+                  />
+                );
+              })}
+            </Box>
+            <Bottom
+              teamMessageChangeHandler={teamMessageChangeHandler}
+              teamSendMessageHandle={teamSendMessageHandle}
+              teamMessage={teamMessage}
+              teamOnEmojiClick={teamOnEmojiClick}
+              // Files
+              handleChooseFileIconTeam={handleChooseFileIconTeam}
+              handleChooseFileIcon2Team={handleChooseFileIcon2Team}
+              handleChooseFileTeam={handleChooseFileTeam}
+              handleRemoveFileTeam={handleRemoveFileTeam}
+              teamFileInput={teamFileInput}
+              teamFileInput2={teamFileInput2}
+              teamFiles={teamFiles}
+              // Topic
+              topicTitle={topicTitle}
+              topicTitleChangeHandler={topicTitleChangeHandler}
+              topicDescriptionChangeHandler={topicDescriptionChangeHandler}
+              createTopicHandler={createTopicHandler}
+              startTopic={startTopic}
+              toggleTopicHandler={toggleTopicHandler}
+              noShowTopicThings={true}
+            />
           </Box>
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-
-            // scrollable
-            overflowY: "scroll",
-            height: "100%",
-          }}
-        >
-          {selectedTeam.messages.map((message) => {
-            return message.sender.id === user.id ? (
-              <UserMessage
-                message={message}
-                user={user}
-                handleShowTeamFile={handleShowTeamFile}
-                // handleClickedTopic={handleClickedTopic}
-                // goToTopic={goToTopic}
-                noShowTopicThings={true}
-              />
-            ) : (
-              <ColleagueMessage
-                message={message}
-                handleShowTeamFile={handleShowTeamFile}
-                noShowTopicThings={true}
-
-                // handleClickedTopic={handleClickedTopic}
-                // goToTopic={goToTopic}
-              />
-            );
-          })}
-        </Box>
-        <Bottom
-          teamMessageChangeHandler={teamMessageChangeHandler}
-          teamSendMessageHandle={teamSendMessageHandle}
-          teamMessage={teamMessage}
-          teamOnEmojiClick={teamOnEmojiClick}
-          // Files
-          handleChooseFileIconTeam={handleChooseFileIconTeam}
-          handleChooseFileIcon2Team={handleChooseFileIcon2Team}
-          handleChooseFileTeam={handleChooseFileTeam}
-          handleRemoveFileTeam={handleRemoveFileTeam}
-          teamFileInput={teamFileInput}
-          teamFileInput2={teamFileInput2}
-          teamFiles={teamFiles}
-          // Topic
-          topicTitle={topicTitle}
-          topicTitleChangeHandler={topicTitleChangeHandler}
-          topicDescriptionChangeHandler={topicDescriptionChangeHandler}
-          createTopicHandler={createTopicHandler}
-          startTopic={startTopic}
-          toggleTopicHandler={toggleTopicHandler}
-          noShowTopicThings={true}
-        />
-      </Box>
-    </Box>
+      )}
+    </>
   );
 };
 

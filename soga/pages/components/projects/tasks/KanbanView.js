@@ -62,12 +62,16 @@ import moment from "moment";
 import FileComponent from "../../mediaFiles/FileComponent";
 
 const KanbanView = ({
-  project: { members },
-  subProject: { tasks, id, project, title },
+  project,
+  subProject,
   taskStatus,
   handleShowFile,
   showChats,
 }) => {
+  const members = project && project.members;
+  const tasks = subProject && subProject.tasks;
+  const id = subProject && subProject.id;
+  const title = subProject && subProject.title;
   const dispatch = useDispatch();
   // Add tasks handlers
   // Add Pending tasks handlers
@@ -81,18 +85,22 @@ const KanbanView = ({
     );
   };
   return (
-    <Box sx={{ width: showChats ? "600px" : "900px" }}>
-      <Typography variant="h6">{title}</Typography>
-      <TaskStates
-        tasks={tasks}
-        taskStatus={taskStatus}
-        addTheTaskToReduxHandler={addTheTaskToReduxHandler}
-        id={id}
-        members={members}
-        projectId={project}
-        handleShowFile={handleShowFile}
-      />
-    </Box>
+    <>
+      {members && (
+        <Box sx={{ width: showChats ? "600px" : "900px" }}>
+          <Typography variant="h6">{title}</Typography>
+          <TaskStates
+            tasks={tasks}
+            taskStatus={taskStatus}
+            addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+            id={id}
+            members={members}
+            projectId={project}
+            handleShowFile={handleShowFile}
+          />
+        </Box>
+      )}
+    </>
   );
 };
 
