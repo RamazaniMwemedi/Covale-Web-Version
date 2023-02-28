@@ -11,37 +11,20 @@ import { useTheme } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import userServices from "../../../services/user";
-import { SECRETE_SERVER_ADDRESS } from "../../../config";
-import { useDispatch, useSelector } from "react-redux";
-import { addKeys } from "../../../Redux/slices/user";
 
-const PersonRequest = ({ user, token }) => {
-  const userStore = useSelector((state) => state.user);
+const PersonRequest = ({ user: colleague, token }) => {
   const theme = useTheme();
   const [accepting, setAccepeting] = useState(false);
   const [showCommunication, setShowCommunication] = useState(false);
-  const [secreteToken, setSecreteToken] = useState(null);
-  const dispatch = useDispatch();
-
-  console.log("Secrete token :>>", secreteToken);
-  React.useEffect(() => {
-    // Loged in user from localStorage
-    const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
-    if (!signedInUser) {
-      router.push("/");
-    } else {
-      setSecreteToken(signedInUser.secreteServerToken.secretToken);
-    }
-  }, []);
   return (
     <>
-      {user && (
+      {colleague && (
         <Box
           sx={{
             width: "300px",
             borderRadius: "15px",
             boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-            backgroundColor: theme.colors.background1,
+            backgroundColor: theme.colors.background1
           }}
         >
           <br />
@@ -71,10 +54,10 @@ const PersonRequest = ({ user, token }) => {
                   gap: 1,
                 }}
               >
-                <Typography variant="h6">{user.firstname}</Typography>
-                <Typography variant="h6">{user.lastname}</Typography>
+                <Typography variant="h6">{colleague.firstname}</Typography>
+                <Typography variant="h6">{colleague.lastname}</Typography>
               </Box>
-              <Typography variant="caption">@{user.username}</Typography>
+              <Typography variant="caption">@{colleague.username}</Typography>
             </Box>
           </Box>
           <br />
@@ -111,10 +94,8 @@ const PersonRequest = ({ user, token }) => {
                     onClick={() => {
                       setAccepeting(true);
                       userServices
-                        .acceptFriendRequest(user.id, token, secreteToken)
+                        .acceptFriendRequest(colleague.id, token)
                         .then((res) => {
-                          console.log("res from PersonReq component :>>", res);
-                          dispatch(addKeys(res.keys));
                           setShowCommunication(true);
                         });
                     }}
@@ -130,7 +111,7 @@ const PersonRequest = ({ user, token }) => {
                   width: "120px",
                 }}
                 onClick={() => {
-                  userServices.removeFriendRequest(user.id, token);
+                  userServices.removeFriendRequest(colleague.id, token);
                 }}
               >
                 {" "}

@@ -75,7 +75,7 @@ export default function ProjectLeft() {
 
         <Box
           sx={{
-            // backgroundColor: theme.colors.background1,
+            backgroundColor: theme.colors.background1,
             // height: "100vh",
             // No scrallbar
             overflow: "hidden",
@@ -84,7 +84,7 @@ export default function ProjectLeft() {
           {/* Project box */}
           <Box
             sx={{
-              // backgroundColor: theme.colors.background1,
+              backgroundColor: theme.colors.background1,
               height: "60px",
               borderTopLeftRadius: "8px",
               p: 1,
@@ -151,7 +151,7 @@ export default function ProjectLeft() {
                   // justifyContent: "flex-start",
                   // gap: "10px",
                   // padding: "10px",
-                  // backgroundColor: theme.colors.background1,
+                  backgroundColor: theme.colors.background1,
                   // borderRadius: "8px",
                   // border: "1px solid darkgray",
                 }}
@@ -207,11 +207,10 @@ function ProjectTrees({ projects }) {
                   }
                 );
               }}
-              sx={{
-                backgroundColor: theme.colors.background1,
-                color: "white",
-                m: 0.4,
-                borderRadius: 2,
+              onDoubleClick={() => {
+                if (project.subProjects.length == 0) {
+                  alert("Its one");
+                }
               }}
             >
               {project.subProjects.length > 0 ? (
@@ -277,7 +276,7 @@ function ProjectTrees({ projects }) {
             alignItems: "center",
             height: "100%",
             width: "100%",
-            // backgroundColor: theme.colors.textBackground,
+            backgroundColor: theme.colors.textBackground,
             borderRadius: "8px",
             p: 1,
           }}

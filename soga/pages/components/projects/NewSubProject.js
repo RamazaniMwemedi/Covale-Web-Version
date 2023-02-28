@@ -49,35 +49,31 @@ export default function NewSubProject({ project }) {
   };
 
   return (
-    <>
-      {project && (
-        <React.Fragment>
-          <Button
-            sx={{
-              width: "98%",
-              marginLeft: 0.3,
-              textTransform: "none",
-              width: "70%",
-            }}
-            variant="contained"
-            color="secondary"
-            size="small"
-            onClick={handleClickOpen}
-          >
-            New Sub Project
-          </Button>
-          <Dialog
-            fullWidth={fullWidth}
-            maxWidth={maxWidth}
-            open={open}
-            onClose={handleClose}
-          >
-            <DialogTitle>Add a sub project for {project.title}</DialogTitle>
-            <SubProjectForm project={project} handleClose={handleClose} />
-          </Dialog>
-        </React.Fragment>
-      )}
-    </>
+    <React.Fragment>
+      <Button
+        sx={{
+          width: "98%",
+          marginLeft: 0.3,
+          textTransform: "none",
+          width: "70%",
+        }}
+        variant="contained"
+        color="secondary"
+        size="small"
+        onClick={handleClickOpen}
+      >
+        New Sub Project
+      </Button>
+      <Dialog
+        fullWidth={fullWidth}
+        maxWidth={maxWidth}
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle>Add a sub project for {project.title}</DialogTitle>
+        <SubProjectForm project={project} handleClose={handleClose} />
+      </Dialog>
+    </React.Fragment>
   );
 }
 

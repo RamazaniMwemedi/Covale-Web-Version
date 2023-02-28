@@ -36,44 +36,38 @@ const WeekPicker = ({
   // };
 
   return (
-    <>
-      {selectedDate && (
-        <Box className={classes.root}>
-          <Button
-            size="small"
-            color="secondary"
-            variant="contained"
-            sx={{
-              borderRadius: "5px",
-              padding: "5px 10px",
-              textTransform: "none",
-            }}
-            onClick={() => handleDateChange(moment())}
-          >
-            Today
-          </Button>
-          <Box className={classes.weekPicker}>
-            <IconButton
-              onClick={() => {
-                handlePrevWeek(selectedDate);
-              }}
-            >
-              {"<"}
-            </IconButton>
-            <Typography variant="h5">
-              {selectedDate.format("MMMM YYYY")}
-            </Typography>
-            <IconButton
-              onClick={() => {
-                handleNextWeek(selectedDate);
-              }}
-            >
-              {">"}
-            </IconButton>
-          </Box>
-        </Box>
-      )}
-    </>
+    <Box className={classes.root}>
+      <Button
+        size="small"
+        color="secondary"
+        variant="contained"
+        sx={{
+          borderRadius: "5px",
+          padding: "5px 10px",
+          textTransform: "none",
+        }}
+        onClick={() => handleDateChange(moment())}
+      >
+        Today
+      </Button>
+      <Box className={classes.weekPicker}>
+        <IconButton
+          onClick={() => {
+            handlePrevWeek(selectedDate);
+          }}
+        >
+          {"<"}
+        </IconButton>
+        <Typography variant="h5">{selectedDate.format("MMMM YYYY")}</Typography>
+        <IconButton
+          onClick={() => {
+            handleNextWeek(selectedDate);
+          }}
+        >
+          {">"}
+        </IconButton>
+      </Box>
+    </Box>
   );
 };
 

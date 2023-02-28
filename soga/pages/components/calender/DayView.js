@@ -73,164 +73,161 @@ const DayView = ({ selectedDate, handleDateChange }) => {
     setEvents(events);
   }, [selectedDate]);
 
+  console.log(selectedDate._d);
+  // Console.log date in format of date, weekday
+  console.log();
+
   return (
-    <>
-      {selectedDate && (
-        <Box className="day-view">
-          <Box
-            sx={{
-              display: "flex",
-              gap: 1,
-              alignItems: "center",
-              p: 1,
-            }}
-          >
-            <Button
-              onClick={() => {
-                handleDateChange(selectedDate.clone().subtract(1, "day"));
-              }}
-            >
-              {"<"}
-            </Button>
-            <Box>{selectedDate.format("dddd, MMMM Do YYYY")}</Box>
-            <Button
-              onClick={() =>
-                handleDateChange(selectedDate.clone().add(1, "day"))
-              }
-            >
-              {">"}
-            </Button>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-            }}
-          >
-            <TableContainer
-              sx={{
-                maxHeight: 500,
-                position: "sticky",
-                flex: selectedEvent ? "0.72" : "1",
-              }}
-            >
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow style={{}}>
+    <Box className="day-view">
+      <Box
+        sx={{
+          display: "flex",
+          gap: 1,
+          alignItems: "center",
+          p: 1,
+        }}
+      >
+        <Button
+          onClick={() => {
+            handleDateChange(selectedDate.clone().subtract(1, "day"));
+          }}
+        >
+          {"<"}
+        </Button>
+        <Box>{selectedDate.format("dddd, MMMM Do YYYY")}</Box>
+        <Button
+          onClick={() => handleDateChange(selectedDate.clone().add(1, "day"))}
+        >
+          {">"}
+        </Button>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+        }}
+      >
+        <TableContainer
+          sx={{
+            maxHeight: 500,
+            position: "sticky",
+            flex: selectedEvent ? "0.72" : "1",
+          }}
+        >
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow style={{}}>
+                <TableCell
+                  style={{
+                    width: "10%",
+                  }}
+                ></TableCell>
+                {[0].map((day) => {
+                  const date = selectedDate.clone().weekday(day);
+
+                  return (
                     <TableCell
                       style={{
-                        width: "10%",
+                        border: "1px solid #dddddd",
+                        borderTop: `${
+                          selectedDate.isSame(Moment(), "day")
+                            ? "3px solid #5f2eea"
+                            : ""
+                        }`,
+                        textAlign: "left",
+                        padding: "8px",
                       }}
-                    ></TableCell>
+                      key={day}
+                      conClick={() => {
+                        console.log("selectedDate :>>", selectedDate);
+                        // handleDateChange(selectedDate);
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: "10px",
+                        }}
+                      >
+                        {selectedDate.format("Do, dddd")}
+                      </Box>
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {[
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                18, 19, 20, 21, 22, 23,
+              ].map((hour) => {
+                return (
+                  <TableRow
+                    style={{
+                      border: "1px solid #dddddd",
+                      textAlign: "left",
+                      padding: "8px",
+                      ":nth-child(even)": {
+                        backgroundColor: "#dddddd",
+                      },
+                      top: 57,
+                      height: "100px",
+                    }}
+                    key={hour}
+                  >
+                    <td
+                      style={{
+                        border: "1px solid #dddddd",
+                        textAlign: "left",
+                        padding: "8px",
+                      }}
+                    >
+                      {hour}:00
+                    </td>
                     {[0].map((day) => {
                       const date = selectedDate.clone().weekday(day);
-
                       return (
                         <TableCell
                           style={{
                             border: "1px solid #dddddd",
-                            borderTop: `${
-                              selectedDate.isSame(Moment(), "day")
-                                ? "3px solid #5f2eea"
-                                : ""
-                            }`,
                             textAlign: "left",
                             padding: "8px",
                           }}
                           key={day}
-                          conClick={() => {
-                            console.log("selectedDate :>>", selectedDate);
-                            // handleDateChange(selectedDate);
+                          onClick={() => {
+                            const nowEvents = events.filter(
+                              (event) =>
+                                Moment(event.start).isSame(
+                                  selectedDate,
+                                  "day"
+                                ) && Moment(event.start).hour() === hour
+                            );
+                            selectEventHandler(nowEvents);
+                            handleDateChange(selectedDate);
                           }}
                         >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              gap: "10px",
-                            }}
-                          >
-                            {selectedDate.format("Do, dddd")}
-                          </Box>
+                          {events
+                            .filter(
+                              (event) =>
+                                Moment(event.start).isSame(
+                                  selectedDate,
+                                  "day"
+                                ) && Moment(event.start).hour() === hour
+                            )
+                            .map((event) => {
+                              return <Box key={event.id}> {event.title}</Box>;
+                            })}
                         </TableCell>
                       );
                     })}
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {[
-                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-                    17, 18, 19, 20, 21, 22, 23,
-                  ].map((hour) => {
-                    return (
-                      <TableRow
-                        style={{
-                          border: "1px solid #dddddd",
-                          textAlign: "left",
-                          padding: "8px",
-                          ":nth-child(even)": {
-                            backgroundColor: "#dddddd",
-                          },
-                          top: 57,
-                          height: "100px",
-                        }}
-                        key={hour}
-                      >
-                        <td
-                          style={{
-                            border: "1px solid #dddddd",
-                            textAlign: "left",
-                            padding: "8px",
-                          }}
-                        >
-                          {hour}:00
-                        </td>
-                        {[0].map((day) => {
-                          const date = selectedDate.clone().weekday(day);
-                          return (
-                            <TableCell
-                              style={{
-                                border: "1px solid #dddddd",
-                                textAlign: "left",
-                                padding: "8px",
-                              }}
-                              key={day}
-                              onClick={() => {
-                                const nowEvents = events.filter(
-                                  (event) =>
-                                    Moment(event.start).isSame(
-                                      selectedDate,
-                                      "day"
-                                    ) && Moment(event.start).hour() === hour
-                                );
-                                selectEventHandler(nowEvents);
-                                handleDateChange(selectedDate);
-                              }}
-                            >
-                              {events
-                                .filter(
-                                  (event) =>
-                                    Moment(event.start).isSame(
-                                      selectedDate,
-                                      "day"
-                                    ) && Moment(event.start).hour() === hour
-                                )
-                                .map((event) => {
-                                  return (
-                                    <Box key={event.id}> {event.title}</Box>
-                                  );
-                                })}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        </Box>
-      )}
-    </>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+       
+      </Box>
+    </Box>
   );
 };
 

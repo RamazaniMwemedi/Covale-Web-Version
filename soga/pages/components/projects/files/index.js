@@ -9,48 +9,44 @@ import moment from "moment";
 const Files = ({ files, handleShowFile }) => {
   const theme = useTheme();
   return (
-    <>
-      {files && (
-        <Box>
-          {/* All files main box */}
+    <Box>
+      {/* All files main box */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+        }}
+      >
+        {files.map((file) => (
           <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              bgcolor: theme.colors.textBackground,
+              m: 1,
+              borderRadius: "5px",
+              p: 1,
+              alignContent: "center",
+              flexDirection: "column",
+              textAlign: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              boxShadow: 1
             }}
+            onClick={() => handleShowFile(file)}
           >
-            {files.map((file) => (
-              <Box
-                sx={{
-                  bgcolor: theme.colors.textBackground,
-                  m: 1,
-                  borderRadius: "5px",
-                  p: 1,
-                  alignContent: "center",
-                  flexDirection: "column",
-                  textAlign: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  boxShadow: 1,
-                }}
-                onClick={() => handleShowFile(file)}
-              >
-                <FileIcone fileType={file.fileType} height={50} width={50} />
-                <Box>
-                  <Typography variant="body1">
-                    <b> File name : </b> {file.fileName}
-                  </Typography>
-                  <Typography variant="body2">
-                    <b>Added at : </b>{" "}
-                    {moment(file.createdAt).format("MMMM Do YYYY HH:mm ")}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
+            <FileIcone fileType={file.fileType} height={50} width={50} />
+            <Box>
+              <Typography variant="body1">
+                <b> File name : </b> {file.fileName}
+              </Typography>
+              <Typography variant="body2">
+                <b>Added at : </b>{" "}
+                {moment(file.createdAt).format("MMMM Do YYYY HH:mm ")}
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-      )}
-    </>
+        ))}
+      </Box>
+    </Box>
   );
 };
 

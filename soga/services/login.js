@@ -1,5 +1,5 @@
 import axios from "axios";
-const { SERVER_ADDRESS } = require("../config/index");
+const { SERVER_ADDRESS, SECRETE_SERVER_ADDRESS } = require("../config/index");
 
 const signIn = async (data) => {
   const { email, password } = data;
@@ -7,7 +7,17 @@ const signIn = async (data) => {
     email,
     password,
   });
-  return response.data;
+  if (response.status === 200) {
+    // Request for token from secrete server
+    const secreteServerToken = await axios.post(
+      `${SECRETE_SERVER_ADDRESS}/api/v1/authorization/`,
+      {
+        email,
+        password,
+      }
+    );
+    return { ...response.data, secreteServerToken: secreteServerToken.data };
+  }
 };
 
 const signUp = async (data) => {
@@ -22,7 +32,17 @@ const signUp = async (data) => {
     birthday,
     gender,
   });
-  return response.data;
+  // Request for token from secrete server
+  if (response.status === 201) {
+    const secreteServerToken = await axios.post(
+      `${SECRETE_SERVER_ADDRESS}/api/v1/authorization/`,
+      {
+        email,
+        password,
+      }
+    );
+    return { ...response.data, secreteServerToken: secreteServerToken.data };
+  }
 };
 
 const getUsers = async () => {

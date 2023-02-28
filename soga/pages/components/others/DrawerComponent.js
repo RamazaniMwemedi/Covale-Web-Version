@@ -257,7 +257,7 @@ export default function DrawerComponent() {
                 </ListItemButton>
               </Tooltip>
               {/* Calendar */}
-              {/* <Tooltip title="Calendar" placement="right-start">
+              <Tooltip title="Calendar" placement="right-start">
                 <ListItemButton
                   button
                   onClick={() => {
@@ -277,7 +277,7 @@ export default function DrawerComponent() {
                   </ListItemIcon>
                   <ListItemText primary="Calender" />
                 </ListItemButton>
-              </Tooltip> */}
+              </Tooltip>
               {/* Meet */}
               {/* <Tooltip title="Meet" placement="right-start">
                 <ListItemButton

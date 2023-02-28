@@ -15,7 +15,9 @@ export default function TasksTabPanel({
 }) {
    const router = useRouter();
    const projectId = router.query.project;
- 
+   const project = useSelector((state) =>
+     state.projects.projects.find((project) => project.id === projectId)
+   );
   return (
     <Box sx={{ width: "100%" }}>
       <Tabs
