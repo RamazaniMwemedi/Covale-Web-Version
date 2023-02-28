@@ -123,6 +123,27 @@ const findUserById = async (token, id) => {
     } catch (error) {
       // Redirect to the login page
       console.log("Error in findUserById", error);
+      window.location.href = "/login";
+    }
+  }
+};
+
+// Remove user from colleagues
+const removeColleague = async (token, id) => {
+  if (token) {
+    try {
+      const response = await axios.post(
+        `${SERVER_ADDRESS}/api/v1/users/colleague/remove/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      // Redirect to the login page
+      console.log("Error in findUserById", error);
       // window.location.href = "/login";
     }
   }
@@ -138,4 +159,5 @@ module.exports = {
   removeFriendRequest,
   cancelFriendRequest,
   findUserById,
+  removeColleague,
 };

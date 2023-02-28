@@ -17,17 +17,24 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import SearchOffRoundedIcon from "@mui/icons-material/SearchOffRounded";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
+import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 
 // My Modules
-import userServices from "../../../services/user";
+import exploreColleagueservices from "../../../services/user";
 import DrawerComponent from "../../components/others/DrawerComponent";
 import PeopleLeft from "../../components/colleagues/PeopleLeft";
 import DiscoverPeopleSkeleton from "../../components/colleagues/DiscoverPeopleSkeleton";
+import { useDispatch, useSelector } from "react-redux";
+
+import { removeColleagueFromExplore } from "../../../Redux/slices/colleagues";
+import { useExploreColleagus } from "../../../hooks/colleagues";
 
 export default function Explore() {
-  const [users, setUsers] = React.useState([]);
+  const colleagueStore = useSelector((state) => state.colleagues);
+  const exploreColleagues = colleagueStore.colleagues
+    ? colleagueStore.colleagues.explore
+    : null;
   const [logedinUser, setLogedinUser] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
   const theme = useTheme();
 
@@ -50,14 +57,7 @@ export default function Explore() {
     }
   }, [logedinUser]);
 
-  React.useEffect(() => {
-    if (token) {
-      userServices.allUsers(token).then((res) => {
-        setUsers(res);
-        setLoading(false);
-      });
-    }
-  }, [token]);
+  useExploreColleagus(token);
 
   // Signout Handler
   const signoutHandler = () => {
@@ -86,11 +86,11 @@ export default function Explore() {
         }}
       >
         <People
-          users={users}
-          loading={loading}
+          exploreColleagues={exploreColleagues}
           logedinUser={logedinUser}
           showSearchField={showSearchField}
           handleToggleShowSearch={handleToggleShowSearch}
+          token={token}
         />
       </Box>
     </Box>
@@ -98,11 +98,11 @@ export default function Explore() {
 }
 
 const People = ({
-  users,
-  loading,
+  exploreColleagues,
   logedinUser,
   showSearchField,
   handleToggleShowSearch,
+  token,
 }) => {
   const theme = useTheme();
   const router = useRouter();
@@ -196,14 +196,19 @@ const People = ({
           pt: 1,
         }}
       >
-        {loading ? (
+        {!exploreColleagues ? (
           <DiscoverPeopleSkeleton />
-        ) : users.length < 1 ? (
+        ) : exploreColleagues.length < 1 ? (
           <NoDiscToShow />
         ) : (
           <>
-            {users.map((user) => (
-              <Person user={user} key={user.id} logedinUser={logedinUser} />
+            {exploreColleagues.map((user) => (
+              <Person
+                user={user}
+                key={user.id}
+                token={token}
+                logedinUser={logedinUser}
+              />
             ))}
           </>
         )}
@@ -229,10 +234,22 @@ const NoDiscToShow = () => {
   );
 };
 
-const Person = ({ user, logedinUser }) => {
+const Person = ({ user, logedinUser, token }) => {
   const theme = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
+  const dispatch = useDispatch();
+
+  const removeColleague = async () => {
+    const res = await removeColleague(token, user.id);
+    if (res) {
+      dispatch(
+        removeColleagueFromExplore({
+          colleagueId: user.id,
+        })
+      );
+    }
+  };
   return (
     <>
       <Box
@@ -254,6 +271,7 @@ const Person = ({ user, logedinUser }) => {
             bgcolor: theme.colors.textBackground2,
           }}
           size="small"
+          onClick={removeColleague}
         >
           <HighlightOffRoundedIcon fontSize="medium" />
         </IconButton>
@@ -265,7 +283,7 @@ const Person = ({ user, logedinUser }) => {
             flexDirection: "column",
           }}
         >
-          <Avatar sx={{ width: 58, height: 58, textTransform: "uppercase" }}>
+          <Avatar sx={{ width: 80, height: 80, textTransform: "uppercase" }}>
             {user.firstname[0]}
             {user.lastname[0]}
           </Avatar>
@@ -322,7 +340,7 @@ const Person = ({ user, logedinUser }) => {
               }}
               color="error"
               onClick={() => {
-                userServices
+                exploreColleagueservices
                   .cancelFriendRequest(user.id, logedinUser.token)
                   .then(setRequestSent(false));
               }}
@@ -350,11 +368,13 @@ const Person = ({ user, logedinUser }) => {
                     height: "30px",
                     margin: "5px",
                     textTransform: "unset",
+                    display: "flex",
+                    gap: "20%",
                   }}
                   color="secondary"
                   onClick={() => {
                     setSending(true);
-                    userServices
+                    exploreColleagueservices
                       .addFriendById(user.id, logedinUser.token)
                       .then(() => {
                         setRequestSent(true);
@@ -362,6 +382,7 @@ const Person = ({ user, logedinUser }) => {
                       });
                   }}
                 >
+                  <PersonAddAlt1RoundedIcon fontSize="small" />
                   Connect
                 </Button>
               )}
