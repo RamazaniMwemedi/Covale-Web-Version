@@ -16,6 +16,7 @@ import { useTheme } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import SearchOffRoundedIcon from "@mui/icons-material/SearchOffRounded";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
 // My Modules
 import userServices from "../../../services/user";
@@ -124,10 +125,10 @@ const People = ({
           Connect with Colleagues
         </Typography>
         <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-        }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
         >
           {showSearchField ? (
             <FormControl sx={{ m: 1 }} variant="outlined">
@@ -227,8 +228,6 @@ const Person = ({ user, logedinUser }) => {
   const theme = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
-  // User age
-  const age = new Date().getFullYear() - user.birthday.split("-")[0];
   return (
     <>
       <Box
@@ -242,6 +241,15 @@ const Person = ({ user, logedinUser }) => {
           flexDirection: "column",
         }}
       >
+        <IconButton
+          sx={{
+            display: "flex",
+            alignSelf: "flex-end",
+          }}
+          size="small"
+        >
+          <HighlightOffRoundedIcon fontSize="small" />
+        </IconButton>
         <Box
           sx={{
             p: 1,
