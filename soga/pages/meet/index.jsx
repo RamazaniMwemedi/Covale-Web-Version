@@ -30,7 +30,7 @@ export default function Calendar() {
   return (
     <Box sx={{ display: "flex", height: "100%" }}>
       <CssBaseline />
-      <DrawerComponent />
+      <DrawerComponent user={user} />
       <Box component="main" sx={{ display: "flex", height: "100%" }}>
         {/* App will start here */}
         <MeetLeft/>

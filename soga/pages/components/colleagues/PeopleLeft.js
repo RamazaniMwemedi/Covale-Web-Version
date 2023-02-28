@@ -134,7 +134,7 @@ export default function PeopleLeft() {
               }}
               dense
               onClick={() => {
-                router.push("/colleagues/friendrequests");
+                router.push("/people/friendrequests");
               }}
             >
               <Box
@@ -177,7 +177,7 @@ export default function PeopleLeft() {
               }}
               dense
               onClick={() => {
-                router.push("/colleagues/friends");
+                router.push("/people/friends");
               }}
             >
               <Box
@@ -216,7 +216,7 @@ export default function PeopleLeft() {
               }}
               dense
               onClick={() => {
-                router.push("/colleagues/explore");
+                router.push("/people/explore");
               }}
             >
               <Box

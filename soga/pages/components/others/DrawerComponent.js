@@ -57,7 +57,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function DrawerComponent() {
+export default function DrawerComponent({ signoutHandler, user }) {
   const router = useRouter();
   const theme = useTheme();
 
@@ -90,7 +90,7 @@ export default function DrawerComponent() {
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
-    } else if (pathname.includes("/colleagues")) {
+    } else if (pathname.includes("/people")) {
       setChatColor("gray");
       setPeopleColor("secondary");
       setCalendar("gray");
@@ -221,7 +221,7 @@ export default function DrawerComponent() {
                 <ListItemButton
                   button
                   onClick={() => {
-                    router.push("/colleagues");
+                    router.push("/people");
                   }}
                   sx={{
                     borderRadius: "10px",
@@ -258,7 +258,7 @@ export default function DrawerComponent() {
                 </ListItemButton>
               </Tooltip>
               {/* Calendar */}
-              <Tooltip title="Calendar" placement="right-start">
+              {/* <Tooltip title="Calendar" placement="right-start">
                 <ListItemButton
                   button
                   onClick={() => {
@@ -278,7 +278,7 @@ export default function DrawerComponent() {
                   </ListItemIcon>
                   <ListItemText primary="Calender" />
                 </ListItemButton>
-              </Tooltip>
+              </Tooltip> */}
               {/* Meet */}
               {/* <Tooltip title="Meet" placement="right-start">
                 <ListItemButton
@@ -309,10 +309,10 @@ export default function DrawerComponent() {
           >
             <Notification />
             <Box>
-              <Tooltip title="Join">
+              {/* <Tooltip title="Join">
                 <NewMeet />
-              </Tooltip>
-              <Signout />
+              </Tooltip> */}
+              <Signout signoutHandler={signoutHandler} user={user} />
             </Box>
           </Box>
         </Box>

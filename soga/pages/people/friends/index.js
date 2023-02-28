@@ -54,11 +54,16 @@ export default function People() {
     }
   }, [token]);
 
-
+  // Signout Handler
+  const signoutHandler = () => {
+    setUser(null);
+    window.localStorage.removeItem("logedinUser");
+    router.push("/login");
+  };
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       <CssBaseline />
-      <DrawerComponent  />
+      <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <PeopleLeft />
       <Box
         component="main"

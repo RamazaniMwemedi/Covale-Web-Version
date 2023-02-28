@@ -1,5 +1,5 @@
 import axios from "axios";
-const { SERVER_ADDRESS, SECRETE_SERVER_ADDRESS } = require("../config/index");
+const { SERVER_ADDRESS } = require("../config/index");
 
 const allUsers = async (token) => {
   const response = await axios.get(

@@ -59,6 +59,12 @@ export default function Explore() {
     }
   }, [token]);
 
+  // Signout Handler
+  const signoutHandler = () => {
+    localStorage.removeItem("logedinUser");
+    router.push("/login");
+  };
+
   return (
     <Box
       sx={{
@@ -69,7 +75,7 @@ export default function Explore() {
       }}
     >
       {/* <CssBaseline /> */}
-      <DrawerComponent  />
+      <DrawerComponent user={logedinUser} signoutHandler={signoutHandler} />
       <PeopleLeft />
       <Box
         sx={{

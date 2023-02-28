@@ -33,7 +33,11 @@ const Project = (props) => {
   useGetProjects(token);
   useGetTeams(token);
 
-
+  const signoutHandler = () => {
+    localStorage.removeItem("logedinUser");
+    router.push("/login");
+    dispatch(removeUser());
+  };
 
   return (
     <>
@@ -51,6 +55,8 @@ const Project = (props) => {
           {userStore.user ? (
             <>
               <DrawerComponent
+                signoutHandler={signoutHandler}
+                user={userStore.user}
               />
               <ProjectLeft projects={projects} />
               <ProjectSection />
