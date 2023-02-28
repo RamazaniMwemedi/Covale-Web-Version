@@ -20,6 +20,7 @@ import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import ExploreIcon from "@mui/icons-material/Explore";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import Groups3Icon from "@mui/icons-material/Groups3";
 const drawerWidth = 300;
 
 const useStyles = makeStyles({
@@ -42,8 +43,11 @@ const closedMixin = (theme) => ({
     marginLeft: theme.spacing(8),
   },
   justifyContent: "spaceBetween",
+  borderLeft: `2px solid ${theme.colors.background1}`,
+  borderRight: `2px solid ${theme.colors.background1}`,
   backgroundColor: theme.colors.background,
 });
+
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -52,6 +56,7 @@ const Drawer = styled(MuiDrawer, {
   backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
+
   ...(open && {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
@@ -98,41 +103,27 @@ export default function PeopleLeft() {
             alignItem: "center",
             textAlign: "center",
             paddingTop: "16px",
-            paddingLeft: "8px",
+            // paddingLeft: "8px",
             backgroundColor: theme.colors.background1,
             height: "70px",
+            gap: 1,
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="36"
-            height="36"
-            fill="purple"
-            // class="bi bi-link-45deg"
-            viewBox="0 0 16 16"
-          >
-            <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
-            <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z" />
-          </svg>
-          <Typography variant="h4" component="h4" color="secondary" noWrap>
-            People
+          <Groups3Icon fontSize="large" color="secondary" />
+          <Typography variant="h5" component="h4" color="secondary" noWrap>
+            Colleague
           </Typography>
         </Box>
         <Divider />
-        <List sx={{ width: "100%", maxWidth: 360 }}>
+        <List sx={{m:0.1}}>
           {/* Friend Request Button */}
           <ListItem
             sx={{
-              borderTopRightRadius: "16px",
-              borderBottomRightRadius: "16px",
+              borderRadius: "8px",
               // if pathname is /friendrequests, background color is gray
               backgroundColor: pathname.includes("/friendrequests")
                 ? theme.colors.background1
                 : "unset",
-              "& :hover": {
-                borderTopRightRadius: "16px",
-                borderBottomRightRadius: "16px",
-              },
             }}
             disablePadding
           >
@@ -158,27 +149,23 @@ export default function PeopleLeft() {
                   fontSize="large"
                   color={friendsRequestColor}
                 />
-
-                <Typography variant="body1" color={friendsRequestColor} noWrap>
-                  Friends Requests
-                </Typography>
+                <ListItemText
+                  color={friendsRequestColor}
+                  primary="Colleague Requests"
+                />
               </Box>
               <ArrowForwardIcon fontSize="large" color={friendsRequestColor} />
             </ListItemButton>
           </ListItem>
           <ListItem
             sx={{
-              borderTopRightRadius: "16px",
-              borderBottomRightRadius: "16px",
+              borderRadius: "8px",
+
               marginTop: "5px",
               // if pathname is /friends, background color is gray
               backgroundColor: pathname.includes("/friends")
                 ? theme.colors.background1
                 : "unset",
-              "& :hover": {
-                borderTopRightRadius: "16px",
-                borderBottomRightRadius: "16px",
-              },
             }}
             disablePadding
           >
@@ -202,9 +189,7 @@ export default function PeopleLeft() {
                 }}
               >
                 <PeopleRoundedIcon fontSize="large" color={friendsColor} />
-                <Typography variant="body1" color={friendsColor} gutterBottom>
-                  Friends
-                </Typography>
+                <ListItemText color={friendsColor} primary="My Colleague" />
               </Box>
               <ArrowForwardIcon fontSize="large" color={friendsColor} />
             </ListItemButton>
@@ -212,20 +197,12 @@ export default function PeopleLeft() {
           <ListItem
             sx={{
               marginTop: "5px",
-              borderTopRightRadius: "16px",
-              borderBottomRightRadius: "16px",
+              borderRadius: "8px",
+
               // if pathname is /explore, background color is gray
               backgroundColor: pathname.includes("/explore")
                 ? theme.colors.background1
                 : "unset",
-              "& :hover": {
-                borderTopRightRadius: "16px",
-                borderBottomRightRadius: "16px",
-              },
-              "& :hover": {
-                borderTopRightRadius: "16px",
-                borderBottomRightRadius: "16px",
-              },
             }}
             disablePadding
           >
@@ -251,9 +228,10 @@ export default function PeopleLeft() {
                 }}
               >
                 <ExploreIcon fontSize="large" color={exploreColor} />
-                <Typography variant="body1" color={exploreColor} gutterBottom>
-                  Discover People
-                </Typography>
+                <ListItemText
+                  color={exploreColor}
+                  primary="Build Your Network"
+                />
               </Box>
               <ArrowForwardIcon fontSize="large" color={exploreColor} />
             </ListItemButton>

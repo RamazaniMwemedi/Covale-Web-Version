@@ -70,10 +70,7 @@ hr {
   background-color: dodgerblue;
 }
 
-.redirectToSentReq :hover {
-  cursor: pointer;
-  background-color: plum;
-}
+
 .redirect {
   border-radius: 15px;
   border-style: solid;

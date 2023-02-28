@@ -57,7 +57,7 @@ export default function Explore() {
             textAlign: "center",
           }}
         >
-          <h1 style={{ color: "purple" }}>Friend Requests</h1>
+          <h1 style={{ color: "purple" }}>Colleague Requests</h1>
           <div
             className="redirectToSentReq"
             onClick={() => {
@@ -74,7 +74,7 @@ export default function Explore() {
                 padding: "8px",
               }}
             >
-              Friend Request Sent
+              Colleague Request Sent
             </Typography>
           </div>
         </Box>

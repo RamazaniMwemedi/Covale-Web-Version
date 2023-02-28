@@ -1,9 +1,22 @@
 import Box from "@mui/material/Box";
 import * as React from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
-import { Avatar, Button, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  OutlinedInput,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import SearchOffRoundedIcon from "@mui/icons-material/SearchOffRounded";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
 // My Modules
 import userServices from "../../../services/user";
@@ -16,8 +29,15 @@ export default function Explore() {
   const [logedinUser, setLogedinUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
+  const theme = useTheme();
+
+  const [showSearchField, setShowSearchField] = useState(false);
 
   const token = logedinUser ? logedinUser.token : null;
+
+  const handleToggleShowSearch = () => {
+    setShowSearchField((prev) => !prev);
+  };
 
   React.useLayoutEffect(() => {
     // Loged in user from localStorage
@@ -40,7 +60,14 @@ export default function Explore() {
   }, [token]);
 
   return (
-    <Box sx={{ display: "flex", flex: 1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flex: 1,
+        height: "100vh",
+        bgcolor: theme.colors.background,
+      }}
+    >
       {/* <CssBaseline /> */}
       <DrawerComponent  />
       <PeopleLeft />
@@ -49,17 +76,29 @@ export default function Explore() {
           flex: 1,
           grow: 1,
           height: "100%",
-          width: "100pc",
           marginLeft: "-4rem",
         }}
       >
-        <People users={users} loading={loading} logedinUser={logedinUser} />
+        <People
+          users={users}
+          loading={loading}
+          logedinUser={logedinUser}
+          showSearchField={showSearchField}
+          handleToggleShowSearch={handleToggleShowSearch}
+        />
       </Box>
     </Box>
   );
 }
 
-const People = ({ users, loading, logedinUser }) => {
+const People = ({
+  users,
+  loading,
+  logedinUser,
+  showSearchField,
+  handleToggleShowSearch,
+}) => {
+  const theme = useTheme();
   const router = useRouter();
   return (
     <>
@@ -71,37 +110,79 @@ const People = ({ users, loading, logedinUser }) => {
           textAlign: "center",
           position: "sticky",
           top: "0",
+          bgcolor: theme.colors.background1,
+          p: 1,
+          zIndex: 1,
         }}
       >
-        <h1 style={{ color: "purple" }}>Discover new Friends</h1>
-        <div
-          className="redirectToSentReq"
-          onClick={() => {
-            router.push("/people/friendrequests/requestsent");
+        <Typography variant="h4" color="secondary">
+          Connect with Colleagues
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          <Typography
-            variant="caption"
+          {showSearchField ? (
+            <FormControl sx={{ m: 1 }} variant="outlined">
+              <OutlinedInput
+                startAdornment={
+                  <InputAdornment
+                    sx={{
+                      marginLeft: "-15px",
+                    }}
+                    position="start"
+                  >
+                    <IconButton onClick={handleToggleShowSearch}>
+                      <SearchOffRoundedIcon color="secondary" />
+                    </IconButton>
+                  </InputAdornment>
+                }
+                id="outlined-adornment-password"
+                type="text"
+                sx={{
+                  height: "35px",
+                  borderRadius: "15px",
+                }}
+                color="secondary"
+              />
+            </FormControl>
+          ) : (
+            <IconButton onClick={handleToggleShowSearch}>
+              <SearchRoundedIcon color="secondary" />
+            </IconButton>
+          )}
+          <Button
+            onClick={() => {
+              router.push("/people/friendrequests/requestsent");
+            }}
+            variant="contained"
             sx={{
-              borderRadius: "15px",
-              borderStyle: "solid",
+              ml: 1,
+              borderRadius: "8px",
               borderColor: "plum",
               borderWidth: "1.5px",
               padding: "8px",
+              textTransform: "unset",
+              height: "25px",
             }}
+            color="secondary"
           >
-            Friend Request Sent
-          </Typography>
-        </div>
+            Connections sent
+          </Button>
+        </Box>
       </Box>
       <Box
         sx={{
           // Display Grid
           display: "grid",
-          gridTemplateColumns: "200px 200px 200px 200px ",
-          gridGap: "40px",
-          marginLeft: "20px",
-          marginTop: "30px",
+          gridTemplateColumns: "repeat(auto-fit, 210px)",
+          // gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: 2,
+          alignContent: "center",
+          justifyContent: "center",
+          pt: 1,
         }}
       >
         {loading ? (
@@ -109,11 +190,11 @@ const People = ({ users, loading, logedinUser }) => {
         ) : users.length < 1 ? (
           <NoDiscToShow />
         ) : (
-          users.map((user) => (
-            <Box key={user.id}>
-              <Person user={user} logedinUser={logedinUser} />
-            </Box>
-          ))
+          <>
+            {users.map((user) => (
+              <Person user={user} key={user.id} logedinUser={logedinUser} />
+            ))}
+          </>
         )}
       </Box>
     </>
@@ -141,49 +222,43 @@ const Person = ({ user, logedinUser }) => {
   const theme = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
-  // User age
-  const age = new Date().getFullYear() - user.birthday.split("-")[0];
   return (
     <>
       <Box
         sx={{
-          borderRadius: "10px",
-          width: "115%",
-          padding: "3px",
-          borderStyle: "solid",
-          borderWidth: "1px",
-          borderColor: "lightgray",
-          "&:hover": {
-            boxShadow: 4,
-          },
-          backgroundColor: theme.colors.background1,
+          width: "200px",
+          borderRadius: "8px",
+          boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+          backgroundColor: theme.colors.textBackground,
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <Box
+        <IconButton
           sx={{
-            backgroundImage: `linear-gradient(to right, purple, green)`,
-            width: "100%",
-            height: "55px",
             display: "flex",
-            marginTop: "10px",
-            borderTopRightRadius: "5px",
-            borderTopLeftRadius: "5px",
+            alignSelf: "flex-end",
           }}
-        />
+          size="small"
+        >
+          <HighlightOffRoundedIcon fontSize="small" />
+        </IconButton>
         <Box
           sx={{
+            p: 1,
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-evenly",
-            gap: 2,
-            marginTop: "-10px",
-            padding: "-10px",
+            flexDirection: "column",
           }}
         >
-          <Avatar sx={{ width: 48, height: 48 }} />
+          <Avatar sx={{ width: 58, height: 58, textTransform: "uppercase" }}>
+            {user.firstname[0]}
+            {user.lastname[0]}
+          </Avatar>
           <Box
             sx={{
-              marginTop: "7px",
+              pt: "10px",
               marginLeft: "-10px",
             }}
           >
@@ -200,28 +275,25 @@ const Person = ({ user, logedinUser }) => {
             </Box>
             <Box sx={{ textAlign: "left" }}>
               <Typography variant="caption">@{user.username}</Typography>
+              <br />
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                }}
+                variant="caption"
+              >
+                Gender: {user.gender}
+              </Typography>
             </Box>
           </Box>
         </Box>
         <br />
         <Box
           sx={{
-            display: "flex",
             alignItems: "center",
             justifyContent: "space-evenly",
           }}
-        >
-         
-          <Typography
-            sx={{
-              fontWeight: "bold",
-            }}
-            variant="caption"
-          >
-            Gender: {user.gender}
-          </Typography>
-         
-        </Box>
+        ></Box>
         <Box
           sx={{
             display: "flow",
@@ -252,7 +324,6 @@ const Person = ({ user, logedinUser }) => {
                   variant="contained"
                   color="secondary"
                   sx={{
-                    width: "95%",
                     margin: "5px",
                     height: "35px",
                     alignSelf: "center",
@@ -262,11 +333,12 @@ const Person = ({ user, logedinUser }) => {
                 <Button
                   variant="contained"
                   sx={{
-                    width: "95%",
+                    width: "100px",
+                    height: "30px",
                     margin: "5px",
-                    alignSelf: "center",
+                    textTransform: "unset",
                   }}
-                  color="success"
+                  color="secondary"
                   onClick={() => {
                     setSending(true);
                     userServices
@@ -277,19 +349,10 @@ const Person = ({ user, logedinUser }) => {
                       });
                   }}
                 >
-                  Add
+                  Connect
                 </Button>
               )}
               <br />
-              <Button
-                sx={{
-                  width: "95%",
-                  margin: "5px",
-                }}
-                variant="outlined"
-              >
-                Remove
-              </Button>
             </>
           )}
         </Box>
