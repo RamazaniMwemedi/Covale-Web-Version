@@ -1,5 +1,4 @@
 import React from "react";
-import { useRouter } from "next/router";
 import { Box, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useTheme } from "@mui/material/styles";
@@ -21,13 +20,6 @@ const Work = (props) => {
   const userLoading = useCheckLogedinUser();
   const userStore = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const router = useRouter();
-
-  const signoutHandler = () => {
-    localStorage.removeItem("logedinUser");
-    router.push("/login");
-    dispatch(removeUser());
-  };
 
   return (
     <>
@@ -44,8 +36,6 @@ const Work = (props) => {
           {userStore.user ? (
             <>
               <DrawerComponent
-                signoutHandler={signoutHandler}
-                user={userStore.user}
               />
               <WorktLeft user={userStore.user} />
             </>

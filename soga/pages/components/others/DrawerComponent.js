@@ -56,7 +56,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function DrawerComponent({ signoutHandler, user }) {
+export default function DrawerComponent() {
   const router = useRouter();
   const theme = useTheme();
 
@@ -311,7 +311,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
               <Tooltip title="Join">
                 <NewMeet />
               </Tooltip>
-              <Signout signoutHandler={signoutHandler} user={user} />
+              <Signout />
             </Box>
           </Box>
         </Box>

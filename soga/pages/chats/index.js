@@ -474,10 +474,7 @@ export default function Chat() {
           <CssBaseline />
           {userStore ? (
             <>
-              <DrawerComponent
-                signoutHandler={signoutHandler}
-                user={userStore.user}
-              />
+              <DrawerComponent />
               <ChatLeft user={userStore.user} chat={{}} />
               {/* If there is an Id */}
               {id ? (

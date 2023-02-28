@@ -122,12 +122,6 @@ export default function Chat() {
     setChatMessage(e.target.value);
   };
 
-  const signoutHandler = () => {
-    localStorage.removeItem("logedinUser");
-    dispatch(removeUser);
-    router.push("/login");
-  };
-
   const onEmojiClick = (event, emojiObject) => {
     setChatMessage(chatMessage + emojiObject.emoji);
   };
@@ -475,8 +469,6 @@ export default function Chat() {
           {userStore ? (
             <>
               <DrawerComponent
-                signoutHandler={signoutHandler}
-                user={userStore.user}
               />
               <ChatLeft user={userStore.user} chat={{}} />
               {/* If there is an Id */}

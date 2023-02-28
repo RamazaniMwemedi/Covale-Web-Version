@@ -23,17 +23,10 @@ export default function People() {
     }
   }, [user]);
 
-  // Signout Handler
-  const signoutHandler = () => {
-    setUser(null);
-    localStorage.removeItem("logedinUser");
-    router.push("/");
-  };
-
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       <CssBaseline />
-      <DrawerComponent signoutHandler={signoutHandler} user={user} />
+      <DrawerComponent />
       <PeopleLeft />
       <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: "-5pc" }}>
         <Typography variant="h1" color="secondary">

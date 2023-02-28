@@ -39,16 +39,10 @@ export default function Explore() {
     }
   }, [token]);
 
-  // Signout Handler
-  const signoutHandler = () => {
-    localStorage.removeItem("logedinUser");
-    router.push("/login");
-  };
-
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       {/* <CssBaseline /> */}
-      <DrawerComponent user={logedinUser} signoutHandler={signoutHandler} />
+      <DrawerComponent  />
       <PeopleLeft />
       <Box
         sx={{

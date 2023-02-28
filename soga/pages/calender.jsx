@@ -1,8 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import { useRouter } from "next/router";
-
 import CssBaseline from "@mui/material/CssBaseline";
 import { useTheme } from "@mui/styles";
 // My Modules
@@ -44,24 +42,10 @@ export default function Calendar() {
     setSelectedDate(Moment(currentDate).add(1, "week"));
   };
 
-  const [user, setUser] = React.useState(null);
-  const router = useRouter();
-
-  React.useLayoutEffect(() => {
-    // Loged in user from localStorage
-    const signedInUser = localStorage.getItem("logedinUser");
-    if (!signedInUser) {
-      router.push("/");
-    }
-    if (user === null) {
-      setUser(JSON.parse(signedInUser));
-    }
-  }, [user]);
-
   return (
     <Box sx={{ display: "flex", height: "100%" }}>
       <CssBaseline />
-      <DrawerComponent user={user} />
+      <DrawerComponent />
       <CalenderLeft handleDateChange={handleDateChange} value={selectedDate} />
       <Box component="main" sx={{ display: "flex", height: "100%" }}>
         {/* App will start here */}

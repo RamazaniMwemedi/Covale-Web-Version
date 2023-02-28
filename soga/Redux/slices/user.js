@@ -15,14 +15,18 @@ const userSlice = createSlice({
     addKeys(state, { payload }) {
       state.user.keys = [payload];
     },
+    signOut(state) {
+      state = {};
+    },
   },
 });
 
-const { addUser, removeUser, addKeys } = userSlice.actions;
+const { addUser, removeUser, addKeys, signOut } = userSlice.actions;
 const reducer = userSlice.reducer;
 module.exports = {
   reducer,
   addUser,
   addKeys,
   removeUser,
+  signOut,
 };

@@ -15,8 +15,16 @@ import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
-export default function AccountMenu({ user, signoutHandler }) {
+import { signOut } from "../../../Redux/slices/calendar";
+
+export default function Signout({}) {
+  const userStore = useSelector((state) => state.user);
+  const user = userStore ? userStore.user : null;
+  const dispatch = useDispatch();
+  const router = useRouter();
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -40,6 +48,12 @@ export default function AccountMenu({ user, signoutHandler }) {
     localStorage.setItem("theme", mode);
     theme.themeChengeHandler(mode);
   };
+
+  const signoutHandler = () => {
+    localStorage.removeItem("logedinUser");
+    dispatch(signOut());
+    router.push("/login");
+  };
   return (
     <>
       {user && (
@@ -61,7 +75,7 @@ export default function AccountMenu({ user, signoutHandler }) {
                 aria-expanded={open ? "true" : undefined}
               >
                 <Avatar sx={{ width: 32, height: 32 }}>
-                  {user.username[0]}
+                  {user.firstname[0]} {user.lastname[0]}
                 </Avatar>
               </IconButton>
             </Tooltip>
@@ -102,7 +116,10 @@ export default function AccountMenu({ user, signoutHandler }) {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem>
-              <Avatar>{user.username[0]}</Avatar> {user.username}
+              <Avatar>
+                {user.firstname[0]} {user.lastname[0]}
+              </Avatar>{" "}
+              {user.firstname} {user.lastname}
             </MenuItem>
             <Divider />
             <MenuItem
