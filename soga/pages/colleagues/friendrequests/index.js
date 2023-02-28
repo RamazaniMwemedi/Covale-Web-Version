@@ -36,11 +36,17 @@ export default function Explore() {
     }
   }, [token]);
 
+  // Signout Handler
+  const signoutHandler = () => {
+    localStorage.removeItem("logedinUser");
+    setUser(null);
+    router.push("/login");
+  };
 
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       {/* <CssBaseline /> */}
-      <DrawerComponent />
+      <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <PeopleLeft />
       <Box
         sx={{
@@ -58,11 +64,11 @@ export default function Explore() {
             textAlign: "center",
           }}
         >
-          <h1 style={{ color: "purple" }}>Friend Requests</h1>
+          <h1 style={{ color: "purple" }}>Colleague Requests</h1>
           <div
             className="redirectToSentReq"
             onClick={() => {
-              router.push("/colleagues/friendrequests/requestsent");
+              router.push("/people/friendrequests/requestsent");
             }}
           >
             <Typography
@@ -75,7 +81,7 @@ export default function Explore() {
                 padding: "8px",
               }}
             >
-              Friend Request Sent
+              Colleague Request Sent
             </Typography>
           </div>
         </Box>
@@ -130,7 +136,7 @@ const NoFriendsRequest = () => {
         <Typography
           variant="h5"
           color="secondary"
-          onClick={() => router.push("/colleagues/explore")}
+          onClick={() => router.push("/people/explore")}
         >
           Explore New People{" "}
         </Typography>

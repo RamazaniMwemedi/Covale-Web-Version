@@ -54,11 +54,16 @@ export default function People() {
     }
   }, [token]);
 
- 
+  // Signout Handler
+  const signoutHandler = () => {
+    setUser(null);
+    window.localStorage.removeItem("logedinUser");
+    router.push("/login");
+  };
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       <CssBaseline />
-      <DrawerComponent  />
+      <DrawerComponent signoutHandler={signoutHandler} user={user} />
       <PeopleLeft />
       <Box
         component="main"
@@ -83,7 +88,7 @@ export default function People() {
           <div
             className="redirectToSentReq"
             onClick={() => {
-              router.push("/colleagues/friendrequests/requestsent");
+              router.push("/people/friendrequests/requestsent");
             }}
           >
             <Typography
@@ -157,7 +162,7 @@ const NoFriends = () => {
           variant="h5"
           className={classes.text}
           color="secondary"
-          onClick={() => router.push("/colleagues/explore")}
+          onClick={() => router.push("/people/explore")}
         >
           Explore New People{" "}
         </Typography>
