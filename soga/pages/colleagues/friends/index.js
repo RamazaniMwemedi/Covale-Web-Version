@@ -54,7 +54,7 @@ export default function People() {
     }
   }, [token]);
 
-
+ 
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       <CssBaseline />
@@ -83,7 +83,7 @@ export default function People() {
           <div
             className="redirectToSentReq"
             onClick={() => {
-              router.push("/people/friendrequests/requestsent");
+              router.push("/colleagues/friendrequests/requestsent");
             }}
           >
             <Typography
@@ -157,7 +157,7 @@ const NoFriends = () => {
           variant="h5"
           className={classes.text}
           color="secondary"
-          onClick={() => router.push("/people/explore")}
+          onClick={() => router.push("/colleagues/explore")}
         >
           Explore New People{" "}
         </Typography>

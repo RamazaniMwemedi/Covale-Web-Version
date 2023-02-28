@@ -36,10 +36,11 @@ export default function Explore() {
     }
   }, [token]);
 
+
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       {/* <CssBaseline /> */}
-      <DrawerComponent  />
+      <DrawerComponent />
       <PeopleLeft />
       <Box
         sx={{
@@ -57,11 +58,11 @@ export default function Explore() {
             textAlign: "center",
           }}
         >
-          <h1 style={{ color: "purple" }}>Colleague Requests</h1>
+          <h1 style={{ color: "purple" }}>Friend Requests</h1>
           <div
             className="redirectToSentReq"
             onClick={() => {
-              router.push("/people/friendrequests/requestsent");
+              router.push("/colleagues/friendrequests/requestsent");
             }}
           >
             <Typography
@@ -74,7 +75,7 @@ export default function Explore() {
                 padding: "8px",
               }}
             >
-              Colleague Request Sent
+              Friend Request Sent
             </Typography>
           </div>
         </Box>
@@ -129,7 +130,7 @@ const NoFriendsRequest = () => {
         <Typography
           variant="h5"
           color="secondary"
-          onClick={() => router.push("/people/explore")}
+          onClick={() => router.push("/colleagues/explore")}
         >
           Explore New People{" "}
         </Typography>

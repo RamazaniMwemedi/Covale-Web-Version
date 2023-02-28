@@ -57,7 +57,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function DrawerComponent({ signoutHandler, user }) {
+export default function DrawerComponent() {
   const router = useRouter();
   const theme = useTheme();
 
@@ -90,7 +90,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
-    } else if (pathname.includes("/people")) {
+    } else if (pathname.includes("/colleagues")) {
       setChatColor("gray");
       setPeopleColor("secondary");
       setCalendar("gray");
@@ -221,7 +221,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 <ListItemButton
                   button
                   onClick={() => {
-                    router.push("/people");
+                    router.push("/colleagues");
                   }}
                   sx={{
                     borderRadius: "10px",
@@ -309,10 +309,10 @@ export default function DrawerComponent({ signoutHandler, user }) {
           >
             <Notification />
             <Box>
-              {/* <Tooltip title="Join">
+              <Tooltip title="Join">
                 <NewMeet />
-              </Tooltip> */}
-              <Signout signoutHandler={signoutHandler} user={user} />
+              </Tooltip>
+              <Signout />
             </Box>
           </Box>
         </Box>

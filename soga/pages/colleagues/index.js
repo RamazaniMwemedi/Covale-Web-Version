@@ -23,12 +23,10 @@ export default function People() {
     }
   }, [user]);
 
-
-
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       <CssBaseline />
-      <DrawerComponent/>
+      <DrawerComponent />
       <PeopleLeft />
       <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: "-5pc" }}>
         <Typography variant="h1" color="secondary">

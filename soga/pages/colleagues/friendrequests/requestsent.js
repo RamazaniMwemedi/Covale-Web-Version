@@ -51,10 +51,11 @@ export default function Explore() {
   }, [token]);
 
 
+
   return (
     <Box sx={{ display: "flex", flex: 1 }}>
       {/* <CssBaseline /> */}
-      <DrawerComponent />
+      <DrawerComponent  />
       <PeopleLeft />
       <Box
         sx={{
