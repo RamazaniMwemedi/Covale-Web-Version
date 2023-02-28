@@ -68,7 +68,7 @@ export default function Explore() {
           <div
             className="redirectToSentReq"
             onClick={() => {
-              router.push("/people/friendrequests/requestsent");
+              router.push("/colleagues/friendrequests/requestsent");
             }}
           >
             <Typography
@@ -136,7 +136,7 @@ const NoFriendsRequest = () => {
         <Typography
           variant="h5"
           color="secondary"
-          onClick={() => router.push("/people/explore")}
+          onClick={() => router.push("/colleagues/explore")}
         >
           Explore New People{" "}
         </Typography>

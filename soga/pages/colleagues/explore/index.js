@@ -131,7 +131,12 @@ const People = ({
           }}
         >
           {showSearchField ? (
-            <FormControl sx={{ m: 1 }} variant="outlined">
+            <FormControl
+              sx={{
+                m: 1,
+              }}
+              variant="outlined"
+            >
               <OutlinedInput
                 startAdornment={
                   <InputAdornment
@@ -161,7 +166,7 @@ const People = ({
           )}
           <Button
             onClick={() => {
-              router.push("/people/friendrequests/requestsent");
+              router.push("/colleagues/friendrequests/requestsent");
             }}
             variant="contained"
             sx={{

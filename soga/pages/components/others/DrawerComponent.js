@@ -90,7 +90,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
-    } else if (pathname.includes("/people")) {
+    } else if (pathname.includes("/colleagues")) {
       setChatColor("gray");
       setPeopleColor("secondary");
       setCalendar("gray");
@@ -221,7 +221,7 @@ export default function DrawerComponent({ signoutHandler, user }) {
                 <ListItemButton
                   button
                   onClick={() => {
-                    router.push("/people");
+                    router.push("/colleagues");
                   }}
                   sx={{
                     borderRadius: "10px",
