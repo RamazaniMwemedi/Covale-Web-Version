@@ -308,7 +308,7 @@ export default function DrawerComponent() {
           >
             <Notification />
             <Box>
-              {/* <Tooltip title="Join">
+              <Tooltip title="Join">
                 <NewMeet />
               </Tooltip>
               <Signout />
