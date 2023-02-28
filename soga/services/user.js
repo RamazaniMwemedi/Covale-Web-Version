@@ -1,5 +1,5 @@
 import axios from "axios";
-const { SERVER_ADDRESS, SECRETE_SERVER_ADDRESS } = require("../config/index");
+const { SERVER_ADDRESS } = require("../config/index");
 
 const allUsers = async (token) => {
   const response = await axios.get(
@@ -78,34 +78,8 @@ const acceptFriendRequest = async (id, token, secreteServerToken) => {
         },
       }
     );
-    if (response.status === 201) {
-      // Request for asymmetric keys
-      const response2 = await axios.post(
-        `${SECRETE_SERVER_ADDRESS}/api/v1/keys`,
-        {
-          modelName: "Chat",
-          modelId: response.data.chatId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${secreteServerToken}`,
-          },
-        }
-      );
-      console.log("res from PersonReq Services :>>", {
-        status: response.status,
-        data: response.data,
-        keys: response2.data,
-      });
-
-      // Return
-      return {
-        status: response.status,
-        data: response.data,
-        keys: response2.data,
-      };
-    }
   }
+  return response.data;
 };
 
 // Remove Friend Request

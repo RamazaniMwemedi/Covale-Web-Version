@@ -62,37 +62,45 @@ import moment from "moment";
 import FileComponent from "../../mediaFiles/FileComponent";
 
 const KanbanView = ({
-  project: { members },
-  subProject: { tasks, id, project, title },
+  project,
+  subProject,
   taskStatus,
   handleShowFile,
   showChats,
 }) => {
+  const members = project && project.members;
+  const tasks = subProject && subProject.tasks;
+  const id = subProject && subProject.id;
+  const title = subProject && subProject.title;
   const dispatch = useDispatch();
   // Add tasks handlers
   // Add Pending tasks handlers
   const addTheTaskToReduxHandler = (task) => {
     dispatch(
       addTaskToSubProject({
-        projectId: project,
+        projectId: project.id,
         subProjectId: id,
         task,
       })
     );
   };
   return (
-    <Box sx={{ width: showChats ? "600px" : "900px" }}>
-      <Typography variant="h6">{title}</Typography>
-      <TaskStates
-        tasks={tasks}
-        taskStatus={taskStatus}
-        addTheTaskToReduxHandler={addTheTaskToReduxHandler}
-        id={id}
-        members={members}
-        projectId={project}
-        handleShowFile={handleShowFile}
-      />
-    </Box>
+    <>
+      {members && (
+        <Box sx={{ width: showChats ? "600px" : "900px" }}>
+          <Typography variant="h6">{title}</Typography>
+          <TaskStates
+            tasks={tasks}
+            taskStatus={taskStatus}
+            addTheTaskToReduxHandler={addTheTaskToReduxHandler}
+            id={id}
+            members={members}
+            projectId={project}
+            handleShowFile={handleShowFile}
+          />
+        </Box>
+      )}
+    </>
   );
 };
 
@@ -843,6 +851,7 @@ const AddTaskForm = ({
   const [flag, setFlag] = React.useState("");
   const [assignees, setAssignees] = React.useState([]);
   const [addingTask, setAddingTask] = React.useState(false);
+  const [addingTaskError, setAddingTaskError] = React.useState("");
   // Subtask state
   const [subtasks, setSubtasks] = React.useState([]);
   const [showSubtaskForm, setShowSubtaskForm] = React.useState(false);
@@ -926,15 +935,28 @@ const AddTaskForm = ({
   const addTask = async () => {
     // If title is an empty string or a space, return
     if (title.trim() === "") {
+      setAddingTaskError("Task title cannot be empty");
+      setTimeout(() => {
+        setAddingTaskError("");
+      }, 2000);
+
       return;
     }
 
     if (assignees.length === 0) {
+      setAddingTaskError("Assignees cannot be empty");
+      setTimeout(() => {
+        setAddingTaskError("");
+      }, 2000);
       return;
     }
 
     // Date
     if (startDate > dueDate) {
+      setAddingTaskError("Start date cannot be after due date");
+      setTimeout(() => {
+        setAddingTaskError("");
+      }, 2000);
       return;
     }
 
@@ -993,6 +1015,9 @@ const AddTaskForm = ({
           padding: "20px",
         }}
       >
+        <Typography variant="caption" color="error">
+          {addingTaskError}
+        </Typography>
         <Box sx={{ display: "flex", gap: "10px" }}>
           <TextField
             label="Title"

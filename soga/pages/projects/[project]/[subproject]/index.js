@@ -17,6 +17,7 @@ import { removeUser } from "../../../../Redux/slices/user";
 // Redux
 import PropTypes from "prop-types";
 import { useGetProjects } from "../../../../hooks/projects";
+import { useGetTeams } from "../../../../hooks/teams";
 
 const Project = (props) => {
   const theme = useTheme();
@@ -25,8 +26,12 @@ const Project = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const token = userStore.user ? userStore.user.token : null;
-  const projects = useGetProjects(token);
-  const subProjectId = router.query.subproject;
+  const projectsStore = useSelector((state) => state.projects);
+  const projects = projectsStore ? projectsStore.projects : [];
+
+  // Hooks
+  useGetProjects(token);
+  useGetTeams(token);
 
 
   return (
@@ -38,6 +43,7 @@ const Project = (props) => {
           sx={{
             display: "flex",
             height: "100vh",
+            width: "100vw",
           }}
         >
           <CssBaseline />
