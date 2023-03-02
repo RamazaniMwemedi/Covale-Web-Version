@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { removeColleagueFromExplore } from "../../../Redux/slices/colleagues";
 import { useExploreColleagus } from "../../../hooks/colleagues";
+import { removeColleague } from "../../../services/user";
 
 export default function Explore() {
   const colleagueStore = useSelector((state) => state.colleagues);
@@ -192,8 +193,12 @@ const People = ({
           // gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: 2,
           alignContent: "center",
-          justifyContent: "center",
+          justifyContent:
+            exploreColleagues && exploreColleagues.length < 4
+              ? "flex-start"
+              : "center",
           pt: 1,
+          pl: 1,
         }}
       >
         {!exploreColleagues ? (
@@ -240,7 +245,7 @@ const Person = ({ user, logedinUser, token }) => {
   const [sending, setSending] = React.useState(false);
   const dispatch = useDispatch();
 
-  const removeColleague = async () => {
+  const removeColleagueFromUser = async () => {
     const res = await removeColleague(token, user.id);
     if (res) {
       dispatch(
@@ -271,7 +276,7 @@ const Person = ({ user, logedinUser, token }) => {
             bgcolor: theme.colors.textBackground2,
           }}
           size="small"
-          onClick={removeColleague}
+          onClick={removeColleagueFromUser}
         >
           <HighlightOffRoundedIcon fontSize="medium" />
         </IconButton>

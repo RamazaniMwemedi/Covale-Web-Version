@@ -134,6 +134,7 @@ const removeColleague = async (token, id) => {
     try {
       const response = await axios.post(
         `${SERVER_ADDRESS}/api/v1/users/colleague/remove/${id}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -161,3 +162,4 @@ module.exports = {
   findUserById,
   removeColleague,
 };
+

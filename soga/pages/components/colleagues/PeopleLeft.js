@@ -134,7 +134,7 @@ export default function PeopleLeft() {
               }}
               dense
               onClick={() => {
-                router.push("/colleagues/friendrequests");
+                router.push("/colleagues/colleaguerequests");
               }}
             >
               <Box
@@ -163,7 +163,7 @@ export default function PeopleLeft() {
 
               marginTop: "5px",
               // if pathname is /friends, background color is gray
-              backgroundColor: pathname.includes("/friends")
+              backgroundColor: pathname.includes("/mycolleagues")
                 ? theme.colors.background1
                 : "unset",
             }}
@@ -177,7 +177,7 @@ export default function PeopleLeft() {
               }}
               dense
               onClick={() => {
-                router.push("/colleagues/friends");
+                router.push("/colleagues/mycolleagues");
               }}
             >
               <Box
