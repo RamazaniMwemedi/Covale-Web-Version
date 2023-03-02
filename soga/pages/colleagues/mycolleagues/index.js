@@ -150,7 +150,7 @@ export default function People() {
             )}
             <Button
               onClick={() => {
-                router.push("/colleagues/friendrequests/requestsent");
+                router.push("/colleagues/colleaguerequests/sent");
               }}
               variant="contained"
               sx={{
