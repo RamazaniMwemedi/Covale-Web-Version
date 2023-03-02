@@ -1,16 +1,29 @@
-import { ListItem, ListItemButton } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  ListItem,
+  ListItemButton,
+  OutlinedInput,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useRouter } from "next/router";
 import { makeStyles } from "@mui/styles";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import SearchOffRoundedIcon from "@mui/icons-material/SearchOffRounded";
+import { useState } from "react";
+
 // My Modules
 import DrawerComponent from "../../components/others/DrawerComponent";
 import PeopleLeft from "../../components/colleagues/PeopleLeft";
 import Friend from "../../components/colleagues/Friend";
 
 import userServices from "../../../services/user";
+import { useTheme } from "@emotion/react";
 
 const useStyles = makeStyles({
   text: {
@@ -25,9 +38,13 @@ export default function People() {
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
+  const theme = useTheme();
+  const [showSearchField, setShowSearchField] = useState(false);
 
   const token = user ? user.token : null;
-
+  const handleToggleShowSearch = () => {
+    setShowSearchField((prev) => !prev);
+  };
   // Loged in user from window.locationStorage
   React.useEffect(
     (router) => {
@@ -75,47 +92,103 @@ export default function People() {
           marginLeft: "-4rem",
         }}
       >
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             textAlign: "center",
+            position: "sticky",
+            top: "0",
+            bgcolor: theme.colors.background1,
+            p: 1,
+            zIndex: 1,
           }}
         >
-          <h1 style={{ color: "purple" }}>Your Friends</h1>
-
-          <div
-            className="redirectToSentReq"
-            onClick={() => {
-              router.push("/colleagues/friendrequests/requestsent");
+          <Typography variant="h4" color="secondary">
+            My Colleagues
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            <Typography
-              variant="caption"
+            {showSearchField ? (
+              <FormControl
+                sx={{
+                  m: 1,
+                }}
+                variant="outlined"
+              >
+                <OutlinedInput
+                  startAdornment={
+                    <InputAdornment
+                      sx={{
+                        marginLeft: "-15px",
+                      }}
+                      position="start"
+                    >
+                      <IconButton onClick={handleToggleShowSearch}>
+                        <SearchOffRoundedIcon color="secondary" />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  id="outlined-adornment-password"
+                  type="text"
+                  sx={{
+                    height: "35px",
+                    borderRadius: "15px",
+                  }}
+                  color="secondary"
+                />
+              </FormControl>
+            ) : (
+              <IconButton onClick={handleToggleShowSearch}>
+                <SearchRoundedIcon color="secondary" />
+              </IconButton>
+            )}
+            <Button
+              onClick={() => {
+                router.push("/colleagues/friendrequests/requestsent");
+              }}
+              variant="contained"
               sx={{
-                borderRadius: "15px",
-                borderStyle: "solid",
+                ml: 1,
+                borderRadius: "8px",
                 borderColor: "plum",
                 borderWidth: "1.5px",
                 padding: "8px",
+                textTransform: "unset",
+                height: "25px",
               }}
+              color="secondary"
             >
-              Friend Request Sent
-            </Typography>
-          </div>
-        </div>
-        {loading ? (
-          <p>Loading</p>
-        ) : (
-          <>
-            {friends.length > 0 ? (
-              <Friends friends={friends} token={token} />
-            ) : (
-              <NoFriends />
-            )}
-          </>
-        )}
+              Colleagues Request Sent
+            </Button>
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            flex: 1,
+            grow: 1,
+            height: "100%",
+            marginLeft: "-4rem",
+          }}
+        >
+          {loading ? (
+            <p>Loading</p>
+          ) : (
+            <>
+              {friends.length > 0 ? (
+                <Friends friends={friends} token={token} />
+              ) : (
+                <NoFriends />
+              )}
+            </>
+          )}
+        </Box>
       </Box>
     </Box>
   );
@@ -145,7 +218,6 @@ const Friends = ({ friends, token }) => {
 
 const NoFriends = () => {
   const router = useRouter();
-  const classes = useStyles();
 
   return (
     <Box
@@ -157,16 +229,13 @@ const NoFriends = () => {
     >
       <Typography variant="h2">You Have No Friend Now</Typography>
       <br />
-      <div className="redirect">
-        <Typography
-          variant="h5"
-          className={classes.text}
-          color="secondary"
-          onClick={() => router.push("/colleagues/explore")}
-        >
-          Explore New People{" "}
-        </Typography>
-      </div>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => router.push("/colleagues/explore")}
+      >
+        Explore New People{" "}
+      </Button>
     </Box>
   );
 };

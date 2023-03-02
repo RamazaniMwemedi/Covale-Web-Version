@@ -7,16 +7,6 @@ body {
   background-color: rgb(226, 216, 226);
   scroll-behavior: smooth;
 }
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: rgb(58, 20, 58);
-  }
-}
-@media (prefers-color-scheme: light) {
-  body {
-    background-color: rgb(226, 216, 226);
-  }
-}
 
 a {
   text-decoration: none;
