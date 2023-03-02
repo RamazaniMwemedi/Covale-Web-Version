@@ -121,9 +121,13 @@ export default function PeopleLeft() {
             sx={{
               borderRadius: "8px",
               // if pathname is /friendrequests, background color is gray
-              backgroundColor: pathname.includes("/friendrequests")
+              backgroundColor: pathname.includes("/colleaguerequests")
                 ? theme.colors.background1
                 : "unset",
+              "&:hover": {
+                backgroundColor: theme.colors.textBackground,
+                borderRadius: "8px",
+              },
             }}
             disablePadding
           >
@@ -146,7 +150,7 @@ export default function PeopleLeft() {
                 }}
               >
                 <PersonAddAlt1Icon
-                  fontSize="large"
+                  fontSize="small"
                   color={friendsRequestColor}
                 />
                 <ListItemText
@@ -154,7 +158,7 @@ export default function PeopleLeft() {
                   primary="Colleague Requests"
                 />
               </Box>
-              <ArrowForwardIcon fontSize="large" color={friendsRequestColor} />
+              <ArrowForwardIcon fontSize="small" color={friendsRequestColor} />
             </ListItemButton>
           </ListItem>
           <ListItem
@@ -166,6 +170,10 @@ export default function PeopleLeft() {
               backgroundColor: pathname.includes("/mycolleagues")
                 ? theme.colors.background1
                 : "unset",
+              "&:hover": {
+                backgroundColor: theme.colors.textBackground,
+                borderRadius: "8px",
+              },
             }}
             disablePadding
           >
@@ -188,10 +196,10 @@ export default function PeopleLeft() {
                   display: "flex",
                 }}
               >
-                <PeopleRoundedIcon fontSize="large" color={friendsColor} />
+                <PeopleRoundedIcon fontSize="small" color={friendsColor} />
                 <ListItemText color={friendsColor} primary="My Colleague" />
               </Box>
-              <ArrowForwardIcon fontSize="large" color={friendsColor} />
+              <ArrowForwardIcon fontSize="small" color={friendsColor} />
             </ListItemButton>
           </ListItem>
           <ListItem
@@ -203,6 +211,10 @@ export default function PeopleLeft() {
               backgroundColor: pathname.includes("/explore")
                 ? theme.colors.background1
                 : "unset",
+              "&:hover": {
+                backgroundColor: theme.colors.textBackground,
+                borderRadius: "8px",
+              },
             }}
             disablePadding
           >
@@ -227,13 +239,13 @@ export default function PeopleLeft() {
                   display: "flex",
                 }}
               >
-                <ExploreIcon fontSize="large" color={exploreColor} />
+                <ExploreIcon fontSize="small" color={exploreColor} />
                 <ListItemText
                   color={exploreColor}
                   primary="Build Your Network"
                 />
               </Box>
-              <ArrowForwardIcon fontSize="large" color={exploreColor} />
+              <ArrowForwardIcon fontSize="small" color={exploreColor} />
             </ListItemButton>
           </ListItem>
         </List>
