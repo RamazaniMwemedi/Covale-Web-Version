@@ -347,7 +347,7 @@ const LoginPage = () => {
               <Box
                 sx={{
                   borderRadius: "20px",
-                  backgroundColor: "whitesmoke",
+                  backgroundColor:theme.colors.background1,
 
                 }}
               >

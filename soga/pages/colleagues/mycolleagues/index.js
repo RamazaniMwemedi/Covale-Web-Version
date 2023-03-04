@@ -25,6 +25,9 @@ import Friend from "../../components/colleagues/Friend";
 import userServices from "../../../services/user";
 import { useTheme } from "@emotion/react";
 import TopComponent from "../../components/colleagues/TopComponent";
+import { useSelector } from "react-redux";
+import { useCheckLogedinUser } from "../../../hooks/hooks";
+import { useExploreColleagus } from "../../../hooks/colleagues";
 
 const useStyles = makeStyles({
   text: {
@@ -36,31 +39,21 @@ const useStyles = makeStyles({
 
 export default function People() {
   const [friends, setFriends] = React.useState([]);
-  const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
   const theme = useTheme();
-  const token = user ? user.token : null;
   const [showSearchField, setShowSearchField] = useState(false);
+
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user ? userStore.user : null;
+  const token = user ? user.token : null;
+
+  useCheckLogedinUser();
+  useExploreColleagus(token);
 
   const handleToggleShowSearch = () => {
     setShowSearchField((prev) => !prev);
   };
-  // Loged in user from window.locationStorage
-  React.useEffect(
-    (router) => {
-      const signedInUser = JSON.parse(
-        window.localStorage.getItem("logedinUser")
-      );
-      if (!signedInUser) {
-        router.push("/");
-      }
-      if (user === null) {
-        setUser(signedInUser);
-      }
-    },
-    [user]
-  );
 
   // Get all my friends
   React.useEffect(() => {
@@ -72,54 +65,50 @@ export default function People() {
     }
   }, [token]);
 
-  // Signout Handler
-  const signoutHandler = () => {
-    setUser(null);
-    window.localStorage.removeItem("logedinUser");
-    router.push("/login");
-  };
   return (
-    <Box sx={{ display: "flex", flex: 1 }}>
-      <CssBaseline />
-      <DrawerComponent signoutHandler={signoutHandler} user={user} />
-      <PeopleLeft />
-      <Box
-        component="main"
-        sx={{
-          flex: 1,
-          grow: 1,
-          height: "100%",
-          width: "100pc",
-          marginLeft: "-4rem",
-        }}
-      >
-        <TopComponent
-          showSearchField={showSearchField}
-          handleToggleShowSearch={handleToggleShowSearch}
-          title="My Colleagues"
-          routeText="Colleagues Request Sent"
-          routeUrl="/colleagues/colleaguerequests/sent"
-        />
-
+    <Box sx={{ height: "100vh", bgcolor: theme.colors.background }}>
+      <Box sx={{ display: "flex", flex: 1 }}>
+        <CssBaseline />
+        <DrawerComponent />
+        <PeopleLeft />
         <Box
+          component="main"
           sx={{
             flex: 1,
             grow: 1,
             height: "100%",
+            width: "100pc",
             marginLeft: "-4rem",
           }}
         >
-          {loading ? (
-            <p>Loading</p>
-          ) : (
-            <>
-              {friends.length > 0 ? (
-                <Friends friends={friends} token={token} />
-              ) : (
-                <NoFriends />
-              )}
-            </>
-          )}
+          <TopComponent
+            showSearchField={showSearchField}
+            handleToggleShowSearch={handleToggleShowSearch}
+            title="My Colleagues"
+            routeText="Colleagues Request Sent"
+            routeUrl="/colleagues/colleaguerequests/sent"
+          />
+
+          <Box
+            sx={{
+              flex: 1,
+              grow: 1,
+              height: "100%",
+              marginLeft: "-4rem",
+            }}
+          >
+            {loading ? (
+              <p>Loading</p>
+            ) : (
+              <>
+                {friends.length > 0 ? (
+                  <Friends friends={friends} token={token} />
+                ) : (
+                  <NoFriends />
+                )}
+              </>
+            )}
+          </Box>
         </Box>
       </Box>
     </Box>
@@ -159,11 +148,13 @@ const NoFriends = () => {
         marginTop: "190px",
       }}
     >
-      <Typography variant="h2">You Have No Friend Now</Typography>
+      <Typography variant="h5">You have no colleagues yet.</Typography>
+      <Typography variant="h5">Explore new people </Typography>
       <br />
       <Button
         variant="contained"
         color="secondary"
+        size="small"
         onClick={() => router.push("/colleagues/explore")}
       >
         Explore New People{" "}

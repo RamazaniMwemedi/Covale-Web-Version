@@ -18,6 +18,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import SearchOffRoundedIcon from "@mui/icons-material/SearchOffRounded";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
+import PersonRemoveAlt1RoundedIcon from "@mui/icons-material/PersonRemoveAlt1Rounded";
 
 // My Modules
 import exploreColleagueservices from "../../../services/user";
@@ -30,43 +31,29 @@ import { removeColleagueFromExplore } from "../../../Redux/slices/colleagues";
 import { useExploreColleagus } from "../../../hooks/colleagues";
 import { removeColleague } from "../../../services/user";
 import TopComponent from "../../components/colleagues/TopComponent";
+import { grey } from "@mui/material/colors";
+import { useCheckLogedinUser } from "../../../hooks/hooks";
 
 export default function Explore() {
   const colleagueStore = useSelector((state) => state.colleagues);
   const exploreColleagues = colleagueStore.colleagues
     ? colleagueStore.colleagues.explore
     : null;
-  const [logedinUser, setLogedinUser] = React.useState(null);
   const router = useRouter();
   const theme = useTheme();
-
   const [showSearchField, setShowSearchField] = useState(false);
 
-  const token = logedinUser ? logedinUser.token : null;
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user ? userStore.user : null;
+  const token = user ? user.token : null;
 
+  useCheckLogedinUser();
+  useExploreColleagus(token);
+  
   const handleToggleShowSearch = () => {
     setShowSearchField((prev) => !prev);
   };
-
-  React.useLayoutEffect(() => {
-    // Loged in user from localStorage
-    const signedInUser = localStorage.getItem("logedinUser");
-    if (!signedInUser) {
-      router.push("/");
-    }
-    if (logedinUser === null) {
-      setLogedinUser(JSON.parse(signedInUser));
-    }
-  }, [logedinUser]);
-
-  useExploreColleagus(token);
-
-  // Signout Handler
-  const signoutHandler = () => {
-    localStorage.removeItem("logedinUser");
-    router.push("/login");
-  };
-
+  
   return (
     <Box
       sx={{
@@ -77,7 +64,7 @@ export default function Explore() {
       }}
     >
       {/* <CssBaseline /> */}
-      <DrawerComponent user={logedinUser} signoutHandler={signoutHandler} />
+      <DrawerComponent />
       <PeopleLeft />
       <Box
         sx={{
@@ -89,7 +76,6 @@ export default function Explore() {
       >
         <People
           exploreColleagues={exploreColleagues}
-          logedinUser={logedinUser}
           showSearchField={showSearchField}
           handleToggleShowSearch={handleToggleShowSearch}
           token={token}
@@ -101,7 +87,6 @@ export default function Explore() {
 
 const People = ({
   exploreColleagues,
-  logedinUser,
   showSearchField,
   handleToggleShowSearch,
   token,
@@ -140,12 +125,7 @@ const People = ({
         ) : (
           <>
             {exploreColleagues.map((user) => (
-              <Person
-                user={user}
-                key={user.id}
-                token={token}
-                logedinUser={logedinUser}
-              />
+              <Person user={user} key={user.id} token={token} />
             ))}
           </>
         )}
@@ -166,12 +146,12 @@ const NoDiscToShow = () => {
         marginTop: "13%",
       }}
     >
-      <Typography variant="h2">No Discovery at the moment</Typography>
+      <Typography variant="h5">No Discovery at the moment</Typography>
     </Box>
   );
 };
 
-const Person = ({ user, logedinUser, token }) => {
+const Person = ({ user, token }) => {
   const theme = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
@@ -271,18 +251,22 @@ const Person = ({ user, logedinUser, token }) => {
             <Button
               variant="contained"
               sx={{
-                width: "95%",
+                width: "100px",
+                height: "30px",
                 margin: "5px",
-                alignSelf: "center",
+                textTransform: "unset",
+                display: "flex",
+                gap: "20%",
+                bgcolor: grey[500],
               }}
-              color="error"
+              color="action"
               onClick={() => {
                 exploreColleagueservices
-                  .cancelFriendRequest(user.id, logedinUser.token)
+                  .cancelFriendRequest(user.id, token)
                   .then(setRequestSent(false));
               }}
             >
-              Cancel requestSent
+              <PersonRemoveAlt1RoundedIcon fontSize="small" /> Cancel
             </Button>
           ) : (
             <>
@@ -312,7 +296,7 @@ const Person = ({ user, logedinUser, token }) => {
                   onClick={() => {
                     setSending(true);
                     exploreColleagueservices
-                      .addFriendById(user.id, logedinUser.token)
+                      .addFriendById(user.id, token)
                       .then(() => {
                         setRequestSent(true);
                         setSending(false);

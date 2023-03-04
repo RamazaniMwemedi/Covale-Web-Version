@@ -20,29 +20,23 @@ import PeopleLeft from "../../components/colleagues/PeopleLeft";
 import PersonRequest from "../../components/colleagues/PersonRequest";
 import userServices from "../../../services/user";
 import { useTheme } from "@mui/system";
+import TopComponent from "../../components/colleagues/TopComponent";
+import { useSelector } from "react-redux";
 
 export default function Explore() {
   const [users, setUsers] = React.useState([]);
-  const [user, setUser] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
   const [showSearchField, setShowSearchField] = React.useState(false);
   const theme = useTheme();
+  const [loading, setLoading] = React.useState(true);
 
+  const userStore = useSelector((state) => state.user);
+  const user = userStore.user ? userStore.user : null;
   const token = user ? user.token : null;
+
   const handleToggleShowSearch = () => {
     setShowSearchField((prev) => !prev);
   };
-
-  React.useEffect(() => {
-    // Loged in user from localStorage
-    const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
-    if (!signedInUser) {
-      router.push("/");
-    } else {
-      setUser(signedInUser);
-    }
-  }, []);
 
   React.useEffect(() => {
     if (token) {
@@ -52,13 +46,6 @@ export default function Explore() {
       });
     }
   }, [token]);
-
-  // Signout Handler
-  const signoutHandler = () => {
-    localStorage.removeItem("logedinUser");
-    setUser(null);
-    router.push("/login");
-  };
 
   return (
     <Box
@@ -71,7 +58,7 @@ export default function Explore() {
     >
       {" "}
       {/* <CssBaseline /> */}
-      <DrawerComponent signoutHandler={signoutHandler} user={user} />
+      <DrawerComponent />
       <PeopleLeft />{" "}
       <Box
         sx={{
@@ -89,82 +76,13 @@ export default function Explore() {
           }}
         >
           {" "}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              textAlign: "center",
-              position: "sticky",
-              top: "0",
-              bgcolor: theme.colors.background1,
-              p: 1,
-              zIndex: 1,
-            }}
-          >
-            <Typography variant="h4" color="secondary">
-              Colleague Requests
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {showSearchField ? (
-                <FormControl
-                  sx={{
-                    m: 1,
-                  }}
-                  variant="outlined"
-                >
-                  <OutlinedInput
-                    startAdornment={
-                      <InputAdornment
-                        sx={{
-                          marginLeft: "-15px",
-                        }}
-                        position="start"
-                      >
-                        <IconButton onClick={handleToggleShowSearch}>
-                          <SearchOffRoundedIcon color="secondary" />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    id="outlined-adornment-password"
-                    type="text"
-                    sx={{
-                      height: "35px",
-                      borderRadius: "15px",
-                    }}
-                    color="secondary"
-                  />
-                </FormControl>
-              ) : (
-                <IconButton onClick={handleToggleShowSearch}>
-                  <SearchRoundedIcon color="secondary" />
-                </IconButton>
-              )}
-              <Button
-                onClick={() => {
-                  router.push("/colleagues/colleaguerequests/sent");
-                }}
-                variant="contained"
-                sx={{
-                  ml: 1,
-                  borderRadius: "8px",
-                  borderColor: "plum",
-                  borderWidth: "1.5px",
-                  padding: "8px",
-                  textTransform: "unset",
-                  height: "25px",
-                }}
-                color="secondary"
-              >
-                Colleagues Request Sent
-              </Button>
-            </Box>
-          </Box>
+          <TopComponent
+            handleToggleShowSearch={handleToggleShowSearch}
+            routeText="Colleagues Requests Sent"
+            routeUrl="/colleagues/colleaguerequests/sent"
+            showSearchField={showSearchField}
+            title="Colleague Requests"
+          />
           {loading ? (
             <p>Loadind</p>
           ) : (
