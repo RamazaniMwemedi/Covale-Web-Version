@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeColleagueFromExplore } from "../../../Redux/slices/colleagues";
 import { useExploreColleagus } from "../../../hooks/colleagues";
 import { removeColleague } from "../../../services/user";
+import TopComponent from "../../components/colleagues/TopComponent";
 
 export default function Explore() {
   const colleagueStore = useSelector((state) => state.colleagues);
@@ -109,82 +110,13 @@ const People = ({
   const router = useRouter();
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          textAlign: "center",
-          position: "sticky",
-          top: "0",
-          bgcolor: theme.colors.background1,
-          p: 1,
-          zIndex: 1,
-        }}
-      >
-        <Typography variant="h4" color="secondary">
-          Connect with Colleagues
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          {showSearchField ? (
-            <FormControl
-              sx={{
-                m: 1,
-              }}
-              variant="outlined"
-            >
-              <OutlinedInput
-                startAdornment={
-                  <InputAdornment
-                    sx={{
-                      marginLeft: "-15px",
-                    }}
-                    position="start"
-                  >
-                    <IconButton onClick={handleToggleShowSearch}>
-                      <SearchOffRoundedIcon color="secondary" />
-                    </IconButton>
-                  </InputAdornment>
-                }
-                id="outlined-adornment-password"
-                type="text"
-                sx={{
-                  height: "35px",
-                  borderRadius: "15px",
-                }}
-                color="secondary"
-              />
-            </FormControl>
-          ) : (
-            <IconButton onClick={handleToggleShowSearch}>
-              <SearchRoundedIcon color="secondary" />
-            </IconButton>
-          )}
-          <Button
-            onClick={() => {
-              router.push("/colleagues/friendrequests/requestsent");
-            }}
-            variant="contained"
-            sx={{
-              ml: 1,
-              borderRadius: "8px",
-              borderColor: "plum",
-              borderWidth: "1.5px",
-              padding: "8px",
-              textTransform: "unset",
-              height: "25px",
-            }}
-            color="secondary"
-          >
-            Connections sent
-          </Button>
-        </Box>
-      </Box>
+      <TopComponent
+        handleToggleShowSearch={handleToggleShowSearch}
+        showSearchField={showSearchField}
+        title="Connect with Colleagues"
+        routeText="Connections sent"
+        routeUrl="/colleagues/colleaguerequests/sent"
+      />
       <Box
         sx={{
           // Display Grid

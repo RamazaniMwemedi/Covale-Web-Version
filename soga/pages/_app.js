@@ -60,7 +60,7 @@ function MyApp({ Component, pageProps }) {
       primary: "#00bcd4",
       secondary: "#ff4081",
       error: "#f44336",
-      background: "rgb(226, 216, 226)",
+      background: "rgb(237, 232, 247)",
       background1: "whitesmoke",
       textBackground: "rgba(255,255,255,0.7)",
       textBackground2: "rgba(255,255,255,0.3)",

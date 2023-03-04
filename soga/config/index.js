@@ -11,7 +11,7 @@ const URLS = {
   // Secrete server url
 };
 module.exports = {
-  SERVER_ADDRESS: URLS.devSerURL,
+  SERVER_ADDRESS: URLS.prodSerURL,
   RTC_ADDRESS: URLS.prodRtcURL,
   SECRETE_SERVER_ADDRESS: URLS.devSecSerURL,
 };

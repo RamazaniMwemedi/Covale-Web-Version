@@ -24,6 +24,7 @@ import Friend from "../../components/colleagues/Friend";
 
 import userServices from "../../../services/user";
 import { useTheme } from "@emotion/react";
+import TopComponent from "../../components/colleagues/TopComponent";
 
 const useStyles = makeStyles({
   text: {
@@ -39,9 +40,9 @@ export default function People() {
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
   const theme = useTheme();
+  const token = user ? user.token : null;
   const [showSearchField, setShowSearchField] = useState(false);
 
-  const token = user ? user.token : null;
   const handleToggleShowSearch = () => {
     setShowSearchField((prev) => !prev);
   };
@@ -92,82 +93,13 @@ export default function People() {
           marginLeft: "-4rem",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            textAlign: "center",
-            position: "sticky",
-            top: "0",
-            bgcolor: theme.colors.background1,
-            p: 1,
-            zIndex: 1,
-          }}
-        >
-          <Typography variant="h4" color="secondary">
-            My Colleagues
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            {showSearchField ? (
-              <FormControl
-                sx={{
-                  m: 1,
-                }}
-                variant="outlined"
-              >
-                <OutlinedInput
-                  startAdornment={
-                    <InputAdornment
-                      sx={{
-                        marginLeft: "-15px",
-                      }}
-                      position="start"
-                    >
-                      <IconButton onClick={handleToggleShowSearch}>
-                        <SearchOffRoundedIcon color="secondary" />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  id="outlined-adornment-password"
-                  type="text"
-                  sx={{
-                    height: "35px",
-                    borderRadius: "15px",
-                  }}
-                  color="secondary"
-                />
-              </FormControl>
-            ) : (
-              <IconButton onClick={handleToggleShowSearch}>
-                <SearchRoundedIcon color="secondary" />
-              </IconButton>
-            )}
-            <Button
-              onClick={() => {
-                router.push("/colleagues/colleaguerequests/sent");
-              }}
-              variant="contained"
-              sx={{
-                ml: 1,
-                borderRadius: "8px",
-                borderColor: "plum",
-                borderWidth: "1.5px",
-                padding: "8px",
-                textTransform: "unset",
-                height: "25px",
-              }}
-              color="secondary"
-            >
-              Colleagues Request Sent
-            </Button>
-          </Box>
-        </Box>
+        <TopComponent
+          showSearchField={showSearchField}
+          handleToggleShowSearch={handleToggleShowSearch}
+          title="My Colleagues"
+          routeText="Colleagues Request Sent"
+          routeUrl="/colleagues/colleaguerequests/sent"
+        />
 
         <Box
           sx={{
