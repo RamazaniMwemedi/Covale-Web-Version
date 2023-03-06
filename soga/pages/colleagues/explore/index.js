@@ -33,6 +33,7 @@ import { removeColleague } from "../../../services/user";
 import TopComponent from "../../components/colleagues/TopComponent";
 import { grey } from "@mui/material/colors";
 import { useCheckLogedinUser } from "../../../hooks/hooks";
+import LoadingLogo from "../../components/others/LoadingLogo";
 
 export default function Explore() {
   const colleagueStore = useSelector((state) => state.colleagues);
@@ -49,39 +50,45 @@ export default function Explore() {
 
   useCheckLogedinUser();
   useExploreColleagus(token);
-  
+
   const handleToggleShowSearch = () => {
     setShowSearchField((prev) => !prev);
   };
-  
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flex: 1,
-        height: "100vh",
-        bgcolor: theme.colors.background,
-      }}
-    >
-      {/* <CssBaseline /> */}
-      <DrawerComponent />
-      <PeopleLeft />
-      <Box
-        sx={{
-          flex: 1,
-          grow: 1,
-          height: "100%",
-          marginLeft: "-4rem",
-        }}
-      >
-        <People
-          exploreColleagues={exploreColleagues}
-          showSearchField={showSearchField}
-          handleToggleShowSearch={handleToggleShowSearch}
-          token={token}
-        />
-      </Box>
-    </Box>
+    <>
+      {user ? (
+        <Box
+          sx={{
+            display: "flex",
+            flex: 1,
+            height: "100vh",
+            bgcolor: theme.colors.background,
+          }}
+        >
+          {/* <CssBaseline /> */}
+          <DrawerComponent />
+          <PeopleLeft />
+          <Box
+            sx={{
+              flex: 1,
+              grow: 1,
+              height: "100%",
+              marginLeft: "-4rem",
+            }}
+          >
+            <People
+              exploreColleagues={exploreColleagues}
+              showSearchField={showSearchField}
+              handleToggleShowSearch={handleToggleShowSearch}
+              token={token}
+            />
+          </Box>
+        </Box>
+      ) : (
+        <LoadingLogo />
+      )}
+    </>
   );
 }
 

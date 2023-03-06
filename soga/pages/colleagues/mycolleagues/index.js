@@ -28,6 +28,7 @@ import TopComponent from "../../components/colleagues/TopComponent";
 import { useSelector } from "react-redux";
 import { useCheckLogedinUser } from "../../../hooks/hooks";
 import { useExploreColleagus } from "../../../hooks/colleagues";
+import LoadingLogo from "../../components/others/LoadingLogo";
 
 const useStyles = makeStyles({
   text: {
@@ -49,6 +50,7 @@ export default function People() {
   const token = user ? user.token : null;
 
   useCheckLogedinUser();
+  
   useExploreColleagus(token);
 
   const handleToggleShowSearch = () => {
@@ -67,50 +69,54 @@ export default function People() {
 
   return (
     <Box sx={{ height: "100vh", bgcolor: theme.colors.background }}>
-      <Box sx={{ display: "flex", flex: 1 }}>
-        <CssBaseline />
-        <DrawerComponent />
-        <PeopleLeft />
-        <Box
-          component="main"
-          sx={{
-            flex: 1,
-            grow: 1,
-            height: "100%",
-            width: "100pc",
-            marginLeft: "-4rem",
-          }}
-        >
-          <TopComponent
-            showSearchField={showSearchField}
-            handleToggleShowSearch={handleToggleShowSearch}
-            title="My Colleagues"
-            routeText="Colleagues Request Sent"
-            routeUrl="/colleagues/colleaguerequests/sent"
-          />
-
+      {user ? (
+        <Box sx={{ display: "flex", flex: 1 }}>
+          <CssBaseline />
+          <DrawerComponent />
+          <PeopleLeft />
           <Box
+            component="main"
             sx={{
               flex: 1,
               grow: 1,
               height: "100%",
+              width: "100pc",
               marginLeft: "-4rem",
             }}
           >
-            {loading ? (
-              <p>Loading</p>
-            ) : (
-              <>
-                {friends.length > 0 ? (
-                  <Friends friends={friends} token={token} />
-                ) : (
-                  <NoFriends />
-                )}
-              </>
-            )}
+            <TopComponent
+              showSearchField={showSearchField}
+              handleToggleShowSearch={handleToggleShowSearch}
+              title="My Colleagues"
+              routeText="Colleagues Request Sent"
+              routeUrl="/colleagues/colleaguerequests/sent"
+            />
+
+            <Box
+              sx={{
+                flex: 1,
+                grow: 1,
+                height: "100%",
+                marginLeft: "-4rem",
+              }}
+            >
+              {loading ? (
+                <p>Loading</p>
+              ) : (
+                <>
+                  {friends.length > 0 ? (
+                    <Friends friends={friends} token={token} />
+                  ) : (
+                    <NoFriends />
+                  )}
+                </>
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
+      ) : (
+        <LoadingLogo />
+      )}
     </Box>
   );
 }

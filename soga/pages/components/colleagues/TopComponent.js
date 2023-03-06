@@ -234,7 +234,7 @@ const SearchField = ({ searchTerm }) => {
           }}
         >
           <Typography variant="h6" color="secondary">
-            No results found
+            No results found for "{searchTerm}"
           </Typography>
           <Typography variant="body2" color="secondary">
             Try searching for a colleague's name

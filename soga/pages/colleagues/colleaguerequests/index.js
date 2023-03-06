@@ -22,6 +22,9 @@ import userServices from "../../../services/user";
 import { useTheme } from "@mui/system";
 import TopComponent from "../../components/colleagues/TopComponent";
 import { useSelector } from "react-redux";
+import LoadingLogo from "../../components/others/LoadingLogo";
+import { useCheckLogedinUser } from "../../../hooks/hooks";
+import { useExploreColleagus } from "../../../hooks/colleagues";
 
 export default function Explore() {
   const [users, setUsers] = React.useState([]);
@@ -33,6 +36,9 @@ export default function Explore() {
   const userStore = useSelector((state) => state.user);
   const user = userStore.user ? userStore.user : null;
   const token = user ? user.token : null;
+
+  useCheckLogedinUser();
+  useExploreColleagus(token);
 
   const handleToggleShowSearch = () => {
     setShowSearchField((prev) => !prev);
@@ -48,55 +54,61 @@ export default function Explore() {
   }, [token]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flex: 1,
-        height: "100vh",
-        bgcolor: theme.colors.background,
-      }}
-    >
-      {" "}
-      {/* <CssBaseline /> */}
-      <DrawerComponent />
-      <PeopleLeft />{" "}
-      <Box
-        sx={{
-          flex: 1,
-          grow: 1,
-          height: "100%",
-          marginLeft: "-4rem",
-        }}
-      >
+    <>
+      {user ? (
         <Box
           sx={{
-            // flex: 1,
-            // grow: 1,
-            height: "100%",
+            display: "flex",
+            flex: 1,
+            height: "100vh",
+            bgcolor: theme.colors.background,
           }}
         >
           {" "}
-          <TopComponent
-            handleToggleShowSearch={handleToggleShowSearch}
-            routeText="Colleagues Requests Sent"
-            routeUrl="/colleagues/colleaguerequests/sent"
-            showSearchField={showSearchField}
-            title="Colleague Requests"
-          />
-          {loading ? (
-            <p>Loadind</p>
-          ) : (
-            <>
-              {users.length > 0 ? (
-                <People users={users} token={token} />
+          {/* <CssBaseline /> */}
+          <DrawerComponent />
+          <PeopleLeft />{" "}
+          <Box
+            sx={{
+              flex: 1,
+              grow: 1,
+              height: "100%",
+              marginLeft: "-4rem",
+            }}
+          >
+            <Box
+              sx={{
+                // flex: 1,
+                // grow: 1,
+                height: "100%",
+              }}
+            >
+              {" "}
+              <TopComponent
+                handleToggleShowSearch={handleToggleShowSearch}
+                routeText="Colleagues Requests Sent"
+                routeUrl="/colleagues/colleaguerequests/sent"
+                showSearchField={showSearchField}
+                title="Colleague Requests"
+              />
+              {loading ? (
+                <p>Loadind</p>
               ) : (
-                <NoFriendsRequest />
+                <>
+                  {users.length > 0 ? (
+                    <People users={users} token={token} />
+                  ) : (
+                    <NoFriendsRequest />
+                  )}
+                </>
               )}
-            </>
-          )}
+            </Box>
+          </Box>
         </Box>
-      </Box>
-    </Box>
+      ) : (
+        <LoadingLogo />
+      )}
+    </>
   );
 }
 
