@@ -133,7 +133,7 @@ const removeColleague = async (token, id) => {
   if (token) {
     try {
       const response = await axios.post(
-        `${SERVER_ADDRESS}/api/v1/users/colleague/remove/${id}`,
+        `${SERVER_ADDRESS}/api/v1/users/colleague/explore/remove/${id}`,
         {},
         {
           headers: {
@@ -141,11 +141,10 @@ const removeColleague = async (token, id) => {
           },
         }
       );
+      console.log("response", response);
       return response;
     } catch (error) {
-      // Redirect to the login page
-      console.log("Error in findUserById", error);
-      // window.location.href = "/login";
+      console.error("Error in findUserById", error);
     }
   }
 };
@@ -162,4 +161,3 @@ module.exports = {
   findUserById,
   removeColleague,
 };
-

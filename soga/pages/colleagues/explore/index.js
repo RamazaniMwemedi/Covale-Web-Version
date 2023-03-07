@@ -117,12 +117,14 @@ const People = ({
           // gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: 2,
           alignContent: "center",
+          placeItems: !exploreColleagues && "center",
           justifyContent:
             exploreColleagues && exploreColleagues.length < 4
               ? "flex-start"
               : "center",
           pt: 1,
           pl: 1,
+          height: !exploreColleagues ? "100%" : "auto",
         }}
       >
         {!exploreColleagues ? (
@@ -149,8 +151,6 @@ const NoDiscToShow = () => {
         textAlign: "center",
         alignItems: "center",
         position: "absolute",
-        marginLeft: "8%",
-        marginTop: "13%",
       }}
     >
       <Typography variant="h5">No Discovery at the moment</Typography>
@@ -189,7 +189,6 @@ const Person = ({ user, token }) => {
       >
         <IconButton
           sx={{
-            position: "fixed",
             display: "flex",
             alignSelf: "flex-end",
             bgcolor: theme.colors.textBackground2,
