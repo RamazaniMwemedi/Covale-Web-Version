@@ -50,9 +50,9 @@ export default function AccountMenu() {
   };
 
   const signoutHandler = () => {
+    localStorage.removeItem("logedinUser");
+    window.location.href = "/login";
     dispatch(signOut());
-    // localStorage.removeItem("logedinUser");
-    // router.push("/login");
   };
   return (
     <>

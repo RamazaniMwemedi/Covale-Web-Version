@@ -21,7 +21,9 @@ export default function DiscoverPeopleSkeleton() {
         //  Grid
 
         display: "grid",
-        gridTemplateColumns: "auto auto auto ",
+        gridTemplateColumns: "repeat(auto-fit, 210px)",
+        gap: 2,
+        alignContent: "center",
         columnGap: "45px",
         rowGap: "15px",
       }}
