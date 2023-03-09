@@ -1,24 +1,14 @@
 const { publicEncrypt } = require("crypto");
+const { compressString } = require("./compress");
 
 // Encrypts a message using the public key of the recipient
-function encryptChatMessage(message, recipientPublicKey) {
-  const encryptedMessage = publicEncrypt(
+function encryptString(string, recipientPublicKey) {
+  const compressedSting = compressString(string);
+  const encryptedString = publicEncrypt(
     recipientPublicKey,
-    Buffer.from(message)
+    Buffer.from(compressedSting)
   );
-  return encryptedMessage;
+  return encryptedString;
 }
 
-// Encrypt a team message using the public keys of all the recipients
-function encryptTeamMessage(message, recipientPublicKeys) {
-  const encryptChatMessage = publicEncrypt(
-    recipientPublicKeys,
-    Buffer.from(message)
-  );
-  return encryptChatMessage;
-}
-
-module.exports = {
-  encryptChatMessage,
-  encryptTeamMessage,
-};
+module.exports = { encryptString };

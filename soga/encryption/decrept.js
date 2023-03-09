@@ -1,24 +1,15 @@
-const { privateDecrypt, publicEncrypt } = require("crypto");
+const { privateDecrypt } = require("crypto");
+const { decompressString } = require("./compress");
 
 // Decrypts a message using the public key of the recipient
-function decryptChatMessage(encryptedMessage, recipientPrivateKey) {
+function decryptString(string, recipientPrivateKey) {
   const decryptedMessage = privateDecrypt(
     recipientPrivateKey,
-    encryptedMessage
+    string
   );
-  return decryptedMessage;
+
+  const decompressedString = decompressString(decryptedMessage);
+  return decompressedString;
 }
 
-// Decrypt a team message using the public keys of all the recipients
-function decryptTeamMessage(encryptedMessage, recipientPrivateKeys) {
-  const decryptedMessage = privateDecrypt(
-    recipientPrivateKeys,
-    encryptedMessage
-  );
-  return decryptedMessage;
-}
-
-module.exports = {
-  decryptChatMessage,
-  decryptTeamMessage,
-};
+module.exports = { decryptString };
