@@ -263,7 +263,10 @@ export default function Chat() {
       formData.append("files", file.file);
     }
 
-    formData.append("message", teamMessage);
+    formData.append(
+      "message",
+      await encryptString(teamMessage, keyPair.publicKey)
+    );
     formData.append("idFromClient", uuid);
     setTeamMessage("");
     const teamNewMessage = {
@@ -285,20 +288,20 @@ export default function Chat() {
         teamNewMessage,
       })
     );
-    // const sentMessage = await sendTeamMessege(token, id, formData);
+    const sentMessage = await sendTeamMessege(token, id, formData);
 
-    // teamSocket.emit("send_message_to_team", {
-    //   teamId: id,
-    //   message: sentMessage,
-    // });
-    // dispatch(
-    //   updateTeamMessageId({
-    //     teamId: id,
-    //     id: sentMessage.id,
-    //     idFromClient: sentMessage.idFromClient,
-    //     file: sentMessage.files,
-    //   })
-    // );
+    teamSocket.emit("send_message_to_team", {
+      teamId: id,
+      message: sentMessage,
+    });
+    dispatch(
+      updateTeamMessageId({
+        teamId: id,
+        id: sentMessage.id,
+        idFromClient: sentMessage.idFromClient,
+        file: sentMessage.files,
+      })
+    );
   };
 
   // Topic state handlers

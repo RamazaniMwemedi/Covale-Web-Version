@@ -639,16 +639,25 @@ const UserMessage = ({
   const keyPair = keyPairStore
     ? keyPairStore.find((key) => key.modelId === id)
     : null;
+  const decreptMessageHandler = async () => {
+    // logs
+    console.log("Message to decrypt: ", message.message);
+
+    const messageToDecrypt = message.message;
+    const decryptedMessage = await decryptString(
+      messageToDecrypt,
+      keyPair.privateKey
+    );
+    console.log("Decrypted message: ", decryptedMessage);
+    setMessageToDisplay(decryptedMessage);
+  };
 
   useEffect(() => {
-    if (keyPair && message.message) {
-      decryptString(message.message, keyPair.privateKey)
-        .then((res) => setMessageToDisplay(res))
-        .catch((err) => {
-          console.log("Error decrypting message: ", err);
-        });
+    if (keyPair) {
+      decreptMessageHandler();
     }
-  }, [message.message, keyPair]);
+  }, [keyPair, message]);
+
   console.log("Message to display: ", messageToDisplay);
   return (
     <Box
@@ -757,7 +766,8 @@ const UserMessage = ({
                   })}
               </Box>
               <Typography variant="subtitle2" sx={{ color: "white" }}>
-                {messageToDisplay}
+                {messageToDisplay ? messageToDisplay : "Getting message..."}
+                {/* {message.message} */}
               </Typography>
             </Box>
           </Box>
