@@ -49,7 +49,7 @@ import {
   useJoinNotificationRoom,
   useRecieveNewNotification,
 } from "../../hooks/notification";
-import { useRef, useState } from "react";
+import { use, useRef, useState } from "react";
 import axios from "axios";
 import { sendMessege } from "../../services/chats";
 import {
@@ -58,6 +58,7 @@ import {
   replyToTopic,
 } from "../../services/teams";
 import { RTC_ADDRESS } from "../../config";
+import { useGetKeyPairs } from "../../hooks/secrete";
 // Socket.IO
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
@@ -72,6 +73,12 @@ export default function Chat() {
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
+
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.filter((key) => key.modelId === id)
+    : null;
 
   // Chats States
   const [chatMessage, setChatMessage] = useState("");
@@ -117,6 +124,9 @@ export default function Chat() {
 
   // Recieve new notification
   useRecieveNewNotification(user);
+
+  // Get Key Pair
+  useGetKeyPairs();
 
   const messageChangeHandler = (e) => {
     setChatMessage(e.target.value);

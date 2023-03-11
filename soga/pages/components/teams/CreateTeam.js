@@ -24,11 +24,14 @@ import {
   TextField,
 } from "@mui/material";
 import { useGetFriends, useCheckLogedinUserToken } from "../../../hooks/hooks";
+import { addNewKeyPair } from "../../../Redux/slices/keys";
 import { createNewTeam, inviteFriends } from "../../../services/teams";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import SaveIcon from "@mui/icons-material/Save";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { generateNewKeyPair } from "../../../services/encrypt";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -39,6 +42,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
   const router = useRouter();
   const friends = useGetFriends();
   const token = useCheckLogedinUserToken();
+  const dispatch = useDispatch();
   const [number, setNumber] = useState(1);
   // New Team
   const [createdTeamId, setCreatedTeamId] = useState("");
@@ -121,6 +125,16 @@ const CreateTeam = ({ toggleShowTeam }) => {
         teamVission
       );
       if (typeof response == "string") {
+        // Get data from local storage
+        const localData = JSON.parse(localStorage.getItem("logedinUser"));
+        const secreteToken = localData.secreteToken;
+        const savedKeys = await generateNewKeyPair(
+          "Team",
+          response,
+          secreteToken
+        );
+        console.log("savedKeys :>>>", savedKeys);
+        dispatch(addNewKeyPair(savedKeys));
         setCreatingTeamBool(false);
         setCreatedTeamId(response);
         setNumber((prev) => prev + 1);
