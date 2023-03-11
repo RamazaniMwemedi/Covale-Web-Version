@@ -10,11 +10,11 @@ const useGetKeyPairs = () => {
       localStorage.getItem("logedinUser")
     ).secreteToken;
     console.log(secreteToken);
-      if (secreteToken) {
-        getKeyPairs(secreteToken).then((res) => {
-          if (res) dispatch(allKeyPairs(res));
-        });
-      }
+    if (secreteToken) {
+      getKeyPairs(secreteToken).then((res) => {
+        if (res) dispatch(allKeyPairs(res));
+      });
+    }
   }, []);
 };
 
