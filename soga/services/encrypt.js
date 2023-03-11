@@ -32,5 +32,4 @@ const getKeyPairs = async (secreteToken) => {
 
 module.exports = {
   generateNewKeyPair,
-  getKeyPairs,
 };
