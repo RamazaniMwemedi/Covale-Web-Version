@@ -2,12 +2,13 @@ const { publicEncrypt } = require("crypto");
 const { compressString } = require("./compress");
 
 // Encrypts a message using the public key of the recipient
-function encryptString(string, recipientPublicKey) {
-  const compressedSting = compressString(string);
+async function encryptString(string, recipientPublicKey) {
+  if (!string || !recipientPublicKey) return null;
+  const compressedSting = await compressString(string);
   const encryptedString = publicEncrypt(
     recipientPublicKey,
-    Buffer.from(compressedSting)
-  );
+    compressedSting
+  ).toString("base64");
   return encryptedString;
 }
 

@@ -6,8 +6,7 @@ const compressString = async (inputString) => {
       if (err) {
         reject(err);
       } else {
-        const compressedString = buffer.toString("hex");
-        resolve(compressedString);
+        resolve(buffer);
       }
     });
   });
@@ -29,5 +28,5 @@ const decompressString = async (compressedString) => {
 
 module.exports = {
   compressString,
-  decompressString, 
+  decompressString,
 };

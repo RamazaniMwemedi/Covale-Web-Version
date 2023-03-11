@@ -45,6 +45,8 @@ import FileIcone from "../mediaFiles/FileIcon";
 import FileComponent from "../mediaFiles/FileComponent";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import { timeAgo } from "../../../tools/tools";
+import { decryptString } from "../../../encryption/decrept";
+import { useRouter } from "next/router";
 
 const Picker = dynamic(
   () => {
@@ -629,6 +631,25 @@ const UserMessage = ({
   const purple2 = purple[400];
   const idProvided = message.id ? true : false;
   const theme = useTheme();
+  const router = useRouter();
+  const id = router.query.id;
+  const [messageToDisplay, setMessageToDisplay] = useState("");
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.find((key) => key.modelId === id)
+    : null;
+
+  useEffect(() => {
+    if (keyPair && message.message) {
+      decryptString(message.message, keyPair.privateKey)
+        .then((res) => setMessageToDisplay(res))
+        .catch((err) => {
+          console.log("Error decrypting message: ", err);
+        });
+    }
+  }, [message.message, keyPair]);
+  console.log("Message to display: ", messageToDisplay);
   return (
     <Box
       sx={{
@@ -736,7 +757,7 @@ const UserMessage = ({
                   })}
               </Box>
               <Typography variant="subtitle2" sx={{ color: "white" }}>
-                {message.message}
+                {messageToDisplay}
               </Typography>
             </Box>
           </Box>

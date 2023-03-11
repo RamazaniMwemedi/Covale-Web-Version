@@ -59,6 +59,7 @@ import {
 } from "../../services/teams";
 import { RTC_ADDRESS } from "../../config";
 import { useGetKeyPairs } from "../../hooks/secrete";
+import { encryptString } from "../../encryption/encrypt";
 // Socket.IO
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
@@ -77,7 +78,7 @@ export default function Chat() {
   // key pair
   const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
   const keyPair = keyPairStore
-    ? keyPairStore.filter((key) => key.modelId === id)
+    ? keyPairStore.find((key) => key.modelId === id)
     : null;
 
   // Chats States
@@ -254,6 +255,7 @@ export default function Chat() {
   };
 
   const teamSendMessageHandle = async () => {
+    if (!keyPair) return;
     const uuid = uuidv4();
     const formData = new FormData();
 
@@ -271,31 +273,32 @@ export default function Chat() {
         lastname: user.lastname,
         id: user.id,
       },
-      message: teamMessage,
+      message: await encryptString(teamMessage, keyPair.publicKey),
       idFromClient: uuid,
       file: teamFiles,
     };
     setTeamFiles([]);
+    console.log("Team message", teamNewMessage);
     dispatch(
       addNewMessageToTeamId({
         teamId: id,
         teamNewMessage,
       })
     );
-    const sentMessage = await sendTeamMessege(token, id, formData);
+    // const sentMessage = await sendTeamMessege(token, id, formData);
 
-    teamSocket.emit("send_message_to_team", {
-      teamId: id,
-      message: sentMessage,
-    });
-    dispatch(
-      updateTeamMessageId({
-        teamId: id,
-        id: sentMessage.id,
-        idFromClient: sentMessage.idFromClient,
-        file: sentMessage.files,
-      })
-    );
+    // teamSocket.emit("send_message_to_team", {
+    //   teamId: id,
+    //   message: sentMessage,
+    // });
+    // dispatch(
+    //   updateTeamMessageId({
+    //     teamId: id,
+    //     id: sentMessage.id,
+    //     idFromClient: sentMessage.idFromClient,
+    //     file: sentMessage.files,
+    //   })
+    // );
   };
 
   // Topic state handlers

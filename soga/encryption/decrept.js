@@ -2,13 +2,14 @@ const { privateDecrypt } = require("crypto");
 const { decompressString } = require("./compress");
 
 // Decrypts a message using the public key of the recipient
-function decryptString(string, recipientPrivateKey) {
+async function decryptString(string, recipientPrivateKey) {
+  if (!string || !recipientPrivateKey) return null;
   const decryptedMessage = privateDecrypt(
     recipientPrivateKey,
-    string
+    Buffer.from(string, "base64")
   );
 
-  const decompressedString = decompressString(decryptedMessage);
+  const decompressedString = await decompressString(decryptedMessage);
   return decompressedString;
 }
 
