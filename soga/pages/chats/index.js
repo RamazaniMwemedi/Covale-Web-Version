@@ -281,6 +281,7 @@ export default function Chat() {
       file: teamFiles,
     };
     setTeamFiles([]);
+    setTeamMessage("");
     console.log("Team message", teamNewMessage);
     dispatch(
       addNewMessageToTeamId({
