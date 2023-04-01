@@ -633,7 +633,7 @@ const UserMessage = ({
   const theme = useTheme();
   const router = useRouter();
   const id = router.query.id;
-  const [messageToDisplay, setMessageToDisplay] = useState("");
+  const [decryptedMessage, setDecryptedMessage] = useState("");
   // key pair
   const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
   const keyPair = keyPairStore
@@ -641,13 +641,22 @@ const UserMessage = ({
     : null;
   const decreptMessageHandler = async () => {
     const messageToDecrypt = message.message;
-    const decryptedMessage = await decryptMessage(
-      messageToDecrypt,
-      keyPair.privateKey
+
+    setDecryptedMessage(
+      await decryptMessage(messageToDecrypt, keyPair.privateKey)
     );
-    console.log("Decrypted message: ", decryptedMessage);
-    setMessageToDisplay(decryptedMessage);
   };
+
+  const messageToDisplay = decryptedMessage
+    ? decryptedMessage.split(`\n`).map((item, key) => {
+        return (
+          <span key={key}>
+            {item}
+            <br />
+          </span>
+        );
+      })
+    : "Getting message...";
 
   useEffect(() => {
     if (keyPair) {
@@ -655,7 +664,7 @@ const UserMessage = ({
     }
   }, [keyPair, message]);
 
-  console.log("Message to display: ", messageToDisplay);
+  console.log("Message to display: ", decryptedMessage);
   return (
     <Box
       sx={{
@@ -763,8 +772,7 @@ const UserMessage = ({
                   })}
               </Box>
               <Typography variant="subtitle2" sx={{ color: "white" }}>
-                {messageToDisplay ? messageToDisplay : "Getting message..."}
-                {/* {message.message} */}
+                {messageToDisplay}
               </Typography>
             </Box>
           </Box>
@@ -922,7 +930,7 @@ const Bottom = ({
   return (
     <Box
       sx={{
-        height: "3rem",
+        maxHeight: "9rem",
         display: "flex",
         marginBottom: "4px",
         // Be at the bottom of the page
@@ -935,6 +943,8 @@ const Bottom = ({
         borderRadius: "5px",
         gap: 5,
         justifyContent: "space-between",
+        // Put the content at the bottom of the box
+        alignItems: "flex-end",
       }}
     >
       {" "}
@@ -1197,15 +1207,16 @@ const Bottom = ({
             }
             id="outlined-adornment-password"
             type="text"
-            multiline={false}
+            multiline
+            maxRows={4}
             value={teamMessage}
             onChange={(e) => {
               teamMessageChangeHandler(e);
             }}
             sx={{
-              height: "35px",
               borderRadius: "15px",
             }}
+            size="small"
             color="secondary"
             endAdornment={
               <InputAdornment position="end">
