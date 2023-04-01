@@ -1,9 +1,7 @@
-import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/styles";
 import React from "react";
 // Redux Hooks
-import { useSelector } from "react-redux";
 
 import TeamSectionLeft from "./TeamSectionLeft";
 import TeamSectionRight from "./TeamSectionRight";

@@ -2,20 +2,13 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import {
   Autocomplete,
-  Checkbox,
   IconButton,
   Step,
   StepLabel,
@@ -28,8 +21,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { createNewProject } from "../../../services/projects";
 import { addProject } from "../../../Redux/slices/projects";
 import { useRouter } from "next/router";
-import LoadingButton from "@mui/lab/LoadingButton";
-import SaveIcon from "@mui/icons-material/Save";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -48,8 +39,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function NewProject() {
   const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState("sm");
   const theme = useTheme();
   const handleClickOpen = () => {
     setOpen(true);
@@ -77,8 +66,8 @@ export default function NewProject() {
         New Project
       </Button>
       <Dialog
-        fullWidth={fullWidth}
-        maxWidth={maxWidth}
+        fullWidth={true}
+        maxWidth={"sm"}
         open={open}
         onClose={handleClose}
         sx={{

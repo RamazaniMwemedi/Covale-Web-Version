@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import FloatingAButton from "../chats/FloatingAButton";
 import {
-  Avatar,
-  List,
   ListItem,
   Box,
   Typography,
@@ -17,11 +14,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { useTheme } from "@mui/system";
-import AddIcon from "@mui/icons-material/Add";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 // My components
-import StartAChatWithColleague from "../chats/StartAChatWithColleague";
 import Team from "./Team";
 import FloatingATeamB from "./FloatingATeamB";
 import CreateTeam from "./CreateTeam";

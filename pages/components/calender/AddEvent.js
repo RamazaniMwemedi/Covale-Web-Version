@@ -3,8 +3,8 @@ import { Box } from "@mui/system";
 import React from "react";
 
 const AddEvent = ({ hideAddEventHandler, clickedDay }) => {
-    const date = new Date(clickedDay);
-    
+  const date = new Date(clickedDay);
+
   return (
     <Box
       sx={{
@@ -36,7 +36,7 @@ const AddEvent = ({ hideAddEventHandler, clickedDay }) => {
         {/* Mid */}
 
       </Box>
-        {clickedDay && <Typography variant="h5">{clickedDay.toString()}</Typography>}
+      {clickedDay && <Typography variant="h5">{clickedDay.toString()}</Typography>}
     </Box>
   );
 };

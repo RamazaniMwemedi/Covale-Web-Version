@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Box } from "@mui/system";
-import {Skeleton} from "@mui/material";
+import { Skeleton } from "@mui/material";
 
 
 // A random array

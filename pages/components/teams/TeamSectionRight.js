@@ -226,7 +226,11 @@ const Topics = ({ topics, handleClickedTopic }) => {
         }}
       >
         {topics.map((topic) => (
-          <Topic topic={topic} handleClickedTopic={handleClickedTopic} />
+          <Topic
+            key={topic.id}
+            topic={topic}
+            handleClickedTopic={handleClickedTopic}
+          />
         ))}
       </Box>
     </Box>
@@ -504,7 +508,7 @@ const MessageComponentForTopic = ({ message }) => {
   );
 };
 
-const Media = ({ team, files, handleShowFile }) => {
+const Media = ({ files, handleShowFile }) => {
   const theme = useTheme();
   const imageFiles = files.filter((file) => file.fileType.includes("image"));
   const videoFiles = files.filter((file) => file.fileType.includes("video"));
@@ -1035,7 +1039,7 @@ const UnReadNotificationsBadge = styled(Badge)(({ theme }) => ({
 }));
 
 // Projects
-const Projects = ({ projects }) => {
+const Projects = () => {
   return (
     <Box>
       <Box

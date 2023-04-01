@@ -13,9 +13,9 @@ export default function TasksTabPanel({
   taskViewValueChangeHandler,
   subProjectId,
 }) {
-   const router = useRouter();
-   const projectId = router.query.project;
- 
+  const router = useRouter();
+  const projectId = router.query.project;
+
   return (
     <Box sx={{ width: "100%" }}>
       <Tabs

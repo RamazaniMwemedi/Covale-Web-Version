@@ -50,7 +50,7 @@ export default function People() {
   const token = user ? user.token : null;
 
   useCheckLogedinUser();
-  
+
   useExploreColleagus(token);
 
   const handleToggleShowSearch = () => {

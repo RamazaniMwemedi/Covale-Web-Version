@@ -7,11 +7,9 @@ import MuiDrawer from "@mui/material/Drawer";
 import "@fontsource/open-sans/500.css"; // Weight 500.
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTheme } from "@mui/styles";
-import { Avatar, IconButton, Button } from "@mui/material";
+import { IconButton } from "@mui/material";
 import TreeView from "@mui/lab/TreeView";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import TreeItem from "@mui/lab/TreeItem";
-import Image from "next/image";
 import StyledTreeItem from "./StyledItemRoot";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AssessmentRoundedIcon from "@mui/icons-material/AssessmentRounded";
@@ -35,7 +33,7 @@ const closedMixin = (theme) => ({
   },
   justifyContent: "spaceBetween",
   borderLeft: `2px solid ${theme.colors.background1}`,
-  borderRight: `1px solid darkgray`,
+  borderRight: "1px solid darkgray",
   backgroundColor: theme.colors.background,
 });
 
@@ -48,10 +46,6 @@ const Drawer = styled(MuiDrawer, {
   whiteSpace: "nowrap",
   boxSizing: "border-box",
 
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
   ...(!open && {
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
@@ -286,7 +280,7 @@ function ProjectTrees({ projects }) {
           <br />
           <Box>
             <Typography variant="subtitle1">
-              Click the "New Project" button
+              Click the `&lsquo;New Project`&lsquo; button
             </Typography>
             <Typography variant="subtitle1">
               below to create a new project.

@@ -9,8 +9,8 @@ import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 
 import UpcomingMeetings from "./UpcomingMeetings";
 import HostedMeetings from "./HostedMeetings";
-import AtendedMeetings from './AtendedMeetings'
-import TeamMeetings from "./TeamMeetings"
+import AtendedMeetings from "./AtendedMeetings";
+import TeamMeetings from "./TeamMeetings";
 
 const closedMixin = (theme) => ({
   transition: theme.transitions.create("width", {
@@ -73,16 +73,16 @@ export default function CalenderLeft({ user, value, handleChange }) {
           <br />
         </Box>
         {/* NavBar*/}
-      <Box sx={{
-        marginTop:"65px"
-      }}>
-        <UpcomingMeetings />
-        <HostedMeetings/>
-        <AtendedMeetings/>
-        <TeamMeetings/>
-      </Box>
-      </Drawer> 
-      
+        <Box sx={{
+          marginTop:"65px"
+        }}>
+          <UpcomingMeetings />
+          <HostedMeetings/>
+          <AtendedMeetings/>
+          <TeamMeetings/>
+        </Box>
+      </Drawer>
+
     </Box>
   );
 }

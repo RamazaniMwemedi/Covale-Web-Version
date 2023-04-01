@@ -2,21 +2,12 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Switch from "@mui/material/Switch";
 import { makeStyles } from "@mui/styles";
 import { TextField, Typography } from "@mui/material";
 import { createNewSubProject } from "../../../services/projects";
 import { useDispatch, useSelector } from "react-redux";
-import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { useRouter } from "next/router";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
@@ -26,8 +17,6 @@ import { addSubProjectId } from "../../../Redux/slices/projects";
 
 export default function NewSubProject({ project }) {
   const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState("sm");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -37,16 +26,6 @@ export default function NewSubProject({ project }) {
     setOpen(false);
   };
 
-  const handleMaxWidthChange = (event) => {
-    setMaxWidth(
-      // @ts-expect-error autofill of arbitrary value is not handled.
-      event.target.value
-    );
-  };
-
-  const handleFullWidthChange = (event) => {
-    setFullWidth(event.target.checked);
-  };
 
   return (
     <>
@@ -57,7 +36,6 @@ export default function NewSubProject({ project }) {
               width: "98%",
               marginLeft: 0.3,
               textTransform: "none",
-              width: "70%",
             }}
             variant="contained"
             color="secondary"
@@ -67,8 +45,8 @@ export default function NewSubProject({ project }) {
             New Sub Project
           </Button>
           <Dialog
-            fullWidth={fullWidth}
-            maxWidth={maxWidth}
+            fullWidth={true}
+            maxWidth={"sm"}
             open={open}
             onClose={handleClose}
           >

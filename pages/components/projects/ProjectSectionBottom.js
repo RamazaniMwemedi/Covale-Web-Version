@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Typography from "@mui/material/Typography";
-import TasksTabPanel from "./tasks/TasksTabPanel";
 import TasksViews from "./tasks/TasksViews";
 import ProjectMember from "./ProjectMember";
 import { useRouter } from "next/router";
@@ -24,7 +23,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
     for (let index = 0; index < project.teams.length; index++) {
       const teamId = project.teams[index];
       const team = teamList
-        ? teamList.find((team) => team && team.id == teamId)
+        ? teamList.find((team) => team && team.id === teamId)
         : [];
       allProjectTeams.push(team);
     }
@@ -33,7 +32,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
   const [selectedTeam, setSelectedTeam] = useState(null);
 
   const handleSelectTeam = (teamId) => {
-    setSelectedTeam(allProjectTeams.find((team) => team && team.id == teamId));
+    setSelectedTeam(allProjectTeams.find((team) => team && team.id === teamId));
   };
 
   const router = useRouter();
@@ -231,6 +230,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                                 >
                                   {lastMessageObject.file.map((file) => (
                                     <FileIcone
+                                      key={file.id}
                                       fileType={file.fileType}
                                       height={20}
                                       width={20}

@@ -49,39 +49,39 @@ const ViewToReturn = ({
   showChats,
 }) => {
   switch (taskViewValue) {
-    case "kanban":
-      return (
-        <KanbanView
-          subProject={subProject}
-          taskStatus={taskStatus}
-          project={project}
-          handleShowFile={handleShowFile}
-          showChats={showChats}
-        />
-      );
-    case "table":
-      return (
-        <TableView
-          subProject={subProject}
-          taskStatus={taskStatus}
-          project={project}
-        />
-      );
-    case "list":
-      return (
-        <ListView
-          subProject={subProject}
-          taskStatus={taskStatus}
-          project={project}
-        />
-      );
-    default:
-      return (
-        <KanbanView
-          subProject={subProject}
-          taskStatus={taskStatus}
-          project={project}
-        />
-      );
+  case "kanban":
+    return (
+      <KanbanView
+        subProject={subProject}
+        taskStatus={taskStatus}
+        project={project}
+        handleShowFile={handleShowFile}
+        showChats={showChats}
+      />
+    );
+  case "table":
+    return (
+      <TableView
+        subProject={subProject}
+        taskStatus={taskStatus}
+        project={project}
+      />
+    );
+  case "list":
+    return (
+      <ListView
+        subProject={subProject}
+        taskStatus={taskStatus}
+        project={project}
+      />
+    );
+  default:
+    return (
+      <KanbanView
+        subProject={subProject}
+        taskStatus={taskStatus}
+        project={project}
+      />
+    );
   }
 };

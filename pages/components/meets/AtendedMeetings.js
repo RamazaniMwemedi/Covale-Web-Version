@@ -1,6 +1,6 @@
-import { Typography } from '@mui/material'
-import { Box } from '@mui/system'
-import React from 'react'
+import { Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import React from "react";
 
 const AtendedMeetings = () => {
   return (
@@ -8,6 +8,6 @@ const AtendedMeetings = () => {
       <Typography variant="h5">Atended</Typography>
     </Box>
   );
-}
+};
 
-export default AtendedMeetings
+export default AtendedMeetings;

@@ -1,18 +1,13 @@
 import Box from "@mui/material/Box";
 import { Typography, IconButton, Divider } from "@mui/material/";
 import { useTheme } from "@mui/styles";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import PushPinRoundedIcon from "@mui/icons-material/PushPinRounded";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
-import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
-import { useState } from "react";
 
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import { useRouter } from "next/router";
 
 const ProjectSectionTop = ({
@@ -90,12 +85,12 @@ const ProjectSectionTop = ({
                   <Typography
                     variant="caption"
                     sx={{
-                      color: subProjectId == subProject.id ? "white" : "black",
+                      color: subProjectId === subProject.id ? "white" : "black",
                       // Appear like a button
                       borderRadius: "5px",
                       cursor: "pointer",
                       backgroundColor:
-                        subProjectId == subProject.id
+                        subProjectId === subProject.id
                           ? theme.palette.secondary.main
                           : "white",
                       p: 0.5,
@@ -210,7 +205,7 @@ function TotalAvatars({ valueChangeHandler, value, project }) {
               total={project.members.length}
             >
               {project.members.map((member) => (
-                <Avatar>
+                <Avatar key={member.id}>
                   {member.firstname[0]}
                   {member.lastname[0]}
                 </Avatar>

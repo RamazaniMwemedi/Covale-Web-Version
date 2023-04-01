@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Avatar,
   List,
   ListItem,
   Box,
   Typography,
-  IconButton,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 
@@ -48,10 +46,7 @@ export default function Team({ team }) {
             marginTop: "-8px",
           }}
         >
-          <Avatar
-          >
-            T
-          </Avatar>
+          <Avatar>T</Avatar>
           <Box
             sx={{
               marginLeft: "5px",
@@ -72,7 +67,7 @@ export default function Team({ team }) {
             marginRight: "5px",
             right: "0",
             position: "absolute",
-            
+
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

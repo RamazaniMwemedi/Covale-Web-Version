@@ -51,7 +51,7 @@ export default function WorktLeft({  }) {
       <CssBaseline />
       <Drawer variant="permanent">
         <Box>
-            <Typography variant="h4" >Work</Typography> 
+          <Typography variant="h4" >Work</Typography>
         </Box>
       </Drawer>
     </Box>

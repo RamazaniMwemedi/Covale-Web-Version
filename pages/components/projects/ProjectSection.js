@@ -2,11 +2,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import { useState } from "react";
-const { useSelector } = require("react-redux");
 
 import ProjectSectionTop from "./ProjectSectionTop";
 import ProjectSectionBottom from "./ProjectSectionBottom";
-import TasksViews from "./tasks/TasksViews";
 import { useProject, useSubProjectsTasks } from "../../../hooks/projects";
 import { useTheme } from "@mui/styles";
 

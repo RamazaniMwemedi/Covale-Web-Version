@@ -72,7 +72,7 @@ export default function NewMeet() {
           handleClick(e);
         }}
       >
-        <VideoCallRoundedIcon sx={{ fontSize: "30px"}} />
+        <VideoCallRoundedIcon sx={{ fontSize: "30px" }} />
       </IconButton>
       <StyledMenu
         id="demo-customized-menu"

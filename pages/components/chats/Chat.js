@@ -103,7 +103,7 @@ export default function Chat({ chat }) {
             marginRight: "5px",
             right: "0",
             position: "absolute",
-            
+
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

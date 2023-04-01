@@ -104,7 +104,7 @@ export default function AccountMenu() {
                   mr: 1,
                 },
                 "&:before": {
-                  content: '""',
+                  content: "\"\"",
                   display: "block",
                   position: "absolute",
                   top: 0,

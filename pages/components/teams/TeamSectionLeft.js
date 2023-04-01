@@ -312,6 +312,7 @@ const Mid = ({
         {messages.map((message) => {
           return message.sender.id === user.id ? (
             <UserMessage
+              key={message.sender.id}
               message={message}
               user={user}
               handleShowTeamFile={handleShowTeamFile}
@@ -320,6 +321,7 @@ const Mid = ({
             />
           ) : (
             <ColleagueMessage
+              key={message.sender.id}
               message={message}
               handleShowTeamFile={handleShowTeamFile}
               handleClickedTopic={handleClickedTopic}
@@ -1195,13 +1197,12 @@ const Bottom = ({
                   toggleTopicHandler={toggleTopicHandler}
                   noShowTopicThings={noShowTopicThings}
                 />
-                <IconButton>
-                  <EmojiEmotionsRoundedIcon
-                    color="secondary"
-                    onClick={() => {
-                      setShowEmojiPeaker(true);
-                    }}
-                  />
+                <IconButton
+                  onClick={() => {
+                    setShowEmojiPeaker(true);
+                  }}
+                >
+                  <EmojiEmotionsRoundedIcon color="secondary" />
                 </IconButton>{" "}
               </InputAdornment>
             }

@@ -1,23 +1,7 @@
 import { Box } from "@mui/system";
 import Skeleton from "@mui/material/Skeleton";
 import React from "react";
-import { Typography } from "@mui/material";
-import { Avatar, IconButton } from "@mui/material";
 import { useTheme } from "@mui/styles";
-
-import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
-import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
-import SearchIcon from "@mui/icons-material/Search";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import InsertPhotoRoundedIcon from "@mui/icons-material/InsertPhotoRounded";
-import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
-import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
-import TabPanel from "@mui/lab/TabPanel";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
 
 const TeamSectionSkeleton = () => {
   return (
@@ -301,76 +285,6 @@ const Left = () => {
       {/* Bottom */}
       <Box>
         <Bottom />
-      </Box>
-    </Box>
-  );
-};
-
-// Right
-const Right = () => {
-  return (
-    <Box>
-      <Skeleton
-        variant="circular"
-        sx={{
-          position: "fixed",
-          top: "1",
-          right: "0",
-        }}
-        width={30}
-        height={30}
-      />
-      <Box
-        sx={{
-          // Center this section
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          marginLeft: "120px",
-          // Padding
-        }}
-      >
-        <Friend />
-      </Box>
-    </Box>
-  );
-};
-
-const Friend = () => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingTop: "25px",
-      }}
-    >
-      <Skeleton variant="circular" sx={{ width: "120px", height: "120px" }} />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Skeleton
-          variant="text"
-          sx={{
-            paddingTop: "30px",
-          }}
-          width={120}
-          height={20}
-        />
-        {/* Status */}
-        <Skeleton
-          variant="text"
-          sx={{
-            paddingTop: "10px",
-          }}
-          width={50}
-          height={20}
-        />
       </Box>
     </Box>
   );

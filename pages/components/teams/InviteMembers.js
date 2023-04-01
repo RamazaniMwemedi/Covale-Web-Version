@@ -1,8 +1,5 @@
 import {
   Autocomplete,
-  Avatar,
-  Checkbox,
-  Paper,
   TextField,
   Box,
   Typography,
@@ -50,23 +47,23 @@ const InviteMembers = ({ teamId, members, showInviteMembersHandler }) => {
   const filteredColleagues = friends
     ? friends.filter((friend) => {
         const isMember = members.find((member) => {
-          return member.id == friend.id;
+          return member.id === friend.id;
         });
         return !isMember;
       })
-    : []
+    : [];
   const sendInvitation = async () => {
     if (token && selectedColleagues.length > 0 && teamId) {
       setInvitingBool(true);
       const res = await inviteFriends(token, teamId, selectedColleagues);
-      if (res.status == 200) {
+      if (res.status === 200) {
         const invitations = res.data;
         if (invitations.length > 0) {
           invitations.forEach((invitation) => {
             notificationSocket.emit("send_notification", invitation);
           });
           showInviteMembersHandler();
-          setSelectedColleagues((prev) => []);
+          setSelectedColleagues(() => []);
           setInvitingBool(false);
         }
       }

@@ -1,28 +1,14 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItem from "@mui/material/ListItem";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import PropTypes from "prop-types";
 import { Box } from "@mui/system";
-import { lightBlue, purple } from "@mui/material/colors";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTheme } from "@mui/material/styles";
-import {
-  Autocomplete,
-  Avatar,
-  Checkbox,
-  Paper,
-  TextField,
-} from "@mui/material";
+import { Autocomplete, Checkbox, Paper, TextField } from "@mui/material";
 import { useGetFriends, useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { addNewKeyPair } from "../../../Redux/slices/keys";
 import { createNewTeam, inviteFriends } from "../../../services/teams";
@@ -67,7 +53,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
     setTeamName(event.target.value);
   };
 
-  const isPrivateChangeHandle = (event) => {
+  const isPrivateChangeHandle = () => {
     setIsPrivate((prev) => !prev);
   };
 
@@ -107,7 +93,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
     if (token && selectedFriends.length > 0 && createdTeamId) {
       setInvitingBool(true);
       const res = await inviteFriends(token, createdTeamId, selectedFriends);
-      if (res.status == 200 && createdTeamId) {
+      if (res.status === 200 && createdTeamId) {
         setInvitingBool(false);
         router.push(`/chats/t/${createdTeamId}`);
       }
@@ -124,7 +110,7 @@ const CreateTeam = ({ toggleShowTeam }) => {
         teamMission,
         teamVission
       );
-      if (typeof response == "string") {
+      if (typeof response === "string") {
         // Get data from local storage
         const localData = JSON.parse(localStorage.getItem("logedinUser"));
         const secreteToken = localData.secreteToken;
@@ -386,8 +372,8 @@ const TeamNamingForm = ({
       </Box>
       <br />
       <Typography variant="subtitle2">
-        By Private, we mean it won't be visible by people whom are not members
-        or not invited
+        By Private, we mean it won`&lsquo;t be visible by people whom are not
+        members or not invited
       </Typography>
       <br />
       <br />
@@ -475,7 +461,7 @@ const TeamMissionVission = ({
       <br />
       <Typography variant="subtitle2">
         The Team Mission and Vission will be display in your Team so to motivate
-        your Team members. You may skip if you aren't ready now.
+        your Team members. You may skip if you aren`&lsquo;t ready now.
       </Typography>
       <br />
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -510,7 +496,6 @@ const TeamMissionVission = ({
 
 const AddPeopleInTeam = ({
   friends,
-  selectedFriends,
   selectedFriendsChangeHandler,
   sendInvitation,
   invitingBool,
@@ -640,15 +625,6 @@ const Step = ({ number, passed }) => {
       }}
     >
       <Typography>{number}</Typography>
-    </Box>
-  );
-};
-
-const PersonOption = ({ person }) => {
-  return (
-    <Box sx={{ display: "flex", gap: "15px" }}>
-      <Avatar sx={{ height: "20px", width: "20px" }} />
-      {person.username}
     </Box>
   );
 };

@@ -1,19 +1,19 @@
-import { Typography } from '@mui/material'
-import { Box } from '@mui/system'
-import React from 'react'
+import { Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import React from "react";
 
 const HostedMeetings = () => {
   return (
     <Box>
-        <Typography variant="h5">Hosted</Typography>
-        <Meet/>
+      <Typography variant="h5">Hosted</Typography>
+      <Meet/>
     </Box>
-  )
-}
+  );
+};
 
-export default HostedMeetings
+export default HostedMeetings;
 
-const Meet = () => { 
+const Meet = () => {
   return (
     <Box
       sx={{
@@ -29,4 +29,4 @@ const Meet = () => {
       <Typography variant="caption">duration: time</Typography>
     </Box>
   );
- }
+};

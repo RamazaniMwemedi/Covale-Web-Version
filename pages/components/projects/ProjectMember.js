@@ -5,7 +5,6 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Avatar, Typography } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
@@ -50,8 +49,6 @@ export default function ProjectMember({ members, taskStatus, allTasks }) {
 
   console.log("columns :>>", columns);
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(60);
   const theme = useTheme();
 
   return (
@@ -81,7 +78,7 @@ export default function ProjectMember({ members, taskStatus, allTasks }) {
               </TableHead>
               <TableBody>
                 {members
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(0 * 60, 0 * 60 + 60)
                   .map((member) => {
                     const taskStatusCount = getUserTaskStatus(
                       member.id,

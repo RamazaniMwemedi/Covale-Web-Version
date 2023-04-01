@@ -133,7 +133,7 @@ export default function Notification() {
               mr: 1,
             },
             "&:before": {
-              content: '""',
+              content: "\"\"",
               display: "block",
               position: "absolute",
               top: 0,
@@ -210,7 +210,7 @@ export default function Notification() {
               mr: 1,
             },
             "&:before": {
-              content: '""',
+              content: "\"\"",
               display: "block",
               position: "absolute",
               top: 0,
@@ -302,12 +302,12 @@ const NavigationBar = ({
           sx={
             category === "all"
               ? {
-                  borderBottom: `2px solid ${purpleColor}`,
-                  color: purpleColor,
-                }
+                borderBottom: `2px solid ${purpleColor}`,
+                color: purpleColor,
+              }
               : {
-                  color: "grey",
-                }
+                color: "grey",
+              }
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -361,12 +361,12 @@ const NavigationBar = ({
           sx={
             category === "callendar"
               ? {
-                  borderBottom: `2px solid ${purpleColor}`,
-                  color: purpleColor,
-                }
+                borderBottom: `2px solid ${purpleColor}`,
+                color: purpleColor,
+              }
               : {
-                  color: "grey",
-                }
+                color: "grey",
+              }
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -384,12 +384,12 @@ const NavigationBar = ({
           sx={
             category === "meetings"
               ? {
-                  borderBottom: `2px solid ${purpleColor}`,
-                  color: purpleColor,
-                }
+                borderBottom: `2px solid ${purpleColor}`,
+                color: purpleColor,
+              }
               : {
-                  color: "grey",
-                }
+                color: "grey",
+              }
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -432,31 +432,31 @@ const NotificationToDisplay = ({
 }) => {
   const token = useCheckLogedinUserToken();
   switch (category) {
-    case "all":
-      return <AllNotifications notifications={notifications} token={token} />;
+  case "all":
+    return <AllNotifications notifications={notifications} token={token} />;
 
-    case "work":
-      return <WorkNotifications workNotifications={workNotifications} />;
+  case "work":
+    return <WorkNotifications workNotifications={workNotifications} />;
 
-    case "chat":
-      return (
-        <ChatNotifications
-          chatNotifications={chatNotifications}
-          token={token}
-        />
-      );
-    case "callendar":
-      return (
-        <CallendarNotifications
-          callendarNotifications={callendarNotifications}
-        />
-      );
-    case "meetings":
-      return (
-        <MeetingsNotifications meetingsNotifications={meetingsNotifications} />
-      );
-    default:
-      return <AllNotifications notifications={notifications} token={token} />;
+  case "chat":
+    return (
+      <ChatNotifications
+        chatNotifications={chatNotifications}
+        token={token}
+      />
+    );
+  case "callendar":
+    return (
+      <CallendarNotifications
+        callendarNotifications={callendarNotifications}
+      />
+    );
+  case "meetings":
+    return (
+      <MeetingsNotifications meetingsNotifications={meetingsNotifications} />
+    );
+  default:
+    return <AllNotifications notifications={notifications} token={token} />;
   }
 };
 
@@ -615,12 +615,12 @@ const MeetingsNotifications = () => {
 const NotificationByType = ({ notification, token }) => {
   const { type } = notification;
   switch (type) {
-    case "invitation":
-      return (
-        <InvitationNotification notification={notification} userToken={token} />
-      );
-    case "invitationAccepted":
-      return <InvitationAcceptedNotification notification={notification} />;
+  case "invitation":
+    return (
+      <InvitationNotification notification={notification} userToken={token} />
+    );
+  case "invitationAccepted":
+    return <InvitationAcceptedNotification notification={notification} />;
   }
 };
 // Notification type component

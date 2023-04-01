@@ -31,7 +31,7 @@ const getKeyPairs = async (secreteToken) => {
 };
 
 const encryptMessage = async (message, privateKey) => {
-  const response = await axios.post(`/api/encrypt`, {
+  const response = await axios.post("/api/encrypt", {
     text: message,
     privateKey: privateKey,
   });
@@ -39,7 +39,7 @@ const encryptMessage = async (message, privateKey) => {
 };
 
 const decryptMessage = async (message, publicKey) => {
-  const response = await axios.post(`/api/decrypt`, {
+  const response = await axios.post("/api/decrypt", {
     text: message,
     publicKey: publicKey,
   });

@@ -86,10 +86,10 @@ const Chats = ({
                 e.target.value.length < 1
                   ? []
                   : chats.filter((chat) =>
-                      chat.friendUsername
-                        .toLowerCase()
-                        .includes(e.target.value.toLowerCase())
-                    )
+                    chat.friendUsername
+                      .toLowerCase()
+                      .includes(e.target.value.toLowerCase())
+                  )
               );
             }}
             sx={{

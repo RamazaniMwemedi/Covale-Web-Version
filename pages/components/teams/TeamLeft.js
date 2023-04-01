@@ -46,10 +46,6 @@ const Drawer = styled(MuiDrawer, {
   whiteSpace: "nowrap",
   boxSizing: "border-box",
 
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
   ...(!open && {
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
@@ -75,7 +71,6 @@ function Tabs({
   openCreateTeam,
   teamLoading,
 }) {
-  const theme = useTheme();
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
@@ -250,10 +245,7 @@ const ProfileDialog = ({ user, handleChange, value }) => {
         >
           <Box>
             {" "}
-            <Avatar
-            >
-              {user && user.username[0]}
-            </Avatar>{" "}
+            <Avatar>{user && user.username[0]}</Avatar>{" "}
           </Box>
           <Typography variant="h6" noWrap>
             {user && user.username}
