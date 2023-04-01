@@ -7,35 +7,35 @@ import { v4 as uuidv4 } from "uuid";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 
 // My components
-import DrawerComponent from "../../components/others/DrawerComponent";
-import ChatLeft from "../../components/chats/ChatLeft";
-import ChatSection from "../../components/chats/ChatSection";
-import TeamSectionSkeleton from "../../components/teams/TeamSectionSkeleton";
-import TeamSection from "../../components/teams/TeamSection";
-import ChatSectionSkeleton from "../../components/chats/ChatSectionSkeleton";
-import LoadingLogo from "../../components/others/LoadingLogo";
+import DrawerComponent from "../../../components/others/DrawerComponent";
+import ChatLeft from "../../../components/chats/ChatLeft";
+import ChatSection from "../../../components/chats/ChatSection";
+import TeamSectionSkeleton from "../../../components/teams/TeamSectionSkeleton";
+import TeamSection from "../../../components/teams/TeamSection";
+import ChatSectionSkeleton from "../../../components/chats/ChatSectionSkeleton";
+import LoadingLogo from "../../../components/others/LoadingLogo";
 
 // Hooks
-import { useCheckLogedinUser, useGetChats } from "../../../hooks/hooks";
+import { useCheckLogedinUser, useGetChats } from "../../../../hooks/hooks";
 import {
   useChatId,
   useJoinChatRoom,
   useRecieveNewChatMessage,
-} from "../../../hooks/chats";
+} from "../../../../hooks/chats";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import {
   addNewMessageToChatId,
   updateMessageId,
-} from "../../../Redux/slices/chat";
+} from "../../../../Redux/slices/chat";
 import {
   addNewMessageToTeamId,
   updateTeamMessageId,
   replyToTopicId,
   updateTopicMessageId,
-} from "../../../Redux/slices/team";
-import { removeUser } from "../../../Redux/slices/user";
+} from "../../../../Redux/slices/team";
+import { removeUser } from "../../../../Redux/slices/user";
 
 // Hooks
 import {
@@ -43,35 +43,44 @@ import {
   useJoinTeamRoom,
   useRecieveNewTeamMessage,
   useTeamId,
-} from "../../../hooks/teams";
-import { RTC_ADDRESS } from "../../../config";
+} from "../../../../hooks/teams";
 import {
   useGetNotification,
   useJoinNotificationRoom,
   useRecieveNewNotification,
-} from "../../../hooks/notification";
-import { useRef, useState } from "react";
+} from "../../../../hooks/notification";
+import { use, useRef, useState } from "react";
 import axios from "axios";
-import { sendMessege } from "../../../services/chats";
+import { sendMessege } from "../../../../services/chats";
 import {
   sendTeamMessege,
   createATopic,
   replyToTopic,
-} from "../../../services/teams";
+} from "../../../../services/teams";
+import { RTC_ADDRESS } from "../../../../config";
+import { useGetKeyPairs } from "../../../../hooks/secrete";
+import { encryptString } from "../../../../encryption/encrypt";
+import { encryptMessage } from "../../../../services/encrypt";
 // Socket.IO
-const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
+const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 
 export default function Chat() {
   // Global States
   const dispatch = useDispatch();
   const theme = useTheme();
-  const userStore = useSelector((state) => state.user);
   const userLoading = useCheckLogedinUser();
+  const userStore = useSelector((state) => state.user);
   const user = userStore ? userStore.user : null;
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
+
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.find((key) => key.modelId === id)
+    : null;
 
   // Chats States
   const [chatMessage, setChatMessage] = useState("");
@@ -117,6 +126,9 @@ export default function Chat() {
 
   // Recieve new notification
   useRecieveNewNotification(user);
+
+  // Get Key Pair
+  useGetKeyPairs();
 
   const messageChangeHandler = (e) => {
     setChatMessage(e.target.value);
@@ -244,14 +256,19 @@ export default function Chat() {
   };
 
   const teamSendMessageHandle = async () => {
+    if (!keyPair) return;
     const uuid = uuidv4();
     const formData = new FormData();
+    const encryptedMessage = await encryptMessage(
+      teamMessage,
+      keyPair.publicKey
+    );
 
     for (const file of teamFiles) {
       formData.append("files", file.file);
     }
 
-    formData.append("message", teamMessage);
+    formData.append("message", encryptedMessage);
     formData.append("idFromClient", uuid);
     setTeamMessage("");
     const teamNewMessage = {
@@ -261,11 +278,13 @@ export default function Chat() {
         lastname: user.lastname,
         id: user.id,
       },
-      message: teamMessage,
+      message: encryptedMessage,
       idFromClient: uuid,
       file: teamFiles,
     };
     setTeamFiles([]);
+    setTeamMessage("");
+    console.log("Team message", teamNewMessage);
     dispatch(
       addNewMessageToTeamId({
         teamId: id,

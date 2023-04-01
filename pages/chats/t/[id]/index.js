@@ -44,13 +44,12 @@ import {
   useRecieveNewTeamMessage,
   useTeamId,
 } from "../../../../hooks/teams";
-import { RTC_ADDRESS } from "../../../../config";
 import {
   useGetNotification,
   useJoinNotificationRoom,
   useRecieveNewNotification,
 } from "../../../../hooks/notification";
-import { useRef, useState } from "react";
+import { use, useRef, useState } from "react";
 import axios from "axios";
 import { sendMessege } from "../../../../services/chats";
 import {
@@ -58,20 +57,30 @@ import {
   createATopic,
   replyToTopic,
 } from "../../../../services/teams";
+import { RTC_ADDRESS } from "../../../../config";
+import { useGetKeyPairs } from "../../../../hooks/secrete";
+import { encryptString } from "../../../../encryption/encrypt";
+import { encryptMessage } from "../../../../services/encrypt";
 // Socket.IO
-const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
+const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
 
 export default function Chat() {
   // Global States
   const dispatch = useDispatch();
   const theme = useTheme();
-  const userStore = useSelector((state) => state.user);
   const userLoading = useCheckLogedinUser();
+  const userStore = useSelector((state) => state.user);
   const user = userStore ? userStore.user : null;
   const router = useRouter();
   const id = router.query.id;
   const token = userStore.user ? userStore.user.token : null;
+
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.find((key) => key.modelId === id)
+    : null;
 
   // Chats States
   const [chatMessage, setChatMessage] = useState("");
@@ -117,6 +126,9 @@ export default function Chat() {
 
   // Recieve new notification
   useRecieveNewNotification(user);
+
+  // Get Key Pair
+  useGetKeyPairs();
 
   const messageChangeHandler = (e) => {
     setChatMessage(e.target.value);
@@ -244,14 +256,19 @@ export default function Chat() {
   };
 
   const teamSendMessageHandle = async () => {
+    if (!keyPair) return;
     const uuid = uuidv4();
     const formData = new FormData();
+    const encryptedMessage = await encryptMessage(
+      teamMessage,
+      keyPair.publicKey
+    );
 
     for (const file of teamFiles) {
       formData.append("files", file.file);
     }
 
-    formData.append("message", teamMessage);
+    formData.append("message", encryptedMessage);
     formData.append("idFromClient", uuid);
     setTeamMessage("");
     const teamNewMessage = {
@@ -261,11 +278,13 @@ export default function Chat() {
         lastname: user.lastname,
         id: user.id,
       },
-      message: teamMessage,
+      message: encryptedMessage,
       idFromClient: uuid,
       file: teamFiles,
     };
     setTeamFiles([]);
+    setTeamMessage("");
+    console.log("Team message", teamNewMessage);
     dispatch(
       addNewMessageToTeamId({
         teamId: id,
