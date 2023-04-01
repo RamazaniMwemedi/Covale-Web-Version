@@ -1,179 +1,234 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 
 import Logo from "../assets/Logo";
 import { useTheme } from "@mui/styles";
+import { Button, TextField, Typography } from "@mui/material";
 
-const drawerWidth = 240;
-const navItems = ["Home", "About", "Contact"];
+function Index() {
+  // Coming soon Page
 
-function Index(props) {
   const theme = useTheme();
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  React.useEffect(() => {
+    theme.themeChengeHandler("dark-mode");
+  }, []);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const drawer = (
-    <Box
-      onClick={handleDrawerToggle}
-      sx={{
-        textAlign: "center",
-        backgroundColor: "dodgerblue",
-        height: "100vh",
-      }}
-    >
+  const NavBar = () => {
+    return (
       <Box
         sx={{
+          position: "sticky",
+          top: 0,
+          width: "100%",
+          height: "64px",
           display: "flex",
-          alignItem: "center",
-          textAlign: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+          backgroundColor: theme.colors.background1,
+          zIndex: 1,
         }}
       >
-        <Logo height={50} width={50} />
-        <Typography sx={{ marginTop: "10px" }} variant="h6">
-          Covale
-        </Typography>
-      </Box>
-      <Divider />
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
-
-  return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar sx={{ backgroundColor: "dodgerblue" }} component="nav">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Box
-            sx={{
-              display: "flex",
-              alignItem: "center",
-              textAlign: "center",
-            }}
-          >
-            <Logo height={50} width={50} />
-            <Typography sx={{ marginTop: "10px" }} variant="h6">
-              Covale
-            </Typography>
-          </Box>
-          <Box
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          ></Box>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
-                {item}
-              </Button>
-            ))}
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Box component="nav">
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
+        <Box
           sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
+            width: "98%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Logo height={50} width={50} />
+        </Box>
+      </Box>
+    );
+  };
+
+  const ComingSoon = () => {
+    const [logoValues, setLogoValues] = React.useState(400);
+    // Onscrolling the logo will be smaller and smaller
+
+    React.useEffect(() => {
+      window.addEventListener("scroll", () => {
+        setLogoValues(400 - window.scrollY);
+      });
+    }, []);
+
+    return (
+      <Box
+        sx={{
+          // All the content will be in center of the page
+          display: "grid",
+          placeItems: "center",
+          width: "100%",
+          backgroundColor: theme.colors.background,
+        }}
+      >
+        <br />
+        <br />
+        <Box
+          sx={{
+            // Rotateing the logo animation in 360 degree
+            animation: "spin 50s linear infinite",
+            "@keyframes spin": {
+              "0%": {
+                transform: "rotate(0deg)",
+              },
+              "100%": {
+                transform: "rotate(360deg)",
+              },
             },
           }}
         >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box component="main" sx={{ p: 3 }}>
-        <Toolbar />
-        <Typography>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
-          unde fugit veniam eius, perspiciatis sunt? Corporis qui ducimus
-          quibusdam, aliquam dolore excepturi quae. Distinctio enim at eligendi
-          perferendis in cum quibusdam sed quae, accusantium et aperiam? Quod
-          itaque exercitationem, at ab sequi qui modi delectus quia corrupti
-          alias distinctio nostrum. Minima ex dolor modi inventore sapiente
-          necessitatibus aliquam fuga et. Sed numquam quibusdam at officia
-          sapiente porro maxime corrupti perspiciatis asperiores, exercitationem
-          eius nostrum consequuntur iure aliquam itaque, assumenda et! Quibusdam
-          temporibus beatae doloremque voluptatum doloribus soluta accusamus
-          porro reprehenderit eos inventore facere, fugit, molestiae ab officiis
-          illo voluptates recusandae. Vel dolor nobis eius, ratione atque
-          soluta, aliquam fugit qui iste architecto perspiciatis. Nobis,
-          voluptatem! Cumque, eligendi unde aliquid minus quis sit debitis
-          obcaecati error, delectus quo eius exercitationem tempore. Delectus
-          sapiente, provident corporis dolorum quibusdam aut beatae repellendus
-          est labore quisquam praesentium repudiandae non vel laboriosam quo ab
-          perferendis velit ipsa deleniti modi! Ipsam, illo quod. Nesciunt
-          commodi nihil corrupti cum non fugiat praesentium doloremque
-          architecto laborum aliquid. Quae, maxime recusandae? Eveniet dolore
-          molestiae dicta blanditiis est expedita eius debitis cupiditate porro
-          sed aspernatur quidem, repellat nihil quasi praesentium quia eos,
-          quibusdam provident. Incidunt tempore vel placeat voluptate iure
-          labore, repellendus beatae quia unde est aliquid dolor molestias
-          libero. Reiciendis similique exercitationem consequatur, nobis placeat
-          illo laudantium! Enim perferendis nulla soluta magni error, provident
-          repellat similique cupiditate ipsam, et tempore cumque quod! Qui, iure
-          suscipit tempora unde rerum autem saepe nisi vel cupiditate iusto.
-          Illum, corrupti? Fugiat quidem accusantium nulla. Aliquid inventore
-          commodi reprehenderit rerum reiciendis! Quidem alias repudiandae eaque
-          eveniet cumque nihil aliquam in expedita, impedit quas ipsum nesciunt
-          ipsa ullam consequuntur dignissimos numquam at nisi porro a, quaerat
-          rem repellendus. Voluptates perspiciatis, in pariatur impedit, nam
-          facilis libero dolorem dolores sunt inventore perferendis, aut
-          sapiente modi nesciunt.
+          <Logo height={logoValues} width={logoValues} />
+        </Box>
+        <Typography
+          variant="h1"
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          <span className="comming_soon">Coming Soon</span>
+        </Typography>
+        <br />
+        <br />
+        <Typography
+          sx={{
+            width: "50%",
+            textAlign: "center",
+          }}
+          variant="h6"
+        >
+          Are you ready to take your team's productivity to the next level?
+          Covale has the solution. Our platform is designed to streamline
+          processes, improve collaboration, and create a more engaged and
+          motivated workforce. Stay tuned for our launch, and experience the
+          power of Covale for yourself.
         </Typography>
       </Box>
+    );
+  };
+
+  const JoinWaitlist = () => {
+    const [email, setEmail] = React.useState("");
+    const [emailError, setEmailError] = React.useState(false);
+    const [emailHelperText, setEmailHelperText] = React.useState("");
+
+    const handleEmailChange = (e) => {
+      setEmail(e.target.value);
+    };
+
+    const handleEmailBlur = (e) => {
+      if (e.target.value === "") {
+        setEmailError(true);
+        setEmailHelperText("Email is required");
+      } else {
+        setEmailError(false);
+        setEmailHelperText("");
+      }
+    };
+
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          backgroundColor: theme.colors.background,
+        }}
+      >
+        <br />
+        <br />
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          Join the waitlist
+        </Typography>
+        <br />
+        <br />
+        <Typography
+          sx={{
+            width: "50%",
+            textAlign: "center",
+          }}
+          variant="h6"
+        >
+          We're working hard to bring Covale to you as soon as possible. Enter
+          your email address below to be notified when we launch.
+        </Typography>
+        <br />
+        <br />
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: theme.colors.background1,
+            padding: "10px",
+            borderRadius: "10px",
+          }}
+        >
+          <TextField
+            sx={{
+              // Remove border
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "transparent",
+                },
+                "&:hover fieldset": {
+                  borderColor: "transparent",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "transparent",
+                },
+              },
+            }}
+            size="small"
+            variant="outlined"
+            label="Email"
+            value={email}
+            error={emailError}
+            helperText={emailHelperText}
+            onChange={handleEmailChange}
+            color="secondary"
+          />
+          <Button
+            sx={{
+              marginLeft: "10px",
+              color: "#fff",
+              bgcolor: "#9c27b0",
+              textTransform: "none",
+            }}
+            variant="contained"
+            color="secondary"
+          >
+            Notify Me
+          </Button>
+        </Box>
+        <br />
+        <br />
+        <br />
+      </Box>
+    );
+  };
+
+  return (
+    <Box
+      sx={{
+        bgcolor: theme.colors.background,
+        height: "100vh",
+      }}
+    >
+      <NavBar />
+      <ComingSoon />
+      <JoinWaitlist />
     </Box>
   );
 }
-
-Index.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
 
 export default Index;

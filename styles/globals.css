@@ -60,7 +60,6 @@ hr {
   background-color: dodgerblue;
 }
 
-
 .redirect {
   border-radius: 15px;
   border-style: solid;
@@ -180,4 +179,40 @@ hr {
   );
   position: relative;
   z-index: 1;
+}
+
+/* Animate comming soon with changing colors in Gradient  */
+.comming_soon {
+  animation-name: comming_soon;
+  animation-duration: 50s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  background-image: linear-gradient(
+    90deg,
+    #ff4d4d,
+    #f9cb28,
+    #ff4081,
+    whitesmoke,
+    dodgerblue,
+    #ff4d4d,
+    #f9cb28,
+    #ff4081,
+    whitesmoke,
+    #ff4d4d
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes comming_soon {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
