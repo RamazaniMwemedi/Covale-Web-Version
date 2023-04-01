@@ -45,8 +45,8 @@ import FileIcone from "../mediaFiles/FileIcon";
 import FileComponent from "../mediaFiles/FileComponent";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import { timeAgo } from "../../../tools/tools";
-import { decryptString } from "../../../encryption/decrept";
 import { useRouter } from "next/router";
+import { decryptMessage } from "../../../services/encrypt";
 
 const Picker = dynamic(
   () => {
@@ -640,11 +640,8 @@ const UserMessage = ({
     ? keyPairStore.find((key) => key.modelId === id)
     : null;
   const decreptMessageHandler = async () => {
-    // logs
-    console.log("Message to decrypt: ", message.message);
-
     const messageToDecrypt = message.message;
-    const decryptedMessage = await decryptString(
+    const decryptedMessage = await decryptMessage(
       messageToDecrypt,
       keyPair.privateKey
     );

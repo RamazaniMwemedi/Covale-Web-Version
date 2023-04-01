@@ -1,4 +1,4 @@
-const { decryptString } = require("./encryption/decrypt");
+const { decryptString } = require("../../encryption/decrypt");
 
 export default async function decrypt(req, res) {
   // If method is not POST, return 404 error with message "Unkn"
@@ -7,12 +7,13 @@ export default async function decrypt(req, res) {
   }
   // If method is POST, return 200 status code with encrypted text
   else {
-    const { text, privateKey } = req.body;
-    if (!text || !privateKey) {
+    const { text, publicKey } = req.body;
+
+    if (!text || !publicKey) {
       res.status(400).json({ error: "Missing required parameters" });
     } else {
-      const decryptedText = await decryptString(text, privateKey);
-      res.status(200).json({ decryptedText });
+      const decryptedText = await decryptString(text, publicKey);
+      res.status(200).json({ message: decryptedText });
     }
   }
 }

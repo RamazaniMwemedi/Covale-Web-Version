@@ -30,7 +30,16 @@ const getKeyPairs = async (secreteToken) => {
   return response.data;
 };
 
+const decryptMessage = async (message, publicKey) => {
+  const response = await axios.post(`/api/decrypt`, {
+    text: message,
+    publicKey: publicKey,
+  });
+  return response.data.message;
+};
+
 module.exports = {
   generateNewKeyPair,
   getKeyPairs,
+  decryptMessage,
 };
