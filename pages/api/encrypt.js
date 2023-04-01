@@ -7,12 +7,13 @@ export default async function encrypt(req, res) {
   }
   // If method is POST, return 200 status code with encrypted text
   else {
-    const { text, publicKey } = req.body;
-    if (!text || !publicKey) {
+    const { text, privateKey } = req.body;
+    if (!text || !privateKey) {
       res.status(400).json({ error: "Missing required parameters" });
     } else {
-      const encryptedText = await encryptString(text, publicKey);
-      res.status(200).json({ encryptedText });
+      console.log("text", text);
+      const encryptedText = await encryptString(text, privateKey);
+      res.status(200).json({ message: encryptedText });
     }
   }
 }

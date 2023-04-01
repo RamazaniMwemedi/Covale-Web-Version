@@ -417,6 +417,24 @@ const TeamMissionVission = ({
   teamVissionChangeHandler,
   createTeam,
 }) => {
+  const [creatingTeamMessage, setCreatingTeamMessage] =
+    useState("Creating Team");
+
+  // Change the value of creating team message to Please wait, then this might take a while then back to creating team
+  React.useEffect(() => {
+    if (creatingTeamBool) {
+      setTimeout(() => {
+        setCreatingTeamMessage("Please wait");
+      }, 2000);
+      setTimeout(() => {
+        setCreatingTeamMessage("This might take a while");
+      }, 7000);
+      setTimeout(() => {
+        setCreatingTeamMessage("Creating Team");
+      }, 10000);
+    }
+  }, [creatingTeamBool]);
+
   return (
     <Box>
       <Typography variant="h5">
@@ -468,7 +486,7 @@ const TeamMissionVission = ({
             loadingPosition="start"
             variant="contained"
           >
-            Creating
+            {creatingTeamMessage}
           </LoadingButton>
         ) : (
           <Button

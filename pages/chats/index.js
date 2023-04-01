@@ -60,6 +60,7 @@ import {
 import { RTC_ADDRESS } from "../../config";
 import { useGetKeyPairs } from "../../hooks/secrete";
 import { encryptString } from "../../encryption/encrypt";
+import { encryptMessage } from "../../services/encrypt";
 // Socket.IO
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
@@ -258,15 +259,16 @@ export default function Chat() {
     if (!keyPair) return;
     const uuid = uuidv4();
     const formData = new FormData();
+    const encryptedMessage = await encryptMessage(
+      teamMessage,
+      keyPair.publicKey
+    );
 
     for (const file of teamFiles) {
       formData.append("files", file.file);
     }
 
-    formData.append(
-      "message",
-      await encryptString(teamMessage, keyPair.publicKey)
-    );
+    formData.append("message", encryptedMessage);
     formData.append("idFromClient", uuid);
     setTeamMessage("");
     const teamNewMessage = {
@@ -276,7 +278,7 @@ export default function Chat() {
         lastname: user.lastname,
         id: user.id,
       },
-      message: await encryptString(teamMessage, keyPair.publicKey),
+      message: encryptedMessage,
       idFromClient: uuid,
       file: teamFiles,
     };
