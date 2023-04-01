@@ -411,13 +411,13 @@ const TeamMissionVission = ({
     if (creatingTeamBool) {
       setTimeout(() => {
         setCreatingTeamMessage("Please wait");
-      }, 2000);
+      }, 5000);
       setTimeout(() => {
         setCreatingTeamMessage("This might take a while");
-      }, 7000);
+      }, 12000);
       setTimeout(() => {
         setCreatingTeamMessage("Creating Team");
-      }, 10000);
+      }, 170000);
     }
   }, [creatingTeamBool]);
 
@@ -480,6 +480,7 @@ const TeamMissionVission = ({
             color="secondary"
             sx={{
               borderRadius: "10px",
+              textTransform: "none",
             }}
             onClick={() => {
               // Creacte account junction
