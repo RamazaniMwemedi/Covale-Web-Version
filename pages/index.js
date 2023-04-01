@@ -37,7 +37,25 @@ function Index() {
             justifyContent: "space-between",
           }}
         >
-          <Logo height={50} width={50} />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Logo height={50} width={50} />
+            <Typography
+              variant="body1"
+              sx={{
+                background:
+                  "linear-gradient(to right, rgb(214, 67, 181), rgb(120, 79, 195))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Covale
+            </Typography>
+          </Box>
         </Box>
       </Box>
     );

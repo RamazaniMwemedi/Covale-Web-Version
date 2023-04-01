@@ -1,7 +1,6 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialChatsState = {};
-let keyPairs = new Array();
 
 const keyPairsSlice = createSlice({
   name: "keyPairs",
@@ -9,12 +8,8 @@ const keyPairsSlice = createSlice({
   reducers: {
     allKeyPairs(state, { payload }) {
       if (payload) {
-        for (let index = 0; index < payload.length; index++) {
-          const keyPairByIndex = payload[index];
-          keyPairs.push(keyPairByIndex);
-        }
+        state.keyPairs = payload;
       }
-      state.keyPairs = keyPairs;
     },
     addNewKeyPair(state, { payload }) {
       if (payload) {

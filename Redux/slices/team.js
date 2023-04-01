@@ -1,7 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {};
-let teams = new Array();
 
 const teamSlice = createSlice({
   name: "teams",
@@ -9,15 +8,10 @@ const teamSlice = createSlice({
   reducers: {
     allTeams(state, { payload }) {
       if (payload) {
-        for (let index = 0; index < payload.length; index++) {
-          const teamByIndex = payload[index];
-          teams.push(teamByIndex);
-        }
+        state.teams = payload;
       }
-      state.teams = teams;
     },
     addNewMessageToTeamId(state, { payload }) {
-      console.log("addNewMessageToTeamId", payload.teamNewMessage);
       if (payload) {
         state = {
           ...state,
