@@ -1,4 +1,4 @@
-const { encryptString } = require("../../encryption/encrypt");
+import { encryptString } from "../../encryption/encrypt";
 
 export default async function encrypt(req, res) {
   // If method is not POST, return 404 error with message "Unkn"
@@ -11,7 +11,7 @@ export default async function encrypt(req, res) {
     if (!text || !privateKey) {
       res.status(400).json({ error: "Missing required parameters" });
     } else {
-      console.log("text", text);
+      console.log("text", text.length);
       const encryptedText = await encryptString(text, privateKey);
       res.status(200).json({ message: encryptedText });
     }

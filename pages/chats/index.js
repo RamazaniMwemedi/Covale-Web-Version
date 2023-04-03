@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useTheme } from "@mui/material/styles";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
-import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 
 // My components
 import DrawerComponent from "../components/others/DrawerComponent";
@@ -49,8 +48,7 @@ import {
   useJoinNotificationRoom,
   useRecieveNewNotification,
 } from "../../hooks/notification";
-import { use, useRef, useState } from "react";
-import axios from "axios";
+import { useRef, useState } from "react";
 import { sendMessege } from "../../services/chats";
 import {
   sendTeamMessege,
@@ -59,7 +57,6 @@ import {
 } from "../../services/teams";
 import { RTC_ADDRESS } from "../../config";
 import { useGetKeyPairs } from "../../hooks/secrete";
-import { encryptString } from "../../encryption/encrypt";
 import { encryptMessage } from "../../services/encrypt";
 // Socket.IO
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
@@ -143,10 +140,10 @@ export default function Chat() {
   const onEmojiClick = (event, emojiObject) => {
     setChatMessage(chatMessage + emojiObject.emoji);
   };
-  const handleChooseFileIcon = (e) => {
+  const handleChooseFileIcon = () => {
     chatFileInput.current.click();
   };
-  const handleChooseFileIcon2 = (e) => {
+  const handleChooseFileIcon2 = () => {
     chatFileInput2.current.click();
   };
 
@@ -219,10 +216,10 @@ export default function Chat() {
     setTeamMessage(teamMessage + emojiObject.emoji);
   };
 
-  const handleChooseFileIconTeam = (e) => {
+  const handleChooseFileIconTeam = () => {
     teamFileInput.current.click();
   };
-  const handleChooseFileIcon2Team = (e) => {
+  const handleChooseFileIcon2Team = () => {
     teamFileInput2.current.click();
     console.log("Team file input 2", teamFileInput2);
   };
@@ -256,6 +253,10 @@ export default function Chat() {
   };
 
   const teamSendMessageHandle = async () => {
+    // If the teamMessage is longer than 50000 characters
+    if (teamMessage.length > 50000) {
+      return;
+    }
     if (!keyPair) return;
     const uuid = uuidv4();
     const formData = new FormData();
@@ -338,10 +339,10 @@ export default function Chat() {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  const handleChooseFileIconTopic = (e) => {
+  const handleChooseFileIconTopic = () => {
     topicFileInput.current.click();
   };
-  const handleChooseFileIcon2Topic = (e) => {
+  const handleChooseFileIcon2Topic = () => {
     topicFileInput2.current.click();
     console.log("Topic file input 2", topicFileInput2);
   };

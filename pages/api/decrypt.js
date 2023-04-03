@@ -1,4 +1,4 @@
-const { decryptString } = require("../../encryption/decrypt");
+import { decryptString } from "../../encryption/decrypt";
 
 export default async function decrypt(req, res) {
   // If method is not POST, return 404 error with message "Unkn"
