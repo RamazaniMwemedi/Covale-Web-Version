@@ -225,13 +225,17 @@ const Topics = ({ topics, handleClickedTopic }) => {
           padding: "10px",
         }}
       >
-        {topics.map((topic) => (
-          <Topic
-            key={topic.id}
-            topic={topic}
-            handleClickedTopic={handleClickedTopic}
-          />
-        ))}
+        {topics.length > 0 ? (
+          topics.map((topic) => (
+            <Topic
+              key={topic.id}
+              topic={topic}
+              handleClickedTopic={handleClickedTopic}
+            />
+          ))
+        ) : (
+          <Typography variant="body1">No topis at the momemt</Typography>
+        )}
       </Box>
     </Box>
   );
@@ -547,6 +551,10 @@ const Media = ({ files, handleShowFile }) => {
         <Typography variant="subtitle1">Media</Typography>
       </Box>
       <Box>
+        {/* No Files */}
+        {files.length < 1 && (
+          <Typography variant="body1">No Files at the moment</Typography>
+        )}
         {/* Photos */}
         {imageFiles.length > 0 && (
           <Photos photosFiles={imageFiles} handleShowFile={handleShowFile} />
