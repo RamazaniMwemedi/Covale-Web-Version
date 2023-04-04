@@ -14,8 +14,8 @@ const Logo = ({ width, height }) => {
       }}
     >
       <svg
-        width={`${width + 1}px`}
-        height={`${height + 1}px`}
+        width={`${width > 0 ? width + 1 : 1}px`}
+        height={`${height > 0 ? height + 1 : 1}px`}
         version="1.1"
         viewBox="0 0 752 752"
         xmlns="http://www.w3.org/2000/svg"

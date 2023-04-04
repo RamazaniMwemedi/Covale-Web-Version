@@ -3,16 +3,13 @@ import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
 
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
 // My Modules
 import DrawerComponent from "../components/others/DrawerComponent";
 import MeetLeft from "../components/meets/MeetLeft";
 import MeetSection from "../components/meets/MeetSection";
 
 export default function Calendar() {
-  
   const [user, setUser] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
 
   React.useLayoutEffect(() => {
@@ -26,15 +23,14 @@ export default function Calendar() {
     }
   }, [user]);
 
-
   return (
     <Box sx={{ display: "flex", height: "100%" }}>
       <CssBaseline />
       <DrawerComponent user={user} />
       <Box component="main" sx={{ display: "flex", height: "100%" }}>
         {/* App will start here */}
-        <MeetLeft/>
-        <MeetSection/>
+        <MeetLeft />
+        <MeetSection />
       </Box>
     </Box>
   );

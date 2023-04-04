@@ -33,6 +33,7 @@ import BallotRoundedIcon from "@mui/icons-material/BallotRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import AddIcon from "@mui/icons-material/Add";
 import LeaderboardRoundedIcon from "@mui/icons-material/LeaderboardRounded";
+import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
 
 import { useTheme } from "@mui/material";
 import { purple } from "@mui/material/colors";
@@ -293,6 +294,9 @@ const Mid = ({
     toBottomWhenNewMessage.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const scrollToBottom = () =>
+    toBottomWhenNewMessage.current?.scrollIntoView({ behavior: "smooth" });
+
   return (
     <Box
       sx={{
@@ -307,6 +311,7 @@ const Mid = ({
           overflowX: "hidden",
           padding: "0px",
           margin: "0px",
+          position: "relative", // Add position relative to the parent element
         }}
       >
         {messages.map((message) => {
@@ -329,6 +334,17 @@ const Mid = ({
             />
           );
         })}
+        <div
+          style={{
+            position: "sticky",
+            bottom: "0px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <IconButton onClick={scrollToBottom}>
+            <ArrowDownwardRoundedIcon />
+          </IconButton>
+        </div>
         <ListItem ref={toBottomWhenNewMessage} />
       </List>
     </Box>

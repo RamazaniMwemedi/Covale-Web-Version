@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { TextField, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
-import SendIcon from "@mui/icons-material/Send";
 // CSS
 import styles from "../styles/Login.module.css";
 // My modules
@@ -18,12 +16,8 @@ const LoginPage = () => {
     localStorage.setItem("darkTheme", JSON.stringify(false));
   }, []);
   // User
-  const [user, setUser] = useState(null);
   // Signin form states
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
@@ -36,7 +30,6 @@ const LoginPage = () => {
   const [signupBirthday, setSignupBirthday] = useState(new Date());
   const [signupGender, setSignupGender] = useState(null);
 
-  const [error, setError] = useState("");
   // Login Form Error states
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -106,7 +99,7 @@ const LoginPage = () => {
           console.log(response);
           window.localStorage.setItem("logedinUser", JSON.stringify(response));
           window.localStorage.setItem("theme", "light-mode");
-          router.push(`/chats/`);
+          router.push("/chats/");
         }
       } catch (exception) {
         setSignInSubmiting(false);
@@ -213,17 +206,7 @@ const LoginPage = () => {
 
   // Signin Change Handlers
 
-  const usernameChangeHandler = (e) => {
-    setUsername(e.target.value);
-  };
 
-  const firstnameChangeHandler = (e) => {
-    setFirstname(e.target.value);
-  };
-
-  const lastnameChangeHandler = (e) => {
-    setLastname(e.target.value);
-  };
 
   const emailChangeHandler = (e) => {
     setEmail(e.target.value);
@@ -292,11 +275,7 @@ const LoginPage = () => {
             signInHandlerSubmit={signInHandlerSubmit}
             emailChangeHandler={emailChangeHandler}
             passwordChangeHandler={passwordChangeHandler}
-            usernameChangeHandler={usernameChangeHandler}
-            firstnameChangeHandler={firstnameChangeHandler}
-            lastnameChangeHandler={lastnameChangeHandler}
             signUpHandlerSubmit={signUpHandlerSubmit}
-            error={error}
             signupRef={signupRef}
             loginError={loginError}
             signInSubmiting={signInSubmiting}

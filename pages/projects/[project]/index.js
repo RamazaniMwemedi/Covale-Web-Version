@@ -1,8 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Box, Typography } from "@mui/material";
+import { Box,  } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useTheme } from "@mui/material/styles";
 
 // My components
 import DrawerComponent from "../../components/others/DrawerComponent";
@@ -12,15 +11,13 @@ import ProjectSection from "../../components/projects/ProjectSection";
 // Hooks
 import { useCheckLogedinUser } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/others/LoadingLogo";
-import { useSelector, useDispatch, useStore } from "react-redux";
+import { useSelector, useDispatch,  } from "react-redux";
 import { removeUser } from "../../../Redux/slices/user";
 // Redux
-import PropTypes from "prop-types";
 import { useGetProjects } from "../../../hooks/projects";
 import { useGetTeams } from "../../../hooks/teams";
 
-const Project = (props) => {
-  const theme = useTheme();
+const Project = () => {
   const userLoading = useCheckLogedinUser();
   const userStore = useSelector((state) => state.user);
   const dispatch = useDispatch();

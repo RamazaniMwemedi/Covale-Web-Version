@@ -200,7 +200,7 @@ hr {
     whitesmoke,
     #ff4d4d
   );
-  background-size: 400% 400%;
+  /* background-size: 400% 400%; */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

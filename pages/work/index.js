@@ -1,8 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useTheme } from "@mui/material/styles";
 
 // My components
 import DrawerComponent from "../components/others/DrawerComponent";
@@ -14,10 +13,8 @@ import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../../Redux/slices/user";
 // Redux
-import PropTypes from "prop-types";
 
-const Work = (props) => {
-  const theme = useTheme();
+const Work = () => {
   const userLoading = useCheckLogedinUser();
   const userStore = useSelector((state) => state.user);
   const dispatch = useDispatch();

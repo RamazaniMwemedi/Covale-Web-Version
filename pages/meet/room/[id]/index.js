@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { Box } from "@mui/system";
 import { IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import MicRoundedIcon from "@mui/icons-material/MicRounded";
@@ -27,8 +26,6 @@ import { createAnswer } from "../../../../services/webrtc";
 
 const Id = () => {
   const theme = useTheme();
-  const router = useRouter();
-  const id = router.query.id;
 
   // WebRTC
 
@@ -425,8 +422,6 @@ const Bottom = ({
               position: "absolute",
               bottom: 0,
               left: 0,
-              backgroundColor: theme.colors.meetBackground,
-              backgroundColor: "gray",
               borderRadius: "15px",
               backgroundColor: alpha(
                 theme.palette.action.active,
@@ -467,7 +462,6 @@ const BottomLeft = ({ expandHandler }) => {
       <Tooltip title="More options" placement="top">
         <IconButton
           sx={{
-            backgroundColor: "gray",
             borderRadius: "15px",
             backgroundColor: alpha(
               theme.palette.action.active,
@@ -486,7 +480,6 @@ const BottomLeft = ({ expandHandler }) => {
       <Tooltip title="Meeting Info" placement="top">
         <IconButton
           sx={{
-            backgroundColor: "gray",
             borderRadius: "15px",
             backgroundColor: alpha(
               theme.palette.action.active,
@@ -505,7 +498,6 @@ const BottomLeft = ({ expandHandler }) => {
       <Tooltip title="Host Control" placement="top">
         <IconButton
           sx={{
-            backgroundColor: "gray",
             borderRadius: "15px",
             backgroundColor: alpha(
               theme.palette.action.active,
@@ -527,7 +519,6 @@ const BottomLeft = ({ expandHandler }) => {
             expandHandler();
           }}
           sx={{
-            backgroundColor: "gray",
             borderRadius: "15px",
             backgroundColor: alpha(
               theme.palette.action.active,
@@ -665,10 +656,6 @@ const BottomRight = ({
   setShowChats,
   setShowActivities,
   meetRightOn,
-  schowParticipants,
-  showChats,
-  showActivities,
-  expand,
 }) => {
   const theme = useTheme();
   return (
@@ -688,7 +675,6 @@ const BottomRight = ({
             }
           }}
           sx={{
-            backgroundColor: "gray",
             borderRadius: "15px",
             backgroundColor: alpha(
               theme.palette.action.active,
@@ -719,7 +705,6 @@ const BottomRight = ({
             }
           }}
           sx={{
-            backgroundColor: "gray",
             borderRadius: "15px",
             backgroundColor: alpha(
               theme.palette.action.active,
@@ -760,7 +745,6 @@ const BottomRight = ({
             }
           }}
           sx={{
-            backgroundColor: "gray",
             borderRadius: "15px",
             backgroundColor: alpha(
               theme.palette.action.active,

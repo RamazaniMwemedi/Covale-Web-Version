@@ -1,21 +1,18 @@
 import "../styles/globals.css";
 import * as React from "react";
 import Head from "next/head";
-import useMediaQuery from "@mui/material/useMediaQuery";
+// import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Provider } from "react-redux";
 import { Analytics } from "@vercel/analytics/react";
 
 import store from "../Redux/store";
-import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const router = useRouter();
-  const [lightMode, setLightMode] = React.useState("light-mode");
-  const [darkMode, setDarkMode] = React.useState("dark-mode");
-  const [systemTheme, setSystemTheme] = React.useState("system-mode");
+  // const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const [systemTheme] = React.useState();
   const [preferedTheme, setPreferedTheme] = React.useState("light-mode");
 
   const themeChengeHandler = (theme) => {
@@ -84,17 +81,17 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   const theme = React.useMemo(() => {
-    if (preferedTheme == lightMode) {
-      setPreferedTheme(lightMode);
+    if (preferedTheme === "light-mode") {
+      setPreferedTheme("light-mode");
       return createTheme(lightTheme);
-    } else if (preferedTheme == darkMode) {
-      setPreferedTheme(darkMode);
+    } else if (preferedTheme === "dark-mode") {
+      setPreferedTheme("dark-mode");
       return createTheme(darkTheme);
-    } else if (preferedTheme == systemTheme) {
+    } else if (preferedTheme === systemTheme) {
       setPreferedTheme(systemTheme);
       return createTheme(systemTheme ? darkTheme : lightTheme);
     } else {
-      setPreferedTheme(lightMode);
+      setPreferedTheme("light-mode");
       return createTheme(lightTheme);
     }
   }, [preferedTheme]);

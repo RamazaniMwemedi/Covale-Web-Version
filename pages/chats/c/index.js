@@ -7,35 +7,35 @@ import { v4 as uuidv4 } from "uuid";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 
 // My components
-import DrawerComponent from "../../../components/others/DrawerComponent";
-import ChatLeft from "../../../components/chats/ChatLeft";
-import ChatSection from "../../../components/chats/ChatSection";
-import TeamSectionSkeleton from "../../../components/teams/TeamSectionSkeleton";
-import TeamSection from "../../../components/teams/TeamSection";
-import ChatSectionSkeleton from "../../../components/chats/ChatSectionSkeleton";
-import LoadingLogo from "../../../components/others/LoadingLogo";
+import DrawerComponent from "../../components/others/DrawerComponent";
+import ChatLeft from "../../components/chats/ChatLeft";
+import ChatSection from "../../components/chats/ChatSection";
+import TeamSectionSkeleton from "../../components/teams/TeamSectionSkeleton";
+import TeamSection from "../../components/teams/TeamSection";
+import ChatSectionSkeleton from "../../components/chats/ChatSectionSkeleton";
+import LoadingLogo from "../../components/others/LoadingLogo";
 
 // Hooks
-import { useCheckLogedinUser, useGetChats } from "../../../../hooks/hooks";
+import { useCheckLogedinUser, useGetChats } from "../../../hooks/hooks";
 import {
   useChatId,
   useJoinChatRoom,
   useRecieveNewChatMessage,
-} from "../../../../hooks/chats";
+} from "../../../hooks/chats";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import {
   addNewMessageToChatId,
   updateMessageId,
-} from "../../../../Redux/slices/chat";
+} from "../../../Redux/slices/chat";
 import {
   addNewMessageToTeamId,
   updateTeamMessageId,
   replyToTopicId,
   updateTopicMessageId,
-} from "../../../../Redux/slices/team";
-import { removeUser } from "../../../../Redux/slices/user";
+} from "../../../Redux/slices/team";
+import { removeUser } from "../../../Redux/slices/user";
 
 // Hooks
 import {
@@ -43,24 +43,24 @@ import {
   useJoinTeamRoom,
   useRecieveNewTeamMessage,
   useTeamId,
-} from "../../../../hooks/teams";
+} from "../../../hooks/teams";
 import {
   useGetNotification,
   useJoinNotificationRoom,
   useRecieveNewNotification,
-} from "../../../../hooks/notification";
+} from "../../../hooks/notification";
 import { use, useRef, useState } from "react";
 import axios from "axios";
-import { sendMessege } from "../../../../services/chats";
+import { sendMessege } from "../../../services/chats";
 import {
   sendTeamMessege,
   createATopic,
   replyToTopic,
-} from "../../../../services/teams";
-import { RTC_ADDRESS } from "../../../../config";
-import { useGetKeyPairs } from "../../../../hooks/secrete";
-import { encryptString } from "../../../../encryption/encrypt";
-import { encryptMessage } from "../../../../services/encrypt";
+} from "../../../services/teams";
+import { RTC_ADDRESS } from "../../../config";
+import { useGetKeyPairs } from "../../../hooks/secrete";
+import { encryptString } from "../../../encryption/encrypt";
+import { encryptMessage } from "../../../services/encrypt";
 // Socket.IO
 const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
 const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);

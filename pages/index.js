@@ -62,12 +62,12 @@ function Index() {
   };
 
   const ComingSoon = () => {
-    const [logoValues, setLogoValues] = React.useState(400);
+    const [logoValues, setLogoValues] = React.useState(300);
     // Onscrolling the logo will be smaller and smaller
 
     React.useEffect(() => {
       window.addEventListener("scroll", () => {
-        setLogoValues(400 - window.scrollY);
+        setLogoValues((prev) => prev - window.scrollY);
       });
     }, []);
 
@@ -106,7 +106,15 @@ function Index() {
             textAlign: "center",
           }}
         >
-          <span className="comming_soon">Coming Soon</span>
+          <span
+            style={{
+              height: logoValues,
+              width: logoValues,
+            }}
+            className="comming_soon"
+          >
+            Coming Soon
+          </span>
         </Typography>
         <br />
         <br />
@@ -240,6 +248,7 @@ function Index() {
       sx={{
         bgcolor: theme.colors.background,
         height: "100vh",
+        width: "100vw",
       }}
     >
       <NavBar />
