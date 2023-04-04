@@ -814,6 +814,39 @@ const ColleagueMessage = ({
   goToTopic,
 }) => {
   const theme = useTheme();
+  const router = useRouter();
+  const id = router.query.id;
+  const [decryptedMessage, setDecryptedMessage] = useState("");
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.find((key) => key.modelId === id)
+    : null;
+  const decreptMessageHandler = async () => {
+    const messageToDecrypt = message.message;
+
+    setDecryptedMessage(
+      await decryptMessage(messageToDecrypt, keyPair.privateKey)
+    );
+  };
+
+  const messageToDisplay = decryptedMessage
+    ? decryptedMessage.split(`\n`).map((item, key) => {
+        return (
+          <span key={key}>
+            {item}
+            <br />
+          </span>
+        );
+      })
+    : "Getting message...";
+
+  useEffect(() => {
+    if (keyPair) {
+      decreptMessageHandler();
+    }
+  }, [keyPair, message]);
+
   return (
     <Box
       sx={{
@@ -909,7 +942,7 @@ const ColleagueMessage = ({
                 display: "flex",
               }}
             >
-              <Typography variant="subtitle2">{message.message}</Typography>
+              <Typography variant="subtitle2">{messageToDisplay}</Typography>
             </Box>
           </Box>
         </>
