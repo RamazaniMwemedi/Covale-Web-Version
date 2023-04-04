@@ -244,7 +244,7 @@ const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
               width={width}
               height={height}
               frameborder="0"
-              src={`https://docs.google.com/gview?url=${src}&embedded=true`}
+              src={`https://view.officeapps.live.com/op/embed.aspx?src=${src}&embedded=true`}
             ></iframe>
           ) : (
             <Box
@@ -296,7 +296,7 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
             width={width}
             height={height}
             frameborder="0"
-            src={`https://docs.google.com/gview?url=${src}&embedded=true`}
+            src={`https://view.officeapps.live.com/op/embed.aspx?src=${src}&embedded=true`}
           ></iframe>
         ) : (
           <Box
@@ -338,7 +338,7 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
             width={width}
             height={height}
             frameborder="0"
-            src={`https://docs.google.com/gview?url=${src}&embedded=true`}
+            src={`https://view.officeapps.live.com/op/embed.aspx?src=${src}&embedded=true`}
           ></iframe>
         ) : (
           <Box

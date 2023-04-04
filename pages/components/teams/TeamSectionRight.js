@@ -234,7 +234,14 @@ const Topics = ({ topics, handleClickedTopic }) => {
             />
           ))
         ) : (
-          <Typography variant="body1">No topis at the momemt</Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              p: 5,
+            }}
+          >
+            No topis at the momemt
+          </Typography>
         )}
       </Box>
     </Box>
@@ -553,7 +560,14 @@ const Media = ({ files, handleShowFile }) => {
       <Box>
         {/* No Files */}
         {files.length < 1 && (
-          <Typography variant="body1">No Files at the moment</Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              p: 5,
+            }}
+          >
+            No Files at the moment
+          </Typography>
         )}
         {/* Photos */}
         {imageFiles.length > 0 && (
