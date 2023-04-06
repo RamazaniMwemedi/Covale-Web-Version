@@ -44,25 +44,42 @@ const TeamSection = ({
   const [showRight, setShowRight] = React.useState(false);
   const [clickedTopicId, setClickedTopicId] = useState(null);
 
+  // Team Right toggle
+  const [topicsDisplay, setTopicsDisplay] = useState(false);
+  const [participantsDisplay, setParticipantsDisplay] = useState(false);
+  const [menuDisplay, setMenuDisplay] = useState(false);
+
   const showTopics = () => {
     //  if showRight is true, setOption to "TOPIC" and setShowRight to true
     if (showRight) {
       setOption("TOPIC");
+      setTopicsDisplay(true);
+      setParticipantsDisplay(false);
+      setMenuDisplay(false);
     }
     // if showRight is false, setOption to "TOPIC" and setShowRight to true
     else {
       setShowRight(!showRight);
       setOption("TOPIC");
+      setTopicsDisplay(true);
+      setParticipantsDisplay(false);
+      setMenuDisplay(false);
     }
     // if option is "TOPIC", setOption to "TOPIC" and setShowRight to true
     if (option === "TOPIC") {
       setShowRight(!showRight);
+      setTopicsDisplay(false);
+      setParticipantsDisplay(false);
+      setMenuDisplay(false);
     }
   };
 
   const goToTopic = () => {
     setShowRight(true);
     setOption("TOPIC");
+    setTopicsDisplay(true);
+    setParticipantsDisplay(false);
+    setMenuDisplay(false);
   };
 
   const showProjects = () => {
@@ -80,23 +97,41 @@ const TeamSection = ({
   const showMenu = () => {
     if (showRight) {
       setOption("MENU");
+      setTopicsDisplay(false);
+      setParticipantsDisplay(false);
+      setMenuDisplay(true);
     } else {
       setShowRight(!showRight);
       setOption("MENU");
+      setTopicsDisplay(false);
+      setParticipantsDisplay(false);
+      setMenuDisplay(true);
     }
     if (option === "MENU") {
       setShowRight(!showRight);
+      setTopicsDisplay(false);
+      setParticipantsDisplay(false);
+      setMenuDisplay(false);
     }
   };
   const showParticipant = () => {
     if (showRight) {
       setOption("PARTICIPANT");
+      setTopicsDisplay(false);
+      setParticipantsDisplay(true);
+      setMenuDisplay(false);
     } else {
       setShowRight(!showRight);
       setOption("PARTICIPANT");
+      setTopicsDisplay(false);
+      setParticipantsDisplay(true);
+      setMenuDisplay(false);
     }
     if (option === "PARTICIPANT") {
       setShowRight(!showRight);
+      setTopicsDisplay(false);
+      setParticipantsDisplay(true);
+      setMenuDisplay(false);
     }
   };
 
