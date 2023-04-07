@@ -86,6 +86,10 @@ const TeamSectionLeft = ({
   // Topic
   handleClickedTopic,
   goToTopic,
+  //
+  topicsDisplay,
+  participantsDisplay,
+  menuDisplay,
 }) => {
   const userStore = useSelector((state) => state.user);
   const user = userStore.user;
@@ -130,6 +134,10 @@ const TeamSectionLeft = ({
             showProjects={showProjects}
             showMenu={showMenu}
             showParticipant={showParticipant}
+            //
+            topicsDisplay={topicsDisplay}
+            participantsDisplay={participantsDisplay}
+            menuDisplay={menuDisplay}
           />
           <Box
             sx={{
@@ -188,6 +196,9 @@ const TopBar = ({
   showProjects,
   showParticipant,
   showMenu,
+  topicsDisplay,
+  participantsDisplay,
+  menuDisplay,
 }) => {
   const theme = useTheme();
   return (
@@ -250,7 +261,9 @@ const TopBar = ({
             showTopics();
           }}
         >
-          <TopicRoundedIcon color={showRight ? "secondary" : "action"} />
+          <TopicRoundedIcon
+            color={showRight && topicsDisplay ? "secondary" : "action"}
+          />
         </IconButton>
         {/* <IconButton
           onClick={() => {
@@ -267,14 +280,18 @@ const TopBar = ({
             showParticipant();
           }}
         >
-          <GroupsRoundedIcon color={showRight ? "secondary" : "action"} />
+          <GroupsRoundedIcon
+            color={showRight && participantsDisplay ? "secondary" : "action"}
+          />
         </IconButton>
         <IconButton
           onClick={() => {
             showMenu();
           }}
         >
-          <MenuRoundedIcon color={showRight ? "secondary" : "action"} />
+          <MenuRoundedIcon
+            color={showRight && menuDisplay ? "secondary" : "action"}
+          />
         </IconButton>
       </Box>
     </Box>

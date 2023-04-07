@@ -191,6 +191,9 @@ const TeamSection = ({
               startTopic={startTopic}
               toggleTopicHandler={toggleTopicHandler}
               handleClickedTopic={handleClickedTopic}
+              topicsDisplay={topicsDisplay}
+              participantsDisplay={participantsDisplay}
+              menuDisplay={menuDisplay}
             />
           </Box>
           {/* Team Section Right */}
