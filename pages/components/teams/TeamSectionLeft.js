@@ -17,6 +17,7 @@ import {
   TextField,
   Link,
   Tooltip,
+  LinearProgress,
 } from "@mui/material";
 import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
@@ -809,6 +810,8 @@ const UserMessage = ({
               <Typography variant="subtitle2" sx={{ color: "white" }}>
                 {messageToDisplay}
               </Typography>
+              {/* If idProvided is false show the loadind component */}
+              {!idProvided ? <LinearProgress color="inherit" /> : null}
             </Box>
           </Box>
           <Avatar

@@ -542,144 +542,165 @@ const Bottom = ({
   const theme = useTheme();
 
   return (
-    <Box>
+    <Box
+      sx={{
+        maxHeight: "9rem",
+        display: "flex",
+        marginBottom: "4px",
+        // Be at the bottom of the page
+        verticalAlign: "bottom",
+        backgroundColor: theme.colors.background1,
+        borderBottomRightRadius: "5px",
+        borderBottomLeftRadius: "5px",
+        marginLeft: "10px",
+        marginRight: "15px",
+        borderRadius: "5px",
+        gap: 5,
+        justifyContent: "space-between",
+        // Put the content at the bottom of the box
+        alignItems: "flex-end",
+      }}
+    >
       {/* Selected files will be displayed here  */}
-      {chatFiles.length > 0 && (
-        <Box
-          sx={{
-            position: "fixed",
-            bottom: "60px",
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? "rgba(0,0,0,0.6)"
-                : "rgba(255,255,255,0.4)",
-            marginBottom: "4px",
-            borderBottomRightRadius: "5px",
-            borderBottomLeftRadius: "5px",
-            width: "37vw",
-            marginLeft: "30px",
-            marginRight: "15px",
-            borderRadius: "5px",
-          }}
-        >
-          {/* Display only the first element */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "auto auto",
-            }}
-          >
-            {chatFiles.map((file, i) => (
-              <Box
-                key={i}
-                sx={{
-                  backgroundColor:
-                    theme.palette.mode === "dark"
-                      ? theme.colors.background1
-                      : theme.colors.background1,
-                  p: 1,
-                  mt: 0.3,
-                  ml: 0.3,
-                  borderRadius: 2,
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <FileIcone fileType={file.fileType} />
-                <Typography variant="body1">
-                  {file.fileName.length > 15
-                    ? file.fileName.substring(0, 15) + "..."
-                    : file.fileName}
-                </Typography>
-                <IconButton onClick={() => handleRemoveFile(file)}>
-                  <CloseRoundedIcon />
-                </IconButton>
-              </Box>
-            ))}
-          </Box>
-
-          <Box
-            sx={{
-              m: 1,
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="secondary"
-              size="small"
-              onClick={(e) => handleChooseFileIcon2(e)}
-            >
-              <AddIcon />
-              <input
-                type="file"
-                hidden
-                ref={chatFileInput2}
-                onChange={(e) => handleChooseFile(e)}
-              />
-            </Button>
-          </Box>
-        </Box>
-      )}
       <Box
         sx={{
-          height: "3rem",
           display: "flex",
+          position: "fixed",
+          bottom: "60px",
           marginBottom: "4px",
-          // Be at the bottom of the page
-          verticalAlign: "bottom",
-          backgroundColor: theme.colors.background1,
           borderBottomRightRadius: "5px",
           borderBottomLeftRadius: "5px",
-          marginLeft: "10px",
+          width: "50%",
+          marginLeft: "30px",
           marginRight: "15px",
           borderRadius: "5px",
         }}
       >
-        {showEmojiPeaker === true && (
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: "53px",
-              marginLeft: "30px",
-              backgroundColor: theme.colors.textBackground,
-              borderRadius: "15px",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
-            }}
-          >
-            <IconButton
+        <Box>
+          {chatFiles.length > 0 && (
+            <Box
               sx={{
-                marginLeft: "250px",
-              }}
-              onClick={() => {
-                setShowEmojiPeaker(!showEmojiPeaker);
+                position: "fixed",
+                bottom: "60px",
+                backgroundColor:
+                  theme.palette.mode === "dark"
+                    ? "rgba(0,0,0,0.6)"
+                    : "rgba(255,255,255,0.4)",
+                marginBottom: "4px",
+                borderBottomRightRadius: "5px",
+                borderBottomLeftRadius: "5px",
+                width: "37vw",
+                marginLeft: "30px",
+                marginRight: "15px",
+                borderRadius: "5px",
               }}
             >
-              <CloseRoundedIcon color="secondary" fontSize="small" />
-            </IconButton>
-            <Picker
-              native={true}
-              preload={true}
-              searchPlaceholder={"Search emojie"}
-              onEmojiClick={onEmojiClick}
-              pickerStyle={{
-                backgroundColor: theme.colors.textBackground,
-                boxShadow: "none",
-                border: `1px solid ${theme.colors.textBackground}`,
-              }}
-            />
-          </Box>
-        )}
+              {/* Display only the first element */}
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "auto auto",
+                }}
+              >
+                {chatFiles.map((file, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      backgroundColor:
+                        theme.palette.mode === "dark"
+                          ? theme.colors.background1
+                          : theme.colors.background1,
+                      p: 1,
+                      mt: 0.3,
+                      ml: 0.3,
+                      borderRadius: 2,
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <FileIcone fileType={file.fileType} />
+                    <Typography variant="body1">
+                      {file.fileName.length > 15
+                        ? file.fileName.substring(0, 15) + "..."
+                        : file.fileName}
+                    </Typography>
+                    <IconButton onClick={() => handleRemoveFile(file)}>
+                      <CloseRoundedIcon />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
 
-        <MenuListComposition
-          handleChooseFileIcon={handleChooseFileIcon}
-          chatFileInput={chatFileInput}
-          handleChooseFile={handleChooseFile}
-        />
+              <Box
+                sx={{
+                  m: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={(e) => handleChooseFileIcon2(e)}
+                >
+                  <AddIcon />
+                  <input
+                    type="file"
+                    hidden
+                    ref={chatFileInput2}
+                    onChange={(e) => handleChooseFile(e)}
+                  />
+                </Button>
+              </Box>
+            </Box>
+          )}
+        </Box>
+      </Box>
 
+      {showEmojiPeaker === true && (
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: "53px",
+            marginLeft: "30px",
+            backgroundColor: theme.colors.textBackground,
+            borderRadius: "15px",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >
+          <IconButton
+            sx={{
+              marginLeft: "250px",
+            }}
+            onClick={() => {
+              setShowEmojiPeaker(!showEmojiPeaker);
+            }}
+          >
+            <CloseRoundedIcon color="secondary" fontSize="small" />
+          </IconButton>
+          <Picker
+            native={true}
+            preload={true}
+            searchPlaceholder={"Search emojie"}
+            onEmojiClick={onEmojiClick}
+            pickerStyle={{
+              backgroundColor: theme.colors.textBackground,
+              boxShadow: "none",
+              border: `1px solid ${theme.colors.textBackground}`,
+            }}
+          />
+        </Box>
+      )}
+
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+        }}
+      >
         {/* Communication */}
         <Box
           sx={{
@@ -696,6 +717,11 @@ const Bottom = ({
                   }}
                   position="start"
                 >
+                  <MenuListComposition
+                    handleChooseFileIcon={handleChooseFileIcon}
+                    chatFileInput={chatFileInput}
+                    handleChooseFile={handleChooseFile}
+                  />
                   <IconButton>
                     <EmojiEmotionsRoundedIcon
                       color="secondary"
@@ -708,6 +734,8 @@ const Bottom = ({
               }
               id="outlined-adornment-password"
               type="text"
+              multiline
+              maxRows={4}
               value={message}
               onChange={(e) => {
                 messageChangeHandler(e);
@@ -740,7 +768,6 @@ const Bottom = ({
     </Box>
   );
 };
-
 function MenuListComposition({
   handleChooseFileIcon,
   chatFileInput,

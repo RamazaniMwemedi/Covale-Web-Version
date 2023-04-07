@@ -29,7 +29,7 @@ export default function Chat({ chat }) {
   // key pair
   const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
   const keyPair = keyPairStore
-    ? keyPairStore.find((key) => key.modelId === id)
+    ? keyPairStore.find((key) => key.modelId === chat.id)
     : null;
   const decreptMessageHandler = async () => {
     const messageToDecrypt = lastMessage;
@@ -38,17 +38,6 @@ export default function Chat({ chat }) {
       await decryptMessage(messageToDecrypt, keyPair.privateKey)
     );
   };
-
-  const messageToDisplay = decryptedMessage
-    ? decryptedMessage.split(`\n`).map((item, key) => {
-        return (
-          <span key={key}>
-            {item}
-            <br />
-          </span>
-        );
-      })
-    : "Getting message...";
 
   useEffect(() => {
     if (keyPair) {
@@ -122,9 +111,9 @@ export default function Chat({ chat }) {
             </Box>
             {/* Show the first 25 characters only else add ... */}
             <Typography variant="body2">
-              {messageToDisplay.length > 30
-                ? messageToDisplay.substring(0, 30) + "..."
-                : messageToDisplay}
+              {decryptedMessage.length > 30
+                ? decryptedMessage.substring(0, 30) + "..."
+                : decryptedMessage}
             </Typography>
           </Box>
 

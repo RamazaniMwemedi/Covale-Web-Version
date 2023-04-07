@@ -1,18 +1,54 @@
-import React from "react";
-import {
-  Avatar,
-  List,
-  ListItem,
-  Box,
-  Typography,
-} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Avatar, List, ListItem, Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
+import { decryptMessage } from "../../../services/encrypt";
+import { useSelector } from "react-redux";
+import { timeAgo } from "../../../tools/tools";
 
 export default function Team({ team }) {
   const router = useRouter();
   const id = router.query.id;
   const theme = useTheme();
+  // messages
+  const messages = team ? team.messages : null;
+  // last message in messages array if there is a message else return an empty string using higher order function
+  const lastMessageObject = messages ? messages[messages.length - 1] : null;
+  const lastMessage = lastMessageObject ? lastMessageObject.message : "";
+  const [lastMessageSentAt, setLastMessageSentAt] = useState("");
+
+  const [decryptedMessage, setDecryptedMessage] = useState("");
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.find((key) => key.modelId === team.id)
+    : null;
+  const decreptMessageHandler = async () => {
+    const messageToDecrypt = lastMessage;
+
+    setDecryptedMessage(
+      await decryptMessage(messageToDecrypt, keyPair.privateKey)
+    );
+  };
+
+  useEffect(() => {
+    if (keyPair) {
+      decreptMessageHandler();
+    }
+  }, [keyPair, lastMessage]);
+  const [time, setTime] = useState(0);
+  useEffect(() => {
+    if (lastMessageObject) {
+      const date = new Date(lastMessageObject.sentAt);
+      // Time ago function
+      const time = timeAgo(date);
+      setLastMessageSentAt(time);
+      setTimeout(() => {
+        setTime((p) => ++p);
+      }, time);
+    }
+  }, [time]);
+
   return (
     <List
       sx={{
@@ -46,19 +82,30 @@ export default function Team({ team }) {
             marginTop: "-8px",
           }}
         >
-          <Avatar>T</Avatar>
+          <Avatar>{team.teamName[0]}</Avatar>
           <Box
             sx={{
               marginLeft: "5px",
             }}
           >
-            <Typography variant="subtitle1">{team.teamName} </Typography>
+            <Box
+              sx={{
+                // Separate the last message and the time
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "50%",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="subtitle1">{team.teamName}</Typography>
+              {/* sentAt */}
+              {/* <Typography variant="caption">{lastMessageSentAt}</Typography> */}
+            </Box>
             {/* Show the first 25 characters only else add ... */}
             <Typography variant="body2">
-              Last message
-              {/* {message.lastMessege.length > 30
-                ? message.lastMessege.substring(0, 30) + "..."
-                : message.lastMessege} */}
+              {decryptedMessage.length > 30
+                ? decryptedMessage.substring(0, 30) + "..."
+                : decryptedMessage}
             </Typography>
           </Box>
 
