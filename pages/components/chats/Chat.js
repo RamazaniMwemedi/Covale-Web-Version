@@ -11,6 +11,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import { timeAgo } from "../../../tools/tools";
+import { decryptMessage } from "../../../services/encrypt";
+import { useSelector } from "react-redux";
 
 export default function Chat({ chat }) {
   const router = useRouter();
@@ -23,6 +25,36 @@ export default function Chat({ chat }) {
   const lastMessage = lastMessageObject ? lastMessageObject.message : "";
   const [lastMessageSentAt, setLastMessageSentAt] = useState("");
 
+  const [decryptedMessage, setDecryptedMessage] = useState("");
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.find((key) => key.modelId === id)
+    : null;
+  const decreptMessageHandler = async () => {
+    const messageToDecrypt = lastMessage;
+
+    setDecryptedMessage(
+      await decryptMessage(messageToDecrypt, keyPair.privateKey)
+    );
+  };
+
+  const messageToDisplay = decryptedMessage
+    ? decryptedMessage.split(`\n`).map((item, key) => {
+        return (
+          <span key={key}>
+            {item}
+            <br />
+          </span>
+        );
+      })
+    : "Getting message...";
+
+  useEffect(() => {
+    if (keyPair) {
+      decreptMessageHandler();
+    }
+  }, [keyPair, lastMessage]);
   useEffect(() => {
     if (lastMessageObject) {
       const date = new Date(lastMessageObject.sentAt);
@@ -65,9 +97,7 @@ export default function Chat({ chat }) {
             marginTop: "-8px",
           }}
         >
-          <Avatar
-            alt={chat.colleagueUsername[0]}
-          >
+          <Avatar alt={chat.colleagueUsername[0]}>
             {chat.colleagueUsername[0]}
           </Avatar>
           <Box
@@ -80,21 +110,21 @@ export default function Chat({ chat }) {
                 // Separate the last message and the time
                 display: "flex",
                 justifyContent: "space-between",
-                width: "100%",
-                // gap: "80%",
+                gap: "50%",
+                alignItems: "center",
               }}
             >
-              <Typography variant="subtitle1">{chat.colleagueUsername}</Typography>
+              <Typography variant="subtitle1">
+                {chat.colleagueUsername}
+              </Typography>
               {/* sentAt */}
-              {/* <Typography variant="body2">
-                {lastMessageObject ? lastMessageSentAt : ""}
-              </Typography> */}
+              <Typography variant="caption">{lastMessageSentAt}</Typography>
             </Box>
             {/* Show the first 25 characters only else add ... */}
             <Typography variant="body2">
-              {lastMessage.length > 30
-                ? lastMessage.substring(0, 30) + "..."
-                : lastMessage}
+              {messageToDisplay.length > 30
+                ? messageToDisplay.substring(0, 30) + "..."
+                : messageToDisplay}
             </Typography>
           </Box>
 

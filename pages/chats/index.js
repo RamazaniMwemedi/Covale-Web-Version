@@ -174,19 +174,23 @@ export default function Chat() {
   const sendMessageHandle = async (event) => {
     event.preventDefault();
     const uuid = uuidv4();
+     const encryptedMessage = await encryptMessage(
+       chatMessage,
+       keyPair.publicKey
+     );
     const formData = new FormData();
 
     for (const file of chatFiles) {
       formData.append("files", file.file);
     }
 
-    formData.append("message", chatMessage);
+    formData.append("message", encryptedMessage);
     formData.append("idFromClient", uuid);
     setChatMessage("");
     const newMessage = {
       idFromClient: uuid,
       sender: user.id,
-      message: chatMessage,
+      message: encryptedMessage,
       files: chatFiles,
       chatRoom: id,
     };

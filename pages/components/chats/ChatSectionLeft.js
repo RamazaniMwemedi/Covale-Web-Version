@@ -40,6 +40,9 @@ import FileComponent from "../mediaFiles/FileComponent";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import { getFileType } from "../../../tools/tools";
 import FileIcone from "../mediaFiles/FileIcon";
+import { useSelector } from "react-redux";
+import { decryptMessage } from "../../../services/encrypt";
+import { useRouter } from "next/router";
 
 const Picker = dynamic(
   () => {
@@ -285,6 +288,41 @@ const UserMessage = ({ message, handleShowFile }) => {
   const purple2 = purple[400];
   const theme = useTheme();
   let idProvided = message.id ? true : false;
+  const router = useRouter();
+  const id = router.query.id;
+  const [decryptedMessage, setDecryptedMessage] = useState("");
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.find((key) => key.modelId === id)
+    : null;
+  const decreptMessageHandler = async () => {
+    const messageToDecrypt = message.message;
+
+    setDecryptedMessage(
+      await decryptMessage(messageToDecrypt, keyPair.privateKey)
+    );
+  };
+
+  const messageToDisplay = decryptedMessage
+    ? decryptedMessage.split(`\n`).map((item, key) => {
+        return (
+          <span key={key}>
+            {item}
+            <br />
+          </span>
+        );
+      })
+    : "Getting message...";
+
+  useEffect(() => {
+    if (keyPair) {
+      decreptMessageHandler();
+    }
+  }, [keyPair, message]);
+
+  console.log("Message to display: ", decryptedMessage);
+
   return (
     <Box
       sx={{
@@ -369,7 +407,7 @@ const UserMessage = ({ message, handleShowFile }) => {
         </Box>
         {message.message.length > 0 ? (
           <Typography variant="subtitle2" sx={{ color: "white" }}>
-            {message.message}
+            {messageToDisplay}
           </Typography>
         ) : null}
         {/* If idProvided is false show the loadind component */}

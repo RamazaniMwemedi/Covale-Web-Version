@@ -1,7 +1,6 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialChatsState = {};
-let chats = new Array();
 
 const chatSlice = createSlice({
   name: "chats",
