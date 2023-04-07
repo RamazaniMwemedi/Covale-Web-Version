@@ -18,6 +18,16 @@ const useGetKeyPairs = () => {
   }, []);
 };
 
+const useGetSecreteToken = () => {
+  const [secreteToken, setSecreteToken] = useState(null);
+  useEffect(() => {
+    const secreteToken = JSON.parse(localStorage.getItem("logedinUser"));
+    setSecreteToken(secreteToken.secreteToken);
+  }, []);
+  return secreteToken;
+};
+
 module.exports = {
   useGetKeyPairs,
+  useGetSecreteToken,
 };

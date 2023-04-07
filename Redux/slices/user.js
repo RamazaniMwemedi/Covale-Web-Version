@@ -12,9 +12,6 @@ const userSlice = createSlice({
     removeUser(state) {
       state.user = initialState;
     },
-    addKeys(state, { payload }) {
-      state.user.keys = [payload];
-    },
     signOut(state) {
       // Clear the user state
       state.user = {};
@@ -22,12 +19,11 @@ const userSlice = createSlice({
   },
 });
 
-const { addUser, removeUser, addKeys, signOut } = userSlice.actions;
+const { addUser, removeUser, signOut } = userSlice.actions;
 const reducer = userSlice.reducer;
 module.exports = {
   reducer,
   addUser,
-  addKeys,
   removeUser,
   signOut,
 };

@@ -127,7 +127,7 @@ const People = ({
           height: !exploreColleagues ? "100%" : "auto",
         }}
       >
-        {exploreColleagues ? (
+        {!exploreColleagues ? (
           <DiscoverPeopleSkeleton />
         ) : exploreColleagues.length < 1 ? (
           <NoDiscToShow />

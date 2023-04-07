@@ -119,6 +119,8 @@ const People = ({ users, token }) => {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
         gap: "10px",
+        p: 1,
+        ml: 1,
       }}
     >
       {users.map((user) => (

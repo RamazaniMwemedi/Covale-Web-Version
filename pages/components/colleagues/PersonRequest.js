@@ -1,191 +1,206 @@
 import React, { useState } from "react";
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import { Avatar, Box, Button, Link, Typography } from "@mui/material";
 
 import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
-import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import { useTheme } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
-import userServices from "../../../services/user";
-import { useDispatch, useSelector } from "react-redux";
-import { addKeys } from "../../../Redux/slices/user";
+import { acceptFriendRequest } from "../../../services/user";
+import { useDispatch } from "react-redux";
+import { grey, purple } from "@mui/material/colors";
+import { useRouter } from "next/router";
+import { useGetSecreteToken } from "../../../hooks/secrete";
+import { useCheckLogedinUserToken } from "../../../hooks/hooks";
+import { generateNewKeyPair } from "../../../services/encrypt";
 
-const PersonRequest = ({ user, token }) => {
-  const userStore = useSelector((state) => state.user);
+const PersonRequest = ({ user }) => {
   const theme = useTheme();
   const [accepting, setAccepeting] = useState(false);
+  const [declining, setDeclining] = useState(false);
   const [showCommunication, setShowCommunication] = useState(false);
-  const dispatch = useDispatch();
+  const [chatID, setChatID] = useState(null);
 
-  React.useEffect(() => {
-    // Loged in user from localStorage
-    const signedInUser = JSON.parse(localStorage.getItem("logedinUser"));
-    if (!signedInUser) {
-      router.push("/");
+  const secreteToken = useGetSecreteToken();
+  const token = useCheckLogedinUserToken();
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const acceptingConnectionHandler = async () => {
+    setAccepeting((prev) => !prev);
+    if (user.id && token) {
+      const response = await acceptFriendRequest(user.id, token);
+      if (response.chatId) {
+        // chatId;
+        const keys = await generateNewKeyPair(
+          "Chat",
+          response.chatId,
+          secreteToken
+        );
+        console.log("Keys ", keys);
+        if (keys && response.chatId) {
+          setChatID(response.chatId);
+          setShowCommunication((p) => !p);
+        }
+      }
     }
-  }, []);
+  };
+  const decliningConnectionHandler = () => {
+    setDeclining((prev) => !prev);
+  };
+
   return (
     <>
-      {user && (
+      <Box
+        sx={{
+          width: "200px",
+          borderRadius: "8px",
+          boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+          backgroundColor: theme.colors.textBackground,
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <IconButton
+          sx={{
+            display: "flex",
+            alignSelf: "flex-end",
+            bgcolor: theme.colors.textBackground2,
+          }}
+          size="small"
+          onClick={() => {}}
+        >
+          <HighlightOffRoundedIcon fontSize="medium" />
+        </IconButton>
         <Box
           sx={{
-            width: "300px",
-            borderRadius: "15px",
-            boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-            backgroundColor: theme.colors.background1,
+            p: 1,
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
           }}
         >
-          <br />
-          {/* Top Box */}
+          <Avatar sx={{ width: 80, height: 80, textTransform: "uppercase" }}>
+            {user.firstname[0]}
+            {user.lastname[0]}
+          </Avatar>
           <Box
             sx={{
-              display: "flex",
-              alignContent: "center",
-              gap: 1.5,
+              pt: "10px",
+              marginLeft: "-10px",
             }}
           >
-            {/* Avatar */}
-            <Avatar
-              sx={{
-                width: "80px",
-                height: "80px",
-                marginLeft: "10px",
-              }}
-            />
-            {/* User detail e.g. Fast, last and username */}
-            <Box>
-              {/* Fastname and Lastname */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 1,
-                }}
-              >
-                <Typography variant="h6">{user.firstname}</Typography>
-                <Typography variant="h6">{user.lastname}</Typography>
-              </Box>
-              <Typography variant="caption">@{user.username}</Typography>
-            </Box>
-          </Box>
-          <br />
-          {/* Buttons Box */}
-          {/* If Communication is true */}
-          {showCommunication ? (
-            <CommunnicationShortCut />
-          ) : (
             <Box
               sx={{
                 display: "flex",
-                alignContent: "center",
-                gap: 2,
-                marginLeft: "20px",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                gap: 1,
               }}
             >
-              {
-                // If the user is accepting the request
-                accepting ? (
-                  <LoadingButton
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    disabled={true}
-                    loading={true}
-                  />
-                ) : (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    sx={{
-                      width: "120px",
-                    }}
-                    onClick={() => {
-                      setAccepeting(true);
-                      userServices
-                        .acceptFriendRequest(user.id, token)
-                        .then((res) => {
-                          console.log("res from PersonReq component :>>", res);
-                          dispatch(addKeys(res.keys));
-                          setShowCommunication(true);
-                        });
-                    }}
-                  >
-                    Accept
-                  </Button>
-                )
-              }
-              <Button
-                variant="outlined"
-                color="secondary"
-                sx={{
-                  width: "120px",
+              <Typography variant="body1">{user.firstname}</Typography>
+              <Typography variant="body1">{user.lastname}</Typography>
+            </Box>
+            <Box sx={{ textAlign: "left" }}>
+              <Typography variant="caption">@{user.username}</Typography>
+              <br />
+            </Box>
+          </Box>
+        </Box>
+        <br />
+
+        {showCommunication ? (
+          <Box>
+            <Typography variant="caption">
+              {user.firstname} {user.lastname} is now a connection
+              <span
+                style={{
+                  marginLeft: "20px",
+                  color: "dodgerblue",
+                  cursor: "pointer",
                 }}
                 onClick={() => {
-                  userServices.removeFriendRequest(user.id, token);
+                  router.push(`/chats/c/${chatID}`);
                 }}
               >
-                {" "}
-                Reject
-              </Button>
-            </Box>
-          )}
-          <br />
-        </Box>
-      )}
+                Message
+              </span>
+            </Typography>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+            }}
+          >
+            {!declining ? (
+              !accepting ? (
+                <Button
+                  variant="contained"
+                  sx={{
+                    width: "80px",
+                    height: "30px",
+                    margin: "5px",
+                    textTransform: "unset",
+                    display: "flex",
+                    gap: "20%",
+                    bgcolor: purple[500],
+                  }}
+                  color="action"
+                  onClick={acceptingConnectionHandler}
+                >
+                  Accept
+                </Button>
+              ) : (
+                <LoadingButton
+                  loading
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    margin: "5px",
+                    height: "35px",
+                    alignSelf: "center",
+                  }}
+                />
+              )
+            ) : null}
+            {!accepting ? (
+              !declining ? (
+                <Button
+                  variant="contained"
+                  sx={{
+                    width: "80px",
+                    height: "30px",
+                    margin: "5px",
+                    textTransform: "unset",
+                    display: "flex",
+                    gap: "20%",
+                    bgcolor: grey[500],
+                  }}
+                  color="action"
+                  onClick={decliningConnectionHandler}
+                >
+                  Decline
+                </Button>
+              ) : (
+                <LoadingButton
+                  loading
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    margin: "5px",
+                    height: "35px",
+                    alignSelf: "center",
+                  }}
+                />
+              )
+            ) : null}
+          </Box>
+        )}
+      </Box>
     </>
   );
 };
 
 export default PersonRequest;
-
-const CommunnicationShortCut = () => {
-  return (
-    // {/* Communicate shortcuts */}
-    <Box sx={{ display: "flex" }}>
-      <FormControl sx={{ m: 1, width: "23ch" }} variant="outlined">
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type="text"
-          onChange={() => {}}
-          sx={{
-            height: "40px",
-            borderRadius: "15px",
-          }}
-          color="secondary"
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton edge="end">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="purple"
-                  // class="bi bi-send-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-                </svg>
-              </IconButton>
-            </InputAdornment>
-          }
-        />
-      </FormControl>
-      <Box
-        sx={{
-          display: "flex",
-        }}
-      >
-        <IconButton>
-          <AddIcCallRoundedIcon color="secondary" />
-        </IconButton>
-        <IconButton>
-          <VideoCallRoundedIcon color="secondary" />
-        </IconButton>
-      </Box>
-    </Box>
-  );
-};
