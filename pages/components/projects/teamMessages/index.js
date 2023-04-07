@@ -78,12 +78,11 @@ const TeamChats = ({ selectedTeam }) => {
     setTeamMessage(teamMessage + emojiObject.emoji);
   };
 
-  const handleChooseFileIconTeam = (e) => {
+  const handleChooseFileIconTeam = () => {
     teamFileInput.current.click();
   };
-  const handleChooseFileIcon2Team = (e) => {
+  const handleChooseFileIcon2Team = () => {
     teamFileInput2.current.click();
-    console.log("Team file input 2", teamFileInput2);
   };
 
   const handleChooseFileTeam = (e) => {
@@ -190,12 +189,11 @@ const TeamChats = ({ selectedTeam }) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  const handleChooseFileIconTopic = (e) => {
+  const handleChooseFileIconTopic = () => {
     topicFileInput.current.click();
   };
-  const handleChooseFileIcon2Topic = (e) => {
+  const handleChooseFileIcon2Topic = () => {
     topicFileInput2.current.click();
-    console.log("Topic file input 2", topicFileInput2);
   };
   const handleChooseFileTopic = (e) => {
     // input change handler
@@ -255,7 +253,6 @@ const TeamChats = ({ selectedTeam }) => {
       file: topicFiles,
     };
     setTopicFiles([]);
-    console.log("Topic New Message", topicNewMessage);
     dispatch(
       replyToTopicId({
         topicId: topicId,
@@ -264,7 +261,6 @@ const TeamChats = ({ selectedTeam }) => {
       })
     );
     const sendMessageToTopic = await replyToTopic(token, topicId, formData);
-    console.log("Send Message To Topic", sendMessageToTopic);
 
     teamSocket.emit("send_message_to_topic", {
       teamId: selectedTeam.id,
@@ -311,13 +307,11 @@ const TeamChats = ({ selectedTeam }) => {
         teamNewMessage,
       })
     );
-    console.log(newTopic);
     const topicFromServer = await createATopic(token, id, newTopic);
     teamSocket.emit("send_message_to_team", {
       teamId: selectedTeam.id,
       message: teamNewMessage,
     });
-    console.log("Topic from server", topicFromServer);
     dispatch(
       updateTeamMessageId({
         teamId: selectedTeam.id,

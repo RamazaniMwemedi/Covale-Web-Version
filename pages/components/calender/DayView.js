@@ -138,7 +138,6 @@ const DayView = ({ selectedDate, handleDateChange }) => {
                           }}
                           key={day}
                           conClick={() => {
-                            console.log("selectedDate :>>", selectedDate);
                             // handleDateChange(selectedDate);
                           }}
                         >

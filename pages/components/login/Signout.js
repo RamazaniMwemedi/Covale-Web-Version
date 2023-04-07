@@ -26,7 +26,6 @@ export default function AccountMenu() {
   const open = Boolean(anchorEl);
   const userStore = useSelector((state) => state.user);
   const user = userStore ? userStore.user : null;
-  console.log("userStore", userStore);
   const [themeAnchor, setThemeAnchor] = useState(null);
   const themeOpen = Boolean(themeAnchor);
   const router = useRouter();

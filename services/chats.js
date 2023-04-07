@@ -36,7 +36,6 @@ const getChats = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log("response.data", response);
   return response.data;
 };
 

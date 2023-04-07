@@ -11,7 +11,6 @@ export default async function encrypt(req, res) {
     if (!text || !privateKey) {
       res.status(400).json({ error: "Missing required parameters" });
     } else {
-      console.log("text", text.length);
       const encryptedText = await encryptString(text, privateKey);
       res.status(200).json({ message: encryptedText });
     }

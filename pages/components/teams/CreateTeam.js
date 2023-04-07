@@ -119,7 +119,6 @@ const CreateTeam = ({ toggleShowTeam }) => {
           response,
           secreteToken
         );
-        console.log("savedKeys :>>>", savedKeys);
         dispatch(addNewKeyPair(savedKeys));
         setCreatingTeamBool(false);
         setCreatedTeamId(response);

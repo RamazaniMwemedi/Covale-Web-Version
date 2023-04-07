@@ -10,13 +10,11 @@ import { Avatar, Typography } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
 function getUserTaskStatus(userId, allTasks, taskStatus) {
   // Filter tasks by assignor or assignees
-  console.log("allTasks :>>", allTasks);
   const userTasks = allTasks.filter(
     (task) =>
       task.assignor.id === userId ||
       task.assignees.map((assignee) => assignee.id)[0].includes(userId)
   );
-  console.log("UserTasks :>>", userTasks);
 
   // Count tasks by status
   const taskCounts =
@@ -47,7 +45,6 @@ export default function ProjectMember({ members, taskStatus, allTasks }) {
     ...Object.values(columnMap),
   ];
 
-  console.log("columns :>>", columns);
 
   const theme = useTheme();
 
@@ -85,7 +82,6 @@ export default function ProjectMember({ members, taskStatus, allTasks }) {
                       allTasks,
                       taskStatus
                     );
-                    console.log("LLL :>>", taskStatusCount);
                     return (
                       <TableRow
                         hover
@@ -94,9 +90,7 @@ export default function ProjectMember({ members, taskStatus, allTasks }) {
                         key={member.code}
                       >
                         {columns.map((column) => {
-                          console.log("column >>", column);
                           const value = members[column.id];
-                          console.log("Value :>> ", value);
                           return (
                             <TableCell key={column.id} align={column.align}>
                               <Box

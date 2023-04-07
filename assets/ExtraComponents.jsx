@@ -123,7 +123,6 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
     justifyContent: "center",
     alignItems: "center",
   }));
-  console.log(src);
 
   return (
     <Box

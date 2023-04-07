@@ -10,7 +10,6 @@ const colleagueSlice = createSlice({
       state.colleagues = { explore: payload };
     },
     removeColleagueFromExplore(state, { payload }) {
-      console.log("Remove", payload);
 
       return {
         ...state,

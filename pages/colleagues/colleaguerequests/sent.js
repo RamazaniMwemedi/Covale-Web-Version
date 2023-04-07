@@ -18,8 +18,6 @@ export default function Explore() {
 
   const token = user ? user.token : null;
   const secreteToken = user ? user.secreteToken : null;
-  console.log("Token: ", token);
-  console.log("Secrete Token: ", secreteToken);
   // Remove user from reqSent array
   const removeUser = (id) => {
     const newReqSent = reqSent.filter((user) => user.id !== id);

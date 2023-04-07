@@ -228,7 +228,6 @@ export default function Chat() {
   };
   const handleChooseFileIcon2Team = (e) => {
     teamFileInput2.current.click();
-    console.log("Team file input 2", teamFileInput2);
   };
 
   const handleChooseFileTeam = (e) => {
@@ -288,7 +287,6 @@ export default function Chat() {
     };
     setTeamFiles([]);
     setTeamMessage("");
-    console.log("Team message", teamNewMessage);
     dispatch(
       addNewMessageToTeamId({
         teamId: id,
@@ -347,7 +345,6 @@ export default function Chat() {
   };
   const handleChooseFileIcon2Topic = (e) => {
     topicFileInput2.current.click();
-    console.log("Topic file input 2", topicFileInput2);
   };
   const handleChooseFileTopic = (e) => {
     // input change handler
@@ -407,7 +404,6 @@ export default function Chat() {
       file: topicFiles,
     };
     setTopicFiles([]);
-    console.log("Topic New Message", topicNewMessage);
     dispatch(
       replyToTopicId({
         topicId: topicId,
@@ -416,7 +412,6 @@ export default function Chat() {
       })
     );
     const sendMessageToTopic = await replyToTopic(token, topicId, formData);
-    console.log("Send Message To Topic", sendMessageToTopic);
 
     teamSocket.emit("send_message_to_topic", {
       teamId: id,
@@ -463,13 +458,11 @@ export default function Chat() {
         teamNewMessage,
       })
     );
-    console.log(newTopic);
     const topicFromServer = await createATopic(token, id, newTopic);
     teamSocket.emit("send_message_to_team", {
       teamId: id,
       message: teamNewMessage,
     });
-    console.log("Topic from server", topicFromServer);
     dispatch(
       updateTeamMessageId({
         teamId: id,

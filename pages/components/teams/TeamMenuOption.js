@@ -97,15 +97,12 @@ export default function TeamMenuOption({ teamId }) {
 
   //   Delete Team By Id handler
   const deleteTeamByIdHandler = async () => {
-    console.log("teamId", teamId);
-    console.log("Token", token);
     if (confirmDeleteValue === "delete team") {
       const status = await deleteTeamById(token, teamId);
       if (status === 204) {
         dispatch(removeTeamFromTeamsById(teamId));
         router.push("/chats/t");
       } else {
-        console.log("Error in deleting team", status);
       }
     } else {
       alert("Please Type 'delete team' to delete the team");

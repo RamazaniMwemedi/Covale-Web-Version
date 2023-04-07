@@ -96,7 +96,6 @@ const LoginPage = () => {
         const response = await loginServices.signIn(data);
 
         if (response) {
-          console.log(response);
           window.localStorage.setItem("logedinUser", JSON.stringify(response));
           window.localStorage.setItem("theme", "light-mode");
           router.push("/chats/");
@@ -190,7 +189,6 @@ const LoginPage = () => {
       try {
         setSubmiting(true);
         const response = await loginServices.signUp(data);
-        console.log(response);
         window.localStorage.setItem("logedinUser", JSON.stringify(response));
         router.push("/chats/");
         window.localStorage.setItem("theme", "light-mode");

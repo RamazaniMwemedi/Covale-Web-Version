@@ -700,7 +700,6 @@ const UserMessage = ({
     }
   }, [keyPair, message]);
 
-  console.log("Message to display: ", decryptedMessage);
   return (
     <Box
       sx={{
@@ -1109,7 +1108,6 @@ const Bottom = ({
                   size="small"
                   onClick={(e) => {
                     handleChooseFileIcon2Team(e);
-                    console.log(teamFileInput);
                   }}
                 >
                   <AddIcon />

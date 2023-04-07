@@ -9,7 +9,6 @@ const useGetKeyPairs = () => {
     const secreteToken = JSON.parse(
       localStorage.getItem("logedinUser")
     ).secreteToken;
-    console.log(secreteToken);
     if (secreteToken) {
       getKeyPairs(secreteToken).then((res) => {
         if (res) dispatch(allKeyPairs(res));

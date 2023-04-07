@@ -125,7 +125,6 @@ function SubProjectForm({ project, handleClose }) {
       }
     );
     if (response) {
-      console.log(response);
       dispatch(
         addSubProjectId({
           projectId: project.id,

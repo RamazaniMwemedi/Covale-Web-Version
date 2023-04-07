@@ -5,7 +5,6 @@ const { compressString } = require("./compress");
 async function encryptString(string, recipientPublicKey) {
   if (!string || !recipientPublicKey) return null;
   const compressedSting = await compressString(string);
-  console.log("Conmpressed string length: ", compressedSting.length);
   const encryptedString = publicEncrypt(
     recipientPublicKey,
     compressedSting

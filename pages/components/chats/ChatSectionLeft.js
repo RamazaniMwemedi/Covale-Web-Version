@@ -324,7 +324,6 @@ const UserMessage = ({ message, handleShowFile }) => {
     }
   }, [keyPair, message]);
 
-  console.log("Message to display: ", decryptedMessage);
 
   return (
     <Box

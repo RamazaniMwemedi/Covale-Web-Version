@@ -649,7 +649,6 @@ const AddTeam = ({ teams, teamChangeHandler, user }) => {
   const filteredTeams = teams.filter((team) => {
     return team.directors.map((director) => director._id).includes(user._id);
   });
-  console.log("filteredTeams :>>", filteredTeams);
   return (
     <Box>
       {" "}

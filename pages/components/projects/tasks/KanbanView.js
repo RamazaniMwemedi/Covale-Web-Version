@@ -961,7 +961,6 @@ const AddTaskForm = ({
     }
 
     setAddingTask(true);
-    console.log("subtasks", subtasks);
     const formData = new FormData();
 
     for (const file of files) {
@@ -985,7 +984,6 @@ const AddTaskForm = ({
     formData.append("startDate", startDate);
     formData.append("dueDate", dueDate);
 
-    console.log("The form data", formData);
     const sentTasktoServer = await createNewTask(token, formData, id);
 
     addTheTaskToReduxHandler(sentTasktoServer);

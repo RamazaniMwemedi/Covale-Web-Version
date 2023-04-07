@@ -224,7 +224,6 @@ export default function MonthView({
                               const toDateEvents = events.filter((event) =>
                                 Moment(event.start).isSame(date, "day")
                               );
-                              console.log("toDateEvents :>>", toDateEvents);
                               selectEventHandler(toDateEvents);
                               handleDateChange(date);
                             }}

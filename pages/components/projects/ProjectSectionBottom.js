@@ -172,7 +172,6 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                         ? team &&
                           team.messages[team && team.messages.length - 1]
                         : null;
-                    console.log("Last message :>>", lastMessageObject);
                     const lastMessage = lastMessageObject
                       ? lastMessageObject.message
                       : "";

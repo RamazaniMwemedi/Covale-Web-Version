@@ -27,7 +27,6 @@ const ChatSection = ({
     setShowRight(!showRight);
   };
   const theme = useTheme();
-  console.log("Chat :>", chat);
   return (
     <>
       {chat ? (

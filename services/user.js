@@ -122,7 +122,6 @@ const findUserById = async (token, id) => {
       return response;
     } catch (error) {
       // Redirect to the login page
-      console.log("Error in findUserById", error);
       window.location.href = "/login";
     }
   }
@@ -141,7 +140,6 @@ const removeColleague = async (token, id) => {
           },
         }
       );
-      console.log("response", response);
       return response;
     } catch (error) {
       console.error("Error in findUserById", error);
