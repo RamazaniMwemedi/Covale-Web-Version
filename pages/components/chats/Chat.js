@@ -66,9 +66,9 @@ export default function Chat({ chat }) {
           }}
         >
           <Avatar
-            alt={chat.friendUsername[0]}
+            alt={chat.colleagueUsername[0]}
           >
-            {chat.friendUsername[0]}
+            {chat.colleagueUsername[0]}
           </Avatar>
           <Box
             sx={{
@@ -84,7 +84,7 @@ export default function Chat({ chat }) {
                 // gap: "80%",
               }}
             >
-              <Typography variant="subtitle1">{chat.friendUsername}</Typography>
+              <Typography variant="subtitle1">{chat.colleagueUsername}</Typography>
               {/* sentAt */}
               {/* <Typography variant="body2">
                 {lastMessageObject ? lastMessageSentAt : ""}

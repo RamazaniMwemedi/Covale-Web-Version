@@ -98,7 +98,7 @@ const ChatSectionLeft = ({
           }}
         >
           <TopBar
-            friendUsername={chat.friendUsername}
+            colleagueUsername={chat.colleagueUsername}
             showRightHandler={showRightHandler}
             showRight={showRight}
             id={id}
@@ -142,7 +142,7 @@ const ChatSectionLeft = ({
 
 export default ChatSectionLeft;
 
-const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
+const TopBar = ({ colleagueUsername, showRightHandler, showRight, id }) => {
   const theme = useTheme();
   return (
     <Box
@@ -177,14 +177,16 @@ const TopBar = ({ friendUsername, showRightHandler, showRight, id }) => {
           textAlign: "center",
         }}
       >
-        <Avatar alt={friendUsername} sx={{ width: 45, height: 45 }} />
+        <Avatar alt={colleagueUsername} sx={{ width: 45, height: 45 }}>
+          {colleagueUsername[0]}
+        </Avatar>
         <Typography
           variant="h6"
           sx={{
             paddingLeft: "10px",
           }}
         >
-          {friendUsername}
+          {colleagueUsername}
         </Typography>
       </Box>
       {/* Right */}

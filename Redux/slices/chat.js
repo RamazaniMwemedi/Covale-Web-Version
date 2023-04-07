@@ -9,12 +9,8 @@ const chatSlice = createSlice({
   reducers: {
     allChats(state, { payload }) {
       if (payload) {
-        for (let index = 0; index < payload.length; index++) {
-          const chatByIndex = payload[index];
-          chats.push(chatByIndex);
-        }
+        state.chats = payload;
       }
-      state.chats = chats;
     },
     addNewMessageToChatId(state, { payload }) {
       if (payload) {

@@ -12,7 +12,6 @@ const ChatSection = ({
   message,
   sendNewMessage,
   messages,
-  friendUsername,
   onEmojiClick,
   chatFileInput,
   handleChooseFileIcon,
@@ -28,6 +27,7 @@ const ChatSection = ({
     setShowRight(!showRight);
   };
   const theme = useTheme();
+  console.log("Chat :>", chat);
   return (
     <>
       {chat ? (
@@ -58,7 +58,7 @@ const ChatSection = ({
               sendNewMessage={sendNewMessage}
               message={message}
               messages={messages}
-              friendUsername={friendUsername}
+              colleagueUsername={chat.colleagueUsername}
               showRightHandler={showRightHandler}
               showRight={showRight}
               onEmojiClick={onEmojiClick}
@@ -82,7 +82,7 @@ const ChatSection = ({
             >
               <ChatSectionRight
                 files={chat.files}
-                friendUsername={chat.friendUsername}
+                colleagueUsername={chat.colleagueUsername}
               />
             </Box>
           ) : null}

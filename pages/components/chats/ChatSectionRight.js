@@ -22,7 +22,7 @@ import {
   XlsIcon,
 } from "../../../assets/Icons";
 
-const ChatSectionRight = ({ friendUsername, files }) => {
+const ChatSectionRight = ({ colleagueUsername, files }) => {
   const [showFile, setShowFile] = useState(false);
   const [file, setFile] = useState(null);
   const handleShowFile = (file) => {
@@ -42,7 +42,7 @@ const ChatSectionRight = ({ friendUsername, files }) => {
           file={file}
         />
       )}
-      {friendUsername && (
+      {colleagueUsername && (
         <Box
           sx={{
             maxHeight: "100vh",
@@ -67,7 +67,7 @@ const ChatSectionRight = ({ friendUsername, files }) => {
               flexDirection: "column",
             }}
           >
-            <Friend friendUsername={friendUsername} />
+            <Friend colleagueUsername={colleagueUsername} />
             <br />
           </Box>
           <Box
@@ -90,7 +90,7 @@ export default ChatSectionRight;
 
 // Friend short details
 
-const Friend = ({ friendUsername }) => {
+const Friend = ({ colleagueUsername }) => {
   return (
     <Box
       sx={{
@@ -101,7 +101,9 @@ const Friend = ({ friendUsername }) => {
       }}
     >
       {/* Avatr  Name */}
-      <Avatar sx={{ width: "120px", height: "120px" }} />
+      <Avatar sx={{ width: "120px", height: "120px" }}>
+        {colleagueUsername[0]}
+      </Avatar>
       <Box
         sx={{
           display: "flex",
@@ -115,7 +117,7 @@ const Friend = ({ friendUsername }) => {
             paddingTop: "15px",
           }}
         >
-          {friendUsername}
+          {colleagueUsername}
         </Typography>
       </Box>
     </Box>
