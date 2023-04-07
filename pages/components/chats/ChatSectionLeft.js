@@ -273,7 +273,10 @@ const Mid = ({ user, messages, handleShowFile }) => {
           return message.sender === user.user.id ? (
             <UserMessage message={message} handleShowFile={handleShowFile} />
           ) : (
-            <FriendMessage message={message} handleShowFile={handleShowFile} />
+            <ColleagueMessage
+              message={message}
+              handleShowFile={handleShowFile}
+            />
           );
         })}
 
@@ -417,8 +420,40 @@ const UserMessage = ({ message, handleShowFile }) => {
   );
 };
 
-const FriendMessage = ({ message, handleShowFile }) => {
+const ColleagueMessage = ({ message, handleShowFile }) => {
   const theme = useTheme();
+  const router = useRouter();
+  const id = router.query.id;
+  const [decryptedMessage, setDecryptedMessage] = useState("");
+  // key pair
+  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPair = keyPairStore
+    ? keyPairStore.find((key) => key.modelId === id)
+    : null;
+  const decreptMessageHandler = async () => {
+    const messageToDecrypt = message.message;
+
+    setDecryptedMessage(
+      await decryptMessage(messageToDecrypt, keyPair.privateKey)
+    );
+  };
+
+  const messageToDisplay = decryptedMessage
+    ? decryptedMessage.split(`\n`).map((item, key) => {
+        return (
+          <span key={key}>
+            {item}
+            <br />
+          </span>
+        );
+      })
+    : "Getting message...";
+
+  useEffect(() => {
+    if (keyPair) {
+      decreptMessageHandler();
+    }
+  }, [keyPair, message]);
   return (
     <Box
       sx={{
@@ -483,7 +518,7 @@ const FriendMessage = ({ message, handleShowFile }) => {
           })}
         </Box>
         {message.message.length > 0 ? (
-          <Typography variant="subtitle2">{message.message}</Typography>
+          <Typography variant="subtitle2">{messageToDisplay}</Typography>
         ) : null}
       </Box>
     </Box>
