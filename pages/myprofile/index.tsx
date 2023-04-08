@@ -21,6 +21,7 @@ import { purple } from "@mui/material/colors";
 
 import SwipeableViews from "react-swipeable-views";
 import { element } from "prop-types";
+import Posts from "../components/profile/Posts";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
@@ -133,10 +134,6 @@ const MyAccount = () => {
                     />
                   </Box>
                 </Box>
-                <p>gh</p>
-                <p>gh</p>
-                <p>gh</p>
-                <p>gh</p>
                 {/* Contents  */}
                 <Contents value={value} handleChangeIndex={handleChangeIndex} />
               </Box>
@@ -196,6 +193,7 @@ function FullWidthTabs({ value, handleChange, handleChangeIndex }) {
         justifyContent: "space-between",
         bgcolor: "unset",
         pt: 1.5,
+        alignItems: "center",
       }}
     >
       <AppBar
@@ -256,7 +254,7 @@ const Contents = ({ value, handleChangeIndex }) => {
       onChangeIndex={handleChangeIndex}
     >
       <TabPanel value={value} index={0} dir={theme.direction}>
-        Posts
+        <Posts/>
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
         About

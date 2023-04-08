@@ -9,6 +9,7 @@ const nextConfig = {
       "img.icons8.com",
       "d3vjnwxn2573to.cloudfront.net",
       "images.pexels.com",
+      "media.licdn.com",
     ],
   },
   swcMinify: false, // it should be false by default
