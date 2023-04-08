@@ -41,7 +41,9 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/node": "^18.15.11",
     "eslint": "^8.32.0",
-    "eslint-plugin-react": "^7.32.2"
+    "eslint-plugin-react": "^7.32.2",
+    "typescript": "^5.0.4"
   }
 }
