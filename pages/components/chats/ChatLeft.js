@@ -71,7 +71,6 @@ function Tabs({
   openCreateTeam,
   teamLoading,
 }) {
-
   return (
     <Box sx={{ width: "100%", typography: "body1", overflow: "hidden" }}>
       <TabContext value={value}>
@@ -130,7 +129,6 @@ export default function ChatLeft({ user }) {
     setShowMoreFriends(false);
     setShowButton(true);
   };
-
 
   const clickFriendHandler = (friend) => {
     setFriendClicked(friend);
@@ -205,10 +203,7 @@ const ProfileDialog = ({ user, handleChange, value }) => {
         >
           <Box>
             {" "}
-            <Avatar
-            >
-              {user && user.username[0]}
-            </Avatar>{" "}
+            <Avatar>{user && user.username[0]}</Avatar>{" "}
           </Box>
           <Typography variant="h6" noWrap>
             {user && user.username}
