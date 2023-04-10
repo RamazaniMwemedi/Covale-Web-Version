@@ -43,6 +43,7 @@ const useCheckLogedinUser = () => {
           router.push("/login");
         }
         if (res) {
+          console.log("REs :>>", res);
           userObject = {
             id: res.data.id,
             token,
@@ -52,6 +53,7 @@ const useCheckLogedinUser = () => {
             birthday: res.data.birthday,
             gender: res.data.gender,
             email: res.data.email,
+            profilePic: res.data.profilePic,
           };
           dispatch(addUser(userObject));
           setloading(false);

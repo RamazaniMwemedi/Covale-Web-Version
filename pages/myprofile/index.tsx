@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useTheme } from "@mui/styles";
 import {
-  AppBar,
   Button,
   CssBaseline,
   Tabs,
@@ -20,12 +19,11 @@ import Image from "next/image";
 import { purple } from "@mui/material/colors";
 
 import SwipeableViews from "react-swipeable-views";
-import { element } from "prop-types";
 import Posts from "../components/profile/Posts";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
-
+  
   interface RootState {
     user: {
       user: {

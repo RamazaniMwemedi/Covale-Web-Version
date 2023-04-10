@@ -9,6 +9,14 @@ const userSlice = createSlice({
     addUser(state, { payload }) {
       state.user = payload;
     },
+    updateProfilePicture(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          user: (state.user.profilePic = payload),
+        };
+      }
+    },
     removeUser(state) {
       state.user = initialState;
     },
@@ -19,11 +27,13 @@ const userSlice = createSlice({
   },
 });
 
-const { addUser, removeUser, signOut } = userSlice.actions;
+const { addUser, removeUser, updateProfilePicture, signOut } =
+  userSlice.actions;
 const reducer = userSlice.reducer;
 module.exports = {
   reducer,
   addUser,
   removeUser,
+  updateProfilePicture,
   signOut,
 };

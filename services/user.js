@@ -147,6 +147,21 @@ const removeColleague = async (token, id) => {
   }
 };
 
+const addProfilePic = async (token, formData) => {
+  if (token && formData) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/v1/users/profilePic`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
 module.exports = {
   allUsers,
   addFriendById,
@@ -158,4 +173,5 @@ module.exports = {
   cancelFriendRequest,
   findUserById,
   removeColleague,
+  addProfilePic,
 };
