@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Box } from "@mui/system";
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, IconButton, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import Image from "next/image";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import moment from "moment";
 
 const Posts = ({}) => {
@@ -58,15 +59,31 @@ const Summary = () => {
           borderRadius: 2,
         }}
       >
-        <Typography
-          variant="body1"
+        <Box
           sx={{
-            fontWeight: "bold",
-            mb: 0.5,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          Proffesional Summary
-        </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: "bold",
+              mb: 0.5,
+            }}
+          >
+            Proffesional Summary
+          </Typography>
+          <Box>
+            <IconButton size="small">
+              <AddRoundedIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small">
+              <EditRoundedIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
 
         <Typography variant="body2">
           Experienced software engineer skilled in Agile, Java, Python, and C++.
@@ -77,59 +94,6 @@ const Summary = () => {
     );
   };
   const WorkExperience = () => {
-    interface ExperienceProps {
-      title: string;
-      organizationName: string;
-      organizationProfilePic: string;
-      dateStarted: Date;
-      dateStopped: Date;
-    }
-
-    const Experience = ({
-      title,
-      organizationName,
-      organizationProfilePic,
-      dateStarted,
-      dateStopped,
-    }: ExperienceProps) => {
-      const duration = moment.duration(
-        moment(dateStopped).diff(moment(dateStarted))
-      );
-
-      const years = duration.years();
-      const months = duration.months();
-
-      const formattedDuration = `${years} years and ${months} months`;
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            p: 0.3,
-          }}
-        >
-          <Avatar
-            src={organizationProfilePic}
-            sx={{
-              height: 70,
-              width: 70,
-            }}
-          >
-            {organizationName[0]}
-          </Avatar>
-          <Box>
-            <Typography variant="body1"> {title} </Typography>
-            <Typography variant="body2"> {organizationName} </Typography>
-            <Typography variant="caption">
-              {moment(dateStarted).format("MMMM YYYY")}
-              {` `}&middot; {moment(dateStopped).format("MMMM YYYY")}
-            </Typography>
-            <br />
-            <Typography variant="caption">{formattedDuration}</Typography>
-          </Box>
-        </Box>
-      );
-    };
     return (
       <Box
         sx={{
@@ -138,22 +102,90 @@ const Summary = () => {
           borderRadius: 2,
         }}
       >
-        <Typography
-          variant="body1"
+        <Box
           sx={{
-            fontWeight: "bold",
-            mb: 0.5,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          Work Experience
-        </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: "bold",
+              mb: 0.5,
+            }}
+          >
+            Work Experience
+          </Typography>
+          <Box>
+            <IconButton size="small">
+              <AddRoundedIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small">
+              <EditRoundedIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
 
-        <Experience
+        <CardWithAvatarAndDate
           title={"Advanced ICT Trainer"}
-          organizationName="Solidarity Initiative For Refugees"
-          organizationProfilePic="https://media.licdn.com/dms/image/C4D0BAQHe8fL22aVodQ/company-logo_100_100/0/1582888548679?e=1689206400&v=beta&t=Nzog9TlPB8ENkGEplWXt1OfB6MEplO9t0rc0cF1KzlQ"
-          dateStarted={new Date("11/01/2023")}
-          dateStopped={new Date("11/01/2025")}
+          subTitle="Solidarity Initiative For Refugees"
+          avatarSrc="https://media.licdn.com/dms/image/C4D0BAQHe8fL22aVodQ/company-logo_100_100/0/1582888548679?e=1689206400&v=beta&t=Nzog9TlPB8ENkGEplWXt1OfB6MEplO9t0rc0cF1KzlQ"
+          startDate={new Date("11/01/2023")}
+          endDate={new Date("11/01/2025")}
+        />
+        <CardWithAvatarAndDate
+          title={"Advanced ICT Trainer"}
+          subTitle="Solidarity Initiative For Refugees"
+          avatarSrc="https://media.licdn.com/dms/image/C4D0BAQHe8fL22aVodQ/company-logo_100_100/0/1582888548679?e=1689206400&v=beta&t=Nzog9TlPB8ENkGEplWXt1OfB6MEplO9t0rc0cF1KzlQ"
+          startDate={new Date("11/01/2023")}
+          endDate={new Date("11/01/2025")}
+        />
+      </Box>
+    );
+  };
+  const EducationAndCertificates = () => {
+    return (
+      <Box
+        sx={{
+          bgcolor: theme.colors.textBackground2,
+          p: 1,
+          borderRadius: 2,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: "bold",
+              mb: 0.5,
+            }}
+          >
+            Education and Certificates
+          </Typography>
+          <Box>
+            <IconButton size="small">
+              <AddRoundedIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small">
+              <EditRoundedIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
+
+        <CardWithAvatarAndDate
+          title={"University of the People"}
+          subTitle="BS Computer Science, Front end engineer"
+          avatarSrc="https://th.bing.com/th/id/R.07095f38f56b752bd8ff8a159f634478?rik=N%2fu22PtUr2kf9A&pid=ImgRaw&r=0"
+          startDate={new Date("11/01/2020")}
+          endDate={new Date("11/01/2025")}
         />
       </Box>
     );
@@ -180,6 +212,64 @@ const Summary = () => {
       <br />
       {/* Work Experience  */}
       <WorkExperience />
+      <br />
+      {/* Education And Certificates */}
+      <EducationAndCertificates />
+    </Box>
+  );
+};
+
+interface CardWithAvatarAndDateProps {
+  title: string;
+  subTitle: string;
+  avatarSrc: string;
+  startDate: Date;
+  endDate: Date;
+}
+
+const CardWithAvatarAndDate = ({
+  title,
+  subTitle,
+  avatarSrc,
+  startDate,
+  endDate,
+}: CardWithAvatarAndDateProps) => {
+  const duration = moment.duration(moment(endDate).diff(moment(startDate)));
+  const years = duration.years();
+  const months = duration.months();
+  const formattedDuration = `${years} years and ${months} months`;
+  const theme: any = useTheme();
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        gap: 1,
+        boxShadow: 1,
+        mt: 3,
+        borderRadius: 2,
+        bgcolor: theme.colors.textBackground2,
+        p:1
+      }}
+    >
+      <Avatar
+        src={avatarSrc}
+        sx={{
+          height: 50,
+          width: 50,
+        }}
+      >
+        {title[0]}
+      </Avatar>
+      <Box>
+        <Typography variant="body1"> {title} </Typography>
+        <Typography variant="body2"> {subTitle} </Typography>
+        <Typography variant="caption">
+          {moment(startDate).format("MMMM YYYY")}
+          {` `}&middot; {moment(endDate).format("MMMM YYYY")}
+        </Typography>
+        <br />
+        <Typography variant="caption">{formattedDuration}</Typography>
+      </Box>
     </Box>
   );
 };
