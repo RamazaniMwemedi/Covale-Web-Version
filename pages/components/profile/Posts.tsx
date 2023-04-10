@@ -11,9 +11,9 @@ const Posts = ({}) => {
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(30%, 1fr))",
-        gridGap: "20px",
-        width: "100%",
+        gridTemplateColumns: "30% 70%", // set explicit column widths
+        gridTemplateRows: "auto", // set the row height to auto
+        gap: "1rem",
         "@media screen and (max-width: 800px)": {
           gridTemplateColumns: "repeat(auto-fit, minmax(100%, 1fr))",
         },
@@ -28,7 +28,11 @@ const Posts = ({}) => {
         <Summary />
       </Box>
       {/* Post Right */}
-      <Box>
+      <Box
+        sx={{
+          width: "70%",
+        }}
+      >
         Rigtht
         {Array.from({ length: 100 }).map((_, i) => (
           <p key={i}>{i}</p>

@@ -26,7 +26,15 @@ import Posts from "../components/profile/Posts";
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
 
-  const userStore = useSelector((state: any) => state.user);
+  interface RootState {
+    user: {
+      user: {
+        name: string;
+        email: string;
+      };
+    };
+  }
+  const userStore = useSelector((state: RootState) => state.user);
   const user = userStore ? userStore.user : null;
   const theme: any = useTheme();
   const [value, setValue] = React.useState(0);
@@ -125,14 +133,21 @@ const MyAccount = () => {
                     >
                       <UserCard user={user} />
                     </Box>
-                    {/* Tabs */}
-                    <Box sx={{ position: "sticky", top: 0 }}>jjs</Box>
-                    <FullWidthTabs
-                      value={value}
-                      handleChange={handleChange}
-                      handleChangeIndex={handleChangeIndex}
-                    />
                   </Box>
+                </Box>
+                {/* Tabs */}
+                <Box
+                  sx={{
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 2,
+                  }}
+                >
+                  <FullWidthTabs
+                    value={value}
+                    handleChange={handleChange}
+                    handleChangeIndex={handleChangeIndex}
+                  />
                 </Box>
                 {/* Contents  */}
                 <Contents value={value} handleChangeIndex={handleChangeIndex} />
@@ -183,7 +198,13 @@ function a11yProps(index: number) {
   };
 }
 
-function FullWidthTabs({ value, handleChange, handleChangeIndex }) {
+interface FullWidthTabsProps {
+  value: number;
+  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
+  handleChangeIndex: (index: number) => void;
+}
+
+function FullWidthTabs({ value, handleChange }: FullWidthTabsProps) {
   const theme: any = useTheme();
 
   return (
@@ -191,61 +212,43 @@ function FullWidthTabs({ value, handleChange, handleChangeIndex }) {
       sx={{
         display: "flex",
         justifyContent: "space-between",
-        bgcolor: "unset",
-        pt: 1.5,
+        bgcolor: theme.colors.background,
         alignItems: "center",
+        borderBottom: 1,
+        borderColor: "divider",
       }}
     >
-      <AppBar
-        sx={{
-          backgroundColor: theme.colors.background1,
-          boxShadow: "none",
-          flex: 0.2,
-          borderRadius: 2,
-        }}
-        position="static"
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        indicatorColor="secondary"
+        textColor="secondary"
+        variant="fullWidth"
+        aria-label="Contents Tab"
       >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="secondary"
-          textColor="secondary"
-          variant="fullWidth"
-          aria-label="Contents Tab"
-        >
-          <Tab
-            sx={{ textTransform: "unset", borderRadius: 10 }}
-            label="Posts"
-            {...a11yProps(0)}
-          />
-          <Tab
-            sx={{ textTransform: "unset" }}
-            label="About"
-            {...a11yProps(1)}
-          />
-          <Tab
-            sx={{ textTransform: "unset" }}
-            label="Connections"
-            {...a11yProps(2)}
-          />
-          <Tab
-            sx={{ textTransform: "unset" }}
-            label="Teams"
-            {...a11yProps(3)}
-          />
-          <Tab
-            sx={{ textTransform: "unset" }}
-            label="Files"
-            {...a11yProps(4)}
-          />
-        </Tabs>
-      </AppBar>
+        <Tab
+          sx={{ textTransform: "unset", borderRadius: 10 }}
+          label="Posts"
+          {...a11yProps(0)}
+        />
+        <Tab sx={{ textTransform: "unset" }} label="About" {...a11yProps(1)} />
+        <Tab
+          sx={{ textTransform: "unset" }}
+          label="Connections"
+          {...a11yProps(2)}
+        />
+        <Tab sx={{ textTransform: "unset" }} label="Teams" {...a11yProps(3)} />
+        <Tab sx={{ textTransform: "unset" }} label="Files" {...a11yProps(4)} />
+      </Tabs>
       <Box>Menu</Box>
     </Box>
   );
 }
-
-const Contents = ({ value, handleChangeIndex }) => {
+interface ContentsProps {
+  value: number;
+  handleChangeIndex: (index: number) => void;
+}
+const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
   const theme: any = useTheme();
   return (
     <SwipeableViews
@@ -254,7 +257,7 @@ const Contents = ({ value, handleChangeIndex }) => {
       onChangeIndex={handleChangeIndex}
     >
       <TabPanel value={value} index={0} dir={theme.direction}>
-        <Posts/>
+        <Posts />
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
         About
