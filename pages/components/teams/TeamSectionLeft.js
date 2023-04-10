@@ -819,6 +819,7 @@ const UserMessage = ({
               height: 25,
               marginRight: "6px",
             }}
+            src={user.profilePic.fileUrl}
           />
         </>
       )}

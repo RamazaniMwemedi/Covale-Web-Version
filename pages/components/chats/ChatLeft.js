@@ -203,7 +203,9 @@ const ProfileDialog = ({ user, handleChange, value }) => {
         >
           <Box>
             {" "}
-            <Avatar>{user && user.username[0]}</Avatar>{" "}
+            <Avatar src={user.profilePic.fileUrl}>
+              {user && user.username[0]}
+            </Avatar>{" "}
           </Box>
           <Typography variant="h6" noWrap>
             {user && user.username}

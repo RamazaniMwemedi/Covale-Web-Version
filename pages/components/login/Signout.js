@@ -79,6 +79,7 @@ export default function AccountMenu() {
                     height: 32,
                     fontSize: "0.8rem",
                   }}
+                  src={user.profilePic.fileUrl}
                 >
                   {user.firstname[0]} {user.lastname[0]}
                 </Avatar>
@@ -103,7 +104,7 @@ export default function AccountMenu() {
                   mr: 1,
                 },
                 "&:before": {
-                  content: "\"\"",
+                  content: '""',
                   display: "block",
                   position: "absolute",
                   top: 0,
@@ -120,13 +121,14 @@ export default function AccountMenu() {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem>
+            <MenuItem onClick={() => router.push("/myprofile")}>
               <Avatar
                 sx={{
                   width: 32,
                   height: 32,
                   fontSize: "0.8rem",
                 }}
+                src={user.profilePic.fileUrl}
               >
                 {user.firstname[0]} {user.lastname[0]}
               </Avatar>{" "}
