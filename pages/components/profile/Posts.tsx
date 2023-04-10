@@ -12,9 +12,11 @@ const Posts = ({}) => {
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: "30% 70%", // set explicit column widths
+        gridTemplateColumns: "40% 60%", // set explicit column widths
         gridTemplateRows: "auto", // set the row height to auto
         gap: "1rem",
+        width: "90%",
+        ml: 7,
         "@media screen and (max-width: 800px)": {
           gridTemplateColumns: "repeat(auto-fit, minmax(100%, 1fr))",
         },
@@ -84,7 +86,7 @@ const Summary = () => {
             </IconButton>
           </Box>
         </Box>
-
+        <br />
         <Typography variant="body2">
           Experienced software engineer skilled in Agile, Java, Python, and C++.
           Passionate about delivering top-quality software products that meet
@@ -248,7 +250,7 @@ const CardWithAvatarAndDate = ({
         mt: 3,
         borderRadius: 2,
         bgcolor: theme.colors.textBackground2,
-        p:1
+        p: 1,
       }}
     >
       <Avatar

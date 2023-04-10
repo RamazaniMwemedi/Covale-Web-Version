@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Provider } from "react-redux";
 import { Analytics } from "@vercel/analytics/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import store from "../Redux/store";
 
@@ -95,26 +96,29 @@ function MyApp({ Component, pageProps }) {
       return createTheme(lightTheme);
     }
   }, [preferedTheme]);
+  const queryClient = new QueryClient();
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Head>
-          <title>Covale</title>
-          <meta
-            name="viewport"
-            content="initial-scale=1.0, width=device-width"
-          />
-          <link
-            rel="icon"
-            href="https://ramazanimwemedi.github.io/sounds/covalogo.png"
-          />
-        </Head>
-        <CssBaseline />
-        <Component {...pageProps} />
-        <Analytics />
-      </ThemeProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Head>
+            <title>Covale</title>
+            <meta
+              name="viewport"
+              content="initial-scale=1.0, width=device-width"
+            />
+            <link
+              rel="icon"
+              href="https://ramazanimwemedi.github.io/sounds/covalogo.png"
+            />
+          </Head>
+          <CssBaseline />
+          <Component {...pageProps} />
+          <Analytics />
+        </ThemeProvider>
+      </Provider>
+    </QueryClientProvider>
   );
 }
 

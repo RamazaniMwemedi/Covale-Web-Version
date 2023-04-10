@@ -141,6 +141,8 @@ const MyAccount = () => {
                     position: "sticky",
                     top: 0,
                     zIndex: 2,
+                    ml: 7,
+                    width: "90%",
                   }}
                 >
                   <FullWidthTabs
