@@ -75,6 +75,7 @@ export default function DrawerComponent() {
   const [calenderBackgroundColor, setCalenderBackgroundColor] = useState("");
   const [meetBackgroundColor, setMeetBackgroundColor] = useState("");
   const [projectBackgroundColor, setProjectBackgroundColor] = useState("");
+  const [myProfileBackgroundColor, setMyProfileBackgroundColor] = useState("");
 
   const pathname = router.pathname;
 
@@ -144,6 +145,20 @@ export default function DrawerComponent() {
       setCalenderBackgroundColor("");
       setHomeBackgroundColor("");
       setProjectBackgroundColor(theme.colors.drawerBackground);
+    } else if (pathname.includes("/myprofile")) {
+      setHomeColor("action");
+      setChatColor("gray");
+      setPeopleColor("gray");
+      setCalendar("gray");
+      setMeet("action");
+      setProjectsColor("action");
+      // Background color
+      setChatBackgroundColor("");
+      setPeopleBackgroundColor("");
+      setCalenderBackgroundColor("");
+      setHomeBackgroundColor("");
+      setProjectBackgroundColor("");
+      setMyProfileBackgroundColor(theme.colors.drawerBackground);
     }
   }, [router.pathname, theme]);
 
@@ -312,7 +327,7 @@ export default function DrawerComponent() {
               {/* <Tooltip title="Join">
                 <NewMeet />
               </Tooltip> */}
-              <Signout />
+              <Signout myProfileBackgroundColor={myProfileBackgroundColor} />
             </Box>
           </Box>
         </Box>

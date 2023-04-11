@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 
 import { signOut } from "../../../Redux/slices/user";
 
-export default function AccountMenu() {
+export default function AccountMenu({ myProfileBackgroundColor }) {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -68,7 +68,11 @@ export default function AccountMenu() {
               <IconButton
                 onClick={handleClick}
                 size="small"
-                sx={{ ml: 2 }}
+                sx={{
+                  ml: 2,
+                  bgcolor: myProfileBackgroundColor,
+                  borderRadius: "50%",
+                }}
                 aria-controls={open ? "account-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}

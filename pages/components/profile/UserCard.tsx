@@ -6,7 +6,7 @@ import {
   Slider,
   Typography,
 } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, Stack } from "@mui/system";
 import * as React from "react";
 import { useState } from "react";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
@@ -14,10 +14,13 @@ import Badge from "@mui/material/Badge";
 import { useTheme } from "@mui/styles";
 import { purple } from "@mui/material/colors";
 import ModeEditRoundedIcon from "@mui/icons-material/ModeEditRounded";
-
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import Dialog from "@mui/material/Dialog";
-
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import Cropper from "react-easy-crop";
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
+
 import getCroppedImg from "../../../image/croppedImg";
 import { addProfilePic } from "../../../services/user";
 import { updateProfilePicture } from "../../../Redux/slices/user";
@@ -27,7 +30,7 @@ import { useDispatch } from "react-redux";
 interface ProfilePic {
   file: File;
   fileName: string;
-  fileUrl: string | ArrayBuffer | null;
+  fileUrl: string | ArrayBuffer | null | undefined;
   fileUri: string | ArrayBuffer | null;
   fileType: string;
   fileSize: number;
@@ -47,7 +50,7 @@ const UserCard = ({ user }: UserCardProp) => {
   const profileFileInput = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [profilePic, setProfilePic] = useState<ProfilePic | null>(null);
- 
+
   const dispatch = useDispatch();
   const theme: any = useTheme();
   const token = useCheckLogedinUserToken();
@@ -188,7 +191,7 @@ const CroppImageAvatar = ({
   const [zoom, setZoom] = useState<number>(1);
   const [aspect, setAspect] = useState<number>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [rotation, setRotation] = useState<number>(0);
+  const theme: any = useTheme();
 
   const onCropChange = (crop: { x: number; y: number }): void => {
     setCrop(crop);
@@ -204,15 +207,13 @@ const CroppImageAvatar = ({
     try {
       const croppedImage = await getCroppedImg(
         image.fileUrl,
-        croppedAreaPixels,
-        rotation
+        croppedAreaPixels
       );
-      console.log("donee", { croppedImage });
       if (croppedImage) croppedImageReady(croppedImage);
     } catch (e) {
       console.error(e);
     }
-  }, [croppedAreaPixels, rotation]);
+  }, [croppedAreaPixels]);
   const onZoomChange = (zoom: number): void => {
     setZoom(zoom);
   };
@@ -221,7 +222,7 @@ const CroppImageAvatar = ({
     <Box>
       <Box
         sx={{
-          height: 300,
+          height: 500,
           width: 200,
         }}
       >
@@ -232,49 +233,54 @@ const CroppImageAvatar = ({
           aspect={aspect}
           cropShape="round"
           showGrid={false}
-          rotation={rotation}
           onCropChange={onCropChange}
           onCropComplete={onCropComplete}
           onZoomChange={onZoomChange}
-          onRotationChange={setRotation}
         />
+      </Box>{" "}
+      <Box sx={{ width: "90%", ml: 4 }}>
+        <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+          <ZoomOutIcon />
+          <Slider
+            value={zoom}
+            min={1}
+            max={3}
+            step={0.1}
+            aria-labelledby="Zoom"
+            color="secondary"
+            onChange={(e, zoom: number) => onZoomChange(zoom)}
+          />
+
+          <ZoomInIcon />
+        </Stack>
       </Box>
-      <Slider
-        value={zoom}
-        min={1}
-        max={3}
-        step={0.1}
-        aria-labelledby="Zoom"
-        onChange={(e, zoom: number) => onZoomChange(zoom)}
+      <Box
         sx={{
-          position: "absolute",
-          bottom: 0,
-          left: "50%",
-          width: "50%",
-          transform: "translateX(-50%)",
           display: "flex",
-          alignItems: "center",
+          justifyContent: "flex-end",
+          gap: 2,
+          bgcolor: theme.colors.background1,
+          zIndex: 1,
+          padding: 1,
         }}
-      />
-      <Typography variant="overline">Rotation</Typography>
-      <Slider
-        value={rotation}
-        min={0}
-        max={360}
-        step={1}
-        aria-labelledby="Rotation"
-        onChange={(e, rotation: number) => setRotation(rotation)}
-      />{" "}
-      <Button
-        onClick={() => {
-          showCroppedImage();
-          onCloseHandler();
-        }}
-        variant="contained"
-        color="primary"
       >
-        Show Result
-      </Button>
+        <Button
+          onClick={() => {
+            showCroppedImage();
+            onCloseHandler();
+          }}
+          variant="contained"
+          color="secondary"
+          sx={{
+            textTransform: "unset",
+          }}
+        >
+          Update Profile
+        </Button>
+        <Button color="secondary" variant="outlined" onClick={onCloseHandler}>
+          Close
+        </Button>
+      </Box>
     </Box>
   );
 };
@@ -298,9 +304,6 @@ function CropeImageDialog({
             croppedImageReady={croppedImageReady}
             onCloseHandler={onCloseHandler}
           />
-          <DialogActions>
-            <Button onClick={onCloseHandler}>Close</Button>
-          </DialogActions>
         </Dialog>
       )}
     </React.Fragment>
