@@ -17,6 +17,14 @@ const userSlice = createSlice({
         };
       }
     },
+    updateCoverPhotoe(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          user: (state.user.coverPhotoe = payload),
+        };
+      }
+    },
     removeUser(state) {
       state.user = initialState;
     },
@@ -27,13 +35,11 @@ const userSlice = createSlice({
   },
 });
 
-const { addUser, removeUser, updateProfilePicture, signOut } =
-  userSlice.actions;
-const reducer = userSlice.reducer;
-module.exports = {
-  reducer,
+export const {
   addUser,
   removeUser,
   updateProfilePicture,
+  updateCoverPhotoe,
   signOut,
-};
+} = userSlice.actions;
+export const reducer = userSlice.reducer;

@@ -18,8 +18,6 @@ import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import Dialog from "@mui/material/Dialog";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import Cropper from "react-easy-crop";
-import RotateLeftIcon from "@mui/icons-material/RotateLeft";
-import RotateRightIcon from "@mui/icons-material/RotateRight";
 
 import getCroppedImg from "../../../image/croppedImg";
 import { addProfilePic } from "../../../services/user";
@@ -105,9 +103,12 @@ const UserCard = ({ user }: UserCardProp) => {
         >
           {open && (
             <CropeImageDialog
+              rounded={true}
               image={profilePic}
               onCloseHandler={onCloseHandler}
               croppedImageReady={croppedImageReady}
+              caption="Update Profile Photoe"
+              aspect={1}
             />
           )}
           {/* Avatar */}
@@ -181,15 +182,20 @@ interface CroppImageAvatarProp {
   image: ProfilePic;
   croppedImageReady: (file: File) => void;
   onCloseHandler: () => void;
+  rounded: boolean;
+  caption: string;
+  aspect: number;
 }
 const CroppImageAvatar = ({
   image,
   croppedImageReady,
   onCloseHandler,
+  rounded,
+  caption,
+  aspect,
 }: CroppImageAvatarProp) => {
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState<number>(1);
-  const [aspect, setAspect] = useState<number>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const theme: any = useTheme();
 
@@ -231,7 +237,7 @@ const CroppImageAvatar = ({
           crop={crop}
           zoom={zoom}
           aspect={aspect}
-          cropShape="round"
+          cropShape={rounded ? "round" : "rect"}
           showGrid={false}
           onCropChange={onCropChange}
           onCropComplete={onCropComplete}
@@ -275,9 +281,16 @@ const CroppImageAvatar = ({
             textTransform: "unset",
           }}
         >
-          Update Profile
+          {caption}
         </Button>
-        <Button color="secondary" variant="outlined" onClick={onCloseHandler}>
+        <Button
+          sx={{
+            textTransform: "unset",
+          }}
+          color="secondary"
+          variant="outlined"
+          onClick={onCloseHandler}
+        >
           Close
         </Button>
       </Box>
@@ -289,11 +302,17 @@ interface CropeImaageDialogProp {
   image: ProfilePic;
   onCloseHandler: () => void;
   croppedImageReady: (file: File) => void;
+  rounded: boolean;
+  caption: string;
+  aspect: number;
 }
-function CropeImageDialog({
+export function CropeImageDialog({
   image,
   onCloseHandler,
   croppedImageReady,
+  rounded,
+  caption,
+  aspect,
 }: CropeImaageDialogProp) {
   return (
     <React.Fragment>
@@ -303,6 +322,9 @@ function CropeImageDialog({
             image={image}
             croppedImageReady={croppedImageReady}
             onCloseHandler={onCloseHandler}
+            rounded={rounded}
+            caption={caption}
+            aspect={aspect}
           />
         </Dialog>
       )}

@@ -1,7 +1,7 @@
 import axios from "axios";
-const { SERVER_ADDRESS } = require("../config/index");
+import { SERVER_ADDRESS } from "../config/index";
 
-const allUsers = async (token) => {
+export const allUsers = async (token) => {
   const response = await axios.get(
     `${SERVER_ADDRESS}/api/v1/users/colleague/explore`,
     {
@@ -14,7 +14,7 @@ const allUsers = async (token) => {
 };
 
 // Add a friend
-const addFriendById = async (id, token) => {
+export const addFriendById = async (id, token) => {
   const response = await axios.post(
     `${SERVER_ADDRESS}/api/v1/users/colleague/add/${id}`,
     {},
@@ -27,7 +27,7 @@ const addFriendById = async (id, token) => {
   return response.data;
 };
 
-const myFriends = async (token) => {
+export const myFriends = async (token) => {
   const response = await axios.get(
     `${SERVER_ADDRESS}/api/v1/users/colleague/mycolleagues`,
     {
@@ -40,7 +40,7 @@ const myFriends = async (token) => {
 };
 
 // Friend Requests Received
-const friendReqRecieved = async (token) => {
+export const friendReqRecieved = async (token) => {
   const response = await axios.get(
     `${SERVER_ADDRESS}/api/v1/users/colleague/colleaguesReqRecieved`,
     {
@@ -53,7 +53,7 @@ const friendReqRecieved = async (token) => {
 };
 
 // Friend Requests Sent
-const friendReqSent = async (token) => {
+export const friendReqSent = async (token) => {
   const response = await axios.get(
     `${SERVER_ADDRESS}/api/v1/users/colleague/colleagueReqSent`,
     {
@@ -67,7 +67,7 @@ const friendReqSent = async (token) => {
 };
 
 // Accept Friend Request
-const acceptFriendRequest = async (id, token) => {
+export const acceptFriendRequest = async (id, token) => {
   if (token && id) {
     const response = await axios.post(
       `${SERVER_ADDRESS}/api/v1/users/colleague/accept/${id}`,
@@ -83,7 +83,7 @@ const acceptFriendRequest = async (id, token) => {
 };
 
 // Remove Friend Request
-const removeFriendRequest = async (id, token) => {
+export const removeFriendRequest = async (id, token) => {
   const response = await axios.post(
     `${SERVER_ADDRESS}/api/v1/users/colleague/remove/${id}`,
     {},
@@ -97,7 +97,7 @@ const removeFriendRequest = async (id, token) => {
 };
 
 //Cancel Friend Request
-const cancelFriendRequest = async (id, token) => {
+export const cancelFriendRequest = async (id, token) => {
   const response = await axios.post(
     `${SERVER_ADDRESS}/api/v1/users/colleague/cancel/${id}`,
     {},
@@ -111,7 +111,7 @@ const cancelFriendRequest = async (id, token) => {
 };
 
 // Find userBy id
-const findUserById = async (token, id) => {
+export const findUserById = async (token, id) => {
   if (token) {
     try {
       const response = await axios.get(`${SERVER_ADDRESS}/api/v1/users/${id}`, {
@@ -128,7 +128,7 @@ const findUserById = async (token, id) => {
 };
 
 // Remove user from colleagues
-const removeColleague = async (token, id) => {
+export const removeColleague = async (token, id) => {
   if (token) {
     try {
       const response = await axios.post(
@@ -147,7 +147,7 @@ const removeColleague = async (token, id) => {
   }
 };
 
-const addProfilePic = async (token, formData) => {
+export const addProfilePic = async (token, formData) => {
   if (token && formData) {
     const response = await axios.post(
       `${SERVER_ADDRESS}/api/v1/users/profilePic`,
@@ -161,17 +161,18 @@ const addProfilePic = async (token, formData) => {
     return response.data;
   }
 };
-
-module.exports = {
-  allUsers,
-  addFriendById,
-  myFriends,
-  friendReqRecieved,
-  friendReqSent,
-  acceptFriendRequest,
-  removeFriendRequest,
-  cancelFriendRequest,
-  findUserById,
-  removeColleague,
-  addProfilePic,
+export const addCoverPic = async (token, formData) => {
+  if (token && formData) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/v1/users/coverPhoto`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
 };
+

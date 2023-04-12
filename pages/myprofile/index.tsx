@@ -1,42 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import DrawerComponent from "../components/others/DrawerComponent";
 import { Box } from "@mui/system";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useTheme } from "@mui/styles";
-import {
-  Button,
-  CssBaseline,
-  Tabs,
-  Tab,
-  Typography,
-} from "@mui/material";
+import { Button, CssBaseline, Tabs, Tab, Typography } from "@mui/material";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 
-import { useCheckLogedinUser } from "../../hooks/hooks";
-import UserCard from "../components/profile/UserCard";
+import {
+  useCheckLogedinUser,
+  useCheckLogedinUserToken,
+} from "../../hooks/hooks";
+import UserCard, { CropeImageDialog } from "../components/profile/UserCard";
 import Image from "next/image";
 import { purple } from "@mui/material/colors";
 
 import SwipeableViews from "react-swipeable-views";
 import Posts from "../components/profile/Posts";
+import { addCoverPic } from "../../services/user";
+import { updateCoverPhotoe } from "../../Redux/slices/user";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
-  
+
+  interface ProfilePic {
+    file: File;
+    fileName: string;
+    fileUrl: string | ArrayBuffer | null | undefined;
+    fileUri: string | ArrayBuffer | null;
+    fileType: string;
+    fileSize: number;
+  }
   interface RootState {
     user: {
       user: {
         name: string;
         email: string;
+        coverPhotoe: {
+          fileUrl: string;
+        };
       };
     };
   }
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore ? userStore.user : null;
   const theme: any = useTheme();
+  const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
-
+  const [updateCoverPic, setUpdateCoverPic] = useState<boolean>(false);
+  const [coverImage, setCoverImage] = useState<ProfilePic | null>(null);
+  const token = useCheckLogedinUserToken();
+  const coverFileInputRef = React.useRef<HTMLInputElement>(null);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -45,6 +59,52 @@ const MyAccount = () => {
     setValue(index);
   };
 
+  const onCloseHandler = () => {
+    setUpdateCoverPic(false);
+    setCoverImage(null);
+  };
+  const croppedImageReady = async (file: File): Promise<void> => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("files", file);
+      console.log("Hello there", file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setCoverImage({
+          file: file,
+          fileName: file.name,
+          fileUrl: reader.result,
+          fileUri: reader.result,
+          fileType: file.type,
+          fileSize: file.size,
+        });
+      };
+      reader.readAsDataURL(file);
+      const newCoverPic = await addCoverPic(token, formData);
+      dispatch(updateCoverPhotoe(newCoverPic));
+    }
+  };
+  const handleSelectCoverPic = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setCoverImage({
+          file: file,
+          fileName: file.name,
+          fileUrl: reader.result,
+          fileUri: reader.result,
+          fileType: file.type,
+          fileSize: file.size,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleChoseCover = () => {
+    coverFileInputRef.current?.click();
+    setUpdateCoverPic(true);
+  };
   return (
     <Box>
       {userLoading ? (
@@ -81,6 +141,16 @@ const MyAccount = () => {
                     }}
                   >
                     {/* Cover image  */}
+                    {updateCoverPic && (
+                      <CropeImageDialog
+                        image={coverImage}
+                        croppedImageReady={croppedImageReady}
+                        onCloseHandler={onCloseHandler}
+                        rounded={false}
+                        caption="Update Cover Photoe"
+                        aspect={16 / 9}
+                      />
+                    )}
                     <Box
                       sx={{
                         position: "relative",
@@ -90,14 +160,16 @@ const MyAccount = () => {
                     >
                       <Image
                         src={
-                          "https://images.pexels.com/photos/188035/pexels-photo-188035.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                          user && user.coverPhotoe
+                            ? user.coverPhotoe.fileUrl
+                            : ""
                         }
                         alt="Cover photo"
                         width={1000}
-                        height={300}
+                        height={400}
                         objectFit="cover"
                         style={{
-                          width: "96%",
+                          width: "95%",
                           borderBottomLeftRadius: 10,
                           borderBottomRightRadius: 10,
                         }}
@@ -112,13 +184,23 @@ const MyAccount = () => {
                           display: "flex",
                           bgcolor: purple[500],
                           gap: 1,
+                          zIndex: 1,
                         }}
                         variant="contained"
                         size="small"
                         color="secondary"
+                        onClick={handleChoseCover}
                       >
-                        <CameraAltRoundedIcon fontSize="small" /> Edit cover
-                        photo
+                        {" "}
+                        <input
+                          type="file"
+                          hidden
+                          ref={coverFileInputRef}
+                          accept="image/*"
+                          onChange={handleSelectCoverPic}
+                        />
+                        <CameraAltRoundedIcon fontSize="small" />
+                        Edit cover photo
                       </Button>
                     </Box>
 
