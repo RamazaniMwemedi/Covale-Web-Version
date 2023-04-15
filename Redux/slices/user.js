@@ -25,6 +25,14 @@ const userSlice = createSlice({
         };
       }
     },
+    professionalSummaryUpdate(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          user: (state.user.professionalSummary = payload),
+        };
+      }
+    },
     removeUser(state) {
       state.user = initialState;
     },
@@ -41,5 +49,6 @@ export const {
   updateProfilePicture,
   updateCoverPhotoe,
   signOut,
+  professionalSummaryUpdate,
 } = userSlice.actions;
 export const reducer = userSlice.reducer;

@@ -19,39 +19,30 @@ import SwipeableViews from "react-swipeable-views";
 import Posts from "../components/profile/Posts";
 import { addCoverPic } from "../../services/user";
 import { updateCoverPhotoe } from "../../Redux/slices/user";
+import Files from "../components/profile/files";
+import {
+  ContentsProps,
+  CropperImageInterface,
+  FullWidthTabsProps,
+  RootState,
+  TabPanelProps,
+} from "../../interfaces";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
 
-  interface ProfilePic {
-    file: File;
-    fileName: string;
-    fileUrl: string | ArrayBuffer | null | undefined;
-    fileUri: string | ArrayBuffer | null;
-    fileType: string;
-    fileSize: number;
-  }
-  interface RootState {
-    user: {
-      user: {
-        name: string;
-        email: string;
-        coverPhotoe: {
-          fileUrl: string;
-        };
-      };
-    };
-  }
   const userStore = useSelector((state: RootState) => state.user);
-  const user = userStore ? userStore.user : null;
+  const user = userStore?.user;
   const theme: any = useTheme();
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
   const [updateCoverPic, setUpdateCoverPic] = useState<boolean>(false);
-  const [coverImage, setCoverImage] = useState<ProfilePic | null>(null);
+  const [coverImage, setCoverImage] = useState<CropperImageInterface | null>(
+    null
+  );
   const token = useCheckLogedinUserToken();
   const coverFileInputRef = React.useRef<HTMLInputElement>(null);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -63,48 +54,58 @@ const MyAccount = () => {
     setUpdateCoverPic(false);
     setCoverImage(null);
   };
-  const croppedImageReady = async (file: File): Promise<void> => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("files", file);
-      console.log("Hello there", file);
-      const reader = new FileReader();
-      reader.onload = () => {
+ const croppedImageReady = async (file: File): Promise<void> => {
+   if (file) {
+     const formData = new FormData();
+     formData.append("files", file);
+     console.log("Hello there", file);
+     const reader = new FileReader();
+     reader.onload = () => {
+       const result = reader.result;
+       if (result) {
+         // check if result is not null
+         setCoverImage({
+           file: file,
+           fileName: file.name,
+           fileUrl: result as string, // cast result as string
+           fileUri: result as string, // cast result as string
+           fileType: file.type,
+           fileSize: file.size,
+         });
+       }
+     };
+     reader.readAsDataURL(file);
+     const newCoverPic = await addCoverPic(token, formData);
+     dispatch(updateCoverPhotoe(newCoverPic));
+   }
+ };
+const handleSelectCoverPic = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (result) {
+        // check if result is not null
         setCoverImage({
           file: file,
           fileName: file.name,
-          fileUrl: reader.result,
-          fileUri: reader.result,
+          fileUrl: result as string, // cast result as string
+          fileUri: result as string, // cast result as string
           fileType: file.type,
           fileSize: file.size,
         });
-      };
-      reader.readAsDataURL(file);
-      const newCoverPic = await addCoverPic(token, formData);
-      dispatch(updateCoverPhotoe(newCoverPic));
-    }
-  };
-  const handleSelectCoverPic = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setCoverImage({
-          file: file,
-          fileName: file.name,
-          fileUrl: reader.result,
-          fileUri: reader.result,
-          fileType: file.type,
-          fileSize: file.size,
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
   const handleChoseCover = () => {
     coverFileInputRef.current?.click();
     setUpdateCoverPic(true);
   };
+
   return (
     <Box>
       {userLoading ? (
@@ -119,7 +120,7 @@ const MyAccount = () => {
           }}
         >
           <CssBaseline />
-          {userStore ? (
+          {user ? (
             <>
               <DrawerComponent />
               {/* Body */}
@@ -141,7 +142,7 @@ const MyAccount = () => {
                     }}
                   >
                     {/* Cover image  */}
-                    {updateCoverPic && (
+                    {updateCoverPic && coverImage ? (
                       <CropeImageDialog
                         image={coverImage}
                         croppedImageReady={croppedImageReady}
@@ -150,7 +151,7 @@ const MyAccount = () => {
                         caption="Update Cover Photoe"
                         aspect={16 / 9}
                       />
-                    )}
+                    ) : null}
                     <Box
                       sx={{
                         position: "relative",
@@ -159,11 +160,7 @@ const MyAccount = () => {
                       }}
                     >
                       <Image
-                        src={
-                          user && user.coverPhotoe
-                            ? user.coverPhotoe.fileUrl
-                            : ""
-                        }
+                        src={user && user.coverPic ? user.coverPic.fileUrl : ""}
                         alt="Cover photo"
                         width={1000}
                         height={400}
@@ -208,10 +205,10 @@ const MyAccount = () => {
                     <Box
                       sx={{
                         ml: 7,
-                        mt: -6,
+                        mt: -3,
                       }}
                     >
-                      <UserCard user={user} />
+                      <UserCard />
                     </Box>
                   </Box>
                 </Box>
@@ -246,13 +243,6 @@ const MyAccount = () => {
 
 export default MyAccount;
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  dir?: string;
-  index: number;
-  value: number;
-}
-
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
@@ -278,12 +268,6 @@ function a11yProps(index: number) {
     id: `full-width-tab-${index}`,
     "aria-controls": `full-width-tabpanel-${index}`,
   };
-}
-
-interface FullWidthTabsProps {
-  value: number;
-  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
-  handleChangeIndex: (index: number) => void;
 }
 
 function FullWidthTabs({ value, handleChange }: FullWidthTabsProps) {
@@ -326,10 +310,7 @@ function FullWidthTabs({ value, handleChange }: FullWidthTabsProps) {
     </Box>
   );
 }
-interface ContentsProps {
-  value: number;
-  handleChangeIndex: (index: number) => void;
-}
+
 const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
   const theme: any = useTheme();
   return (
@@ -351,7 +332,7 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
         Teams
       </TabPanel>
       <TabPanel value={value} index={4} dir={theme.direction}>
-        Files
+        <Files />
       </TabPanel>
     </SwipeableViews>
   );

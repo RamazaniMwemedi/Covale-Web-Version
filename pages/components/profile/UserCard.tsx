@@ -1,9 +1,9 @@
 import {
   Avatar,
   Button,
-  DialogActions,
   IconButton,
   Slider,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
@@ -23,31 +23,24 @@ import getCroppedImg from "../../../image/croppedImg";
 import { addProfilePic } from "../../../services/user";
 import { updateProfilePicture } from "../../../Redux/slices/user";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  CropeImaageDialogProp,
+  CroppImageAvatarProp,
+  CropperImageInterface,
+  RootState,
+  UserInterFace,
+} from "../../../interfaces";
 
-interface ProfilePic {
-  file: File;
-  fileName: string;
-  fileUrl: string | ArrayBuffer | null | undefined;
-  fileUri: string | ArrayBuffer | null;
-  fileType: string;
-  fileSize: number;
-}
-interface UserCardProp {
-  user: {
-    firstname: string;
-    lastname: string;
-    username: string;
-    profilePic: {
-      fileUrl: string;
-    };
-  };
-}
+const UserCard = () => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user: UserInterFace | null = userStore ? userStore.user : null;
 
-const UserCard = ({ user }: UserCardProp) => {
   const profileFileInput = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-  const [profilePic, setProfilePic] = useState<ProfilePic | null>(null);
+  const [profilePic, setProfilePic] = useState<CropperImageInterface | null>(
+    null
+  );
 
   const dispatch = useDispatch();
   const theme: any = useTheme();
@@ -65,21 +58,23 @@ const UserCard = ({ user }: UserCardProp) => {
       dispatch(updateProfilePicture(newProfilePic));
     }
   };
-
   const handleSelectProfilePic = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log("Selected File :>>", file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setProfilePic({
-          file: file,
-          fileName: file.name,
-          fileUrl: reader.result,
-          fileUri: reader.result,
-          fileType: file.type,
-          fileSize: file.size,
-        });
+        const result = reader.result;
+        if (result) {
+          // check if result is not null
+          setProfilePic({
+            file: file,
+            fileName: file.name,
+            fileUrl: result as string, // cast result as string
+            fileUri: result as string, // cast result as string
+            fileType: file.type,
+            fileSize: file.size,
+          });
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -101,7 +96,7 @@ const UserCard = ({ user }: UserCardProp) => {
             position: "relative",
           }}
         >
-          {open && (
+          {open && profilePic ? (
             <CropeImageDialog
               rounded={true}
               image={profilePic}
@@ -110,7 +105,7 @@ const UserCard = ({ user }: UserCardProp) => {
               caption="Update Profile Photoe"
               aspect={1}
             />
-          )}
+          ) : null}
           {/* Avatar */}
           <Badge
             overlap="circular"
@@ -140,7 +135,7 @@ const UserCard = ({ user }: UserCardProp) => {
                 height: 150,
                 boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
               }}
-              src={user.profilePic.fileUrl}
+              src={user.profilePic && user.profilePic.fileUrl}
             >
               {user.firstname[0]} {user.lastname[0]}{" "}
             </Avatar>{" "}
@@ -152,6 +147,14 @@ const UserCard = ({ user }: UserCardProp) => {
               {user.firstname} {user.lastname}{" "}
             </Typography>
             <Typography variant="body2">@{user.username}</Typography>
+            {/* Professional Summary */}
+            <Tooltip title="Professional Summary" placement="top">
+              <Typography variant="caption">
+                {user.professionalSummary.length > 110
+                  ? user.professionalSummary.substring(0, 110) + "..."
+                  : user.professionalSummary}
+              </Typography>
+            </Tooltip>
           </Box>
           <Button
             sx={{
@@ -178,14 +181,6 @@ const UserCard = ({ user }: UserCardProp) => {
 
 export default UserCard;
 
-interface CroppImageAvatarProp {
-  image: ProfilePic;
-  croppedImageReady: (file: File) => void;
-  onCloseHandler: () => void;
-  rounded: boolean;
-  caption: string;
-  aspect: number;
-}
 const CroppImageAvatar = ({
   image,
   croppedImageReady,
@@ -203,19 +198,18 @@ const CroppImageAvatar = ({
     setCrop(crop);
   };
 
-  const onCropComplete = React.useCallback(
-    (croppedArea: any, croppedAreaPixels: any) => {
-      setCroppedAreaPixels(croppedAreaPixels);
-    },
-    []
-  );
+  const onCropComplete = React.useCallback((_: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
   const showCroppedImage = React.useCallback(async () => {
     try {
-      const croppedImage = await getCroppedImg(
-        image.fileUrl,
-        croppedAreaPixels
-      );
-      if (croppedImage) croppedImageReady(croppedImage);
+      if (croppedAreaPixels) {
+        const croppedImage = await getCroppedImg(
+          image.fileUrl,
+          croppedAreaPixels
+        );
+        if (croppedImage) croppedImageReady(croppedImage);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -254,7 +248,7 @@ const CroppImageAvatar = ({
             step={0.1}
             aria-labelledby="Zoom"
             color="secondary"
-            onChange={(e, zoom: number) => onZoomChange(zoom)}
+            onChange={(_, zoom) => onZoomChange(zoom as number)}
           />
 
           <ZoomInIcon />
@@ -298,14 +292,6 @@ const CroppImageAvatar = ({
   );
 };
 
-interface CropeImaageDialogProp {
-  image: ProfilePic;
-  onCloseHandler: () => void;
-  croppedImageReady: (file: File) => void;
-  rounded: boolean;
-  caption: string;
-  aspect: number;
-}
 export function CropeImageDialog({
   image,
   onCloseHandler,

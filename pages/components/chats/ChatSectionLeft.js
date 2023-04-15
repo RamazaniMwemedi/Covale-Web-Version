@@ -104,6 +104,9 @@ const ChatSectionLeft = ({
             colleagueUsername={chat.colleagueUsername}
             showRightHandler={showRightHandler}
             showRight={showRight}
+            colleagueProfilePic={
+              chat.colleagueProfilePic && chat.colleagueProfilePic.fileUrl
+            }
             id={id}
           />
           <Box
@@ -145,7 +148,12 @@ const ChatSectionLeft = ({
 
 export default ChatSectionLeft;
 
-const TopBar = ({ colleagueUsername, showRightHandler, showRight, id }) => {
+const TopBar = ({
+  colleagueUsername,
+  showRightHandler,
+  showRight,
+  colleagueProfilePic,
+}) => {
   const theme = useTheme();
   return (
     <Box
@@ -180,7 +188,11 @@ const TopBar = ({ colleagueUsername, showRightHandler, showRight, id }) => {
           textAlign: "center",
         }}
       >
-        <Avatar alt={colleagueUsername} sx={{ width: 45, height: 45 }}>
+        <Avatar
+          alt={colleagueUsername}
+          src={colleagueProfilePic}
+          sx={{ width: 45, height: 45 }}
+        >
           {colleagueUsername[0]}
         </Avatar>
         <Typography
@@ -323,7 +335,6 @@ const UserMessage = ({ message, handleShowFile }) => {
       decreptMessageHandler();
     }
   }, [keyPair, message]);
-
 
   return (
     <Box

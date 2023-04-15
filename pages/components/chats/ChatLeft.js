@@ -181,70 +181,74 @@ export default function ChatLeft({ user }) {
 const ProfileDialog = ({ user, handleChange, value }) => {
   const theme = useTheme();
   return (
-    <Box
-      sx={{
-        backgroundColor: theme.colors.background,
-        position: "sticky",
-        top: "0px",
-        zIndex: "1",
-      }}
-    >
-      <Box>
+    <>
+      {user ? (
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            textAlign: "center",
-            backgroundColor: theme.colors.background1,
-            padding: "20px",
-            borderTopLeftRadius: "8px",
-            gap: "10px",
+            backgroundColor: theme.colors.background,
+            position: "sticky",
+            top: "0px",
+            zIndex: "1",
           }}
         >
           <Box>
-            {" "}
-            <Avatar src={user.profilePic.fileUrl}>
-              {user && user.username[0]}
-            </Avatar>{" "}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                textAlign: "center",
+                backgroundColor: theme.colors.background1,
+                padding: "20px",
+                borderTopLeftRadius: "8px",
+                gap: "10px",
+              }}
+            >
+              <Box>
+                {" "}
+                <Avatar src={user.profilePic ? user.profilePic.fileUrl : null}>
+                  {user && user.username[0]}
+                </Avatar>{" "}
+              </Box>
+              <Typography variant="h6" noWrap>
+                {user && user.username}
+              </Typography>
+            </Box>
           </Box>
-          <Typography variant="h6" noWrap>
-            {user && user.username}
-          </Typography>
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                textColor="secondary"
+                indicatorColor="secondary"
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+                sx={{
+                  backgroundColor: theme.colors.background1,
+                  position: "sticky",
+                  top: "10px",
+                  zIndex: "1",
+                }}
+              >
+                <Tab
+                  label="Chats"
+                  sx={{
+                    textTransform: "none",
+                    fontSize: "18px",
+                  }}
+                  value="chats"
+                />
+                <Tab
+                  label="Team"
+                  value="team"
+                  sx={{
+                    textTransform: "none",
+                    fontSize: "18px",
+                  }}
+                />
+              </TabList>
+            </Box>
+          </TabContext>
         </Box>
-      </Box>
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList
-            textColor="secondary"
-            indicatorColor="secondary"
-            onChange={handleChange}
-            aria-label="lab API tabs example"
-            sx={{
-              backgroundColor: theme.colors.background1,
-              position: "sticky",
-              top: "10px",
-              zIndex: "1",
-            }}
-          >
-            <Tab
-              label="Chats"
-              sx={{
-                textTransform: "none",
-                fontSize: "18px",
-              }}
-              value="chats"
-            />
-            <Tab
-              label="Team"
-              value="team"
-              sx={{
-                textTransform: "none",
-                fontSize: "18px",
-              }}
-            />
-          </TabList>
-        </Box>
-      </TabContext>
-    </Box>
+      ) : null}
+    </>
   );
 };

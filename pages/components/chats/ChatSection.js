@@ -82,6 +82,9 @@ const ChatSection = ({
               <ChatSectionRight
                 files={chat.files}
                 colleagueUsername={chat.colleagueUsername}
+                colleagueProfilePic={
+                  chat.colleagueProfilePic && chat.colleagueProfilePic.fileUrl
+                }
               />
             </Box>
           ) : null}

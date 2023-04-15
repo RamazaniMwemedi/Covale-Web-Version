@@ -55,7 +55,7 @@ export default function AccountMenu({ myProfileBackgroundColor }) {
   };
   return (
     <>
-      {user && (
+      {user ? (
         <Box>
           <Box
             sx={{
@@ -83,7 +83,7 @@ export default function AccountMenu({ myProfileBackgroundColor }) {
                     height: 32,
                     fontSize: "0.8rem",
                   }}
-                  src={user.profilePic.fileUrl}
+                  src={user.profilePic && user.profilePic.fileUrl}
                 >
                   {user.firstname[0]} {user.lastname[0]}
                 </Avatar>
@@ -132,7 +132,7 @@ export default function AccountMenu({ myProfileBackgroundColor }) {
                   height: 32,
                   fontSize: "0.8rem",
                 }}
-                src={user.profilePic.fileUrl}
+                src={user.profilePic && user.profilePic.fileUrl}
               >
                 {user.firstname[0]} {user.lastname[0]}
               </Avatar>{" "}
@@ -219,7 +219,7 @@ export default function AccountMenu({ myProfileBackgroundColor }) {
             </MenuItem>
           </Menu>
         </Box>
-      )}
+      ) : null}
     </>
   );
 }

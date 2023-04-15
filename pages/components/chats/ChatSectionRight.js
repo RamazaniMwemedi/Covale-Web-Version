@@ -22,7 +22,11 @@ import {
   XlsIcon,
 } from "../../../assets/Icons";
 
-const ChatSectionRight = ({ colleagueUsername, files }) => {
+const ChatSectionRight = ({
+  colleagueUsername,
+  files,
+  colleagueProfilePic,
+}) => {
   const [showFile, setShowFile] = useState(false);
   const [file, setFile] = useState(null);
   const handleShowFile = (file) => {
@@ -67,7 +71,10 @@ const ChatSectionRight = ({ colleagueUsername, files }) => {
               flexDirection: "column",
             }}
           >
-            <Friend colleagueUsername={colleagueUsername} />
+            <Friend
+              colleagueUsername={colleagueUsername}
+              colleagueProfilePic={colleagueProfilePic}
+            />
             <br />
           </Box>
           <Box
@@ -90,7 +97,7 @@ export default ChatSectionRight;
 
 // Friend short details
 
-const Friend = ({ colleagueUsername }) => {
+const Friend = ({ colleagueUsername, colleagueProfilePic }) => {
   return (
     <Box
       sx={{
@@ -101,7 +108,10 @@ const Friend = ({ colleagueUsername }) => {
       }}
     >
       {/* Avatr  Name */}
-      <Avatar sx={{ width: "120px", height: "120px" }}>
+      <Avatar
+        sx={{ width: "120px", height: "120px" }}
+        src={colleagueProfilePic}
+      >
         {colleagueUsername[0]}
       </Avatar>
       <Box

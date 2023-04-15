@@ -175,4 +175,17 @@ export const addCoverPic = async (token, formData) => {
     return response.data;
   }
 };
-
+export const updateProfessionalSum = async (token, professionalSumm) => {
+  if (token && professionalSumm) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/v1/users/updateProfessionalSummary`,
+      { professionalSummary: professionalSumm },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};

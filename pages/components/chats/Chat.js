@@ -86,7 +86,10 @@ export default function Chat({ chat }) {
             marginTop: "-8px",
           }}
         >
-          <Avatar alt={chat.colleagueUsername[0]}>
+          <Avatar
+            alt={chat.colleagueUsername[0]}
+            src={chat.colleagueProfilePic && chat.colleagueProfilePic.fileUrl}
+          >
             {chat.colleagueUsername[0]}
           </Avatar>
           <Box
