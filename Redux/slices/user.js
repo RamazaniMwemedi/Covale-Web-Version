@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {};
 
@@ -33,6 +33,24 @@ const userSlice = createSlice({
         };
       }
     },
+    addWorkExperienceToState(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          user: state.user.workExperiences.push(payload),
+        };
+      }
+    },
+    updateworkexperienceState(state, { payload }) {
+      if (payload) {
+        state = {
+          ...state,
+          user: state.user.workExperiences
+            .filter((item) => item._id === payload._id)
+            .map((p) => console.log("This is P:>>",current(p))),
+        };
+      }
+    },
     removeUser(state) {
       state.user = initialState;
     },
@@ -50,5 +68,7 @@ export const {
   updateCoverPhotoe,
   signOut,
   professionalSummaryUpdate,
+  addWorkExperienceToState,
+  updateworkexperienceState,
 } = userSlice.actions;
 export const reducer = userSlice.reducer;

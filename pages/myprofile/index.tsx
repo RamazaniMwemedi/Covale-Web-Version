@@ -26,7 +26,7 @@ import {
   FullWidthTabsProps,
   RootState,
   TabPanelProps,
-} from "../../interfaces";
+} from "../../interfaces/myprofile";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
@@ -54,52 +54,52 @@ const MyAccount = () => {
     setUpdateCoverPic(false);
     setCoverImage(null);
   };
- const croppedImageReady = async (file: File): Promise<void> => {
-   if (file) {
-     const formData = new FormData();
-     formData.append("files", file);
-     console.log("Hello there", file);
-     const reader = new FileReader();
-     reader.onload = () => {
-       const result = reader.result;
-       if (result) {
-         // check if result is not null
-         setCoverImage({
-           file: file,
-           fileName: file.name,
-           fileUrl: result as string, // cast result as string
-           fileUri: result as string, // cast result as string
-           fileType: file.type,
-           fileSize: file.size,
-         });
-       }
-     };
-     reader.readAsDataURL(file);
-     const newCoverPic = await addCoverPic(token, formData);
-     dispatch(updateCoverPhotoe(newCoverPic));
-   }
- };
-const handleSelectCoverPic = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result;
-      if (result) {
-        // check if result is not null
-        setCoverImage({
-          file: file,
-          fileName: file.name,
-          fileUrl: result as string, // cast result as string
-          fileUri: result as string, // cast result as string
-          fileType: file.type,
-          fileSize: file.size,
-        });
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-};
+  const croppedImageReady = async (file: File): Promise<void> => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("files", file);
+      console.log("Hello there", file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        if (result) {
+          // check if result is not null
+          setCoverImage({
+            file: file,
+            fileName: file.name,
+            fileUrl: result as string, // cast result as string
+            fileUri: result as string, // cast result as string
+            fileType: file.type,
+            fileSize: file.size,
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+      const newCoverPic = await addCoverPic(token, formData);
+      dispatch(updateCoverPhotoe(newCoverPic));
+    }
+  };
+  const handleSelectCoverPic = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        if (result) {
+          // check if result is not null
+          setCoverImage({
+            file: file,
+            fileName: file.name,
+            fileUrl: result as string, // cast result as string
+            fileUri: result as string, // cast result as string
+            fileType: file.type,
+            fileSize: file.size,
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleChoseCover = () => {
     coverFileInputRef.current?.click();

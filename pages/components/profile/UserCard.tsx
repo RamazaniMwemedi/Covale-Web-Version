@@ -30,7 +30,7 @@ import {
   CropperImageInterface,
   RootState,
   UserInterFace,
-} from "../../../interfaces";
+} from "../../../interfaces/myprofile";
 
 const UserCard = () => {
   const userStore = useSelector((state: RootState) => state.user);
