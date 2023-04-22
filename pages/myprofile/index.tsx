@@ -4,8 +4,18 @@ import { Box } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useTheme } from "@mui/styles";
-import { Button, CssBaseline, Tabs, Tab, Typography } from "@mui/material";
+import {
+  Button,
+  CssBaseline,
+  Tabs,
+  Tab,
+  Typography,
+  IconButton,
+  MenuItem,
+  Menu,
+} from "@mui/material";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import {
   useCheckLogedinUser,
@@ -27,6 +37,11 @@ import {
   RootState,
   TabPanelProps,
 } from "../../interfaces/myprofile";
+import {
+  PersonalInfoIcon,
+  PrivacyIcon,
+  UserShieldIcon,
+} from "../../assets/Icons";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
@@ -42,7 +57,7 @@ const MyAccount = () => {
   );
   const token = useCheckLogedinUserToken();
   const coverFileInputRef = React.useRef<HTMLInputElement>(null);
-  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (newValue: number) => {
     setValue(newValue);
   };
 
@@ -286,7 +301,7 @@ function FullWidthTabs({ value, handleChange }: FullWidthTabsProps) {
     >
       <Tabs
         value={value}
-        onChange={handleChange}
+        onChange={(_, value) => handleChange(value)}
         indicatorColor="secondary"
         textColor="secondary"
         variant="fullWidth"
@@ -306,7 +321,7 @@ function FullWidthTabs({ value, handleChange }: FullWidthTabsProps) {
         <Tab sx={{ textTransform: "unset" }} label="Teams" {...a11yProps(3)} />
         <Tab sx={{ textTransform: "unset" }} label="Files" {...a11yProps(4)} />
       </Tabs>
-      <Box>Menu</Box>
+      <LongMenu handleChange={handleChange} />{" "}
     </Box>
   );
 }
@@ -334,6 +349,91 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
       <TabPanel value={value} index={4} dir={theme.direction}>
         <Files />
       </TabPanel>
+      <TabPanel value={value} index={5} dir={theme.direction}>
+        Personal Info
+      </TabPanel>
+      <TabPanel value={value} index={6} dir={theme.direction}>
+        Data & Privacy
+      </TabPanel>
+      <TabPanel value={value} index={7} dir={theme.direction}>
+        Security
+      </TabPanel>
     </SwipeableViews>
   );
 };
+
+function LongMenu({
+  handleChange,
+}: {
+  handleChange: (newValue: number) => void;
+}) {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: 48 * 4.5,
+            width: "25ch",
+          },
+        }}
+      >
+        <MenuItem
+          sx={{
+            display: "flex",
+            gap: 1,
+          }}
+          onClick={() => handleChange(5)}
+        >
+          <PersonalInfoIcon height={24} width={24} />
+          <Typography>Personal Info</Typography>
+        </MenuItem>
+        <MenuItem
+          sx={{
+            display: "flex",
+            gap: 1,
+          }}
+          onClick={() => handleChange(6)}
+        >
+          <PrivacyIcon height={24} width={24} />
+          <Typography>Data & Privacy</Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={() => handleChange(7)}
+          sx={{
+            display: "flex",
+            gap: 1,
+          }}
+        >
+          <UserShieldIcon height={24} width={24} />
+          <Typography>Security</Typography>
+        </MenuItem>
+      </Menu>
+    </div>
+  );
+}

@@ -884,53 +884,7 @@ const Summary = () => {
       </Box>
     );
   };
-  const EducationAndCertificates = () => {
-    return (
-      <Box
-        sx={{
-          bgcolor: theme.colors.textBackground2,
-          p: 1,
-          borderRadius: 2,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: "bold",
-              mb: 0.5,
-            }}
-          >
-            Education and Certificates
-          </Typography>
-          <Box>
-            <IconButton size="small">
-              <AddRoundedIcon fontSize="small" />
-            </IconButton>
-            <IconButton size="small">
-              <EditRoundedIcon fontSize="small" />
-            </IconButton>
-          </Box>
-        </Box>
 
-        <CardWithAvatarAndDate
-          title={"University of the People"}
-          subTitle="BS Computer Science, Front end engineer"
-          avatarSrc="https://th.bing.com/th/id/R.07095f38f56b752bd8ff8a159f634478?rik=N%2fu22PtUr2kf9A&pid=ImgRaw&r=0"
-          startDate={new Date("11/01/2020")}
-          endDate={new Date("11/01/2025")}
-          isUntillNow={false}
-          jobDescription="Hello"
-        />
-      </Box>
-    );
-  };
   return (
     <Box
       sx={{
@@ -955,7 +909,6 @@ const Summary = () => {
       <WorkExperience />
       <br />
       {/* Education And Certificates */}
-      <EducationAndCertificates />
     </Box>
   );
 };

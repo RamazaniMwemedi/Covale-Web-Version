@@ -76,7 +76,7 @@ export interface CropeImaageDialogProp {
 }
 export interface FullWidthTabsProps {
   value: number;
-  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
+  handleChange: (newValue: number) => void;
   handleChangeIndex: (index: number) => void;
 }
 
