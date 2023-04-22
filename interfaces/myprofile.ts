@@ -25,7 +25,7 @@ export interface RootState {
           startDate: Date;
           endDate: Date;
           locationType: string;
-          _id: string;
+          id: string;
         }
       ];
     } | null;
@@ -173,7 +173,7 @@ export interface SelectWorkExperienceProp {
   startDate: Date;
   endDate: Date;
   locationType: string;
- _id: string;
+ id: string;
 }
 
 export interface WorkExperience {
