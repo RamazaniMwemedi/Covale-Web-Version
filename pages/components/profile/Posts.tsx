@@ -1204,6 +1204,13 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({
     setFormData({ ...formData, ["isUntillNow"]: checked });
   };
 
+  const onStartDateValueChange = (date: MomentInput) => {
+    setFormData({ ...formData, ["startDate"]: date });
+  };
+  const onEndDateValueChange = (date: MomentInput) => {
+    setFormData({ ...formData, ["endDate"]: date });
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     updateWorkExperienceHandler(formData);
@@ -1409,7 +1416,9 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({
                   <DatePicker
                     label="Start date"
                     value={moment(formData.startDate).format("YYYY-MM-DD")}
-                    onChange={() => {}}
+                    onChange={(selectedEndDate: MomentInput) => {
+                      onStartDateValueChange(selectedEndDate);
+                    }}
                     views={["year", "month"]}
                     openTo="year"
                     renderInput={(params) => (
@@ -1435,7 +1444,9 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({
                     <DatePicker
                       label="End date"
                       value={formData.endDate}
-                      onChange={(selectedEndDate: MomentInput) => {}}
+                      onChange={(selectedEndDate: MomentInput) => {
+                        onEndDateValueChange(selectedEndDate);
+                      }}
                       views={["year", "month"]}
                       openTo="year"
                       renderInput={(params) => (

@@ -41,7 +41,18 @@ const userSlice = createSlice({
         };
       }
     },
+    updateworkexperienceState(state, { payload }) {
+      if (payload) {
+        const updatedWorkExperiences = state.user.workExperiences.map((item) =>
+          item.id === payload.id ? payload : item
+        );
 
+        state.user = {
+          ...state.user,
+          workExperiences: updatedWorkExperiences,
+        };
+      }
+    },
     removeWorkExperienceFromState(state, { payload }) {
       if (payload) {
         state = {

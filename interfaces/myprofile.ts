@@ -173,7 +173,7 @@ export interface SelectWorkExperienceProp {
   startDate: Date;
   endDate: Date;
   locationType: string;
- id: string;
+  id: string;
 }
 
 export interface WorkExperience {
@@ -184,7 +184,7 @@ export interface WorkExperience {
   employmentType: string;
   jobDescription: string;
   isUntillNow: boolean;
-  startDate: Date;
-  endDate: Date;
+  startDate: MomentInput;
+  endDate: MomentInput;
   id: string;
 }
