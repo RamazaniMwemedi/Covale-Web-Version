@@ -236,3 +236,22 @@ export const deleteWorkExperience = async (token, id) => {
     return response.data;
   }
 };
+
+export default {
+  allUsers,
+  addFriendById,
+  myFriends,
+  friendReqRecieved,
+  friendReqSent,
+  acceptFriendRequest,
+  removeFriendRequest,
+  cancelFriendRequest,
+  findUserById,
+  removeColleague,
+  addProfilePic,
+  addCoverPic,
+  updateProfessionalSum,
+  addWorkExperience,
+  updateWorkexperience,
+  deleteWorkExperience,
+};

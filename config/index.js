@@ -1,9 +1,9 @@
 // URLs object
 const URLS = {
   // Production URL
-  prodSerURL: "https://covale.herokuapp.com",
-  prodRtcURL: "https://rtcommunication.herokuapp.com",
-  prodSecSerURL: "https://covale-secrete.herokuapp.com",
+  prodSerURL: "https://covaleapi.vercel.app/",
+  prodRtcURL: "https://covalertcapi.vercel.app/",
+  prodSecSerURL: "https://covalesecurityapi.vercel.app/",
   // Development URL
   devSerURL: "http://localhost:5005",
   devRtcURL: "http://localhost:5055",
