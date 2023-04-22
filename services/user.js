@@ -208,15 +208,25 @@ export const addWorkExperience = async (token, workExperience) => {
 };
 
 export const updateWorkexperience = async (token, workExperience, id) => {
-  console.log("workExperience :>>", workExperience);
-  console.log("Token", token);
-  console.log("id", id);
-
   if (token && id) {
     const response = await axios.put(
       `${SERVER_ADDRESS}/api/v1/users/updateworkexperience/${id}`,
       workExperience,
 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
+export const deleteWorkExperience = async (token, id) => {
+  if (token && id) {
+    const response = await axios.delete(
+      `${SERVER_ADDRESS}/api/v1/users/updateworkexperience/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

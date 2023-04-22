@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   FormControl,
   FormControlLabel,
   Grid,
@@ -31,6 +32,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import {
   addWorkExperience,
+  deleteWorkExperience,
   updateProfessionalSum,
   updateWorkexperience,
 } from "../../../services/user";
@@ -39,6 +41,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addWorkExperienceToState,
   professionalSummaryUpdate,
+  removeWorkExperienceFromState,
   updateworkexperienceState,
 } from "../../../Redux/slices/user";
 import { OrganizationIcon } from "../../../assets/Icons";
@@ -53,7 +56,7 @@ import {
 } from "../../../interfaces/myprofile";
 import { MomentInput } from "moment";
 
-const Posts = ({}) => {
+const Posts = () => {
   return (
     <Box
       sx={{
@@ -751,6 +754,7 @@ const Summary = () => {
         startDate: startDate,
         endDate: endDate,
         isUntillNow: isUntillNow,
+        locationType: locationTypeValue,
       };
       const response = await addWorkExperience(token, workExperienceObject);
       dispatch(addWorkExperienceToState(response));
@@ -848,7 +852,7 @@ const Summary = () => {
             startDate={selectedWorkExperience.startDate}
             title={selectedWorkExperience.title}
             locationType={selectedWorkExperience.locationType}
-            id={selectedWorkExperience._id}
+            id={selectedWorkExperience.id}
           />
         )}
         <AddNewWorkExperince
@@ -1029,15 +1033,30 @@ const WorkExperienceDialog: FC<WorkExperienceDialogProp> = ({
   id,
 }) => {
   const [openForm, setOpenForm] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const token = useCheckLogedinUserToken();
   const dispatch = useDispatch();
   const updateWorkExperienceHandler = async (fromData: WorkExperience) => {
     if (token && fromData && id) {
+      setUpdating(true);
       const response = await updateWorkexperience(token, fromData, id);
       if (response) {
         console.log(response);
         dispatch(updateworkexperienceState(response));
         setOpenForm(false);
+        closeDialogHandler();
+        setUpdating(false);
+      }
+    }
+  };
+  const handleDeleteExperience = async (id: string) => {
+    if (token && id) {
+      setDeleting(true);
+      const response = await deleteWorkExperience(token, id);
+      if (response) {
+        dispatch(removeWorkExperienceFromState(id));
+        setDeleting(false);
         closeDialogHandler();
       }
     }
@@ -1067,6 +1086,7 @@ const WorkExperienceDialog: FC<WorkExperienceDialogProp> = ({
           </IconButton>
         </Box>
       </DialogTitle>
+      <Divider />
       <DialogContent>
         <Box sx={{ mb: 2 }}>
           <Grid container spacing={2}>
@@ -1097,10 +1117,6 @@ const WorkExperienceDialog: FC<WorkExperienceDialogProp> = ({
                 {moment(startDate).format("MMMM YYYY")}
                 {` `}&middot;{" "}
                 {isUntillNow ? "Present" : moment(endDate).format("MMMM YYYY")}
-                <FormControlLabel
-                  control={<Checkbox color="secondary" checked={isUntillNow} />}
-                  label="Currently Working Here"
-                />
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -1135,6 +1151,7 @@ const WorkExperienceDialog: FC<WorkExperienceDialogProp> = ({
           open={openForm}
           closeDialogHandler={() => setOpenForm(false)}
           updateWorkExperienceHandler={updateWorkExperienceHandler}
+          updating={updating}
           workExperience={{
             title,
             employmentType,
@@ -1147,6 +1164,8 @@ const WorkExperienceDialog: FC<WorkExperienceDialogProp> = ({
             locationType,
             id,
           }}
+          handleDeleteExperience={handleDeleteExperience}
+          deleting={deleting}
         />
       )}
     </Dialog>
@@ -1154,8 +1173,11 @@ const WorkExperienceDialog: FC<WorkExperienceDialogProp> = ({
 };
 type WorkExperienceFormProps = {
   open: boolean;
+  updating: boolean;
+  deleting: boolean;
   closeDialogHandler: () => void;
   updateWorkExperienceHandler: (updatedWorkExperience: WorkExperience) => void;
+  handleDeleteExperience: (id: string) => void;
   workExperience: WorkExperience;
 };
 
@@ -1164,12 +1186,16 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({
   closeDialogHandler,
   updateWorkExperienceHandler,
   workExperience,
+  handleDeleteExperience,
+  updating,
+  deleting,
 }) => {
   const [formData, setFormData] = useState<WorkExperience>(workExperience);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, id } = event.target;
 
+    console.log("ID :>>", id);
     setFormData({ ...formData, [id]: value });
   };
 
@@ -1206,35 +1232,42 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({
             alignItems: "center",
           }}
         >
-          <Box>
-            <Typography variant="h5">
-              <TextField
-                required
-                sx={{
-                  width: "90%",
-                  backgroundColor: theme.colors.textBackground,
-                  borderStyle: "none",
-                  marginTop: 1,
-                }}
-                variant="outlined"
-                size="small"
-                color="secondary"
-                margin="dense"
-                id="title"
-                fullWidth
-                inputProps={{ minLength: 50, maxLength: 350 }}
-                value={formData.title}
-                onChange={handleInputChange}
-              />
-            </Typography>
-            <Typography variant="body1" fontWeight="bold">
-              Position
-            </Typography>
-          </Box>
+          <Typography variant="h4" fontWeight="bold">
+            Modify Your Experience
+          </Typography>
         </DialogTitle>
+        <Divider />
         <DialogContent>
           <Box sx={{ mb: 2 }}>
             <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Box>
+                  {" "}
+                  <Typography variant="h6" fontWeight="bold">
+                    Position
+                  </Typography>
+                  <Typography variant="h5">
+                    <TextField
+                      required
+                      sx={{
+                        width: "90%",
+                        backgroundColor: theme.colors.textBackground,
+                        borderStyle: "none",
+                        marginTop: 1,
+                      }}
+                      variant="outlined"
+                      size="small"
+                      color="secondary"
+                      margin="dense"
+                      id="title"
+                      fullWidth
+                      inputProps={{ minLength: 50, maxLength: 350 }}
+                      value={formData.title}
+                      onChange={handleInputChange}
+                    />
+                  </Typography>
+                </Box>
+              </Grid>
               <Grid item xs={12} md={6}>
                 <Typography variant="h6" fontWeight="bold">
                   Organization Name
@@ -1504,10 +1537,11 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({
                   required
                   multiline
                   rows={5}
+                  id="jobDescription"
                   name="jobDescription"
                   color="secondary"
                   value={formData.jobDescription}
-                  // onChange={onChangeHandler}
+                  onChange={handleInputChange}
                   label="Job Description"
                   fullWidth
                 />
@@ -1515,30 +1549,68 @@ const WorkExperienceForm: FC<WorkExperienceFormProps> = ({
             </Grid>
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={closeDialogHandler}
-            sx={{
-              textTransform: "none",
-            }}
-            color="inherit"
-            size="small"
-            variant="outlined"
-          >
-            Cancel
-          </Button>
-          <Button
-            color="secondary"
-            variant="contained"
-            sx={{
-              textTransform: "none",
-            }}
-            size="small"
-            onClick={() => updateWorkExperienceHandler(formData)}
-          >
-            Update
-          </Button>
-        </DialogActions>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            p: 1,
+          }}
+        >
+          {deleting ? (
+            <LoadingButton
+              loading
+              endIcon={<SendIcon />}
+              loadingPosition="end"
+              variant="contained"
+            />
+          ) : (
+            <Button
+              variant="contained"
+              sx={{
+                textTransform: "none",
+              }}
+              size="small"
+              color="error"
+              onClick={() => handleDeleteExperience(formData.id)}
+            >
+              Delete
+            </Button>
+          )}
+          <Box>
+            <Button
+              onClick={closeDialogHandler}
+              sx={{
+                textTransform: "none",
+                m: 1,
+              }}
+              color="inherit"
+              size="small"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            {updating ? (
+              <LoadingButton
+                loading
+                endIcon={<SendIcon />}
+                loadingPosition="end"
+                variant="contained"
+              />
+            ) : (
+              <Button
+                color="secondary"
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                }}
+                size="small"
+                onClick={() => updateWorkExperienceHandler(formData)}
+              >
+                Update
+              </Button>
+            )}
+          </Box>
+        </Box>
       </form>
     </Dialog>
   );

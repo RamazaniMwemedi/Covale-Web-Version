@@ -41,13 +41,14 @@ const userSlice = createSlice({
         };
       }
     },
-    updateworkexperienceState(state, { payload }) {
+
+    removeWorkExperienceFromState(state, { payload }) {
       if (payload) {
         state = {
           ...state,
-          user: state.user.workExperiences
-            .filter((item) => item._id === payload._id)
-            .map((p) => console.log("This is P:>>",current(p))),
+          user: state.user.workExperiences.filter(
+            (experience) => experience.id !== payload.id
+          ),
         };
       }
     },
@@ -70,5 +71,6 @@ export const {
   professionalSummaryUpdate,
   addWorkExperienceToState,
   updateworkexperienceState,
+  removeWorkExperienceFromState,
 } = userSlice.actions;
 export const reducer = userSlice.reducer;
