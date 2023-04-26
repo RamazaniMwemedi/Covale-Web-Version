@@ -1,17 +1,17 @@
 // URLs object
 const URLS = {
   // Production URL
-  prodSerURL: "https://covaleapi.vercel.app",
+  prodServerURL: "https://covaleapi.vercel.app",
   prodRtcURL: "https://covalertcapi.vercel.app",
-  prodSecSerURL: "https://covalesecurityapi.vercel.app",
+  prodSecuritySerURL: "https://covalesecurityapi.vercel.app",
   // Development URL
-  devSerURL: "http://localhost:5005",
+  devServerURL: "http://localhost:5005",
   devRtcURL: "http://localhost:5055",
-  devSecSerURL: "http://localhost:5006",
+  devSecuritySerURL: "http://localhost:5006",
   // Secrete server url
 };
 module.exports = {
-  SERVER_ADDRESS: URLS.prodSerURL,
-  RTC_ADDRESS: URLS.prodRtcURL,
-  SECRETE_SERVER_ADDRESS: URLS.prodSecSerURL,
+  SERVER_ADDRESS: URLS.devServerURL,
+  RTC_ADDRESS: URLS.devRtcURL,
+  SECRETE_SERVER_ADDRESS: URLS.devSecuritySerURL,
 };
