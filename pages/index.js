@@ -174,7 +174,7 @@ function Index() {
             textAlign: "center",
           }}
         >
-          Join the waitlist
+          Join the wait list
         </Typography>
         <br />
         <br />

@@ -1,10 +1,43 @@
-import { Avatar, Divider, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  IconButton,
+  Menu,
+  Radio,
+  RadioGroup,
+  SelectChangeEvent,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { FC, RefObject, useRef, useState } from "react";
 import { RootState, ThemeInterface } from "../../../interfaces/myprofile";
 import { useSelector } from "react-redux";
-import { EventIcon, FileIcon, ImageIcon } from "../../../assets/Icons";
+import {
+  EventIcon,
+  FileIcon,
+  ImageIcon,
+  PrizeIcon,
+  VideoIcon,
+} from "../../../assets/Icons";
+import { LoadingButton } from "@mui/lab";
+import SendIcon from "@mui/icons-material/Send";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import PollRoundedIcon from "@mui/icons-material/PollRounded";
+import { CropperImageInterface } from "../../../interfaces/myprofile";
+import { CropeImageDialog } from "./UserCard";
+import FileComponent from "../mediaFiles/FileComponent";
 
 const PostRight = () => {
   return (
@@ -16,9 +49,132 @@ const PostRight = () => {
 
 const AddANewPost = () => {
   const theme: ThemeInterface = useTheme();
-
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
+
+  // States
+  const [open, setOpen] = useState(false);
+  const [postAudience, setPostAudience] = useState<string>("Anyone");
+  const [postContentText, setPostContentText] = useState<string>("");
+
+  const [selectPhoto, setSelectPhoto] = useState(false);
+  const [selectVideo, setSelectVideo] = useState(false);
+  const [selectFile, setSelectFile] = useState(false);
+
+  // References
+  const photoReference = useRef<HTMLInputElement>(null);
+  const videoReference = useRef<HTMLInputElement | undefined>(undefined);
+  const fileReference = useRef<HTMLInputElement | undefined>(undefined);
+
+  // Files
+  const [photo, setPhoto] = useState<CropperImageInterface | null>(null);
+  const [video, setVideo] = useState<CropperImageInterface | null>(null);
+  const [file, setFile] = useState<CropperImageInterface | null>(null);
+  //    All files
+  const [allFiles, setAllFiles] = useState<CropperImageInterface[]>([]);
+
+  // Handles
+  const toggleOpenCreatePostForm = () => {
+    setOpen((prev) => !prev);
+  };
+
+  const onSelectPostAudienceChange = (value: string) => {
+    setPostAudience(value);
+  };
+
+  const onPostContentTextChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setPostContentText(e.target.value);
+  };
+
+  const handleChosePhoto = () => {
+    photoReference.current?.click();
+    setSelectPhoto(true);
+  };
+  const handleChoseVideo = () => {
+    videoReference.current?.click();
+    setSelectVideo(true);
+  };
+  const handleChoseFile = () => {
+    fileReference.current?.click();
+    setSelectFile(true);
+  };
+  const handleSelectPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    console.log("File :>>", file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        if (result) {
+          // check if result is not null
+          const timestamp = new Date()
+            .toISOString()
+            .replace(/[-:.]/g, "")
+            .replace("T", "_")
+            .split("_")
+            .slice(0, 2)
+            .join("_");
+
+          const fileName = `Covale_${timestamp}`;
+          setPhoto({
+            file: file,
+            fileName,
+            fileUrl: result as string, // cast result as string
+            fileUri: result as string, // cast result as string
+            fileType: file.type,
+            fileSize: file.size,
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const croppedImageReady = async (file: File): Promise<void> => {
+    if (file) {
+      const formData = new FormData();
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        if (result) {
+          // check if result is not null
+          const timestamp = new Date()
+            .toISOString()
+            .replace(/[-:.]/g, "")
+            .replace("T", "_")
+            .split("_")
+            .slice(0, 2)
+            .join("_");
+          const fileName = `Covale_${timestamp}`;
+          setAllFiles((prev) => [
+            ...prev,
+            {
+              file: file,
+              fileName,
+              fileUrl: result as string, // cast result as string
+              fileUri: result as string, // cast result as string
+              fileType: file.type,
+              fileSize: file.size,
+            },
+          ]);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeFile = (fileName: string) => {
+    setAllFiles((prevFiles) =>
+      prevFiles.filter((file) => file?.fileName !== fileName)
+    );
+  };
+
+  const onCloseHandler = () => {
+    setSelectPhoto(false);
+    setPhoto(null);
+  };
+
   return (
     <>
       {user && (
@@ -53,19 +209,25 @@ const AddANewPost = () => {
                 </Avatar>
               )}
 
-              <Box
+              <Button
                 sx={{
+                  alignItems: "center",
+                  display: "flex",
+                  gap: 1,
                   bgcolor: theme.colors.textBackground,
-                  width: "100%",
                   p: 1,
                   borderRadius: 3,
+                  textTransform: "none",
                   cursor: "pointer",
+                  width: "100%",
+                  justifyContent: "flex-start",
                 }}
+                color="secondary"
+                onClick={toggleOpenCreatePostForm}
+                variant="outlined"
               >
-                <Typography variant="body1" fontWeight={600}>
-                  Publish an Update
-                </Typography>
-              </Box>
+                Publish an Update
+              </Button>
             </Box>
             <Divider />
             {/* Botom */}
@@ -76,7 +238,7 @@ const AddANewPost = () => {
                 pt: 1,
               }}
             >
-              <Typography
+              <Button
                 sx={{
                   alignItems: "center",
                   display: "flex",
@@ -84,13 +246,16 @@ const AddANewPost = () => {
                   bgcolor: theme.colors.textBackground,
                   p: 1,
                   borderRadius: 3,
+                  textTransform: "none",
                   cursor: "pointer",
                 }}
+                color="secondary"
+                onClick={toggleOpenCreatePostForm}
               >
                 <ImageIcon height={24} width={24} />
                 Photos / Video
-              </Typography>
-              <Typography
+              </Button>
+              <Button
                 sx={{
                   alignItems: "center",
                   display: "flex",
@@ -98,13 +263,15 @@ const AddANewPost = () => {
                   bgcolor: theme.colors.textBackground,
                   p: 1,
                   borderRadius: 3,
+                  textTransform: "none",
                   cursor: "pointer",
                 }}
+                color="secondary"
               >
                 <FileIcon height={24} width={24} />
                 Files
-              </Typography>
-              <Typography
+              </Button>
+              <Button
                 sx={{
                   alignItems: "center",
                   display: "flex",
@@ -112,15 +279,360 @@ const AddANewPost = () => {
                   bgcolor: theme.colors.textBackground,
                   p: 1,
                   borderRadius: 3,
+                  textTransform: "none",
                   cursor: "pointer",
                 }}
+                color="secondary"
               >
                 <EventIcon height={24} width={24} />
                 Event
-              </Typography>
+              </Button>
             </Box>
           </Box>
         </Box>
+      )}
+      {open && (
+        <>
+          <CreateNewPostForm
+            open={open}
+            posting={false}
+            toggleOpenCreatePostForm={toggleOpenCreatePostForm}
+            postAudience={postAudience}
+            postContentText={postContentText}
+            handleChosePhoto={handleChosePhoto}
+            photoReference={photoReference}
+            handleSelectPhoto={handleSelectPhoto}
+            allFiles={allFiles}
+            removeFile={removeFile}
+            onSelectPostAudienceChange={onSelectPostAudienceChange}
+          />
+          {selectPhoto && photo ? (
+            <CropeImageDialog
+              image={photo}
+              croppedImageReady={croppedImageReady}
+              onCloseHandler={onCloseHandler}
+              rounded={false}
+              caption="Update Cover Photo"
+              aspect={16 / 9}
+            />
+          ) : null}
+        </>
+      )}
+    </>
+  );
+};
+
+interface CreateNewPostFormProp {
+  open: boolean;
+  posting: boolean;
+  postAudience: string;
+  postContentText: string;
+  toggleOpenCreatePostForm: () => void;
+  handleChosePhoto: () => void;
+  photoReference: RefObject<HTMLInputElement>;
+  handleSelectPhoto: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  allFiles: CropperImageInterface[];
+  removeFile: (fileName: string) => void;
+  onSelectPostAudienceChange: (value: string) => void;
+}
+
+const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
+  open,
+  toggleOpenCreatePostForm,
+  posting,
+  postContentText,
+  postAudience,
+  handleChosePhoto,
+  photoReference,
+  handleSelectPhoto,
+  allFiles,
+  removeFile,
+  onSelectPostAudienceChange,
+}) => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openSelect = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const theme: ThemeInterface = useTheme();
+
+  return (
+    <>
+      {user && (
+        <Dialog open={open} fullWidth maxWidth="sm">
+          <DialogTitle>
+            Create a Post{" "}
+            <IconButton
+              aria-label="close"
+              onClick={toggleOpenCreatePostForm}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+              size="small"
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            {/* User Box */}
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+              }}
+            >
+              {user.profilePic ? (
+                <Avatar
+                  sx={{
+                    height: 50,
+                    width: 50,
+                  }}
+                  src={user.profilePic.fileUrl}
+                >
+                  {user && user.username[0]}
+                </Avatar>
+              ) : (
+                <Avatar
+                  sx={{
+                    height: 30,
+                    width: 30,
+                  }}
+                >
+                  {user && user.username[0]}
+                  {user && user.lastname[0]}
+                </Avatar>
+              )}{" "}
+              <Box>
+                <Typography variant="subtitle1">
+                  {`${user.username} ${user.lastname}`}
+                </Typography>
+                <div>
+                  <Button
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={openSelect ? "long-menu" : undefined}
+                    aria-expanded={openSelect ? "true" : undefined}
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    sx={{
+                      alignItems: "center",
+                      display: "flex",
+                      gap: 1,
+                      bgcolor: theme.colors.textBackground,
+                      p: 1,
+                      borderRadius: 2,
+                      textTransform: "none",
+                      cursor: "pointer",
+                      justifyContent: "flex-start",
+                    }}
+                    color="secondary"
+                  >
+                    {postAudience} <ArrowDropDownRoundedIcon />
+                  </Button>
+                  <Menu
+                    id="long-menu"
+                    MenuListProps={{
+                      "aria-labelledby": "long-button",
+                    }}
+                    anchorEl={anchorEl}
+                    open={openSelect}
+                    onClose={handleClose}
+                    PaperProps={{
+                      style: {
+                        maxHeight: 48 * 4.5,
+                        width: "40ch",
+                      },
+                    }}
+                  >
+                    <FormControl
+                      sx={{
+                        pl: 2,
+                      }}
+                      color="secondary"
+                    >
+                      <FormLabel id="demo-radio-buttons-group-label">
+                        Who can see your post?
+                      </FormLabel>
+                      <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue={postAudience}
+                        name="radio-buttons-group"
+                        onChange={(_, value) => {
+                          onSelectPostAudienceChange(value);
+                          handleClose();
+                        }}
+                      >
+                        <FormControlLabel
+                          value="Anyone"
+                          control={<Radio color="secondary" />}
+                          label="Anyone"
+                        />
+                        <FormControlLabel
+                          value="My Connection only"
+                          control={<Radio color="secondary" />}
+                          label="My Connection only"
+                        />
+                        <FormControlLabel
+                          value="other"
+                          control={<Radio color="secondary" />}
+                          label="Other"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </Menu>
+                </div>
+              </Box>
+            </Box>
+            <br />
+            {/* Post Content */}
+            <TextField
+              fullWidth
+              id="fullWidth"
+              color="secondary"
+              multiline
+              maxRows={6}
+              sx={{
+                // Remove border
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "transparent",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "transparent",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "transparent",
+                  },
+                },
+              }}
+              placeholder="What do you want to talk about today?"
+            />
+
+            {/* Files */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
+                gap: "10px",
+                p: 1,
+                ml: 1,
+                maxHeight: "300px",
+                overflow: "scroll",
+                overflowX: "unset",
+              }}
+            >
+              {allFiles.length > 0 &&
+                allFiles.map((file) => (
+                  <Box position="relative">
+                    <FileComponent
+                      file={file}
+                      width={200}
+                      height={150}
+                      displayFile
+                    />
+                    <IconButton
+                      aria-label="close"
+                      onClick={() => removeFile(file.fileName)}
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        right: 5,
+                        color: (theme) => theme.palette.grey[500],
+                      }}
+                      size="small"
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                ))}
+            </Box>
+            {/* Add to your Post */}
+            <Box
+              sx={{
+                boxShadow: 3,
+                display: "flex",
+                alignItems: "center",
+                p: 1,
+                justifyContent: "space-between",
+                borderRadius: 2,
+                mt: 0.8,
+              }}
+            >
+              <Typography variant="subtitle2">Add to your post</Typography>
+              <Box>
+                <Tooltip title="Photo" placement="top-start">
+                  <IconButton onClick={handleChosePhoto}>
+                    <ImageIcon height={24} width={24} />
+                    {photoReference && (
+                      <input
+                        type="file"
+                        hidden
+                        ref={photoReference}
+                        accept="image/*"
+                        onChange={handleSelectPhoto}
+                      />
+                    )}
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Video" placement="top-start">
+                  <IconButton>
+                    <VideoIcon height={24} width={24} />
+                  </IconButton>
+                </Tooltip>{" "}
+                <Tooltip title="File" placement="top-start">
+                  <IconButton>
+                    <FileIcon height={24} width={24} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Event" placement="top-start">
+                  <IconButton>
+                    <EventIcon height={24} width={24} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Event" placement="top-start">
+                  <IconButton>
+                    <PollRoundedIcon color="secondary" fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Celebrate" placement="top-start">
+                  <IconButton>
+                    <PrizeIcon height={24} width={24} />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            {posting ? (
+              <LoadingButton
+                loading
+                endIcon={<SendIcon />}
+                loadingPosition="end"
+                variant="contained"
+              />
+            ) : (
+              <Button
+                color="secondary"
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                }}
+                size="small"
+              >
+                Post
+              </Button>
+            )}
+          </DialogActions>
+        </Dialog>
       )}
     </>
   );

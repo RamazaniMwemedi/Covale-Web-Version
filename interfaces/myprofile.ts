@@ -75,7 +75,7 @@ export interface UserInterFace {
   };
 }
 export interface CropperImageInterface {
-  file: File;
+  file: File|null;
   fileName: string;
   fileUrl: string;
   fileUri: string;

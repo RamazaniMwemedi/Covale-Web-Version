@@ -12,7 +12,7 @@ import {
   OtherFile,
 } from "../../../assets/ExtraComponents";
 
-const FileComponent = ({ file, height, width, controls, displayFile }) => {
+const FileComponent = ({ file, height, width, displayFile }) => {
   if (file) {
     if (file.fileType) {
       if (file.fileType.includes("image")) {
@@ -140,7 +140,9 @@ const FileComponent = ({ file, height, width, controls, displayFile }) => {
         );
       }
     }
+    return null;
   }
+  return null;
 };
 
 export default FileComponent;
