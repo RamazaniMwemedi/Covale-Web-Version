@@ -13,7 +13,6 @@ import {
   Menu,
   Radio,
   RadioGroup,
-  SelectChangeEvent,
   TextField,
   Tooltip,
   Typography,
@@ -35,6 +34,10 @@ import SendIcon from "@mui/icons-material/Send";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import PollRoundedIcon from "@mui/icons-material/PollRounded";
+import Groups3RoundedIcon from "@mui/icons-material/Groups3Rounded";
+import PublicIcon from "@mui/icons-material/Public";
+import LockRoundedIcon from "@mui/icons-material/LockRounded";
+
 import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { CropeImageDialog } from "./UserCard";
 import FileComponent from "../mediaFiles/FileComponent";
@@ -58,18 +61,15 @@ const AddANewPost = () => {
   const [postContentText, setPostContentText] = useState<string>("");
 
   const [selectPhoto, setSelectPhoto] = useState(false);
-  const [selectVideo, setSelectVideo] = useState(false);
-  const [selectFile, setSelectFile] = useState(false);
 
   // References
   const photoReference = useRef<HTMLInputElement>(null);
-  const videoReference = useRef<HTMLInputElement | undefined>(undefined);
-  const fileReference = useRef<HTMLInputElement | undefined>(undefined);
+  const videoReference = useRef<HTMLInputElement>(null);
+  const fileReference = useRef<HTMLInputElement>(null);
 
   // Files
   const [photo, setPhoto] = useState<CropperImageInterface | null>(null);
-  const [video, setVideo] = useState<CropperImageInterface | null>(null);
-  const [file, setFile] = useState<CropperImageInterface | null>(null);
+
   //    All files
   const [allFiles, setAllFiles] = useState<CropperImageInterface[]>([]);
 
@@ -94,11 +94,9 @@ const AddANewPost = () => {
   };
   const handleChoseVideo = () => {
     videoReference.current?.click();
-    setSelectVideo(true);
   };
   const handleChoseFile = () => {
     fileReference.current?.click();
-    setSelectFile(true);
   };
   const handleSelectPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -108,19 +106,9 @@ const AddANewPost = () => {
       reader.onload = () => {
         const result = reader.result;
         if (result) {
-          // check if result is not null
-          const timestamp = new Date()
-            .toISOString()
-            .replace(/[-:.]/g, "")
-            .replace("T", "_")
-            .split("_")
-            .slice(0, 2)
-            .join("_");
-
-          const fileName = `Covale_${timestamp}`;
           setPhoto({
             file: file,
-            fileName,
+            fileName: file.name,
             fileUrl: result as string, // cast result as string
             fileUri: result as string, // cast result as string
             fileType: file.type,
@@ -131,27 +119,73 @@ const AddANewPost = () => {
       reader.readAsDataURL(file);
     }
   };
+  const handleSelectVideo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        // Check file size
+        if (file.size > 512 * 1024 * 1024) {
+          alert("File size exceeds 512MB limit");
+          return;
+        } else {
+          setAllFiles((prev) => [
+            ...prev,
+            {
+              file: file,
+              fileName: file.name,
+              fileUrl: result as string, // cast result as string
+              fileUri: result as string, // cast result as string
+              fileType: file.type,
+              fileSize: file.size,
+            },
+          ]);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        // Check file size
+        if (file.size > 512 * 1024 * 1024) {
+          alert("File size exceeds 512MB limit");
+          return;
+        } else {
+          setAllFiles((prev) => [
+            ...prev,
+            {
+              file: file,
+              fileName: file.name,
+              fileUrl: result as string, // cast result as string
+              fileUri: result as string, // cast result as string
+              fileType: file.type,
+              fileSize: file.size,
+            },
+          ]);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const croppedImageReady = async (file: File): Promise<void> => {
     if (file) {
-      const formData = new FormData();
       const reader = new FileReader();
       reader.onload = () => {
         const result = reader.result;
         if (result) {
           // check if result is not null
-          const timestamp = new Date()
-            .toISOString()
-            .replace(/[-:.]/g, "")
-            .replace("T", "_")
-            .split("_")
-            .slice(0, 2)
-            .join("_");
-          const fileName = `Covale_${timestamp}`;
           setAllFiles((prev) => [
             ...prev,
             {
               file: file,
-              fileName,
+              fileName: file.name,
               fileUrl: result as string, // cast result as string
               fileUri: result as string, // cast result as string
               fileType: file.type,
@@ -173,6 +207,12 @@ const AddANewPost = () => {
   const onCloseHandler = () => {
     setSelectPhoto(false);
     setPhoto(null);
+  };
+
+  const handleSubmitPost = () => {
+    console.log("postAudience: >>", postAudience);
+    console.log("postContentText: >>", postContentText);
+    console.log("allFiles: >>", allFiles);
   };
 
   return (
@@ -300,11 +340,19 @@ const AddANewPost = () => {
             postAudience={postAudience}
             postContentText={postContentText}
             handleChosePhoto={handleChosePhoto}
+            handleChoseVideo={handleChoseVideo}
             photoReference={photoReference}
             handleSelectPhoto={handleSelectPhoto}
+            videoReference={videoReference}
             allFiles={allFiles}
             removeFile={removeFile}
             onSelectPostAudienceChange={onSelectPostAudienceChange}
+            onPostContentTextChange={onPostContentTextChange}
+            handleSubmitPost={handleSubmitPost}
+            handleSelectVideo={handleSelectVideo}
+            handleChoseFile={handleChoseFile}
+            fileReference={fileReference}
+            handleSelectFile={handleSelectFile}
           />
           {selectPhoto && photo ? (
             <CropeImageDialog
@@ -313,7 +361,7 @@ const AddANewPost = () => {
               onCloseHandler={onCloseHandler}
               rounded={false}
               caption="Update Cover Photo"
-              aspect={16 / 9}
+              aspect={20 / 15}
             />
           ) : null}
         </>
@@ -329,11 +377,21 @@ interface CreateNewPostFormProp {
   postContentText: string;
   toggleOpenCreatePostForm: () => void;
   handleChosePhoto: () => void;
+  handleChoseFile: () => void;
+  handleChoseVideo: () => void;
+  handleSubmitPost: () => void;
   photoReference: RefObject<HTMLInputElement>;
+  videoReference: RefObject<HTMLInputElement>;
+  fileReference: RefObject<HTMLInputElement>;
   handleSelectPhoto: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSelectVideo: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSelectFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
   allFiles: CropperImageInterface[];
   removeFile: (fileName: string) => void;
   onSelectPostAudienceChange: (value: string) => void;
+  onPostContentTextChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 }
 
 const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
@@ -343,11 +401,19 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
   postContentText,
   postAudience,
   handleChosePhoto,
+  handleChoseVideo,
   photoReference,
   handleSelectPhoto,
+  videoReference,
+  fileReference,
   allFiles,
   removeFile,
   onSelectPostAudienceChange,
+  onPostContentTextChange,
+  handleSubmitPost,
+  handleSelectVideo,
+  handleChoseFile,
+  handleSelectFile,
 }) => {
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
@@ -360,6 +426,17 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
     setAnchorEl(null);
   };
   const theme: ThemeInterface = useTheme();
+
+  const postAudienceIcon = (postAudience: string) => {
+    if (postAudience.toLowerCase() === "anyone") {
+      return <PublicIcon />;
+    } else if (postAudience.toLowerCase() === "my connection only") {
+      return <Groups3RoundedIcon />;
+    } else if (postAudience.toLowerCase() === "only me") {
+      return <LockRoundedIcon />;
+    }
+    return <PublicIcon />;
+  };
 
   return (
     <>
@@ -436,7 +513,8 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                     }}
                     color="secondary"
                   >
-                    {postAudience} <ArrowDropDownRoundedIcon />
+                    {postAudienceIcon(postAudience)} {postAudience}{" "}
+                    <ArrowDropDownRoundedIcon />
                   </Button>
                   <Menu
                     id="long-menu"
@@ -473,18 +551,54 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                       >
                         <FormControlLabel
                           value="Anyone"
-                          control={<Radio color="secondary" />}
-                          label="Anyone"
+                          control={<Radio size="small" color="secondary" />}
+                          label={
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                              variant="caption"
+                            >
+                              <PublicIcon fontSize="small" />
+                              Anyone
+                            </Typography>
+                          }
                         />
                         <FormControlLabel
                           value="My Connection only"
-                          control={<Radio color="secondary" />}
-                          label="My Connection only"
+                          control={<Radio size="small" color="secondary" />}
+                          label={
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                              variant="caption"
+                            >
+                              <Groups3RoundedIcon fontSize="small" />
+                              My Connection only
+                            </Typography>
+                          }
                         />
                         <FormControlLabel
-                          value="other"
-                          control={<Radio color="secondary" />}
-                          label="Other"
+                          value="Only me"
+                          control={<Radio size="small" color="secondary" />}
+                          label={
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                              variant="caption"
+                            >
+                              <LockRoundedIcon fontSize="small" />
+                              Only me
+                            </Typography>
+                          }
                         />
                       </RadioGroup>
                     </FormControl>
@@ -492,7 +606,6 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                 </div>
               </Box>
             </Box>
-            <br />
             {/* Post Content */}
             <TextField
               fullWidth
@@ -500,6 +613,7 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
               color="secondary"
               multiline
               maxRows={6}
+              value={postContentText}
               sx={{
                 // Remove border
                 "& .MuiOutlinedInput-root": {
@@ -514,6 +628,7 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                   },
                 },
               }}
+              onChange={onPostContentTextChange}
               placeholder="What do you want to talk about today?"
             />
 
@@ -531,29 +646,43 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
               }}
             >
               {allFiles.length > 0 &&
-                allFiles.map((file) => (
-                  <Box position="relative">
-                    <FileComponent
-                      file={file}
-                      width={200}
-                      height={150}
-                      displayFile
-                    />
-                    <IconButton
-                      aria-label="close"
-                      onClick={() => removeFile(file.fileName)}
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        right: 5,
-                        color: (theme) => theme.palette.grey[500],
-                      }}
-                      size="small"
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                ))}
+                allFiles.map((file) => {
+                  const displayFile = (myFile: CropperImageInterface) => {
+                    if (
+                      myFile.fileType.includes("image") ||
+                      myFile.fileType.includes("video")
+                    ) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  };
+                  const displayFileBool = displayFile(file);
+
+                  return (
+                    <Box position="relative">
+                      <FileComponent
+                        file={file}
+                        width={200}
+                        height={150}
+                        displayFile={displayFileBool}
+                      />
+                      <IconButton
+                        aria-label="close"
+                        onClick={() => removeFile(file.fileName)}
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          right: 5,
+                          color: (theme) => theme.palette.grey[500],
+                        }}
+                        size="small"
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  );
+                })}
             </Box>
             {/* Add to your Post */}
             <Box
@@ -572,25 +701,55 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                 <Tooltip title="Photo" placement="top-start">
                   <IconButton onClick={handleChosePhoto}>
                     <ImageIcon height={24} width={24} />
-                    {photoReference && (
-                      <input
-                        type="file"
-                        hidden
-                        ref={photoReference}
-                        accept="image/*"
-                        onChange={handleSelectPhoto}
-                      />
-                    )}
+
+                    <input
+                      type="file"
+                      hidden
+                      ref={photoReference}
+                      accept="image/*"
+                      onChange={handleSelectPhoto}
+                    />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Video" placement="top-start">
-                  <IconButton>
+                  <IconButton onClick={handleChoseVideo}>
                     <VideoIcon height={24} width={24} />
+                    <input
+                      type="file"
+                      hidden
+                      ref={videoReference}
+                      accept="video/*"
+                      onChange={handleSelectVideo}
+                    />
                   </IconButton>
                 </Tooltip>{" "}
                 <Tooltip title="File" placement="top-start">
-                  <IconButton>
+                  <IconButton onClick={handleChoseFile}>
                     <FileIcon height={24} width={24} />
+                    <input
+                      type="file"
+                      hidden
+                      ref={fileReference}
+                      accept=".doc,
+                      .docx,
+                      'application/msword',
+                      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                      'application/vnd.ms-excel',
+                      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      'application/vnd.ms-powerpoint',
+                      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                      'application/pdf',
+                      'application/vnd.google-apps.document',
+                      'application/vnd.google-apps.spreadsheet',
+                      'application/vnd.google-apps.presentation',
+                      'application/wps-office.doc',
+                      'application/wps-office.xls',
+                      'application/wps-office.ppt',
+                      .pptx,
+                      .xlsx,
+                      .pdf"
+                      onChange={handleSelectFile}
+                    />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Event" placement="top-start">
@@ -627,6 +786,7 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                   textTransform: "none",
                 }}
                 size="small"
+                onClick={handleSubmitPost}
               >
                 Post
               </Button>

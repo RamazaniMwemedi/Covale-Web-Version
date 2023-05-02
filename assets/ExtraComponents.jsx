@@ -33,7 +33,7 @@ const ImageComponent = React.memo(
       <Box sx={{ width: "100%", overflow: "hidden" }}>
         <Widget>
           {displayFile ? (
-            <Image src={src} width={width} height={height} />
+            <Image alt="Image" src={src} width={width} height={height} />
           ) : (
             <Box
               sx={{
@@ -97,8 +97,11 @@ const Video = React.memo(({ src, fileName, width, height, displayFile }) => {
               variant="subtitle2"
               sx={{
                 fontSize: "12px",
-                whiteSpace: "nowrap",
-                wordBreak: "keep-all",
+                position: "absolute",
+                bottom: 0,
+                width: "100%",
+                bgcolor: theme.colors.textBackground,
+                p: 1,
               }}
             >
               {/* First 10 characters and .{fileExtension} */}
@@ -123,6 +126,7 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
     justifyContent: "center",
     alignItems: "center",
   }));
+  const theme = useTheme();
 
   return (
     <Box
@@ -162,7 +166,17 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
             }}
           >
             <PdfIcon height={height} width={width} />
-            <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontSize: "12px",
+                position: "absolute",
+                bottom: 0,
+                width: "100%",
+                bgcolor: theme.colors.textBackground,
+                p: 1,
+              }}
+            >
               {/* First 10 characters and .{fileExtension} */}
               {fileName.substring(0, 10)}...{fileName.split(".").pop()}
             </Typography>
@@ -204,6 +218,7 @@ const Audio = React.memo(({ src, width, height }) => {
 });
 
 const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
+  const theme = useTheme();
   const Widget = styled("div")(({ theme }) => ({
     borderRadius: 6,
     width: width,
@@ -254,7 +269,14 @@ const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
               <DocxIcon height={height} width={width} />
               <Typography
                 variant="subtitle2"
-                sx={{ fontSize: "12px", width: "100%" }}
+                sx={{
+                  fontSize: "12px",
+                  position: "absolute",
+                  bottom: 0,
+                  width: "100%",
+                  bgcolor: theme.colors.textBackground,
+                  p: 1,
+                }}
               >
                 {fileName.substring(0, 10)}...{fileName.split(".").pop()}
               </Typography>
@@ -279,6 +301,7 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
     justifyContent: "center",
     alignItems: "center",
   }));
+  const theme = useTheme();
 
   return (
     <Box
@@ -304,7 +327,18 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
             }}
           >
             <XlsIcon height={height} width={width} />
-            <Typography variant="subtitle2" sx={{ fontSize: "12px" }} noWrap>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontSize: "12px",
+                position: "absolute",
+                bottom: 0,
+                width: "100%",
+                bgcolor: theme.colors.textBackground,
+                p: 1,
+              }}
+              noWrap
+            >
               {/* First 10 characters and .{fileExtension} */}
               {fileName.substring(0, 10)}...{fileName.split(".").pop()}
             </Typography>
@@ -327,6 +361,7 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
     justifyContent: "center",
     alignItems: "center",
   }));
+  const theme = useTheme();
 
   return (
     <Box sx={{ overflow: "hidden" }}>
@@ -348,7 +383,17 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
             }}
           >
             <PptIcon height={height} width={width} />
-            <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontSize: "12px",
+                position: "absolute",
+                bottom: 0,
+                width: "100%",
+                bgcolor: theme.colors.textBackground,
+                p: 1,
+              }}
+            >
               {/* First 10 characters and .{fileExtension} */}
               {fileName.substring(0, 10)}...{fileName.split(".").pop()}
             </Typography>
@@ -374,6 +419,7 @@ const OtherFile = React.memo(
       justifyContent: "center",
       alignItems: "center",
     }));
+    const theme = useTheme();
     return (
       <Widget>
         <Box
@@ -384,7 +430,17 @@ const OtherFile = React.memo(
           }}
         >
           <File height={height} width={width} />
-          <Typography variant="subtitle2" sx={{ fontSize: "12px" }}>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontSize: "12px",
+              position: "absolute",
+              bottom: 0,
+              width: "100%",
+              bgcolor: theme.colors.textBackground,
+              p: 1,
+            }}
+          >
             {/* First 10 characters and .{fileExtension} */}
             {fileName.substring(0, 10)}...{fileName.split(".").pop()}
           </Typography>

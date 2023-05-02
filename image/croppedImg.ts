@@ -67,21 +67,26 @@ export default async function getCroppedImg(
   ctx.putImageData(data, 0, 0);
 
   return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) {
-          reject(new Error("Could not get blob from canvas element"));
-          return;
-        }
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error("Could not get blob from canvas element"));
+        return;
+      }
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[-:.]/g, "")
+        .replace("T", "_")
+        .split("_")
+        .slice(0, 2)
+        .join("_");
 
-        const file = new File([blob], "filename.jpg", {
-          type: "image/jpeg",
-          lastModified: new Date().getTime(),
-        });
+      const fileName = `Covale_${timestamp}`;
+      const file = new File([blob], `${fileName}.jpg`, {
+        type: "image/jpeg",
+        lastModified: new Date().getTime(),
+      });
 
-        resolve(file);
-      },
-      "image/jpeg"
-    );
+      resolve(file);
+    }, "image/jpeg");
   });
 }

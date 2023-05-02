@@ -34,27 +34,27 @@ export interface RootState {
 
 export interface ThemeInterface {
   typography: {
-      fontFamily:string,
-    },
-    palette: {
-      mode: string,
-    },
-    colors: {
-      primary:string,
-      secondary: string,
-      error: string,
-      background: string,
-      background1: string,
-      textBackground: string,
-      textBackground2: string,
-      itemBackground: string,
-      drawerBackground: string,
-      border: string,
-      hoverDate: string,
-      background2: string,
-      meetBackground: string,
-    },
-    themeChengeHandler: (theme:string)=>void,
+    fontFamily: string;
+  };
+  palette: {
+    mode: string;
+  };
+  colors: {
+    primary: string;
+    secondary: string;
+    error: string;
+    background: string;
+    background1: string;
+    textBackground: string;
+    textBackground2: string;
+    itemBackground: string;
+    drawerBackground: string;
+    border: string;
+    hoverDate: string;
+    background2: string;
+    meetBackground: string;
+  };
+  themeChengeHandler: (theme: string) => void;
 }
 
 export interface ProfilePic {
@@ -74,8 +74,9 @@ export interface UserInterFace {
     fileUrl: string;
   };
 }
+
 export interface CropperImageInterface {
-  file: File|null;
+  file: File | null;
   fileName: string;
   fileUrl: string;
   fileUri: string;
