@@ -183,9 +183,7 @@ hr {
 
 /* Animate comming soon with changing colors in Gradient  */
 .comming_soon {
-  animation-name: comming_soon;
-  animation-duration: 50s;
-  animation-iteration-count: infinite;
+  animation: comming_soon 5s linear infinite;
   animation-timing-function: ease-in-out;
   background-image: linear-gradient(
     90deg,

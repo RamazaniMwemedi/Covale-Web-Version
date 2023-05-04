@@ -1,6 +1,7 @@
 import {
   Avatar,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
@@ -37,10 +38,14 @@ import PollRoundedIcon from "@mui/icons-material/PollRounded";
 import Groups3RoundedIcon from "@mui/icons-material/Groups3Rounded";
 import PublicIcon from "@mui/icons-material/Public";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
+import TagFacesRoundedIcon from "@mui/icons-material/TagFacesRounded";
+import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 
 import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { CropeImageDialog } from "./UserCard";
 import FileComponent from "../mediaFiles/FileComponent";
+import { createNewPostService } from "../../../services/work";
+import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 
 const PostRight = () => {
   return (
@@ -54,11 +59,13 @@ const AddANewPost = () => {
   const theme: ThemeInterface = useTheme();
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
-
+  const token = useCheckLogedinUserToken();
   // States
   const [open, setOpen] = useState(false);
   const [postAudience, setPostAudience] = useState<string>("Anyone");
   const [postContentText, setPostContentText] = useState<string>("");
+  const [checkedEnableReactions, setCheckedEnableReactions] = useState(true);
+  const [checkedEnableComments, setCheckedEnableComments] = useState(true);
 
   const [selectPhoto, setSelectPhoto] = useState(false);
 
@@ -76,8 +83,19 @@ const AddANewPost = () => {
   // Handles
   const toggleOpenCreatePostForm = () => {
     setOpen((prev) => !prev);
+    setPostAudience("Anyone");
+    setPostContentText("");
+    setSelectPhoto(false);
+    setPhoto(null);
+    setAllFiles([]);
   };
 
+  const handleChangeEnableReactions = () => {
+    setCheckedEnableReactions((prev) => !prev);
+  };
+  const handleChangeEnableComments = () => {
+    setCheckedEnableComments((prev) => !prev);
+  };
   const onSelectPostAudienceChange = (value: string) => {
     setPostAudience(value);
   };
@@ -210,9 +228,22 @@ const AddANewPost = () => {
   };
 
   const handleSubmitPost = () => {
-    console.log("postAudience: >>", postAudience);
-    console.log("postContentText: >>", postContentText);
-    console.log("allFiles: >>", allFiles);
+    const formData = new FormData();
+
+    for (const file of allFiles) {
+      if (file.file) {
+        formData.append("files", file.file);
+      }
+    }
+
+    formData.append("text", postContentText);
+    formData.append("postAudience", postAudience);
+
+    formData.append("reactionsEnabled", checkedEnableReactions.toString());
+    formData.append("commentsEnabled", checkedEnableComments.toString());
+    if (token) {
+      createNewPostService(token, formData);
+    }
   };
 
   return (
@@ -353,6 +384,10 @@ const AddANewPost = () => {
             handleChoseFile={handleChoseFile}
             fileReference={fileReference}
             handleSelectFile={handleSelectFile}
+            checkedEnableReactions={checkedEnableReactions}
+            handleChangeEnableReactions={handleChangeEnableReactions}
+            checkedEnableComments={checkedEnableComments}
+            handleChangeEnableComments={handleChangeEnableComments}
           />
           {selectPhoto && photo ? (
             <CropeImageDialog
@@ -371,6 +406,10 @@ const AddANewPost = () => {
 };
 
 interface CreateNewPostFormProp {
+  checkedEnableReactions: boolean;
+  handleChangeEnableReactions: () => void;
+  checkedEnableComments: boolean;
+  handleChangeEnableComments: () => void;
   open: boolean;
   posting: boolean;
   postAudience: string;
@@ -414,16 +453,31 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
   handleSelectVideo,
   handleChoseFile,
   handleSelectFile,
+  checkedEnableReactions,
+  handleChangeEnableReactions,
+  checkedEnableComments,
+  handleChangeEnableComments,
 }) => {
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorElReactionAndComment, setAnchorElReactionAndComment] =
+    useState<null | HTMLElement>(null);
   const openSelect = Boolean(anchorEl);
+  const openSelectReactionAndCommemt = Boolean(anchorElReactionAndComment);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const handleClickReactionAndComment = (
+    event: React.MouseEvent<HTMLElement>
+  ) => {
+    setAnchorElReactionAndComment(event.currentTarget);
+  };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleCloseReactionAndComment = () => {
+    setAnchorElReactionAndComment(null);
   };
   const theme: ThemeInterface = useTheme();
 
@@ -493,29 +547,62 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                   {`${user.username} ${user.lastname}`}
                 </Typography>
                 <div>
-                  <Button
-                    aria-label="more"
-                    id="long-button"
-                    aria-controls={openSelect ? "long-menu" : undefined}
-                    aria-expanded={openSelect ? "true" : undefined}
-                    aria-haspopup="true"
-                    onClick={handleClick}
+                  <Box
                     sx={{
-                      alignItems: "center",
                       display: "flex",
-                      gap: 1,
-                      bgcolor: theme.colors.textBackground,
-                      p: 1,
-                      borderRadius: 2,
-                      textTransform: "none",
-                      cursor: "pointer",
-                      justifyContent: "flex-start",
+                      gap: 2,
                     }}
-                    color="secondary"
                   >
-                    {postAudienceIcon(postAudience)} {postAudience}{" "}
-                    <ArrowDropDownRoundedIcon />
-                  </Button>
+                    <Button
+                      aria-label="more"
+                      id="long-button"
+                      aria-controls={openSelect ? "long-menu" : undefined}
+                      aria-expanded={openSelect ? "true" : undefined}
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                      sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        gap: 1,
+                        bgcolor: theme.colors.textBackground,
+                        p: 1,
+                        borderRadius: 2,
+                        textTransform: "none",
+                        cursor: "pointer",
+                        justifyContent: "flex-start",
+                      }}
+                      color="secondary"
+                      variant="outlined"
+                      size="small"
+                    >
+                      {postAudienceIcon(postAudience)} {postAudience}{" "}
+                      <ArrowDropDownRoundedIcon />
+                    </Button>
+                    <Button
+                      aria-label="more"
+                      id="long-button"
+                      aria-controls={openSelect ? "long-menu" : undefined}
+                      aria-expanded={openSelect ? "true" : undefined}
+                      aria-haspopup="true"
+                      onClick={handleClickReactionAndComment}
+                      sx={{
+                        alignItems: "center",
+                        display: "flex",
+                        gap: 1,
+                        bgcolor: theme.colors.textBackground,
+                        p: 1,
+                        borderRadius: 2,
+                        textTransform: "none",
+                        cursor: "pointer",
+                        justifyContent: "flex-start",
+                      }}
+                      color="secondary"
+                      variant="outlined"
+                      size="small"
+                    >
+                      Comment and Reaction Settings
+                    </Button>
+                  </Box>
                   <Menu
                     id="long-menu"
                     MenuListProps={{
@@ -603,6 +690,56 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                       </RadioGroup>
                     </FormControl>
                   </Menu>
+                  {/* Reaction and Comment Menu */}
+                  <Menu
+                    id="long-menu"
+                    MenuListProps={{
+                      "aria-labelledby": "long-button",
+                    }}
+                    anchorEl={anchorElReactionAndComment}
+                    open={openSelectReactionAndCommemt}
+                    onClose={handleCloseReactionAndComment}
+                    PaperProps={{
+                      style: {
+                        maxHeight: 48 * 4.5,
+                        width: "40ch",
+                      },
+                    }}
+                  >
+                    <FormControl
+                      sx={{
+                        pl: 2,
+                      }}
+                      color="secondary"
+                    >
+                      <FormLabel id="demo-radio-buttons-group-label">
+                        Enable or Disable commenting and reactions on your post
+                      </FormLabel>
+                      <br />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            color="secondary"
+                            checked={checkedEnableReactions}
+                            onChange={handleChangeEnableReactions}
+                            defaultChecked
+                          />
+                        }
+                        label="Enable Reactions "
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            color="secondary"
+                            checked={checkedEnableComments}
+                            onChange={handleChangeEnableComments}
+                            defaultChecked
+                          />
+                        }
+                        label="Enable Comments "
+                      />
+                    </FormControl>
+                  </Menu>
                 </div>
               </Box>
             </Box>
@@ -663,7 +800,7 @@ const CreateNewPostForm: FC<CreateNewPostFormProp> = ({
                     <Box position="relative">
                       <FileComponent
                         file={file}
-                        width={200}
+                        width={displayFileBool ? 200 : 100}
                         height={150}
                         displayFile={displayFileBool}
                       />

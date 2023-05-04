@@ -15,6 +15,7 @@ const Posts = () => {
         ml: 7,
         "@media screen and (max-width: 800px)": {
           gridTemplateColumns: "repeat(auto-fit, minmax(100%, 1fr))",
+          placeItems: "center",
         },
       }}
     >

@@ -222,7 +222,7 @@ const CroppImageAvatar = ({
     <Box>
       <Box
         sx={{
-          height: 500,
+          height: 400,
           width: 200,
         }}
       >
