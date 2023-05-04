@@ -38,8 +38,6 @@ import PollRoundedIcon from "@mui/icons-material/PollRounded";
 import Groups3RoundedIcon from "@mui/icons-material/Groups3Rounded";
 import PublicIcon from "@mui/icons-material/Public";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
-import TagFacesRoundedIcon from "@mui/icons-material/TagFacesRounded";
-import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 
 import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { CropeImageDialog } from "./UserCard";
