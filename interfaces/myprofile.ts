@@ -1,5 +1,6 @@
 import { SelectChangeEvent } from "@mui/material";
 import { MomentInput } from "moment";
+import { PostInterface } from "./work";
 
 export interface RootState {
   user: {
@@ -28,6 +29,7 @@ export interface RootState {
           id: string;
         }
       ];
+      posts:PostInterface[]
     } | null;
   };
 }
@@ -66,7 +68,7 @@ export interface ProfilePic {
   fileSize: number;
 }
 export interface UserInterFace {
-  firstname: string;
+  firstname: string ;
   lastname: string;
   username: string;
   professionalSummary: string;

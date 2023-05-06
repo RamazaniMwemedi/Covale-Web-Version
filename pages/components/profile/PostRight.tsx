@@ -22,7 +22,7 @@ import { useTheme } from "@mui/styles";
 import { Box } from "@mui/system";
 import React, { FC, RefObject, useRef, useState } from "react";
 import { RootState, ThemeInterface } from "../../../interfaces/myprofile";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   EventIcon,
   FileIcon,
@@ -44,11 +44,18 @@ import { CropeImageDialog } from "./UserCard";
 import FileComponent from "../mediaFiles/FileComponent";
 import { createNewPostService } from "../../../services/work";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
+import { addPost } from "../../../Redux/slices/work";
+import Post from "../work/Post";
 
 const PostRight = () => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
   return (
     <>
       <AddANewPost />
+      {user?.posts.map((post) => (
+        <Post post={post} user={user} />
+      ))}
     </>
   );
 };
@@ -58,8 +65,10 @@ const AddANewPost = () => {
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
   const token = useCheckLogedinUserToken();
+  const dispatch = useDispatch();
   // States
   const [open, setOpen] = useState(false);
+  const [posting, setPosting] = useState(false);
   const [postAudience, setPostAudience] = useState<string>("Anyone");
   const [postContentText, setPostContentText] = useState<string>("");
   const [checkedEnableReactions, setCheckedEnableReactions] = useState(true);
@@ -225,7 +234,7 @@ const AddANewPost = () => {
     setPhoto(null);
   };
 
-  const handleSubmitPost = () => {
+  const handleSubmitPost = async () => {
     const formData = new FormData();
 
     for (const file of allFiles) {
@@ -240,7 +249,12 @@ const AddANewPost = () => {
     formData.append("reactionsEnabled", checkedEnableReactions.toString());
     formData.append("commentsEnabled", checkedEnableComments.toString());
     if (token) {
-      createNewPostService(token, formData);
+      setPosting(true);
+      const response = await createNewPostService(token, formData);
+      if (response) {
+        toggleOpenCreatePostForm();
+        dispatch(addPost(response));
+      }
     }
   };
 
@@ -364,7 +378,7 @@ const AddANewPost = () => {
         <>
           <CreateNewPostForm
             open={open}
-            posting={false}
+            posting={posting}
             toggleOpenCreatePostForm={toggleOpenCreatePostForm}
             postAudience={postAudience}
             postContentText={postContentText}
