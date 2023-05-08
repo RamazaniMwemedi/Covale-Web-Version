@@ -27,7 +27,7 @@ export const postNewCommentToPost = async(token:string, formData:FormData, postI
     
   if (token && formData) {
       const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/work/circle/post/new`,
+      `${SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comment/new`,
       formData,
       {
         headers: {

@@ -21,6 +21,7 @@ const workSlice = createSlice({
     addPost(state, { payload }: { payload: PostInterface }) {
       state.work.posts.push(payload);
     },
+    
   },
 });
 export const { addPosts,addPost } = workSlice.actions;

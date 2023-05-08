@@ -204,8 +204,6 @@ const LoginPage = () => {
 
   // Signin Change Handlers
 
-
-
   const emailChangeHandler = (e) => {
     setEmail(e.target.value);
   };
@@ -311,40 +309,39 @@ const LoginPage = () => {
           />
           <br />
         </Box>
-          <Box>
+        <Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flex: 1,
+              gap: "100px",
+            }}
+          >
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flex: 1,
-                gap: "100px",
+                borderRadius: 30,
+                backgroundColor: theme.colors.background1,
               }}
             >
-              <Box
-                sx={{
-                  borderRadius: "20px",
-                  backgroundColor:theme.colors.background1,
-
-                }}
-              >
-                  <Logo height={230} />
-              </Box>
-              <Typography
-                variant="h1"
-                sx={{
-                  background:
-                    "linear-gradient(to right, rgb(214, 67, 181), rgb(120, 79, 195))",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-
-                  marginLeft: "-80px",
-                }}
-              >
-                Covale
-              </Typography>
+              <Logo height={230} width={230} />
             </Box>
+            <Typography
+              variant="h1"
+              sx={{
+                background:
+                  "linear-gradient(to right, rgb(214, 67, 181), rgb(120, 79, 195))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+
+                marginLeft: "-80px",
+              }}
+            >
+              Covale
+            </Typography>
           </Box>
+        </Box>
       </Box>
     </Box>
   );

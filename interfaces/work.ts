@@ -5,34 +5,32 @@ import { CropperImageInterface, UserInterFace } from "./myprofile";
  * This is basically the innterface for all the posts
  */
 export interface PostInterface {
-  id:string;
+  _id:string;
   author: UserInterFace;
   text: string;
   createdAt: Date;
-  updatedAt: Date;
   pinned: Boolean;
   priority: string;
-  tags: string[];
-  readBy: UserInterFace[];
   files: CropperImageInterface[];
   reactions: {
     user: UserInterFace;
     type: string;
   }[];
-  comments: {
-    user: UserInterFace;
-    text: string;
-    createdAt: Date;
-    updatedAt: Date;
-    mentions: UserInterFace[];
-  }[];
+  comments:CommentInterface[];
   shares: {
     user: UserInterFace;
     createdAt: Date;
   }[];
   postAudience: string;
-  links: string[];
   reactionsEnabled: boolean;
   commentsEnabled: boolean;
   sharesDisabled: boolean;
+}
+
+export interface CommentInterface{
+    author: UserInterFace;
+    commentText: string;
+    createdAt: Date;
+    updatedAt: Date;
+  files: CropperImageInterface[];
 }

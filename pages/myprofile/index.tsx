@@ -30,6 +30,7 @@ import Posts from "../components/profile/Posts";
 import { addCoverPic } from "../../services/user";
 import { updateCoverPhotoe } from "../../Redux/slices/user";
 import Files from "../components/profile/files";
+import defaultBackgroundImage from "../../assets/defaultBackgroundImage.jpeg";
 import {
   ContentsProps,
   CropperImageInterface,
@@ -175,10 +176,14 @@ const MyAccount = () => {
                       }}
                     >
                       <Image
-                        src={user && user.coverPic ? user.coverPic.fileUrl : ""}
+                        src={
+                          user && user.coverPic
+                            ? user.coverPic.fileUrl
+                            : defaultBackgroundImage
+                        }
                         alt="Cover photo"
-                        width={1000}
-                        height={400}
+                        width={2000}
+                        height={600}
                         objectFit="cover"
                         style={{
                           width: "95%",

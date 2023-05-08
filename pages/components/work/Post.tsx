@@ -30,7 +30,7 @@ const Picker = dynamic(
   { ssr: false }
 );
 
-import { PostInterface } from "../../../interfaces/work";
+import { CommentInterface, PostInterface } from "../../../interfaces/work";
 import { timeAgo } from "../../../tools/tools";
 import FileComponent from "../mediaFiles/FileComponent";
 import { useTheme } from "@mui/styles";
@@ -50,19 +50,15 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
     commentsEnabled,
     files,
     createdAt,
-    links,
     pinned,
     postAudience,
     priority,
     reactions,
     reactionsEnabled,
-    readBy,
     shares,
     sharesDisabled,
-    tags,
     text,
-    updatedAt,
-    id,
+    _id,
   } = post;
   const theme: ThemeInterface = useTheme();
   const token = useCheckLogedinUserToken();
@@ -84,6 +80,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
     emojiObject: IEmojiData
   ) => {
     setCommentText(commentText + emojiObject.emoji);
+    setShowEmojiPeaker((prev) => !prev);
   };
   const fileRef = useRef<HTMLInputElement>(null);
   const handleChoseFile = () => {
@@ -137,14 +134,14 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
     }
 
     formData.append("commentText", commentText);
-    if (token) {
+    if (token && _id) {
       setIsCommenting(true);
-      const response = await postNewCommentToPost(token, formData, id);
-      setTimeout(() => {
+      const response = await postNewCommentToPost(token, formData, _id);
+      if (response) {
         setIsCommenting(false);
         setAllFiles([]);
         setCommentText("");
-      }, 3000);
+      }
     }
   };
 
@@ -233,7 +230,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       </Box>
       {/* Post texts */}
       <Box>
-        <Typography variant="body2" sx={{ color: "#333333", pt: 1 }}>
+        <Typography variant="body2" sx={{ pt: 1 }}>
           {text.split("\n").map((item, key) => {
             // match URLs and hashtags using regular expressions
             const urls = item.match(/https?:\/\/[^\s]+/g);
@@ -343,9 +340,8 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
             sx={{
               position: "absolute",
               right: 0,
-              bottom: 50,
-              // bottom: "53px",
-              // // marginLeft: "10px",
+              bottom: 100,
+              zIndex: 1,
               backgroundColor: theme.colors.textBackground,
               borderRadius: "15px",
 
@@ -525,19 +521,20 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
               )}
             </>
           )}
-          <Stack sx={{ width: "100%", color: "grey.500", p: 1 }} spacing={2}>
-            {isCommenting ? (
+          {isCommenting ? (
+            <Stack sx={{ width: "100%", color: "grey.500", p: 1 }} spacing={2}>
               <LinearProgress
                 color="secondary"
                 sx={{
                   borderRadius: "10px",
                 }}
               />
-            ) : null}
-          </Stack>
+            </Stack>
+          ) : null}
         </FormControl>
       </Box>
       {/* End Comments Section */}
+      <PostComments comments={comments} />
     </Box>
   );
 };
@@ -616,6 +613,43 @@ const FileSlider = ({ files }: { files: CropperImageInterface[] }) => {
           ))}
         </Box>
       )}
+    </Box>
+  );
+};
+
+const PostComments = ({ comments }: { comments: CommentInterface[] }) => {
+  const theme: ThemeInterface = useTheme();
+  return (
+    <Box>
+      {comments.map((comment) => (
+        <Box sx={{ display: "flex", p: 2 }}>
+          <Avatar
+            sx={{
+              height: 30,
+              width: 30,
+              mt: 0.3,
+            }}
+            src={comment.author.profilePic?.fileUrl}
+          >
+            {comment.author.firstname[0]}
+            {comment.author.lastname[0]}
+          </Avatar>
+          <Box
+            sx={{
+              bgcolor: theme.colors.textBackground2,
+              width: "100%",
+              p: 1,
+              borderRadius: 2,
+              borderTopLeftRadius: 0,
+            }}
+          >
+            <Typography variant="subtitle1" fontWeight={700}>
+              {comment.author.firstname} {comment.author.lastname}
+            </Typography>
+            <Typography>{comment.commentText}</Typography>
+          </Box>
+        </Box>
+      ))}
     </Box>
   );
 };
