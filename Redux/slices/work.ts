@@ -19,7 +19,7 @@ const workSlice = createSlice({
       state.work.posts = payload;
     },
     addPost(state, { payload }: { payload: PostInterface }) {
-      state.work.posts.push(payload);
+      state.work.posts.unshift(payload);
     },
     
   },

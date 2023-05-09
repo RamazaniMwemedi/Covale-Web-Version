@@ -4,34 +4,13 @@ import { PostInterface } from "./work";
 
 export interface RootState {
   user: {
-    user: {
-      firstname: string;
-      lastname: string;
-      username: string;
-      professionalSummary: string;
-      profilePic: {
-        fileUrl: string;
-      };
-      coverPic: {
-        fileUrl: string;
-      };
-      workExperiences: [
-        {
-          title: string;
-          organizationName: string;
-          location: string;
-          employmentType: string;
-          jobDescription: string;
-          isUntillNow: boolean;
-          startDate: Date;
-          endDate: Date;
-          locationType: string;
-          id: string;
-        }
-      ];
-      posts:PostInterface[]
-    } | null;
+    user: UserInterFace
   };
+  work:{
+    work:{
+      posts:PostInterface[]
+    }
+  }
 }
 
 export interface ThemeInterface {
@@ -68,14 +47,32 @@ export interface ProfilePic {
   fileSize: number;
 }
 export interface UserInterFace {
-  firstname: string ;
-  lastname: string;
-  username: string;
-  professionalSummary: string;
-  profilePic: {
-    fileUrl: string;
-  };
-}
+      id: string;
+      firstname: string;
+      lastname: string;
+      username: string;
+      professionalSummary: string;
+      profilePic: {
+        fileUrl: string;
+      };
+      coverPic: {
+        fileUrl: string;
+      };
+      workExperiences: [
+        {
+          title: string;
+          organizationName: string;
+          location: string;
+          employmentType: string;
+          jobDescription: string;
+          isUntillNow: boolean;
+          startDate: Date;
+          endDate: Date;
+          locationType: string;
+          id: string;
+        }
+      ];
+    } 
 
 export interface CropperImageInterface {
   file: File | null;

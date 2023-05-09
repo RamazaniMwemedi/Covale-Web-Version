@@ -13,7 +13,7 @@ import {
   Typography,
   LinearProgress,
 } from "@mui/material";
-import React, { FC, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
@@ -39,30 +39,13 @@ import { ImageIcon, RepostIcon } from "../../../assets/Icons";
 import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { IEmojiData } from "emoji-picker-react";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
-import { useDispatch } from "react-redux";
 import { LoadingButton } from "@mui/lab";
 import { postNewCommentToPost } from "../../../services/work";
 
 const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
-  const {
-    author,
-    comments,
-    commentsEnabled,
-    files,
-    createdAt,
-    pinned,
-    postAudience,
-    priority,
-    reactions,
-    reactionsEnabled,
-    shares,
-    sharesDisabled,
-    text,
-    _id,
-  } = post;
+  const { author, comments, files, createdAt, text, _id } = post;
   const theme: ThemeInterface = useTheme();
   const token = useCheckLogedinUserToken();
-  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -76,7 +59,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
   const [isCommenting, setIsCommenting] = useState(false);
   const [allFiles, setAllFiles] = useState<CropperImageInterface[]>([]);
   const commentOnEmojiClick = (
-    event: React.MouseEvent,
+    _: React.MouseEvent,
     emojiObject: IEmojiData
   ) => {
     setCommentText(commentText + emojiObject.emoji);

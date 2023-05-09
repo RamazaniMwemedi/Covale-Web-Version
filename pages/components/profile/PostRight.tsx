@@ -46,16 +46,29 @@ import { createNewPostService } from "../../../services/work";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { addPost } from "../../../Redux/slices/work";
 import Post from "../work/Post";
+import { useGetUserPosts } from "../../../hooks/work";
 
 const PostRight = () => {
   const userStore = useSelector((state: RootState) => state.user);
+  const mapStateToProps = (state: RootState) => {
+    const sortedState = state.work?.work.posts
+      .slice()
+      .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+    return sortedState;
+  };
+  const posts = useSelector((state: RootState) => mapStateToProps(state));
   const user = userStore?.user;
+  // const { posts } = workStore.;
+
+  const loading = user && useGetUserPosts(user.id);
   return (
     <>
       <AddANewPost />
-      {user?.posts.map((post) => (
-        <Post post={post} user={user} />
-      ))}
+      {loading ? (
+        <Typography variant="h2">Loading</Typography>
+      ) : (
+        posts.map((post) => <Post post={post} user={user} key={post._id} />)
+      )}
     </>
   );
 };

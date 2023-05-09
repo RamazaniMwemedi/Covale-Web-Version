@@ -19,7 +19,7 @@ export interface PostInterface {
   comments:CommentInterface[];
   shares: {
     user: UserInterFace;
-    createdAt: Date;
+    createdAt: string;
   }[];
   postAudience: string;
   reactionsEnabled: boolean;
