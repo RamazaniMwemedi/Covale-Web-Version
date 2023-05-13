@@ -36,7 +36,17 @@ import { timeAgo } from "../../../tools/tools";
 import FileComponent from "../mediaFiles/FileComponent";
 import { useTheme } from "@mui/styles";
 import { ThemeInterface, UserInterFace } from "../../../interfaces/myprofile";
-import { ImageIcon, RepostIcon } from "../../../assets/Icons";
+import {
+  BulbIcon,
+  CelebrateIcon,
+  FunnyIcon,
+  HandHoldingHeartIcon,
+  HeartIcon,
+  ImageIcon,
+  RepostIcon,
+  ThinkinhFaceIcon,
+  ThumbsUpIcon,
+} from "../../../assets/Icons";
 import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { IEmojiData } from "emoji-picker-react";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
@@ -70,6 +80,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
     setShowEmojiPeaker((prev) => !prev);
   };
   const [showCommentSection, setShowCommentSection] = useState(false);
+  const [showReactions, setShowReactions] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const handleChoseFile = () => {
     fileRef.current?.click();
@@ -106,6 +117,11 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       prevFiles.filter((file) => file?.fileName !== fileName)
     );
   };
+
+  const reactionHandle = (reaction: string) => {
+    // alert(`Reaction is ${reaction}`);
+  };
+
   const commentTeaxtChangeHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -277,12 +293,21 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
         <Button
           color="secondary"
           variant="text"
+          onMouseOver={() => setShowReactions(true)}
+          onMouseLeave={() => setShowReactions(false)}
+          onClick={() => {
+            reactionHandle("like");
+            setShowReactions(false);
+          }}
           sx={{
             textTransform: "none",
             gap: 1,
             p: 1,
+            position: "relative",
           }}
         >
+          {" "}
+          {showReactions && <PostReactions reactionHandle={reactionHandle} />}
           <ThumbUpAltRoundedIcon />
           Like
         </Button>
@@ -669,6 +694,111 @@ const PostComments = ({ comments }: { comments: CommentInterface[] }) => {
           </Box>
         </Box>
       ))}
+    </Box>
+  );
+};
+
+const PostReactions = ({
+  reactionHandle,
+}: {
+  reactionHandle: (reaction: string) => void;
+}) => {
+  const reactions: string[] = [
+    "like",
+    "love",
+    "celebrate",
+    "insightful",
+    "curious",
+    "support",
+    "funny",
+  ];
+
+  const reactionIcon = (
+    reaction: string,
+    dimessions: {
+      height: number;
+      width: number;
+    }
+  ) => {
+    if (reaction === "like") {
+      return (
+        <ThumbsUpIcon width={dimessions.width} height={dimessions.height} />
+      );
+    } else if (reaction === "love") {
+      return <HeartIcon width={dimessions.width} height={dimessions.height} />;
+    } else if (reaction === "celebrate") {
+      return (
+        <CelebrateIcon width={dimessions.width} height={dimessions.height} />
+      );
+    } else if (reaction === "insightful") {
+      return <BulbIcon width={dimessions.width} height={dimessions.height} />;
+    } else if (reaction === "curious") {
+      return (
+        <ThinkinhFaceIcon width={dimessions.width} height={dimessions.height} />
+      );
+    } else if (reaction === "support") {
+      return (
+        <HandHoldingHeartIcon
+          width={dimessions.width}
+          height={dimessions.height}
+        />
+      );
+    } else if (reaction === "funny") {
+      return <FunnyIcon width={dimessions.width} height={dimessions.height} />;
+    }
+  };
+  const theme: ThemeInterface = useTheme();
+  function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  return (
+    <Box
+      sx={{
+        position: "absolute",
+        top: -20,
+        left: 0,
+        bgcolor: theme.colors.textBackground,
+        display: "flex",
+        gap: 1,
+        borderRadius: 2,
+        height: 40,
+        zIndex: 1,
+        backdropFilter: "blur(40px)",
+      }}
+    >
+      {reactions.map((reaction) => {
+        const [size, setSize] = useState<"small" | "medium" | "large">("small");
+        const [dimessions, setDimessions] = useState({
+          height: 30,
+          width: 30,
+        });
+        return (
+          <Tooltip title={capitalizeFirstLetter(reaction)} placement="top">
+            <IconButton
+              onMouseOver={() => {
+                setDimessions({
+                  height: 40,
+                  width: 30,
+                });
+                setSize("large");
+              }}
+              onClick={() => reactionHandle(reaction)}
+              onMouseLeave={() => {
+                setDimessions({
+                  height: 30,
+                  width: 30,
+                });
+                setSize("small");
+              }} // Set size back to "small" when mouse leaves
+              color="secondary"
+              size={size}
+            >
+              {reactionIcon(reaction, dimessions)}
+            </IconButton>
+          </Tooltip>
+        );
+      })}
     </Box>
   );
 };
