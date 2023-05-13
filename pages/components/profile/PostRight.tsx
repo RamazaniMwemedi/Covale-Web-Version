@@ -67,7 +67,7 @@ const PostRight = () => {
       {loading ? (
         <Typography variant="h2">Loading</Typography>
       ) : (
-        posts.map((post) => <Post post={post} user={user} key={post._id} />)
+        posts.map((post) => <Post post={post} user={user} key={post.id} />)
       )}
     </>
   );
@@ -106,6 +106,7 @@ const AddANewPost = () => {
     setPostAudience("Anyone");
     setPostContentText("");
     setSelectPhoto(false);
+    setPosting(false)
     setPhoto(null);
     setAllFiles([]);
   };

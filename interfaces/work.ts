@@ -5,10 +5,10 @@ import { CropperImageInterface, UserInterFace } from "./myprofile";
  * This is basically the innterface for all the posts
  */
 export interface PostInterface {
-  _id:string;
+  id:string;
   author: UserInterFace;
   text: string;
-  createdAt: Date;
+  createdAt: string;
   pinned: Boolean;
   priority: string;
   files: CropperImageInterface[];
@@ -30,7 +30,7 @@ export interface PostInterface {
 export interface CommentInterface{
     author: UserInterFace;
     commentText: string;
-    createdAt: Date;
-    updatedAt: Date;
+    date: string;
+    updatedAt: string;
   files: CropperImageInterface[];
 }

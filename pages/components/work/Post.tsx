@@ -12,6 +12,7 @@ import {
   OutlinedInput,
   Typography,
   LinearProgress,
+  Tooltip,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
@@ -41,13 +42,16 @@ import { IEmojiData } from "emoji-picker-react";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { LoadingButton } from "@mui/lab";
 import { postNewCommentToPost } from "../../../services/work";
+import { useDispatch } from "react-redux";
+import { addCommentToPost } from "../../../Redux/slices/work";
 
 const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
-  const { author, comments, files, createdAt, text, _id } = post;
+  const { author, comments, files, createdAt, text, id } = post;
   const theme: ThemeInterface = useTheme();
   const token = useCheckLogedinUserToken();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -65,6 +69,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
     setCommentText(commentText + emojiObject.emoji);
     setShowEmojiPeaker((prev) => !prev);
   };
+  const [showCommentSection, setShowCommentSection] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const handleChoseFile = () => {
     fileRef.current?.click();
@@ -117,10 +122,17 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
     }
 
     formData.append("commentText", commentText);
-    if (token && _id) {
+
+    if (token && id) {
       setIsCommenting(true);
-      const response = await postNewCommentToPost(token, formData, _id);
+      const response = await postNewCommentToPost(token, formData, id);
       if (response) {
+        dispatch(
+          addCommentToPost({
+            postId: id,
+            newComment: response,
+          })
+        );
         setIsCommenting(false);
         setAllFiles([]);
         setCommentText("");
@@ -275,16 +287,18 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
           Like
         </Button>
         <Button
-          color="secondary"
-          variant="text"
+          color={"secondary"}
+          variant={showCommentSection ? "outlined" : "text"}
           sx={{
             textTransform: "none",
             gap: 1,
             p: 1,
+            borderRadius: 3,
           }}
+          onClick={() => setShowCommentSection((prev) => !prev)}
         >
           <CommentRoundedIcon />
-          Comments
+          {comments.length} Comments
         </Button>
         <Button
           color="secondary"
@@ -517,7 +531,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
         </FormControl>
       </Box>
       {/* End Comments Section */}
-      <PostComments comments={comments} />
+      {showCommentSection && <PostComments comments={comments} />}
     </Box>
   );
 };
@@ -602,9 +616,15 @@ const FileSlider = ({ files }: { files: CropperImageInterface[] }) => {
 
 const PostComments = ({ comments }: { comments: CommentInterface[] }) => {
   const theme: ThemeInterface = useTheme();
+
+  // sort the comments by createdAt in descending order
+  const sortedComments = comments.slice().sort((a, b) => {
+    return Date.parse(b.date) - Date.parse(a.date);
+  });
+
   return (
-    <Box>
-      {comments.map((comment) => (
+    <Box sx={{ maxHeight: "15rem", overflowY: "auto" }}>
+      {sortedComments.map((comment) => (
         <Box sx={{ display: "flex", p: 2 }}>
           <Avatar
             sx={{
@@ -626,9 +646,25 @@ const PostComments = ({ comments }: { comments: CommentInterface[] }) => {
               borderTopLeftRadius: 0,
             }}
           >
-            <Typography variant="subtitle1" fontWeight={700}>
-              {comment.author.firstname} {comment.author.lastname}
-            </Typography>
+            <Box>
+              <Typography variant={"subtitle1"} fontWeight={700}>
+                {comment.author.firstname} {comment.author.lastname}
+              </Typography>
+              <Tooltip
+                title={comment.author.professionalSummary}
+                placement="right-start"
+              >
+                <Typography variant="caption">
+                  {comment.author.professionalSummary &&
+                  comment.author.professionalSummary.length > 80
+                    ? `${comment.author.professionalSummary.substring(
+                        0,
+                        80
+                      )}...`
+                    : comment.author.professionalSummary}
+                </Typography>
+              </Tooltip>
+            </Box>
             <Typography>{comment.commentText}</Typography>
           </Box>
         </Box>
