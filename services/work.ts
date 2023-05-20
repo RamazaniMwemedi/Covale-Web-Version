@@ -99,3 +99,38 @@ export const reactOnApost = async (
     return response.status;
   }
 };
+/**
+ *
+ * @param token server token
+ * @param commentId Id of the post to be reacted
+ * @param reaction the reaction
+ * @returns reaction
+ */
+export const reactOnApostComment = async (
+  token: string,
+  commentId: string,
+  reaction:
+    | "like"
+    | "love"
+    | "celebrate"
+    | "insightful"
+    | "curious"
+    | "support"
+    | "funny"
+) => {
+  if (token && commentId) {
+    const response = await axios.put(
+      `${SERVER_ADDRESS}/api/v1/work/circle/post/comment/${commentId}/react`,
+      {
+        reaction,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.status;
+  }
+};
+

@@ -1,5 +1,5 @@
 import { PostInterface } from "./../../interfaces/work";
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: {
   work: {
@@ -106,8 +106,68 @@ const workSlice = createSlice({
         },
       };
     },
+    reactOnPostCommentState(state, { payload }) {
+      const { postId, commentId, statusCode, newReaction, user } = payload;
+
+      const updatedPosts = state.work.posts.map((post) => {
+        if (post.id === postId) {
+          const updatedComments = post.comments.map((comment) => {
+            if (comment.id === commentId) {
+              const existingReaction = comment.reactions.find(
+                (reaction) => reaction.user.id === user.id
+              );
+
+              if (Number(statusCode) === 204) {
+                // If the user has already reacted with the same reaction type, remove the reaction
+                const updatedReactions = comment.reactions.filter(
+                  (reaction) => reaction.user.id !== user.id
+                );
+
+                return { ...comment, reactions: updatedReactions };
+              } else if (existingReaction) {
+                // If the user has not yet reacted with the same reaction type, update the reaction
+                const updatedReactions = comment.reactions.map((reaction) => {
+                  if (reaction.user.id === user.id) {
+                    return { ...reaction, type: newReaction };
+                  }
+                  return reaction;
+                });
+
+                return { ...comment, reactions: updatedReactions };
+              } else {
+                // If it's a new reaction, add it
+                const newReactionObj = {
+                  user: user,
+                  type: newReaction,
+                };
+                const updatedReactions = [...comment.reactions, newReactionObj];
+
+                return { ...comment, reactions: updatedReactions };
+              }
+            }
+            return comment;
+          });
+
+          return { ...post, comments: updatedComments };
+        }
+        return post;
+      });
+
+      return {
+        ...state,
+        work: {
+          ...state.work,
+          posts: updatedPosts,
+        },
+      };
+    },
   },
 });
-export const { addPosts, addPost, addCommentToPost, reactOnPostState } =
-  workSlice.actions;
+export const {
+  addPosts,
+  addPost,
+  addCommentToPost,
+  reactOnPostState,
+  reactOnPostCommentState,
+} = workSlice.actions;
 export const reducer = workSlice.reducer;

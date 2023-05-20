@@ -5,7 +5,7 @@ import { CropperImageInterface, UserInterFace } from "./myprofile";
  * This is basically the innterface for all the posts
  */
 export interface PostInterface {
-  id:string;
+  id: string;
   author: UserInterFace;
   text: string;
   createdAt: string;
@@ -16,9 +16,8 @@ export interface PostInterface {
     user: UserInterFace;
     type: string;
     id?: string;
-
   }[];
-  comments:CommentInterface[];
+  comments: CommentInterface[];
   shares: {
     user: UserInterFace;
     createdAt: string;
@@ -29,10 +28,16 @@ export interface PostInterface {
   sharesDisabled: boolean;
 }
 
-export interface CommentInterface{
-    author: UserInterFace;
-    commentText: string;
-    date: string;
-    updatedAt: string;
+export interface CommentInterface {
+  author: UserInterFace;
+  commentText: string;
+  date: string;
+  id: string;
+  updatedAt: string;
+  reactions: {
+    user: UserInterFace;
+    type: string;
+    id?: string;
+  }[];
   files: CropperImageInterface[];
 }

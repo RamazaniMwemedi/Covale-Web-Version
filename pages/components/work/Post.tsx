@@ -51,9 +51,17 @@ import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { IEmojiData } from "emoji-picker-react";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { LoadingButton } from "@mui/lab";
-import { postNewCommentToPost, reactOnApost } from "../../../services/work";
+import {
+  postNewCommentToPost,
+  reactOnApost,
+  reactOnApostComment,
+} from "../../../services/work";
 import { useDispatch } from "react-redux";
-import { addCommentToPost, reactOnPostState } from "../../../Redux/slices/work";
+import {
+  addCommentToPost,
+  reactOnPostCommentState,
+  reactOnPostState,
+} from "../../../Redux/slices/work";
 
 const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
   const { author, comments, files, createdAt, text, id, reactions } = post;
@@ -592,7 +600,9 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
         </FormControl>
       </Box>
       {/* End Comments Section */}
-      {showCommentSection && <PostComments comments={comments} />}
+      {showCommentSection && (
+        <PostComments postId={id} comments={comments} user={user} />
+      )}
     </Box>
   );
 };
@@ -676,8 +686,16 @@ const FileSlider = ({ files }: { files: CropperImageInterface[] }) => {
   );
 };
 
-const PostComments = ({ comments }: { comments: CommentInterface[] }) => {
-  const theme: ThemeInterface = useTheme();
+const PostComments = ({
+  comments,
+  user,
+  postId,
+}: {
+  comments: CommentInterface[];
+  user: UserInterFace;
+  postId: string;
+}) => {
+  const [view, setView] = useState(false);
 
   // sort the comments by createdAt in descending order
   const sortedComments = comments.slice().sort((a, b) => {
@@ -685,52 +703,140 @@ const PostComments = ({ comments }: { comments: CommentInterface[] }) => {
   });
 
   return (
-    <Box sx={{ maxHeight: "15rem", overflowY: "auto" }}>
+    <Box sx={{ maxHeight: view ? "auto" : "15rem", overflowY: "auto" }}>
       {sortedComments.map((comment) => (
-        <Box sx={{ display: "flex", p: 2 }}>
-          <Avatar
-            sx={{
-              height: 30,
-              width: 30,
-              mt: 0.3,
-            }}
-            src={comment.author.profilePic?.fileUrl}
-          >
-            {comment.author.firstname[0]}
-            {comment.author.lastname[0]}
-          </Avatar>
-          <Box
-            sx={{
-              bgcolor: theme.colors.textBackground2,
-              width: "100%",
-              p: 1,
-              borderRadius: 2,
-              borderTopLeftRadius: 0,
-            }}
-          >
-            <Box>
-              <Typography variant={"subtitle1"} fontWeight={700}>
-                {comment.author.firstname} {comment.author.lastname}
-              </Typography>
-              <Tooltip
-                title={comment.author.professionalSummary}
-                placement="right-start"
-              >
-                <Typography variant="caption">
-                  {comment.author.professionalSummary &&
-                  comment.author.professionalSummary.length > 80
-                    ? `${comment.author.professionalSummary.substring(
-                        0,
-                        80
-                      )}...`
-                    : comment.author.professionalSummary}
-                </Typography>
-              </Tooltip>
-            </Box>
-            <Typography>{comment.commentText}</Typography>
-          </Box>
-        </Box>
+        <PostComment
+          user={user}
+          postId={postId}
+          comment={comment}
+          key={comment.id}
+        />
       ))}
+      <Button onClick={() => setView((p) => !p)}>Load more</Button>
+    </Box>
+  );
+};
+
+const PostComment = ({
+  comment,
+  user,
+
+  postId,
+}: {
+  comment: CommentInterface;
+  user: UserInterFace;
+  postId: string;
+}) => {
+  const dispatch = useDispatch();
+  const token = useCheckLogedinUserToken();
+  const [showReactions, setShowReactions] = useState(false);
+  const { id } = comment;
+  const reactionHandle = async (
+    reaction:
+      | "like"
+      | "love"
+      | "celebrate"
+      | "insightful"
+      | "curious"
+      | "support"
+      | "funny"
+  ) => {
+    if (token && id) {
+      setShowReactions(false);
+
+      const statusCode = await reactOnApostComment(token, id, reaction);
+
+      dispatch(
+        reactOnPostCommentState({
+          commentId: id,
+          postId: postId,
+          newReaction: reaction,
+          statusCode,
+          user: {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            profilePic: user.profilePic,
+          },
+        })
+      );
+    }
+  };
+
+  const theme: ThemeInterface = useTheme();
+  return (
+    <Box sx={{ display: "flex", p: 2 }}>
+      <Avatar
+        sx={{
+          height: 30,
+          width: 30,
+          mt: 0.3,
+        }}
+        src={comment.author.profilePic?.fileUrl}
+      >
+        {comment.author.firstname[0]}
+        {comment.author.lastname[0]}
+      </Avatar>
+      <Box
+        sx={{
+          bgcolor: theme.colors.textBackground2,
+          width: "100%",
+          p: 1,
+          borderRadius: 2,
+          borderTopLeftRadius: 0,
+        }}
+      >
+        <Box>
+          <Typography variant={"subtitle1"} fontWeight={700}>
+            {comment.author.firstname} {comment.author.lastname}
+          </Typography>
+          <Tooltip
+            title={comment.author.professionalSummary}
+            placement="right-start"
+          >
+            <Typography variant="caption" color="action">
+              {comment.author.professionalSummary &&
+              comment.author.professionalSummary.length > 80
+                ? `${comment.author.professionalSummary.substring(0, 80)}...`
+                : comment.author.professionalSummary}
+            </Typography>
+          </Tooltip>
+        </Box>
+        <Typography>{comment.commentText}</Typography>
+        {/*  Comment Reactions*/}
+        <Box
+          sx={{
+            display: "flex",
+          }}
+        >
+          <Button
+            variant="text"
+            size="small"
+            onMouseOver={() => setShowReactions(true)}
+            onMouseLeave={() => setShowReactions(false)}
+            onDoubleClick={() => {
+              reactionHandle("like");
+              setShowReactions(false);
+            }}
+            sx={{
+              textTransform: "none",
+              gap: 1,
+              p: 1,
+              position: "relative",
+            }}
+          >
+            {" "}
+            {showReactions && <PostReactions reactionHandle={reactionHandle} />}
+            Like
+          </Button>
+          {comment.reactions
+            .slice(0, 3)
+            .map((reaction) =>
+              reactionIcon(reaction.type, { width: 20, height: 20 })
+            )}
+          {comment.reactions.length > 0 && comment.reactions.length}
+        </Box>
+      </Box>
     </Box>
   );
 };
