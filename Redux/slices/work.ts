@@ -57,7 +57,57 @@ const workSlice = createSlice({
       // If the post with the matching ID is not found, return the original state object
       return state;
     },
+    reactOnPostState(state, { payload }) {
+      const { postId, statusCode, newReaction, user } = payload;
+      console.log("statusCode :>>", statusCode);
+
+      const updatedPosts = state.work.posts.map((post: PostInterface) => {
+        if (post.id === postId) {
+          const existingReaction = post.reactions.find(
+            (reaction) => reaction.user.id === user.id
+          );
+
+          if (Number(statusCode) === 204) {
+            // If the user has already reacted with the same reaction type, remove the reaction
+            const updatedReactions = post.reactions.filter(
+              (reaction) => reaction.user.id !== user.id
+            );
+
+            return { ...post, reactions: updatedReactions };
+          } else if (existingReaction) {
+            // If the user has not yet reacted with the same reaction type, update the reaction
+            const updatedReactions = post.reactions.map((reaction) => {
+              if (reaction.user.id === user.id) {
+                return { ...reaction, type: newReaction };
+              }
+              return reaction;
+            });
+
+            return { ...post, reactions: updatedReactions };
+          } else {
+            // If it's a new reaction, add it
+            const newReactionObj = {
+              user: user,
+              type: newReaction,
+            };
+            const updatedReactions = [...post.reactions, newReactionObj];
+
+            return { ...post, reactions: updatedReactions };
+          }
+        }
+        return post;
+      });
+
+      return {
+        ...state,
+        work: {
+          ...state.work,
+          posts: updatedPosts,
+        },
+      };
+    },
   },
 });
-export const { addPosts, addPost, addCommentToPost } = workSlice.actions;
+export const { addPosts, addPost, addCommentToPost, reactOnPostState } =
+  workSlice.actions;
 export const reducer = workSlice.reducer;

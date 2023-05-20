@@ -30,10 +30,22 @@ const ImageComponent = React.memo(
     }));
 
     return (
-      <Box sx={{ width: "100%", overflow: "hidden" }}>
+      <Box sx={{ width: "95%", overflow: "hidden" }}>
         <Widget>
           {displayFile ? (
-            <Image alt="Image" src={src} width={width} height={height} />
+            <Image
+              alt="Image"
+              src={src}
+              width={width}
+              height={height}
+              objectFit="cover"
+              style={{
+                width: "auto",
+                height: "auto",
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
+              }}
+            />
           ) : (
             <Box
               sx={{
@@ -151,7 +163,7 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
           >
             <iframe
               // className={filetype}
-              width="1000"
+              width="100%"
               height="600"
               frameborder="0"
               src={src}

@@ -21,7 +21,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reducer = exports.addCommentToPost = exports.addPost = exports.addPosts = void 0;
+exports.reducer = exports.reactOnPostState = exports.addCommentToPost = exports.addPost = exports.addPosts = void 0;
 var toolkit_1 = require("@reduxjs/toolkit");
 var initialState = {
     work: {
@@ -59,7 +59,43 @@ var workSlice = (0, toolkit_1.createSlice)({
             // If the post with the matching ID is not found, return the original state object
             return state;
         },
+        reactOnPostState: function (state, _a) {
+            var payload = _a.payload;
+            var postId = payload.postId, statusCode = payload.statusCode, newReaction = payload.newReaction, user = payload.user;
+            console.log("statusCode :>>", statusCode);
+            var updatedPosts = state.work.posts.map(function (post) {
+                if (post.id === postId) {
+                    var existingReaction = post.reactions.find(function (reaction) { return reaction.user.id === user.id; });
+                    if (Number(statusCode) === 204) {
+                        // If the user has already reacted with the same reaction type, remove the reaction
+                        var updatedReactions = post.reactions.filter(function (reaction) { return reaction.user.id !== user.id; });
+                        return __assign(__assign({}, post), { reactions: updatedReactions });
+                    }
+                    else if (existingReaction) {
+                        // If the user has not yet reacted with the same reaction type, update the reaction
+                        var updatedReactions = post.reactions.map(function (reaction) {
+                            if (reaction.user.id === user.id) {
+                                return __assign(__assign({}, reaction), { type: newReaction });
+                            }
+                            return reaction;
+                        });
+                        return __assign(__assign({}, post), { reactions: updatedReactions });
+                    }
+                    else {
+                        // If it's a new reaction, add it
+                        var newReactionObj = {
+                            user: user,
+                            type: newReaction,
+                        };
+                        var updatedReactions = __spreadArray(__spreadArray([], post.reactions, true), [newReactionObj], false);
+                        return __assign(__assign({}, post), { reactions: updatedReactions });
+                    }
+                }
+                return post;
+            });
+            return __assign(__assign({}, state), { work: __assign(__assign({}, state.work), { posts: updatedPosts }) });
+        },
     },
 });
-exports.addPosts = (_a = workSlice.actions, _a.addPosts), exports.addPost = _a.addPost, exports.addCommentToPost = _a.addCommentToPost;
+exports.addPosts = (_a = workSlice.actions, _a.addPosts), exports.addPost = _a.addPost, exports.addCommentToPost = _a.addCommentToPost, exports.reactOnPostState = _a.reactOnPostState;
 exports.reducer = workSlice.reducer;

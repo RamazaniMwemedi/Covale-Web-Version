@@ -51,12 +51,12 @@ import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { IEmojiData } from "emoji-picker-react";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { LoadingButton } from "@mui/lab";
-import { postNewCommentToPost } from "../../../services/work";
+import { postNewCommentToPost, reactOnApost } from "../../../services/work";
 import { useDispatch } from "react-redux";
-import { addCommentToPost } from "../../../Redux/slices/work";
+import { addCommentToPost, reactOnPostState } from "../../../Redux/slices/work";
 
 const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
-  const { author, comments, files, createdAt, text, id } = post;
+  const { author, comments, files, createdAt, text, id, reactions } = post;
   const theme: ThemeInterface = useTheme();
   const token = useCheckLogedinUserToken();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -118,8 +118,35 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
     );
   };
 
-  const reactionHandle = (reaction: string) => {
-    // alert(`Reaction is ${reaction}`);
+  const reactionHandle = async (
+    reaction:
+      | "like"
+      | "love"
+      | "celebrate"
+      | "insightful"
+      | "curious"
+      | "support"
+      | "funny"
+  ) => {
+    if (token && id) {
+      setShowReactions(false);
+
+      const statusCode = await reactOnApost(token, id, reaction);
+
+      dispatch(
+        reactOnPostState({
+          postId: id,
+          newReaction: reaction,
+          statusCode,
+          user: {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: author.lastname,
+            profilePic: user.profilePic,
+          },
+        })
+      );
+    }
   };
 
   const commentTeaxtChangeHandler = (
@@ -280,6 +307,15 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
         <FileSlider files={files} />
       </Box>
       {/* End Post Files */}
+      {/* Post Reactions  */}
+      <Box>
+        {reactions
+          .slice(0, 3)
+          .map((reaction) =>
+            reactionIcon(reaction.type, { width: 20, height: 20 })
+          )}
+        {reactions.length > 0 && reactions.length}
+      </Box>
       <Divider />
 
       {/* Post Reactions  */}
@@ -295,7 +331,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
           variant="text"
           onMouseOver={() => setShowReactions(true)}
           onMouseLeave={() => setShowReactions(false)}
-          onClick={() => {
+          onDoubleClick={() => {
             reactionHandle("like");
             setShowReactions(false);
           }}
@@ -581,24 +617,25 @@ const FileSlider = ({ files }: { files: CropperImageInterface[] }) => {
     <Box
       sx={{
         mb: 1,
+        display: "grid",
+        placeItems: "center",
+        position: "relative",
       }}
     >
+      {files.length > 1 && (
+        <IconButton
+          sx={{ position: "absolute", top: "50%", left: 0, zIndex: 1 }}
+          onClick={prevFile}
+        >
+          &#10094;
+        </IconButton>
+      )}
       {files.length > 0 && (
         <Box
           sx={{
             display: "flex",
-            position: "relative",
           }}
         >
-          {files.length > 1 && (
-            <IconButton
-              sx={{ position: "absolute", top: "50%", left: 0, zIndex: 1 }}
-              onClick={prevFile}
-            >
-              &#10094;
-            </IconButton>
-          )}
-
           <FileComponent
             height={500}
             displayFile
@@ -606,15 +643,15 @@ const FileSlider = ({ files }: { files: CropperImageInterface[] }) => {
             key={files[filePosition].fileUrl}
             file={files[filePosition]}
           />
-          {files.length > 1 && (
-            <IconButton
-              sx={{ position: "absolute", top: "50%", right: 0, zIndex: 1 }}
-              onClick={nextFile}
-            >
-              &#10095;
-            </IconButton>
-          )}
         </Box>
+      )}
+      {files.length > 1 && (
+        <IconButton
+          sx={{ position: "absolute", top: "50%", right: 0, zIndex: 1 }}
+          onClick={nextFile}
+        >
+          &#10095;
+        </IconButton>
       )}
       {/* Dots to indicate the curent file */}
       {files.length > 1 && (
@@ -701,9 +738,26 @@ const PostComments = ({ comments }: { comments: CommentInterface[] }) => {
 const PostReactions = ({
   reactionHandle,
 }: {
-  reactionHandle: (reaction: string) => void;
+  reactionHandle: (
+    reaction:
+      | "like"
+      | "love"
+      | "celebrate"
+      | "insightful"
+      | "curious"
+      | "support"
+      | "funny"
+  ) => void;
 }) => {
-  const reactions: string[] = [
+  const reactions: (
+    | "like"
+    | "love"
+    | "celebrate"
+    | "insightful"
+    | "curious"
+    | "support"
+    | "funny"
+  )[] = [
     "like",
     "love",
     "celebrate",
@@ -713,40 +767,6 @@ const PostReactions = ({
     "funny",
   ];
 
-  const reactionIcon = (
-    reaction: string,
-    dimessions: {
-      height: number;
-      width: number;
-    }
-  ) => {
-    if (reaction === "like") {
-      return (
-        <ThumbsUpIcon width={dimessions.width} height={dimessions.height} />
-      );
-    } else if (reaction === "love") {
-      return <HeartIcon width={dimessions.width} height={dimessions.height} />;
-    } else if (reaction === "celebrate") {
-      return (
-        <CelebrateIcon width={dimessions.width} height={dimessions.height} />
-      );
-    } else if (reaction === "insightful") {
-      return <BulbIcon width={dimessions.width} height={dimessions.height} />;
-    } else if (reaction === "curious") {
-      return (
-        <ThinkinhFaceIcon width={dimessions.width} height={dimessions.height} />
-      );
-    } else if (reaction === "support") {
-      return (
-        <HandHoldingHeartIcon
-          width={dimessions.width}
-          height={dimessions.height}
-        />
-      );
-    } else if (reaction === "funny") {
-      return <FunnyIcon width={dimessions.width} height={dimessions.height} />;
-    }
-  };
   const theme: ThemeInterface = useTheme();
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -801,4 +821,42 @@ const PostReactions = ({
       })}
     </Box>
   );
+};
+
+const reactionIcon = (
+  reaction: string,
+  dimessions: {
+    height: number;
+    width: number;
+  }
+) => {
+  switch (reaction) {
+    case "like":
+      return (
+        <ThumbsUpIcon width={dimessions.width} height={dimessions.height} />
+      );
+    case "love":
+      return <HeartIcon width={dimessions.width} height={dimessions.height} />;
+    case "celebrate":
+      return (
+        <CelebrateIcon width={dimessions.width} height={dimessions.height} />
+      );
+    case "insightful":
+      return <BulbIcon width={dimessions.width} height={dimessions.height} />;
+    case "curious":
+      return (
+        <ThinkinhFaceIcon width={dimessions.width} height={dimessions.height} />
+      );
+    case "support":
+      return (
+        <HandHoldingHeartIcon
+          width={dimessions.width}
+          height={dimessions.height}
+        />
+      );
+    case "funny":
+      return <FunnyIcon width={dimessions.width} height={dimessions.height} />;
+    default:
+      return null;
+  }
 };

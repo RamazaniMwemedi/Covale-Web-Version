@@ -15,6 +15,8 @@ export interface PostInterface {
   reactions: {
     user: UserInterFace;
     type: string;
+    id?: string;
+
   }[];
   comments:CommentInterface[];
   shares: {

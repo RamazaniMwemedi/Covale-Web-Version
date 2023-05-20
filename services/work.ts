@@ -45,10 +45,9 @@ export const postNewCommentToPost = async (
   }
 };
 
-
 /**
- * 
- * @param token servers token 
+ *
+ * @param token servers token
  * @param userId loggedin user id
  * @returns Post[]
  */
@@ -63,5 +62,40 @@ export const getUserPosts = async (token: string, userId: string) => {
       }
     );
     return response.data;
+  }
+};
+
+/**
+ *
+ * @param token server token
+ * @param postId Id of the post to be reacted
+ * @param reaction the reaction
+ * @returns reaction
+ */
+export const reactOnApost = async (
+  token: string,
+  postId: string,
+  reaction:
+    | "like"
+    | "love"
+    | "celebrate"
+    | "insightful"
+    | "curious"
+    | "support"
+    | "funny"
+) => {
+  if (token && postId) {
+    const response = await axios.put(
+      `${SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/react`,
+      {
+        reaction,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.status;
   }
 };
