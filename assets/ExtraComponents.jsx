@@ -38,10 +38,7 @@ const ImageComponent = React.memo(
               src={src}
               width={width}
               height={height}
-              objectFit="cover"
               style={{
-                width: "auto",
-                height: "auto",
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
               }}
