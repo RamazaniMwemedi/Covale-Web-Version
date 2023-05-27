@@ -26,7 +26,7 @@ const calendarSlice = createSlice({
 const { allEvents } = calendarSlice.actions;
 const reducer = calendarSlice.reducer;
 
-module.exports = {
+export{
   allEvents,
   reducer,
 };

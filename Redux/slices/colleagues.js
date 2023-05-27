@@ -26,7 +26,8 @@ const colleagueSlice = createSlice({
 const { addExploreColleagues, removeColleagueFromExplore } =
   colleagueSlice.actions;
 const reducer = colleagueSlice.reducer;
-module.exports = {
+
+export {
   reducer,
   addExploreColleagues,
   removeColleagueFromExplore,

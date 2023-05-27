@@ -75,7 +75,7 @@ const {
   updateTasks,
 } = projectsSlice.actions;
 const reducer = projectsSlice.reducer;
-module.exports = {
+export{
   reducer,
   addProjects,
   addProject,

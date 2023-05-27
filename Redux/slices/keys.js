@@ -26,7 +26,7 @@ const { allKeyPairs, addNewKeyPair } = keyPairsSlice.actions;
 
 const reducer = keyPairsSlice.reducer;
 
-module.exports = {
+export {
   allKeyPairs,
   addNewKeyPair,
   reducer,

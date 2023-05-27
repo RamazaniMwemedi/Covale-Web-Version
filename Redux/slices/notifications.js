@@ -58,7 +58,7 @@ const {
   deleteNotification,
   updateReadNotification,
 } = notificationSlice.actions;
-module.exports = {
+export {
   allNotifications,
   addNewNotification,
   deleteNotification,

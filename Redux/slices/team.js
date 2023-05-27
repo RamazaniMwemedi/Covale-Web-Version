@@ -114,7 +114,7 @@ const {
   updateTopicMessageId,
 } = teamSlice.actions;
 const reducer = teamSlice.reducer;
-module.exports = {
+export {
   reducer,
   allTeams,
   addNewMessageToTeamId,

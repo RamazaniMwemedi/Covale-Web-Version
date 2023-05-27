@@ -80,7 +80,7 @@ const {
   allChats,
 } = chatSlice.actions;
 const reducer = chatSlice.reducer;
-module.exports = {
+export {
   reducer,
   chatAdd,
   chatReset,
