@@ -183,7 +183,7 @@ hr {
 
 /* Animate comming soon with changing colors in Gradient  */
 .comming_soon {
-  animation: comming_soon 5s linear infinite;
+  animation: comming_soon 8s linear infinite;
   animation-timing-function: ease-in-out;
   background-image: linear-gradient(
     90deg,
@@ -198,7 +198,7 @@ hr {
     whitesmoke,
     #ff4d4d
   );
-  /* background-size: 400% 400%; */
+  background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
