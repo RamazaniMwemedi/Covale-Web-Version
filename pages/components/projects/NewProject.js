@@ -52,7 +52,7 @@ export default function NewProject() {
     <React.Fragment>
       <Button
         sx={{
-          position: "fixed",
+          position: "absolute",
           bottom: 8,
           width: "20%",
           marginLeft: 0.3,

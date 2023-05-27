@@ -45,6 +45,7 @@ const Drawer = styled(MuiDrawer, {
   backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
+  position:"relative",
 
   ...(!open && {
     ...closedMixin(theme),
