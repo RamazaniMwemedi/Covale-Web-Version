@@ -54,7 +54,7 @@ export default function NewProject() {
         sx={{
           position: "absolute",
           bottom: 8,
-          width: "20%",
+          width: "90%",
           marginLeft: 0.3,
           textTransform: "none",
           ml: 2,
@@ -277,7 +277,7 @@ function ProjectForm({ handleClose }) {
     } else {
       setCreating(false);
       dispatch(addProject(res));
-      router.push(`/projects/${respose.id}`);
+      router.push(`/projects/${res.id}`);
       setCreating(false);
       handleClose();
     }

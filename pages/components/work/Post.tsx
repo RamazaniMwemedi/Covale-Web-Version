@@ -64,7 +64,19 @@ import {
 } from "../../../Redux/slices/work";
 
 const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
-  const { author, comments, files, createdAt, text, id, reactions } = post;
+  const author: UserInterFace | null = post ? post.author : null;
+  const comments: CommentInterface[] | null = post ? post.comments : null;
+  const files: CropperImageInterface[] | null = post ? post.files : null;
+  const createdAt: string | null = post ? post.createdAt : null;
+  const text: string | null = post ? post.text : null;
+  const id: string | null = post ? post.id : null;
+  const reactions:
+    | {
+        user: UserInterFace;
+        type: string;
+        id?: string | undefined;
+      }[]
+    | null = post ? post.reactions : null;
   const theme: ThemeInterface = useTheme();
   const token = useCheckLogedinUserToken();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -140,20 +152,21 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       setShowReactions(false);
 
       const statusCode = await reactOnApost(token, id, reaction);
-
-      dispatch(
-        reactOnPostState({
-          postId: id,
-          newReaction: reaction,
-          statusCode,
-          user: {
-            id: user.id,
-            firstname: user.firstname,
-            lastname: author.lastname,
-            profilePic: user.profilePic,
-          },
-        })
-      );
+      if (author) {
+        dispatch(
+          reactOnPostState({
+            postId: id,
+            newReaction: reaction,
+            statusCode,
+            user: {
+              id: user.id,
+              firstname: user.firstname,
+              lastname: author.lastname,
+              profilePic: user.profilePic,
+            },
+          })
+        );
+      }
     }
   };
 
@@ -209,35 +222,37 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
         }}
       >
         {/* Author names */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 1,
-          }}
-        >
-          {" "}
-          <Avatar
+        {author && (
+          <Box
             sx={{
-              height: 50,
-              width: 50,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 1,
             }}
-            src={author.profilePic ? author.profilePic.fileUrl : ""}
           >
-            {author.firstname[0]} {author.lastname[0]}
-          </Avatar>
-          <Box>
-            <Typography variant="subtitle2" fontWeight={700}>
-              {author.firstname} {author.lastname}
-            </Typography>
-            <Typography variant="caption">
-              @{author.username}
-              {"  "}
-            </Typography>
-            <Typography variant="caption">{timeAgo(createdAt)}</Typography>
+            {" "}
+            <Avatar
+              sx={{
+                height: 50,
+                width: 50,
+              }}
+              src={author.profilePic ? author.profilePic.fileUrl : ""}
+            >
+              {author.firstname[0]} {author.lastname[0]}
+            </Avatar>
+            <Box>
+              <Typography variant="subtitle2" fontWeight={700}>
+                {author.firstname} {author.lastname}
+              </Typography>
+              <Typography variant="caption">
+                @{author.username}
+                {"  "}
+              </Typography>
+              <Typography variant="caption">{timeAgo(createdAt)}</Typography>
+            </Box>
           </Box>
-        </Box>
+        )}
 
         {/* Right */}
         <Box
@@ -277,52 +292,52 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       {/* Post texts */}
       <Box>
         <Typography variant="body2" sx={{ pt: 1 }}>
-          {text.split("\n").map((item, key) => {
-            // match URLs and hashtags using regular expressions
-            const urls = item.match(/https?:\/\/[^\s]+/g);
-            const hashtags = item.match(/#\w+/g);
+          {text &&
+            text.split("\n").map((item, key) => {
+              // match URLs and hashtags using regular expressions
+              const urls = item.match(/https?:\/\/[^\s]+/g);
+              const hashtags = item.match(/#\w+/g);
 
-            // replace URLs and hashtags with links and colored text
-            if (urls && urls.length > 0) {
-              urls.forEach((url) => {
-                item = item.replace(
-                  url,
-                  `<a style="color:#1565c0;padding:0px" target=_blank href=${url}>${url}</a>`
-                );
-              });
-            }
-            if (hashtags && hashtags.length > 0) {
-              hashtags.forEach((hashtag) => {
-                item = item.replace(
-                  hashtag,
-                  `<span style="color: #1565c0; font-weight: bold;">${hashtag}</span>`
-                );
-              });
-            }
+              // replace URLs and hashtags with links and colored text
+              if (urls && urls.length > 0) {
+                urls.forEach((url) => {
+                  item = item.replace(
+                    url,
+                    `<a style="color:#1565c0;padding:0px" target=_blank href=${url}>${url}</a>`
+                  );
+                });
+              }
+              if (hashtags && hashtags.length > 0) {
+                hashtags.forEach((hashtag) => {
+                  item = item.replace(
+                    hashtag,
+                    `<span style="color: #1565c0; font-weight: bold;">${hashtag}</span>`
+                  );
+                });
+              }
 
-            return (
-              <span key={key}>
-                {ReactHtmlParser(item)}
-                <br />
-              </span>
-            );
-          })}
+              return (
+                <span key={key}>
+                  {ReactHtmlParser(item)}
+                  <br />
+                </span>
+              );
+            })}
         </Typography>
       </Box>
       {/* End Post texts */}
       {/* Post Files */}
-      <Box>
-        <FileSlider files={files} />
-      </Box>
+      <Box>{files && <FileSlider files={files} />}</Box>
       {/* End Post Files */}
       {/* Post Reactions  */}
       <Box>
-        {reactions
-          .slice(0, 3)
-          .map((reaction) =>
-            reactionIcon(reaction.type, { width: 20, height: 20 })
-          )}
-        {reactions.length > 0 && reactions.length}
+        {reactions &&
+          reactions
+            .slice(0, 3)
+            .map((reaction) =>
+              reactionIcon(reaction.type, { width: 20, height: 20 })
+            )}
+        {reactions && <>{reactions.length > 0 && reactions.length}</>}
       </Box>
       <Divider />
 
@@ -367,7 +382,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
           onClick={() => setShowCommentSection((prev) => !prev)}
         >
           <CommentRoundedIcon />
-          {comments.length} Comments
+          {comments && comments.length} Comments
         </Button>
         <Button
           color="secondary"
@@ -398,9 +413,11 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       <Box
         sx={{ display: "flex", alignItems: "flex-start", position: "relative" }}
       >
-        <Avatar src={user.profilePic ? user.profilePic.fileUrl : ""}>
-          {user.firstname[0]} {user.lastname[0]}
-        </Avatar>
+        {user && (
+          <Avatar src={user.profilePic ? user.profilePic.fileUrl : ""}>
+            {user.firstname[0]} {user.lastname[0]}
+          </Avatar>
+        )}
         {showEmojiPeaker === true && (
           <Box
             sx={{
@@ -601,7 +618,11 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       </Box>
       {/* End Comments Section */}
       {showCommentSection && (
-        <PostComments postId={id} comments={comments} user={user} />
+        <PostComments
+          postId={id ? id : ""}
+          comments={comments ? comments : []}
+          user={user}
+        />
       )}
     </Box>
   );
@@ -775,7 +796,6 @@ const PostComment = ({
     setCommentText(commentText + emojiObject.emoji);
     setShowEmojiPeaker((prev) => !prev);
   };
-  const [showCommentSection, setShowCommentSection] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const handleChoseFile = () => {
     fileRef.current?.click();

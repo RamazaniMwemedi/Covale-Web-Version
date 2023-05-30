@@ -145,7 +145,7 @@ const replyToTopic = async (token, topicId, messageObject) => {
   }
 };
 
-module.exports = {
+export {
   getTeams,
   createNewTeam,
   getTeamById,

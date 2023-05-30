@@ -459,13 +459,4 @@ const OtherFile = React.memo(
   }
 );
 
-module.exports = {
-  ImageComponent,
-  Video,
-  Pdf,
-  Audio,
-  Docx,
-  Xls,
-  Ppt,
-  OtherFile,
-};
+export { ImageComponent, Video, Pdf, Audio, Docx, Xls, Ppt, OtherFile };
