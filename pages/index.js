@@ -69,13 +69,14 @@ function Index() {
         sx={{
           // All the content will be in center of the page
           display: "grid",
-          placeItems: "center",
+          // placeItems: "center",
           width: "100%",
           backgroundColor: theme.colors.background,
         }}
       >
         <br />
         <br />
+        
         <Box
           sx={{
             // Rotateing the logo animation in 360 degree
@@ -93,7 +94,7 @@ function Index() {
           <Logo height={300} width={300} />
         </Box>
         <Typography
-          variant="h1"
+          variant="h2"
           sx={{
             fontWeight: "bold",
             textAlign: "center",
@@ -110,10 +111,9 @@ function Index() {
         <br />
         <Typography
           sx={{
-            width: "50%",
             textAlign: "center",
           }}
-          variant="h6"
+          variant="body1"
         >
           Are you ready to take your team's productivity to the next level?
           Covale has the solution. Our platform is designed to streamline
@@ -158,7 +158,7 @@ function Index() {
         <br />
         <br />
         <Typography
-          variant="h3"
+          variant="h5"
           sx={{
             fontWeight: "bold",
             textAlign: "center",
@@ -173,7 +173,7 @@ function Index() {
             width: "50%",
             textAlign: "center",
           }}
-          variant="h6"
+          variant="body2"
         >
           We're working hard to bring Covale to you as soon as possible. Enter
           your email address below to be notified when we launch.
@@ -238,7 +238,6 @@ function Index() {
       sx={{
         bgcolor: theme.colors.background,
         height: "100vh",
-        width: "auto",
       }}
     >
       <NavBar />

@@ -190,12 +190,10 @@ hr {
     #ff4d4d,
     #f9cb28,
     #ff4081,
-    whitesmoke,
     dodgerblue,
     #ff4d4d,
     #f9cb28,
     #ff4081,
-    whitesmoke,
     #ff4d4d
   );
   background-size: 400% 400%;
@@ -205,15 +203,22 @@ hr {
 
 @keyframes comming_soon {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
 }
+
 
 r-1hdv0qi {
     width: 1.25em;
