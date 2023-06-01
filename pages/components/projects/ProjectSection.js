@@ -38,6 +38,8 @@ const ProjectSection = () => {
         height: "100%",
         width: "100%",
         backgroundColor: theme.colors.background,
+        display: "grid",
+        placeItems: !project && "center",
       }}
     >
       {project ? (
@@ -65,7 +67,6 @@ const ProjectSection = () => {
             justifyContent: "center",
             textAlign: "center",
             flexDirection: "column",
-            pt: "45%",
           }}
         >
           <Typography variant="h3">Choose a project to</Typography>

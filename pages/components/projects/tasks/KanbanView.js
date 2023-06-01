@@ -95,7 +95,7 @@ const KanbanView = ({
             addTheTaskToReduxHandler={addTheTaskToReduxHandler}
             id={id}
             members={members}
-            projectId={project}
+            projectId={project.id}
             handleShowFile={handleShowFile}
           />
         </Box>

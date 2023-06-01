@@ -50,6 +50,7 @@ const projectsSlice = createSlice({
       };
     },
     updateTasks(state, { payload }) {
+      console.log(payload);
       state = {
         ...state,
         projects: (state.projects
@@ -75,7 +76,7 @@ const {
   updateTasks,
 } = projectsSlice.actions;
 const reducer = projectsSlice.reducer;
-export{
+export {
   reducer,
   addProjects,
   addProject,
