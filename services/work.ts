@@ -44,6 +44,33 @@ export const postNewCommentToPost = async (
     return response.data;
   }
 };
+/**
+ *
+ * @param token the main server token for the logged in user
+ * @param formData of the comment which includes comment text and files
+ * @param postId id of the post being commented
+ * @param commentId id for the comment 
+ * @returns new comment
+ */
+export const postNewReplyToComment = async (
+  token: string,
+  formData: FormData,
+  postId: string,
+  commentId: string
+) => {
+  if (token && formData) {
+    const response = await axios.post(
+      `${SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comment/${commentId}/reply`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
 
 /**
  *

@@ -40,4 +40,5 @@ export interface CommentInterface {
     id?: string;
   }[];
   files: CropperImageInterface[];
+  replies:CommentInterface[]
 }

@@ -13,7 +13,7 @@ const Posts = () => {
         gap: "1rem",
         width: "90%",
         ml: 7,
-        "@media screen and (max-width: 800px)": {
+        "@media screen and (max-width: 1400px)": {
           gridTemplateColumns: "repeat(auto-fit, minmax(100%, 1fr))",
           placeItems: "center",
         },

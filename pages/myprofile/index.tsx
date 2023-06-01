@@ -143,6 +143,8 @@ const MyAccount = () => {
               <Box
                 sx={{
                   width: "100vw",
+                  display: "grid",
+                  placeItems: "center",
                 }}
               >
                 {/* Top */}
@@ -249,7 +251,16 @@ const MyAccount = () => {
                   />
                 </Box>
                 {/* Contents  */}
-                <Contents value={value} handleChangeIndex={handleChangeIndex} />
+                <Box
+                  sx={{
+                    p: 5,
+                  }}
+                >
+                  <Contents
+                    value={value}
+                    handleChangeIndex={handleChangeIndex}
+                  />
+                </Box>
               </Box>
             </>
           ) : (

@@ -53,6 +53,7 @@ import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { LoadingButton } from "@mui/lab";
 import {
   postNewCommentToPost,
+  postNewReplyToComment,
   reactOnApost,
   reactOnApostComment,
 } from "../../../services/work";
@@ -549,7 +550,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
                     <FileComponent
                       file={file}
                       width={displayFileBool ? 150 : 100}
-                      height={1}
+                      height={150}
                       displayFile={displayFileBool}
                     />
                     <IconButton
@@ -788,6 +789,9 @@ const PostComment = ({
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
+  // Reply open state
+  const [isReplyOpen, setIsReplyOpen] = useState(false);
+
   const [allFiles, setAllFiles] = useState<CropperImageInterface[]>([]);
   const commentOnEmojiClick = (
     _: React.MouseEvent,
@@ -827,6 +831,7 @@ const PostComment = ({
       reader.readAsDataURL(file);
     }
   };
+
   const removeFile = (fileName: string) => {
     setAllFiles((prevFiles) =>
       prevFiles.filter((file) => file?.fileName !== fileName)
@@ -852,20 +857,22 @@ const PostComment = ({
 
     if (token && id) {
       setIsCommenting(true);
-      const response = await postNewCommentToPost(token, formData, id);
+      const response = await postNewReplyToComment(token, formData, postId, id);
       if (response) {
-        dispatch(
-          addCommentToPost({
-            postId: id,
-            newComment: response,
-          })
-        );
+        // dispatch(
+        //   // addCommentToPost({
+        //   //   postId: postId,
+        //   //   newComment: response,
+        //   // })
+        // );
+        console.log("Response :>>", response);
         setIsCommenting(false);
         setAllFiles([]);
         setCommentText("");
       }
     }
   };
+
   return (
     <Box sx={{ p: 2, position: "relative" }}>
       <Box sx={{ display: "flex", position: "relative" }}>
@@ -906,6 +913,43 @@ const PostComment = ({
             </Tooltip>
           </Box>
           <Typography>{comment.commentText}</Typography>
+
+          {/* All files grid */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(90px, 90px))",
+              p: 1,
+            }}
+          >
+            {" "}
+            {comment.files.length > 0 &&
+              comment.files.map((file) => {
+                const displayFile = (myFile: CropperImageInterface) => {
+                  if (
+                    myFile.fileType.includes("image") ||
+                    myFile.fileType.includes("video")
+                  ) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                };
+                const displayFileBool = displayFile(file);
+
+                return (
+                  <Box>
+                    <FileComponent
+                      file={file}
+                      width={displayFileBool ? 90 : 90}
+                      height={90}
+                      displayFile={displayFileBool}
+                    />
+                  </Box>
+                );
+              })}
+          </Box>
+
           {/*  Comment Reactions*/}
           <Box
             sx={{
@@ -947,7 +991,7 @@ const PostComment = ({
                   reactionIcon(reaction.type, { width: 20, height: 20 })
                 )}
               {comment.reactions.length > 0 && comment.reactions.length}
-              {"  "}|
+
               <Button
                 variant="text"
                 size="small"
@@ -957,148 +1001,457 @@ const PostComment = ({
                   p: 1,
                   position: "relative",
                 }}
+                onClick={() => setIsReplyOpen((p) => !p)}
               >
                 Reply
               </Button>
+              <Typography variant="caption">
+                {comment.replies && comment.replies.length} Replie
+                {comment.replies && comment.replies.length > 1 ? "s" : ""}
+              </Typography>
             </Box>
           </Box>
         </Box>
       </Box>
       {/* Comments Section */}
+      {/* CommentReply */}
       <Box
         sx={{
-          display: "flex",
           alignItems: "flex-start",
           position: "relative",
-          pl: 6,
+          pl: 10,
         }}
       >
-        <Avatar
-          sx={{
-            width: 25,
-            height: 25,
-            mt: 2,
-          }}
-          src={user.profilePic ? user.profilePic.fileUrl : ""}
-        >
-          {user.firstname[0]} {user.lastname[0]}
-        </Avatar>
-        {showEmojiPeaker === true && (
-          <Box
-            sx={{
-              position: "absolute",
-              right: 0,
-              bottom: 100,
-              zIndex: 1,
-              backgroundColor: theme.colors.textBackground,
-              borderRadius: "15px",
+        {comment.replies &&
+          comment.replies.length > 0 &&
+          comment.replies.map((reply) => (
+            <CommentReply
+              comment={reply}
+              user={user}
+              commentId={comment.id}
+              key={reply.id}
+            />
+          ))}
+      </Box>
 
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
+      {isReplyOpen && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            position: "relative",
+            pl: 6,
+          }}
+        >
+          <Avatar
+            sx={{
+              width: 25,
+              height: 25,
+              mt: 2,
             }}
+            src={user.profilePic ? user.profilePic.fileUrl : ""}
           >
-            <IconButton
+            {user.firstname[0]} {user.lastname[0]}
+          </Avatar>
+          {showEmojiPeaker === true && (
+            <Box
               sx={{
-                marginLeft: "250px",
-              }}
-              onClick={() => {
-                setShowEmojiPeaker((prev) => !prev);
+                position: "absolute",
+                right: 0,
+                bottom: 100,
+                zIndex: 1,
+                backgroundColor: theme.colors.textBackground,
+                borderRadius: "15px",
+
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
               }}
             >
-              <CloseRoundedIcon color="secondary" fontSize="small" />
-            </IconButton>
-            <Picker
-              native={true}
-              preload={true}
-              searchPlaceholder={"Search emojie"}
-              onEmojiClick={commentOnEmojiClick}
-              pickerStyle={{
-                backgroundColor: theme.colors.textBackground,
-                boxShadow: "none",
-                border: `1px solid ${theme.colors.textBackground}`,
-                zIndex: "10px",
-              }}
-            />
-          </Box>
-        )}
-        <FormControl
-          sx={{
-            m: 1,
-            bgcolor: theme.colors.textBackground,
-            borderRadius: 2,
-            justifyContent: "flex-end",
-            width: "100%", // Remove border
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "transparent",
-              },
-              "&:hover fieldset": {
-                borderColor: "transparent",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "transparent",
-              },
-            },
-          }}
-          variant="outlined"
-        >
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type="text"
-            multiline
-            maxRows={3}
-            size="small"
-            color="secondary"
-            fullWidth
-            value={commentText}
-            onChange={commentTeaxtChangeHandler}
-            placeholder="Add a reply."
-            endAdornment={
-              <InputAdornment
-                position="end"
+              <IconButton
                 sx={{
-                  gap: 1.5,
+                  marginLeft: "250px",
+                }}
+                onClick={() => {
+                  setShowEmojiPeaker((prev) => !prev);
                 }}
               >
-                <IconButton
-                  edge="end"
-                  onClick={() => {
-                    setShowEmojiPeaker((p) => !p);
+                <CloseRoundedIcon color="secondary" fontSize="small" />
+              </IconButton>
+              <Picker
+                native={true}
+                preload={true}
+                searchPlaceholder={"Search emojie"}
+                onEmojiClick={commentOnEmojiClick}
+                pickerStyle={{
+                  backgroundColor: theme.colors.textBackground,
+                  boxShadow: "none",
+                  border: `1px solid ${theme.colors.textBackground}`,
+                  zIndex: "10px",
+                }}
+              />
+            </Box>
+          )}
+          <FormControl
+            sx={{
+              m: 1,
+              bgcolor: theme.colors.textBackground,
+              borderRadius: 2,
+              justifyContent: "flex-end",
+              width: "100%", // Remove border
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "transparent",
+                },
+                "&:hover fieldset": {
+                  borderColor: "transparent",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "transparent",
+                },
+              },
+            }}
+            variant="outlined"
+          >
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type="text"
+              multiline
+              maxRows={3}
+              size="small"
+              color="secondary"
+              fullWidth
+              value={commentText}
+              onChange={commentTeaxtChangeHandler}
+              placeholder="Add a reply."
+              endAdornment={
+                <InputAdornment
+                  position="end"
+                  sx={{
+                    gap: 1.5,
                   }}
                 >
-                  <EmojiEmotionsRoundedIcon color="secondary" />
-                </IconButton>
+                  <IconButton
+                    edge="end"
+                    onClick={() => {
+                      setShowEmojiPeaker((p) => !p);
+                    }}
+                  >
+                    <EmojiEmotionsRoundedIcon color="secondary" />
+                  </IconButton>
 
-                <IconButton edge="end" onClick={handleChoseFile}>
-                  <input
-                    type="file"
-                    hidden
-                    ref={fileRef}
-                    accept="image/*"
-                    onChange={handleSelectFile}
+                  <IconButton edge="end" onClick={handleChoseFile}>
+                    <input
+                      type="file"
+                      hidden
+                      ref={fileRef}
+                      accept="image/*"
+                      onChange={handleSelectFile}
+                    />
+                    <ImageIcon width={24} height={24} />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            {/* Files */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
+                gap: "10px",
+                p: 1,
+                ml: 1,
+                maxHeight: "300px",
+                overflow: "scroll",
+                overflowX: "unset",
+                justifyContent: "flex-start",
+              }}
+            >
+              {allFiles.length > 0 &&
+                allFiles.map((file) => {
+                  const displayFile = (myFile: CropperImageInterface) => {
+                    if (
+                      myFile.fileType.includes("image") ||
+                      myFile.fileType.includes("video")
+                    ) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  };
+                  const displayFileBool = displayFile(file);
+
+                  return (
+                    <Box position="relative">
+                      <FileComponent
+                        file={file}
+                        width={displayFileBool ? 200 : 100}
+                        height={150}
+                        displayFile={displayFileBool}
+                      />
+                      <IconButton
+                        aria-label="close"
+                        onClick={() => removeFile(file.fileName)}
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          right: 5,
+                          color: (theme) => theme.palette.grey[500],
+                        }}
+                        size="small"
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  );
+                })}
+            </Box>
+            {!(commentText.trim().length === 0 && allFiles.length === 0) && (
+              <>
+                {isCommenting ? (
+                  <LoadingButton
+                    loading={isCommenting}
+                    endIcon={" "}
+                    loadingPosition="end"
+                    variant="contained"
+                    sx={{
+                      width: 30,
+                      height: 23,
+                      borderRadius: 2,
+                      m: 1,
+                      textTransform: "none",
+                    }}
                   />
-                  <ImageIcon width={24} height={24} />
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-          {/* Files */}
+                ) : (
+                  <Button
+                    sx={{
+                      width: 10,
+                      height: 23,
+                      borderRadius: 2,
+                      m: 1,
+                      textTransform: "none",
+                    }}
+                    color="secondary"
+                    variant="contained"
+                    size="small"
+                    onClick={postComment}
+                  >
+                    Comment
+                  </Button>
+                )}
+              </>
+            )}
+            {isCommenting ? (
+              <Stack
+                sx={{ width: "100%", color: "grey.500", p: 1 }}
+                spacing={2}
+              >
+                <LinearProgress
+                  color="secondary"
+                  sx={{
+                    borderRadius: "10px",
+                  }}
+                />
+              </Stack>
+            ) : null}
+          </FormControl>
+        </Box>
+      )}
+      {/* End Comments Section */}
+    </Box>
+  );
+};
+const CommentReply = ({
+  comment,
+  user,
+
+  commentId,
+}: {
+  comment: CommentInterface;
+  user: UserInterFace;
+  commentId: string;
+}) => {
+  const dispatch = useDispatch();
+  const token = useCheckLogedinUserToken();
+  const [showReactions, setShowReactions] = useState(false);
+  const { id } = comment;
+  const reactionHandle = async (
+    reaction:
+      | "like"
+      | "love"
+      | "celebrate"
+      | "insightful"
+      | "curious"
+      | "support"
+      | "funny"
+  ) => {
+    if (token && id) {
+      setShowReactions(false);
+
+      const statusCode = await reactOnApostComment(token, id, reaction);
+
+      dispatch(
+        reactOnPostCommentState({
+          commentId: id,
+          postId: commentId,
+          newReaction: reaction,
+          statusCode,
+          user: {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            profilePic: user.profilePic,
+          },
+        })
+      );
+    }
+  };
+
+  const theme: ThemeInterface = useTheme();
+  const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [isCommenting, setIsCommenting] = useState(false);
+  // Reply open state
+  const [isReplyOpen, setIsReplyOpen] = useState(false);
+
+  const [allFiles, setAllFiles] = useState<CropperImageInterface[]>([]);
+  const commentOnEmojiClick = (
+    _: React.MouseEvent,
+    emojiObject: IEmojiData
+  ) => {
+    setCommentText(commentText + emojiObject.emoji);
+    setShowEmojiPeaker((prev) => !prev);
+  };
+  const fileRef = useRef<HTMLInputElement>(null);
+  const handleChoseFile = () => {
+    fileRef.current?.click();
+  };
+  const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        // Check file size
+        if (file.size > 512 * 1024 * 1024) {
+          alert("File size exceeds 512MB limit");
+          return;
+        } else {
+          setAllFiles((prev) => [
+            ...prev,
+            {
+              file: file,
+              fileName: file.name,
+              fileUrl: result as string, // cast result as string
+              fileUri: result as string, // cast result as string
+              fileType: file.type,
+              fileSize: file.size,
+            },
+          ]);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeFile = (fileName: string) => {
+    setAllFiles((prevFiles) =>
+      prevFiles.filter((file) => file?.fileName !== fileName)
+    );
+  };
+
+  const commentTeaxtChangeHandler = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setCommentText(e.target.value);
+  };
+
+  const postComment = async () => {
+    const formData = new FormData();
+
+    for (const file of allFiles) {
+      if (file.file) {
+        formData.append("files", file.file);
+      }
+    }
+
+    formData.append("commentText", commentText);
+
+    if (token && id) {
+      setIsCommenting(true);
+      const response = await postNewReplyToComment(
+        token,
+        formData,
+        commentId,
+        id
+      );
+      if (response) {
+        // dispatch(
+        //   // addCommentToPost({
+        //   //   postId: postId,
+        //   //   newComment: response,
+        //   // })
+        // );
+        console.log("Response :>>", response);
+        setIsCommenting(false);
+        setAllFiles([]);
+        setCommentText("");
+      }
+    }
+  };
+
+  return (
+    <Box sx={{ p: 2, position: "relative" }}>
+      <Box sx={{ display: "flex", position: "relative" }}>
+        <Avatar
+          sx={{
+            height: 30,
+            width: 30,
+            mt: 0.3,
+          }}
+          src={comment.author.profilePic?.fileUrl}
+        >
+          {comment.author.firstname[0]}
+          {comment.author.lastname[0]}
+        </Avatar>
+        <Box
+          sx={{
+            bgcolor: theme.colors.textBackground2,
+            width: "100%",
+            p: 1,
+            borderRadius: 2,
+            borderTopLeftRadius: 0,
+          }}
+        >
+          <Box>
+            <Typography variant={"subtitle1"} fontWeight={700}>
+              {comment.author.firstname} {comment.author.lastname}
+            </Typography>
+            <Tooltip
+              title={comment.author.professionalSummary}
+              placement="right-start"
+            >
+              <Typography variant="caption" color="action">
+                {comment.author.professionalSummary &&
+                comment.author.professionalSummary.length > 80
+                  ? `${comment.author.professionalSummary.substring(0, 80)}...`
+                  : comment.author.professionalSummary}
+              </Typography>
+            </Tooltip>
+          </Box>
+          <Typography>{comment.commentText}</Typography>
+
+          {/* All files grid */}
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
-              gap: "10px",
+              gridTemplateColumns: "repeat(auto-fit, minmax(90px, 90px))",
               p: 1,
-              ml: 1,
-              maxHeight: "300px",
-              overflow: "scroll",
-              overflowX: "unset",
-              justifyContent: "flex-start",
             }}
           >
-            {allFiles.length > 0 &&
-              allFiles.map((file) => {
+            {" "}
+            {comment.files.length > 0 &&
+              comment.files.map((file) => {
                 const displayFile = (myFile: CropperImageInterface) => {
                   if (
                     myFile.fileType.includes("image") ||
@@ -1112,77 +1465,65 @@ const PostComment = ({
                 const displayFileBool = displayFile(file);
 
                 return (
-                  <Box position="relative">
+                  <Box>
                     <FileComponent
                       file={file}
-                      width={displayFileBool ? 200 : 100}
-                      height={150}
+                      width={displayFileBool ? 90 : 90}
+                      height={90}
                       displayFile={displayFileBool}
                     />
-                    <IconButton
-                      aria-label="close"
-                      onClick={() => removeFile(file.fileName)}
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        right: 5,
-                        color: (theme) => theme.palette.grey[500],
-                      }}
-                      size="small"
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
                   </Box>
                 );
               })}
           </Box>
-          {!(commentText.trim().length === 0 && allFiles.length === 0) && (
-            <>
-              {isCommenting ? (
-                <LoadingButton
-                  loading={isCommenting}
-                  endIcon={" "}
-                  loadingPosition="end"
-                  variant="contained"
-                  sx={{
-                    width: 30,
-                    height: 23,
-                    borderRadius: 2,
-                    m: 1,
-                    textTransform: "none",
-                  }}
-                />
-              ) : (
-                <Button
-                  sx={{
-                    width: 10,
-                    height: 23,
-                    borderRadius: 2,
-                    m: 1,
-                    textTransform: "none",
-                  }}
-                  color="secondary"
-                  variant="contained"
-                  size="small"
-                  onClick={postComment}
-                >
-                  Comment
-                </Button>
-              )}
-            </>
-          )}
-          {isCommenting ? (
-            <Stack sx={{ width: "100%", color: "grey.500", p: 1 }} spacing={2}>
-              <LinearProgress
-                color="secondary"
-                sx={{
-                  borderRadius: "10px",
+
+          {/*  Comment Reactions*/}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                variant="text"
+                size="small"
+                onMouseOver={() => setShowReactions(true)}
+                onMouseLeave={() => setShowReactions(false)}
+                onDoubleClick={() => {
+                  reactionHandle("like");
+                  setShowReactions(false);
                 }}
-              />
-            </Stack>
-          ) : null}
-        </FormControl>
+                sx={{
+                  textTransform: "none",
+                  gap: 1,
+                  p: 1,
+                  position: "relative",
+                }}
+              >
+                {" "}
+                {showReactions && (
+                  <PostReactions reactionHandle={reactionHandle} />
+                )}
+                Like
+              </Button>
+              {comment.reactions
+                .slice(0, 3)
+                .map((reaction) =>
+                  reactionIcon(reaction.type, { width: 20, height: 20 })
+                )}
+              {comment.reactions.length > 0 && comment.reactions.length}
+            </Box>
+          </Box>
+        </Box>
       </Box>
+      {/* Comments Section */}
+
       {/* End Comments Section */}
     </Box>
   );
