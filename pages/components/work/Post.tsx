@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/system";
+import { Box } from "@mui/system";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -11,7 +11,6 @@ import {
   InputAdornment,
   OutlinedInput,
   Typography,
-  LinearProgress,
   Tooltip,
 } from "@mui/material";
 import React, { useRef, useState } from "react";

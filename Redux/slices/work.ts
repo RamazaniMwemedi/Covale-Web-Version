@@ -194,11 +194,6 @@ const workSlice = createSlice({
   },
 });
 
-// Helper function to generate a unique reply id
-function generateUniqueReplyId() {
-  // Implement your logic to generate a unique id
-  return "unique-reply-id";
-}
 export const {
   addPosts,
   addPost,
