@@ -21,7 +21,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reducer = exports.reactOnPostCommentState = exports.reactOnPostState = exports.addCommentToPost = exports.addPost = exports.addPosts = void 0;
+exports.reducer = exports.addReplyToComment = exports.reactOnPostCommentState = exports.reactOnPostState = exports.addCommentToPost = exports.addPost = exports.addPosts = void 0;
 var toolkit_1 = require("@reduxjs/toolkit");
 var initialState = {
     work: {
@@ -136,7 +136,31 @@ var workSlice = (0, toolkit_1.createSlice)({
             });
             return __assign(__assign({}, state), { work: __assign(__assign({}, state.work), { posts: updatedPosts }) });
         },
+        addReplyToComment: function (state, _a) {
+            var payload = _a.payload;
+            var postId = payload.postId, commentId = payload.commentId, reply = payload.reply;
+            console.log(reply);
+            var updatedPosts = state.work.posts.map(function (post) {
+                if (post.id === postId) {
+                    var updatedComments = post.comments.map(function (comment) {
+                        if (comment.id === commentId) {
+                            var updatedReplies = __spreadArray(__spreadArray([], comment.replies, true), [reply], false);
+                            return __assign(__assign({}, comment), { replies: updatedReplies });
+                        }
+                        return comment;
+                    });
+                    return __assign(__assign({}, post), { comments: updatedComments });
+                }
+                return post;
+            });
+            return __assign(__assign({}, state), { work: __assign(__assign({}, state.work), { posts: updatedPosts }) });
+        },
     },
 });
-exports.addPosts = (_a = workSlice.actions, _a.addPosts), exports.addPost = _a.addPost, exports.addCommentToPost = _a.addCommentToPost, exports.reactOnPostState = _a.reactOnPostState, exports.reactOnPostCommentState = _a.reactOnPostCommentState;
+// Helper function to generate a unique reply id
+function generateUniqueReplyId() {
+    // Implement your logic to generate a unique id
+    return "unique-reply-id";
+}
+exports.addPosts = (_a = workSlice.actions, _a.addPosts), exports.addPost = _a.addPost, exports.addCommentToPost = _a.addCommentToPost, exports.reactOnPostState = _a.reactOnPostState, exports.reactOnPostCommentState = _a.reactOnPostCommentState, exports.addReplyToComment = _a.addReplyToComment;
 exports.reducer = workSlice.reducer;

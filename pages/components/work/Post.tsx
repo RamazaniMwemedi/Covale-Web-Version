@@ -60,6 +60,7 @@ import {
 import { useDispatch } from "react-redux";
 import {
   addCommentToPost,
+  addReplyToComment,
   reactOnPostCommentState,
   reactOnPostState,
 } from "../../../Redux/slices/work";
@@ -546,7 +547,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
                 const displayFileBool = displayFile(file);
 
                 return (
-                  <Box position="relative">
+                  <Box position="relative" key={file.id}>
                     <FileComponent
                       file={file}
                       width={displayFileBool ? 150 : 100}
@@ -605,16 +606,6 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
               )}
             </>
           )}
-          {isCommenting ? (
-            <Stack sx={{ width: "100%", color: "grey.500", p: 1 }} spacing={2}>
-              <LinearProgress
-                color="secondary"
-                sx={{
-                  borderRadius: "10px",
-                }}
-              />
-            </Stack>
-          ) : null}
         </FormControl>
       </Box>
       {/* End Comments Section */}
@@ -859,13 +850,13 @@ const PostComment = ({
       setIsCommenting(true);
       const response = await postNewReplyToComment(token, formData, postId, id);
       if (response) {
-        // dispatch(
-        //   // addCommentToPost({
-        //   //   postId: postId,
-        //   //   newComment: response,
-        //   // })
-        // );
-        console.log("Response :>>", response);
+        dispatch(
+          addReplyToComment({
+            postId: postId,
+            commentId: id,
+            reply: response,
+          })
+        );
         setIsCommenting(false);
         setAllFiles([]);
         setCommentText("");
@@ -938,7 +929,7 @@ const PostComment = ({
                 const displayFileBool = displayFile(file);
 
                 return (
-                  <Box>
+                  <Box key={file.id}>
                     <FileComponent
                       file={file}
                       width={displayFileBool ? 90 : 90}
@@ -1182,7 +1173,7 @@ const PostComment = ({
                   const displayFileBool = displayFile(file);
 
                   return (
-                    <Box position="relative">
+                    <Box position="relative" key={file.id}>
                       <FileComponent
                         file={file}
                         width={displayFileBool ? 200 : 100}
@@ -1241,19 +1232,6 @@ const PostComment = ({
                 )}
               </>
             )}
-            {isCommenting ? (
-              <Stack
-                sx={{ width: "100%", color: "grey.500", p: 1 }}
-                spacing={2}
-              >
-                <LinearProgress
-                  color="secondary"
-                  sx={{
-                    borderRadius: "10px",
-                  }}
-                />
-              </Stack>
-            ) : null}
           </FormControl>
         </Box>
       )}
@@ -1310,131 +1288,138 @@ const CommentReply = ({
   const theme: ThemeInterface = useTheme();
 
   return (
-    <Box sx={{ p: 2, position: "relative" }}>
-      <Box sx={{ display: "flex", position: "relative" }}>
-        <Avatar
-          sx={{
-            height: 30,
-            width: 30,
-            mt: 0.3,
-          }}
-          src={comment.author.profilePic?.fileUrl}
-        >
-          {comment.author.firstname[0]}
-          {comment.author.lastname[0]}
-        </Avatar>
-        <Box
-          sx={{
-            bgcolor: theme.colors.textBackground2,
-            width: "100%",
-            p: 1,
-            borderRadius: 2,
-            borderTopLeftRadius: 0,
-          }}
-        >
-          <Box>
-            <Typography variant={"subtitle1"} fontWeight={700}>
-              {comment.author.firstname} {comment.author.lastname}
-            </Typography>
-            <Tooltip
-              title={comment.author.professionalSummary}
-              placement="right-start"
+    <>
+      {comment.author && (
+        <Box sx={{ p: 2, position: "relative" }}>
+          <Box sx={{ display: "flex", position: "relative" }}>
+            <Avatar
+              sx={{
+                height: 30,
+                width: 30,
+                mt: 0.3,
+              }}
+              src={comment.author.profilePic?.fileUrl}
             >
-              <Typography variant="caption" color="action">
-                {comment.author.professionalSummary &&
-                comment.author.professionalSummary.length > 80
-                  ? `${comment.author.professionalSummary.substring(0, 80)}...`
-                  : comment.author.professionalSummary}
-              </Typography>
-            </Tooltip>
-          </Box>
-          <Typography>{comment.commentText}</Typography>
-
-          {/* All files grid */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(90px, 90px))",
-              p: 1,
-            }}
-          >
-            {" "}
-            {comment.files.length > 0 &&
-              comment.files.map((file) => {
-                const displayFile = (myFile: CropperImageInterface) => {
-                  if (
-                    myFile.fileType.includes("image") ||
-                    myFile.fileType.includes("video")
-                  ) {
-                    return true;
-                  } else {
-                    return false;
-                  }
-                };
-                const displayFileBool = displayFile(file);
-
-                return (
-                  <Box>
-                    <FileComponent
-                      file={file}
-                      width={displayFileBool ? 90 : 90}
-                      height={90}
-                      displayFile={displayFileBool}
-                    />
-                  </Box>
-                );
-              })}
-          </Box>
-
-          {/*  Comment Reactions*/}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
+              {comment.author.firstname[0]}
+              {comment.author.lastname[0]}
+            </Avatar>
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                bgcolor: theme.colors.textBackground2,
+                width: "100%",
+                p: 1,
+                borderRadius: 2,
+                borderTopLeftRadius: 0,
               }}
             >
-              <Button
-                variant="text"
-                size="small"
-                onMouseOver={() => setShowReactions(true)}
-                onMouseLeave={() => setShowReactions(false)}
-                onDoubleClick={() => {
-                  reactionHandle("like");
-                  setShowReactions(false);
-                }}
+              <Box>
+                <Typography variant={"subtitle1"} fontWeight={700}>
+                  {comment.author.firstname} {comment.author.lastname}
+                </Typography>
+                <Tooltip
+                  title={comment.author.professionalSummary}
+                  placement="right-start"
+                >
+                  <Typography variant="caption" color="action">
+                    {comment.author.professionalSummary &&
+                    comment.author.professionalSummary.length > 80
+                      ? `${comment.author.professionalSummary.substring(
+                          0,
+                          80
+                        )}...`
+                      : comment.author.professionalSummary}
+                  </Typography>
+                </Tooltip>
+              </Box>
+              <Typography>{comment.commentText}</Typography>
+
+              {/* All files grid */}
+              <Box
                 sx={{
-                  textTransform: "none",
-                  gap: 1,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(90px, 90px))",
                   p: 1,
-                  position: "relative",
                 }}
               >
                 {" "}
-                {showReactions && (
-                  <PostReactions reactionHandle={reactionHandle} />
-                )}
-                Like
-              </Button>
-              {comment.reactions
-                .slice(0, 3)
-                .map((reaction) =>
-                  reactionIcon(reaction.type, { width: 20, height: 20 })
-                )}
-              {comment.reactions.length > 0 && comment.reactions.length}
+                {comment.files.length > 0 &&
+                  comment.files.map((file) => {
+                    const displayFile = (myFile: CropperImageInterface) => {
+                      if (
+                        myFile.fileType.includes("image") ||
+                        myFile.fileType.includes("video")
+                      ) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    };
+                    const displayFileBool = displayFile(file);
+
+                    return (
+                      <Box key={file.id}>
+                        <FileComponent
+                          file={file}
+                          width={displayFileBool ? 90 : 90}
+                          height={90}
+                          displayFile={displayFileBool}
+                        />
+                      </Box>
+                    );
+                  })}
+              </Box>
+
+              {/*  Comment Reactions*/}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    variant="text"
+                    size="small"
+                    onMouseOver={() => setShowReactions(true)}
+                    onMouseLeave={() => setShowReactions(false)}
+                    onDoubleClick={() => {
+                      reactionHandle("like");
+                      setShowReactions(false);
+                    }}
+                    sx={{
+                      textTransform: "none",
+                      gap: 1,
+                      p: 1,
+                      position: "relative",
+                    }}
+                  >
+                    {" "}
+                    {showReactions && (
+                      <PostReactions reactionHandle={reactionHandle} />
+                    )}
+                    Like
+                  </Button>
+                  {comment.reactions
+                    .slice(0, 3)
+                    .map((reaction) =>
+                      reactionIcon(reaction.type, { width: 20, height: 20 })
+                    )}
+                  {comment.reactions.length > 0 && comment.reactions.length}
+                </Box>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </Box>
-      {/* Comments Section */}
+          {/* Comments Section */}
 
-      {/* End Comments Section */}
-    </Box>
+          {/* End Comments Section */}
+        </Box>
+      )}
+    </>
   );
 };
 
@@ -1490,14 +1475,18 @@ const PostReactions = ({
         backdropFilter: "blur(40px)",
       }}
     >
-      {reactions.map((reaction) => {
+      {reactions.map((reaction, index) => {
         const [size, setSize] = useState<"small" | "medium" | "large">("small");
         const [dimessions, setDimessions] = useState({
           height: 30,
           width: 30,
         });
         return (
-          <Tooltip title={capitalizeFirstLetter(reaction)} placement="top">
+          <Tooltip
+            title={capitalizeFirstLetter(reaction)}
+            key={index}
+            placement="top"
+          >
             <IconButton
               onMouseOver={() => {
                 setDimessions({

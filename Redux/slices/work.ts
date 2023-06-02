@@ -161,13 +161,50 @@ const workSlice = createSlice({
         },
       };
     },
+    addReplyToComment(state, { payload }) {
+      const { postId, commentId, reply } = payload;
+      console.log(reply)
+
+      const updatedPosts = state.work.posts.map((post) => {
+        if (post.id === postId) {
+          const updatedComments = post.comments.map((comment) => {
+            if (comment.id === commentId) {
+             
+
+              const updatedReplies = [...comment.replies, reply];
+
+              return { ...comment, replies: updatedReplies };
+            }
+            return comment;
+          });
+
+          return { ...post, comments: updatedComments };
+        }
+        return post;
+      });
+
+      return {
+        ...state,
+        work: {
+          ...state.work,
+          posts: updatedPosts,
+        },
+      };
+    },
   },
 });
+
+// Helper function to generate a unique reply id
+function generateUniqueReplyId() {
+  // Implement your logic to generate a unique id
+  return "unique-reply-id";
+}
 export const {
   addPosts,
   addPost,
   addCommentToPost,
   reactOnPostState,
   reactOnPostCommentState,
+  addReplyToComment,
 } = workSlice.actions;
 export const reducer = workSlice.reducer;

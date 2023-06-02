@@ -81,6 +81,7 @@ export interface CropperImageInterface {
   fileUri: string;
   fileType: string;
   fileSize: number;
+  id?:string
 }
 export interface CroppImageAvatarProp {
   image: CropperImageInterface;

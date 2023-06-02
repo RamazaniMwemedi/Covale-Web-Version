@@ -791,7 +791,6 @@ const PostLeft = () => {
     </Box>
   );
 };
-
 const FormDialog = ({
   professionalSumm,
   open,
