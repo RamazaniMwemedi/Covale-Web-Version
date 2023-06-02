@@ -17,11 +17,18 @@ import React, { useRef, useState } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import ReactHtmlParser from "react-html-parser";
 import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import CloseIcon from "@mui/icons-material/Close";
-
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import { TransitionProps } from "@mui/material/transitions";
 import dynamic from "next/dynamic";
 const Picker = dynamic(
   () => {
@@ -42,7 +49,6 @@ import {
   HandHoldingHeartIcon,
   HeartIcon,
   ImageIcon,
-  RepostIcon,
   ThinkinhFaceIcon,
   ThumbsUpIcon,
 } from "../../../assets/Icons";
@@ -205,6 +211,16 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
     }
   };
 
+  const [openSendDialog, setOpenSendDialog] = React.useState(false);
+
+  const handleClickOpenSend = () => {
+    setOpenSendDialog(true);
+  };
+
+  const handleCloseSendDialog = () => {
+    setOpenSendDialog(false);
+  };
+
   return (
     <Box
       sx={{
@@ -345,8 +361,9 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       {/* Post Reactions  */}
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 0.5fr)",
+          placeItems: "center",
           p: 2,
         }}
       >
@@ -385,6 +402,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
           <CommentRoundedIcon />
           {comments && comments.length} Comments
         </Button>
+
         <Button
           color="secondary"
           variant="text"
@@ -393,22 +411,16 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
             gap: 1,
             p: 1,
           }}
-        >
-          <RepostIcon /> Repost
-        </Button>
-        <Button
-          color="secondary"
-          variant="text"
-          sx={{
-            textTransform: "none",
-            gap: 1,
-            p: 1,
-          }}
+          onClick={handleClickOpenSend}
         >
           <SendRoundedIcon />
-          Share
+          Send
         </Button>
       </Box>
+      <AlertDialogSlide
+        open={openSendDialog}
+        handleClose={handleCloseSendDialog}
+      />
       {/* End Post Reactions  */}
       {/* Comments Section */}
       <Box
@@ -707,16 +719,20 @@ const PostComments = ({
   user: UserInterFace;
   postId: string;
 }) => {
-  const [view, setView] = useState(false);
+  const [visibleComments, setVisibleComments] = useState(2); // Number of initially visible comments
 
   // sort the comments by createdAt in descending order
-  const sortedComments = comments.slice().sort((a, b) => {
-    return Date.parse(b.date) - Date.parse(a.date);
-  });
+  const sortedComments = comments
+    .slice()
+    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+
+  const handleLoadMore = () => {
+    setVisibleComments((prevCount) => prevCount + 10); // Increase the visible comment count
+  };
 
   return (
-    <Box sx={{ maxHeight: view ? "auto" : "15rem", overflowY: "auto" }}>
-      {sortedComments.map((comment) => (
+    <Box>
+      {sortedComments.slice(0, visibleComments).map((comment) => (
         <PostComment
           user={user}
           postId={postId}
@@ -724,11 +740,12 @@ const PostComments = ({
           key={comment.id}
         />
       ))}
-      <Button onClick={() => setView((p) => !p)}>Load more</Button>
+      {sortedComments.length > visibleComments && (
+        <Button onClick={handleLoadMore}>Load more</Button>
+      )}
     </Box>
   );
 };
-
 const PostComment = ({
   comment,
   user,
@@ -941,65 +958,59 @@ const PostComment = ({
           </Box>
 
           {/*  Comment Reactions*/}
+
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: "grid",
+              placeContent: "center",
             }}
           >
-            <Box
+            <Button
+              variant="text"
+              size="small"
+              onMouseOver={() => setShowReactions(true)}
+              onMouseLeave={() => setShowReactions(false)}
+              onDoubleClick={() => {
+                reactionHandle("like");
+                setShowReactions(false);
+              }}
               sx={{
-                display: "flex",
-                alignItems: "center",
+                textTransform: "none",
+                gap: 1,
+                p: 1,
+                position: "relative",
               }}
             >
-              <Button
-                variant="text"
-                size="small"
-                onMouseOver={() => setShowReactions(true)}
-                onMouseLeave={() => setShowReactions(false)}
-                onDoubleClick={() => {
-                  reactionHandle("like");
-                  setShowReactions(false);
-                }}
-                sx={{
-                  textTransform: "none",
-                  gap: 1,
-                  p: 1,
-                  position: "relative",
-                }}
-              >
-                {" "}
-                {showReactions && (
-                  <PostReactions reactionHandle={reactionHandle} />
-                )}
-                Like
-              </Button>
-              {comment.reactions
-                .slice(0, 3)
-                .map((reaction) =>
-                  reactionIcon(reaction.type, { width: 20, height: 20 })
-                )}
-              {comment.reactions.length > 0 && comment.reactions.length}
+              {" "}
+              {showReactions && (
+                <PostReactions reactionHandle={reactionHandle} />
+              )}
+              Like
+            </Button>
+            {comment.reactions
+              .slice(0, 3)
+              .map((reaction) =>
+                reactionIcon(reaction.type, { width: 20, height: 20 })
+              )}
+            {comment.reactions.length > 0 && comment.reactions.length}
 
-              <Button
-                variant="text"
-                size="small"
-                sx={{
-                  textTransform: "none",
-                  gap: 1,
-                  p: 1,
-                  position: "relative",
-                }}
-                onClick={() => setIsReplyOpen((p) => !p)}
-              >
-                Reply
-              </Button>
-              <Typography variant="caption">
-                {comment.replies && comment.replies.length} Replie
-                {comment.replies && comment.replies.length > 1 ? "s" : ""}
-              </Typography>
-            </Box>
+            <Button
+              variant="text"
+              size="small"
+              sx={{
+                textTransform: "none",
+                gap: 1,
+                p: 1,
+                position: "relative",
+              }}
+              onClick={() => setIsReplyOpen((p) => !p)}
+            >
+              Reply
+            </Button>
+            <Typography variant="caption">
+              {comment.replies && comment.replies.length} Replie
+              {comment.replies && comment.replies.length > 1 ? "s" : ""}
+            </Typography>
           </Box>
         </Box>
       </Box>
@@ -1551,3 +1562,93 @@ const reactionIcon = (
       return null;
   }
 };
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+function AlertDialogSlide({
+  open,
+  handleClose,
+}: {
+  open: boolean;
+  handleClose: () => void;
+}) {
+  const [selectedConnection, setSelectedConnection] = useState([]);
+  return (
+    <div>
+      <Dialog
+        open={open}
+        fullWidth
+        maxWidth={"md"}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Send post with your connection"}</DialogTitle>
+        <FormControl
+          sx={{
+            width: "100%",
+            p:2
+          }}
+        >
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type="text"
+            multiline
+            maxRows={3}
+            size="small"
+            color="secondary"
+            fullWidth
+            value={""}
+            sx={{ borderRadius: 2 }}
+            onChange={() => {}}
+            placeholder="Type name"
+            endAdornment={
+              <InputAdornment
+                position="start"
+                sx={{
+                  gap: 1.5,
+                }}
+              >
+                <IconButton edge="start" color="secondary">
+                  <SearchRoundedIcon />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <Divider />
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Typography variant="h5" key={i}>
+                {i}
+              </Typography>
+            ))}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            sx={{
+              width: "100%",
+              borderRadius: 2,
+              textTransform: "none",
+            }}
+            color={selectedConnection.length > 0 ? "secondary" : "inherit"}
+            variant="contained"
+            onClick={handleClose}
+          >
+            Send
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
