@@ -144,7 +144,7 @@ const MyAccount = () => {
                 sx={{
                   width: "100vw",
                   display: "grid",
-                  placeItems: "center",
+                  // placeItems: "center",
                 }}
               >
                 {/* Top */}

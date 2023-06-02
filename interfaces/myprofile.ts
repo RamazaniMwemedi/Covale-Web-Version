@@ -58,6 +58,7 @@ export interface UserInterFace {
       coverPic: {
         fileUrl: string;
       };
+      files:FileObject[];
       workExperiences: [
         {
           title: string;
@@ -82,6 +83,10 @@ export interface CropperImageInterface {
   fileType: string;
   fileSize: number;
   id?:string
+}
+export interface FileObject{
+  albumName:string,
+  file:CropperImageInterface
 }
 export interface CroppImageAvatarProp {
   image: CropperImageInterface;

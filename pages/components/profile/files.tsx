@@ -4,6 +4,12 @@ import { Button, Typography } from "@mui/material";
 import { purple } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import FileComponent from "../mediaFiles/FileComponent";
+import {
+  FileObject,
+  RootState,
+} from "../../../interfaces/myprofile";
 const Files = () => {
   const [tabValue, setTabValue] = useState("all");
 
@@ -11,37 +17,37 @@ const Files = () => {
     setTabValue(value);
   };
   return (
-    <Box sx={{ width: "90%", ml: 7, mt: -3 }}>
+    <Box sx={{ width: "auto", ml: 7, mt: -3 }}>
       <FilesTab tabValueHandler={tabValueHandler} tabValue={tabValue} />{" "}
       <Box
         sx={{
-          // should be scrollable
-          overflow: "auto",
-          height: "360px",
-          width: "340px",
-          mt: 0,
-          mb: 1,
-          borderRadius: "10px",
-          "& .MuiAvatar-root": {
-            width: 32,
-            height: 32,
-            ml: -0.5,
-            mr: 1,
-          },
-          "&:before": {
-            content: '""',
-            display: "block",
-            position: "absolute",
-            top: 0,
-            right: 14,
-            width: 10,
-            height: 10,
-            bgcolor: "background.paper",
-            transform: "translateY(-50%) rotate(45deg)",
-            zIndex: 0,
-          },
+          // // should be scrollable
+          // overflow: "auto",
+          // height: "360px",
+          // width: "340px",
+          // mt: 0,
+          // mb: 1,
+          // borderRadius: "10px",
+          // "& .MuiAvatar-root": {
+          //   width: 32,
+          //   height: 32,
+          //   ml: -0.5,
+          //   mr: 1,
+          // },
+          // "&:before": {
+          //   content: '""',
+          //   display: "block",
+          //   position: "absolute",
+          //   top: 0,
+          //   right: 14,
+          //   width: 10,
+          //   height: 10,
+          //   bgcolor: "background.paper",
+          //   transform: "translateY(-50%) rotate(45deg)",
+          //   zIndex: 0,
+          // },
 
-          pb: 4,
+          // pb: 4,
         }}
       >
         <FilsContex tabValue={tabValue} />
@@ -244,10 +250,13 @@ interface FilsContexProp {
 }
 
 const FilsContex = ({ tabValue }: FilsContexProp) => {
-  console.log("All files :>>", tabValue);
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore ? userStore.user : null;
+  const allFiles = user ? user.files : [];
+
   switch (tabValue) {
     case "all":
-      return <AllFiles />;
+      return <AllFiles allFiles={allFiles} />;
     case "gallery":
       return <Gallery />;
     case "videos":
@@ -263,24 +272,37 @@ const FilsContex = ({ tabValue }: FilsContexProp) => {
     case "audiofiles":
       return <AudioFiles />;
     default:
-      return <AllFiles />;
+      return <AllFiles allFiles={allFiles} />;
   }
 };
 
-const AllFiles = () => {
+const AllFiles = ({ allFiles }: { allFiles: FileObject[] }) => {
+  console.log("ALL FILES >>>", allFiles);
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        mt: 1,
-        mb: 1,
-        ml: 0.5,
-        // scrollable
-        overflow: "auto",
-      }}
-    >
+    <Box sx={{ width: "100%" }}>
       <Typography variant="h4">All Files</Typography>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+        }}
+      >
+        {allFiles.length > 0 ? (
+          <>
+            {allFiles.map((fileObject) => (
+              <FileComponent
+                key={fileObject.file.id}
+                file={fileObject.file}
+                displayFile={true}
+                height={300}
+                width={300}
+              />
+            ))}
+          </>
+        ) : (
+          <Typography variant="h5">No Files</Typography>
+        )}
+      </Box>
     </Box>
   );
 };
