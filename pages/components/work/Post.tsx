@@ -12,12 +12,14 @@ import {
   OutlinedInput,
   Typography,
   Tooltip,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 import React, { useRef, useState } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import ReactHtmlParser from "react-html-parser";
 import EmojiEmotionsRoundedIcon from "@mui/icons-material/EmojiEmotionsRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
@@ -41,7 +43,11 @@ import { CommentInterface, PostInterface } from "../../../interfaces/work";
 import { timeAgo } from "../../../tools/tools";
 import FileComponent from "../mediaFiles/FileComponent";
 import { useTheme } from "@mui/styles";
-import { ThemeInterface, UserInterFace } from "../../../interfaces/myprofile";
+import {
+  RootState,
+  ThemeInterface,
+  UserInterFace,
+} from "../../../interfaces/myprofile";
 import {
   BulbIcon,
   CelebrateIcon,
@@ -55,6 +61,7 @@ import {
 import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { IEmojiData } from "emoji-picker-react";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
+import { useGetKeyPairs } from "../../../hooks/secrete";
 import { LoadingButton } from "@mui/lab";
 import {
   postNewCommentToPost,
@@ -62,13 +69,18 @@ import {
   reactOnApost,
   reactOnApostComment,
 } from "../../../services/work";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addCommentToPost,
   addReplyToComment,
   reactOnPostCommentState,
   reactOnPostState,
 } from "../../../Redux/slices/work";
+import { sendMessege } from "../../../services/chats";
+import { connect } from "socket.io-client";
+import { encryptMessage } from "../../../services/encrypt";
+import { RTC_ADDRESS } from "../../../config";
+const chatSocket = connect(`${RTC_ADDRESS}/chat`);
 
 const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
   const author: UserInterFace | null = post ? post.author : null;
@@ -420,6 +432,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       <AlertDialogSlide
         open={openSendDialog}
         handleClose={handleCloseSendDialog}
+        postId={id}
       />
       {/* End Post Reactions  */}
       {/* Comments Section */}
@@ -1575,11 +1588,35 @@ const Transition = React.forwardRef(function Transition(
 function AlertDialogSlide({
   open,
   handleClose,
+  postId,
 }: {
   open: boolean;
   handleClose: () => void;
+  postId: string | null;
 }) {
-  const [selectedConnection, setSelectedConnection] = useState([]);
+  const [selectedConnection, setSelectedConnection] = useState<string[]>([]);
+  const keyPairStore = useSelector(
+    (state: RootState) => state.keyPairs.keyPairs
+  );
+  // Get Key Pair
+  useGetKeyPairs();
+  const token = useCheckLogedinUserToken();
+  const sendPostToConnectionHandle = () => {
+    if (token && selectedConnection.length > 0) {
+      selectedConnection.map((connectionId) => {
+        const keyPair = keyPairStore
+          ? keyPairStore.find((key) => key.modelId === connectionId)
+          : null;
+
+        sendMessageHandle(
+          `/work/posts/${postId}`,
+          keyPair?.publicKey,
+          token,
+          connectionId
+        );
+      });
+    }
+  };
   return (
     <div>
       <Dialog
@@ -1592,58 +1629,51 @@ function AlertDialogSlide({
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>{"Send post with your connection"}</DialogTitle>
-        <FormControl
-          sx={{
-            width: "100%",
-            p:2
-          }}
-        >
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type="text"
-            multiline
-            maxRows={3}
-            size="small"
-            color="secondary"
-            fullWidth
-            value={""}
-            sx={{ borderRadius: 2 }}
-            onChange={() => {}}
-            placeholder="Type name"
-            endAdornment={
-              <InputAdornment
-                position="start"
-                sx={{
-                  gap: 1.5,
-                }}
-              >
-                <IconButton edge="start" color="secondary">
-                  <SearchRoundedIcon />
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
+
         <Divider />
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <Typography variant="h5" key={i}>
-                {i}
-              </Typography>
-            ))}
+            <>
+              <Autocomplete
+                multiple
+                limitTags={2}
+                id="multiple-limit-tags"
+                color="secondary"
+                options={users}
+                getOptionLabel={(person) =>
+                  person.firstname + " " + person.lastname
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Connections"
+                    placeholder="Search connection"
+                    color="secondary"
+                  />
+                )}
+                renderOption={(props, person) => (
+                  <li {...props}>
+                    <PersonOption person={person} />
+                  </li>
+                )}
+                sx={{ width: "auto", maxHeight: "auto" }}
+                onChange={(_, values: User[]) =>
+                  setSelectedConnection(values.map((value) => String(value.id)))
+                }
+              />
+            </>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
             sx={{
-              width: "100%",
+              // width: "100%",
               borderRadius: 2,
               textTransform: "none",
             }}
             color={selectedConnection.length > 0 ? "secondary" : "inherit"}
             variant="contained"
-            onClick={handleClose}
+            onClick={sendPostToConnectionHandle}
           >
             Send
           </Button>
@@ -1652,3 +1682,197 @@ function AlertDialogSlide({
     </div>
   );
 }
+
+const PersonOption = ({ person }: { person: User }) => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: 2,
+    }}
+  >
+    <Avatar
+      sx={{
+        height: 35,
+        width: 35,
+      }}
+    >
+      {person.firstname[0]}
+      {person.lastname[0]}
+    </Avatar>
+    <Typography variant="body2">
+      {person.firstname} {person.lastname}
+    </Typography>
+  </Box>
+);
+
+interface User {
+  firstname: string;
+  lastname: string;
+  id: number;
+  age: number;
+  profileurl: string;
+}
+
+const users: User[] = [
+  {
+    firstname: "John",
+    lastname: "Doe",
+    id: 1,
+    age: 25,
+    profileurl: "https://example.com/johndoe",
+  },
+  {
+    firstname: "Jane",
+    lastname: "Smith",
+    id: 2,
+    age: 30,
+    profileurl: "https://example.com/janesmith",
+  },
+  {
+    firstname: "Michael",
+    lastname: "Johnson",
+    id: 3,
+    age: 28,
+    profileurl: "https://example.com/michaeljohnson",
+  },
+  {
+    firstname: "Emily",
+    lastname: "Brown",
+    id: 4,
+    age: 32,
+    profileurl: "https://example.com/emilybrown",
+  },
+  {
+    firstname: "David",
+    lastname: "Taylor",
+    id: 5,
+    age: 22,
+    profileurl: "https://example.com/davidtaylor",
+  },
+  {
+    firstname: "Sarah",
+    lastname: "Anderson",
+    id: 6,
+    age: 27,
+    profileurl: "https://example.com/sarahanderson",
+  },
+  {
+    firstname: "Christopher",
+    lastname: "Wilson",
+    id: 7,
+    age: 29,
+    profileurl: "https://example.com/christopherwilson",
+  },
+  {
+    firstname: "Olivia",
+    lastname: "Martinez",
+    id: 8,
+    age: 31,
+    profileurl: "https://example.com/oliviamartinez",
+  },
+  {
+    firstname: "Daniel",
+    lastname: "Thompson",
+    id: 9,
+    age: 26,
+    profileurl: "https://example.com/danielthompson",
+  },
+  {
+    firstname: "Sophia",
+    lastname: "Lewis",
+    id: 10,
+    age: 24,
+    profileurl: "https://example.com/sophialewis",
+  },
+  {
+    firstname: "William",
+    lastname: "Lee",
+    id: 11,
+    age: 33,
+    profileurl: "https://example.com/williamlee",
+  },
+  {
+    firstname: "Ava",
+    lastname: "Harris",
+    id: 12,
+    age: 23,
+    profileurl: "https://example.com/avaharris",
+  },
+  {
+    firstname: "Joseph",
+    lastname: "Clark",
+    id: 13,
+    age: 27,
+    profileurl: "https://example.com/josephclark",
+  },
+  {
+    firstname: "Mia",
+    lastname: "Young",
+    id: 14,
+    age: 29,
+    profileurl: "https://example.com/miayoung",
+  },
+  {
+    firstname: "Benjamin",
+    lastname: "Walker",
+    id: 15,
+    age: 26,
+    profileurl: "https://example.com/benjaminwalker",
+  },
+  {
+    firstname: "Abigail",
+    lastname: "Gonzalez",
+    id: 16,
+    age: 28,
+    profileurl: "https://example.com/abigailgonzalez",
+  },
+  {
+    firstname: "James",
+    lastname: "Parker",
+    id: 17,
+    age: 31,
+    profileurl: "https://example.com/jamesparker",
+  },
+  {
+    firstname: "Elizabeth",
+    lastname: "Carter",
+    id: 18,
+    age: 29,
+    profileurl: "https://example.com/elizabethcarter",
+  },
+  {
+    firstname: "Henry",
+    lastname: "Scott",
+    id: 19,
+    age: 27,
+    profileurl: "https://example.com/henryscott",
+  },
+  {
+    firstname: "Ella",
+    lastname: "Adams",
+    id: 20,
+    age: 25,
+    profileurl: "https://example.com/ellaadams",
+  },
+];
+
+const sendMessageHandle = async (
+  message: string,
+  publicKey: string | undefined,
+  token: string,
+  chatId: string
+) => {
+  const uuid = uuidv4();
+  const encryptedMessage = await encryptMessage(message, publicKey);
+  const formData = new FormData();
+
+  formData.append("message", encryptedMessage);
+  formData.append("idFromClient", uuid);
+
+  if (token && chatId) {
+    const sentMessage = await sendMessege(token, chatId, formData);
+
+    chatSocket.emit("send_message", sentMessage);
+  }
+};

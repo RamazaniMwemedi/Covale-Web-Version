@@ -11,6 +11,17 @@ export interface RootState {
       posts:PostInterface[]
     }
   }
+  keyPairs:{
+    keyPairs:KeysSchema[]
+  }
+}
+interface KeysSchema {
+  privateKey: string;
+  publicKey: string;
+  generatedAt: Date;
+  generatedByUserId:string;
+  generatedForModel: string;
+  modelId: string;
 }
 
 export interface ThemeInterface {
