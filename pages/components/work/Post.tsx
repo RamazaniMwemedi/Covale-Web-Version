@@ -15,8 +15,7 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useId } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
@@ -1595,25 +1594,33 @@ function AlertDialogSlide({
   postId: string | null;
 }) {
   const [selectedConnection, setSelectedConnection] = useState<string[]>([]);
+  const [isSending, setIsSending] = useState(false);
   const keyPairStore = useSelector(
     (state: RootState) => state.keyPairs.keyPairs
   );
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
   // Get Key Pair
   useGetKeyPairs();
   const token = useCheckLogedinUserToken();
+  const uid = useId();
+
   const sendPostToConnectionHandle = () => {
     if (token && selectedConnection.length > 0) {
       selectedConnection.map((connectionId) => {
         const keyPair = keyPairStore
           ? keyPairStore.find((key) => key.modelId === connectionId)
           : null;
-
-        sendMessageHandle(
-          `/work/posts/${postId}`,
-          keyPair?.publicKey,
-          token,
-          connectionId
-        );
+        keyPair?.publicKey &&
+          sendMessageHandle(
+            `/work/posts/${postId}`,
+            keyPair?.publicKey,
+            token,
+            connectionId,
+            uid
+          ).then(() => {
+            handleClose();
+          });
       });
     }
   };
@@ -1639,7 +1646,7 @@ function AlertDialogSlide({
                 limitTags={2}
                 id="multiple-limit-tags"
                 color="secondary"
-                options={users}
+                options={user.colleagues}
                 getOptionLabel={(person) =>
                   person.firstname + " " + person.lastname
                 }
@@ -1657,7 +1664,16 @@ function AlertDialogSlide({
                   </li>
                 )}
                 sx={{ width: "auto", maxHeight: "auto" }}
-                onChange={(_, values: User[]) =>
+                onChange={(
+                  _,
+                  values: {
+                    username: string;
+                    firstname: string;
+                    lastname: string;
+                    id: string;
+                    profilePic: { fileUrl: string };
+                  }[]
+                ) =>
                   setSelectedConnection(values.map((value) => String(value.id)))
                 }
               />
@@ -1665,25 +1681,51 @@ function AlertDialogSlide({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            sx={{
-              // width: "100%",
-              borderRadius: 2,
-              textTransform: "none",
-            }}
-            color={selectedConnection.length > 0 ? "secondary" : "inherit"}
-            variant="contained"
-            onClick={sendPostToConnectionHandle}
-          >
-            Send
-          </Button>
+          {!isSending ? (
+            <Button
+              sx={{
+                // width: "100%",
+                borderRadius: 2,
+                textTransform: "none",
+              }}
+              color={selectedConnection.length > 0 ? "secondary" : "inherit"}
+              variant="contained"
+              onClick={() => {
+                sendPostToConnectionHandle();
+                setIsSending(true);
+              }}
+            >
+              Send
+            </Button>
+          ) : (
+            <LoadingButton
+              loading
+              variant="contained"
+              color="secondary"
+              sx={{
+                margin: "5px",
+                height: "35px",
+                alignSelf: "center",
+              }}
+            />
+          )}
         </DialogActions>
       </Dialog>
     </div>
   );
 }
 
-const PersonOption = ({ person }: { person: User }) => (
+const PersonOption = ({
+  person,
+}: {
+  person: {
+    username: string;
+    firstname: string;
+    lastname: string;
+    id: string;
+    profilePic: { fileUrl: string };
+  };
+}) => (
   <Box
     sx={{
       display: "flex",
@@ -1696,6 +1738,7 @@ const PersonOption = ({ person }: { person: User }) => (
         height: 35,
         width: 35,
       }}
+      src={person.profilePic.fileUrl}
     >
       {person.firstname[0]}
       {person.lastname[0]}
@@ -1706,173 +1749,25 @@ const PersonOption = ({ person }: { person: User }) => (
   </Box>
 );
 
-interface User {
-  firstname: string;
-  lastname: string;
-  id: number;
-  age: number;
-  profileurl: string;
-}
-
-const users: User[] = [
-  {
-    firstname: "John",
-    lastname: "Doe",
-    id: 1,
-    age: 25,
-    profileurl: "https://example.com/johndoe",
-  },
-  {
-    firstname: "Jane",
-    lastname: "Smith",
-    id: 2,
-    age: 30,
-    profileurl: "https://example.com/janesmith",
-  },
-  {
-    firstname: "Michael",
-    lastname: "Johnson",
-    id: 3,
-    age: 28,
-    profileurl: "https://example.com/michaeljohnson",
-  },
-  {
-    firstname: "Emily",
-    lastname: "Brown",
-    id: 4,
-    age: 32,
-    profileurl: "https://example.com/emilybrown",
-  },
-  {
-    firstname: "David",
-    lastname: "Taylor",
-    id: 5,
-    age: 22,
-    profileurl: "https://example.com/davidtaylor",
-  },
-  {
-    firstname: "Sarah",
-    lastname: "Anderson",
-    id: 6,
-    age: 27,
-    profileurl: "https://example.com/sarahanderson",
-  },
-  {
-    firstname: "Christopher",
-    lastname: "Wilson",
-    id: 7,
-    age: 29,
-    profileurl: "https://example.com/christopherwilson",
-  },
-  {
-    firstname: "Olivia",
-    lastname: "Martinez",
-    id: 8,
-    age: 31,
-    profileurl: "https://example.com/oliviamartinez",
-  },
-  {
-    firstname: "Daniel",
-    lastname: "Thompson",
-    id: 9,
-    age: 26,
-    profileurl: "https://example.com/danielthompson",
-  },
-  {
-    firstname: "Sophia",
-    lastname: "Lewis",
-    id: 10,
-    age: 24,
-    profileurl: "https://example.com/sophialewis",
-  },
-  {
-    firstname: "William",
-    lastname: "Lee",
-    id: 11,
-    age: 33,
-    profileurl: "https://example.com/williamlee",
-  },
-  {
-    firstname: "Ava",
-    lastname: "Harris",
-    id: 12,
-    age: 23,
-    profileurl: "https://example.com/avaharris",
-  },
-  {
-    firstname: "Joseph",
-    lastname: "Clark",
-    id: 13,
-    age: 27,
-    profileurl: "https://example.com/josephclark",
-  },
-  {
-    firstname: "Mia",
-    lastname: "Young",
-    id: 14,
-    age: 29,
-    profileurl: "https://example.com/miayoung",
-  },
-  {
-    firstname: "Benjamin",
-    lastname: "Walker",
-    id: 15,
-    age: 26,
-    profileurl: "https://example.com/benjaminwalker",
-  },
-  {
-    firstname: "Abigail",
-    lastname: "Gonzalez",
-    id: 16,
-    age: 28,
-    profileurl: "https://example.com/abigailgonzalez",
-  },
-  {
-    firstname: "James",
-    lastname: "Parker",
-    id: 17,
-    age: 31,
-    profileurl: "https://example.com/jamesparker",
-  },
-  {
-    firstname: "Elizabeth",
-    lastname: "Carter",
-    id: 18,
-    age: 29,
-    profileurl: "https://example.com/elizabethcarter",
-  },
-  {
-    firstname: "Henry",
-    lastname: "Scott",
-    id: 19,
-    age: 27,
-    profileurl: "https://example.com/henryscott",
-  },
-  {
-    firstname: "Ella",
-    lastname: "Adams",
-    id: 20,
-    age: 25,
-    profileurl: "https://example.com/ellaadams",
-  },
-];
-
 const sendMessageHandle = async (
   message: string,
-  publicKey: string | undefined,
+  publicKey: string,
   token: string,
-  chatId: string
+  chatId: string,
+  uid: string
 ) => {
-  const uuid = uuidv4();
   const encryptedMessage = await encryptMessage(message, publicKey);
   const formData = new FormData();
 
   formData.append("message", encryptedMessage);
-  formData.append("idFromClient", uuid);
+  formData.append("idFromClient", uid);
 
   if (token && chatId) {
     const sentMessage = await sendMessege(token, chatId, formData);
+    console.log(sentMessage);
 
     chatSocket.emit("send_message", sentMessage);
+  } else {
+    alert("No token or chat Id");
   }
 };

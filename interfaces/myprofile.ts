@@ -69,6 +69,13 @@ export interface UserInterFace {
       coverPic: {
         fileUrl: string;
       };
+      colleagues:{
+      username: string;
+      firstname: string;
+      lastname: string;
+      id: string;
+      profilePic: { fileUrl: string };
+    }[];
       files:FileObject[];
       workExperiences: [
         {
