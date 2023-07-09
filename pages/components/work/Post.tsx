@@ -1596,15 +1596,15 @@ function AlertDialogSlide({
   const uuid = generateRandomString();
 
   const [selectedConnection, setSelectedConnection] = useState<string[]>([]);
-  const [isSending, setIsSending] = useState(false);
   const keyPairStore = useSelector(
     (state: RootState) => state.keyPairs.keyPairs
   );
+  const userStore = useSelector((state: RootState) => state.user);
+  const user: UserInterFace | null = userStore ? userStore.user : null;
+  const colleagues: UserInterFace[] = user ? user?.colleagues : [];
   // Get Key Pair
   useGetKeyPairs();
   const token = useCheckLogedinUserToken();
-  const uid = useId();
-
   const sendPostToConnectionHandle = () => {
     if (token && selectedConnection.length > 0) {
       selectedConnection.map(async (connectionId) => {
@@ -1659,8 +1659,8 @@ function AlertDialogSlide({
                 limitTags={2}
                 id="multiple-limit-tags"
                 color="secondary"
-                options={users}
-                getOptionLabel={(person) =>
+                options={colleagues}
+                getOptionLabel={(person: UserInterFace) =>
                   person.firstname + " " + person.lastname
                 }
                 renderInput={(params) => (
@@ -1687,41 +1687,25 @@ function AlertDialogSlide({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          {!isSending ? (
-            <Button
-              sx={{
-                // width: "100%",
-                borderRadius: 2,
-                textTransform: "none",
-              }}
-              color={selectedConnection.length > 0 ? "secondary" : "inherit"}
-              variant="contained"
-              onClick={() => {
-                sendPostToConnectionHandle();
-                setIsSending(true);
-              }}
-            >
-              Send
-            </Button>
-          ) : (
-            <LoadingButton
-              loading
-              variant="contained"
-              color="secondary"
-              sx={{
-                margin: "5px",
-                height: "35px",
-                alignSelf: "center",
-              }}
-            />
-          )}
+          <Button
+            sx={{
+              // width: "100%",
+              borderRadius: 2,
+              textTransform: "none",
+            }}
+            color={selectedConnection.length > 0 ? "secondary" : "inherit"}
+            variant="contained"
+            onClick={sendPostToConnectionHandle}
+          >
+            Send
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
   );
 }
 
-const PersonOption = ({ person }: { person: User }) => (
+const PersonOption = ({ person }: { person: UserInterFace }) => (
   <Box
     sx={{
       display: "flex",
@@ -1734,7 +1718,6 @@ const PersonOption = ({ person }: { person: User }) => (
         height: 35,
         width: 35,
       }}
-      src={person.profilePic.fileUrl}
     >
       {person.firstname[0]}
       {person.lastname[0]}
@@ -1747,20 +1730,19 @@ const PersonOption = ({ person }: { person: User }) => (
 
 const sendMessageHandle = async (
   message: string,
-  publicKey: string,
+  publicKey: string | undefined,
   token: string,
-  chatId: string
-) => {
-  const uuid = uuidv4();
+  chatId: string,
+  uuid: string
+): Promise<boolean> => {
   const encryptedMessage = await encryptMessage(message, publicKey);
   const formData = new FormData();
   console.log("publicKey :>>", publicKey);
   formData.append("message", encryptedMessage);
-  formData.append("idFromClient", uid);
+  formData.append("idFromClient", uuid);
 
   if (token && chatId) {
     const sentMessage = await sendMessege(token, chatId, formData);
-    console.log(sentMessage);
 
     chatSocket.emit("send_message", sentMessage);
     return true;

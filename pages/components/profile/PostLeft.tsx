@@ -20,8 +20,6 @@ import {
   FormDialogProp,
   RootState,
   SelectWorkExperienceProp,
-  ThemeInterface,
-  UserInterFace,
   WorkExperience,
   WorkExperienceDialogProp,
 } from "../../../interfaces/myprofile";
@@ -40,15 +38,11 @@ import {
   Grid,
   IconButton,
   InputLabel,
-  Link,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextField,
   Typography,
-  Avatar,
-  Card,
-  CardHeader,
 } from "@mui/material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -61,9 +55,7 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { OrganizationIcon } from "../../../assets/Icons";
 
 const PostLeft = () => {
-  const theme: ThemeInterface = useTheme();
-  const userStore = useSelector((state: RootState) => state.user);
-  const user = userStore?.user;
+  const theme: any = useTheme();
 
   const ProfessionalSummary = () => {
     // FormDialog states and handler
@@ -557,7 +549,9 @@ const PostLeft = () => {
       </div>
     );
   };
-  const WorkExperience = ({ user }: { user: UserInterFace }) => {
+  const WorkExperience = () => {
+    const userStore = useSelector((state: RootState) => state.user);
+    const user = userStore?.user;
     const dispatch = useDispatch();
 
     const token = useCheckLogedinUserToken();
@@ -770,100 +764,6 @@ const PostLeft = () => {
     );
   };
 
-  const Connections: FC<{
-    connections: {
-      username: string;
-      firstname: string;
-      lastname: string;
-      id: string;
-      profilePic: { fileUrl: string };
-    }[];
-  }> = ({ connections }) => {
-    const theme: ThemeInterface = useTheme();
-    return (
-      <Box
-        sx={{
-          bgcolor: theme.colors.textBackground2,
-          p: 1,
-          borderRadius: 2,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: "bold",
-              mb: 0.5,
-            }}
-          >
-            Connections
-          </Typography>
-          <Box>
-            <Link
-              underline="hover"
-              sx={{
-                color: (theme) => theme.palette.secondary.main,
-                display: "flex",
-                width: "6rem",
-                cursor: "pointer",
-              }}
-            >
-              See all
-            </Link>
-          </Box>
-        </Box>
-        {/* Connections */}
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          }}
-        >
-          {connections.map((connection) => (
-            <Card
-              sx={{
-                maxWidth: 200,
-                m: 0,
-                p: 0,
-                bgcolor: theme.colors.textBackground2,
-              }}
-            >
-              <CardHeader
-                sx={{ m: 0, p: 1, bgcolor: theme.colors.textBackground2 }}
-                avatar={
-                  <Avatar
-                    sx={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: 5,
-                    }}
-                    src={connection.profilePic.fileUrl}
-                  >
-                    {connection.firstname[0]} {connection.lastname[0]}
-                  </Avatar>
-                }
-                title={`${connection.firstname} ${connection.lastname}`}
-                subheader={
-                  <>
-                    <Typography variant="caption">
-                      @{connection.username}
-                    </Typography>
-                  </>
-                }
-              />
-            </Card>
-          ))}
-        </Box>
-      </Box>
-    );
-  };
-
   return (
     <Box
       sx={{
@@ -885,10 +785,9 @@ const PostLeft = () => {
       <ProfessionalSummary />
       <br />
       {/* Work Experience  */}
-      <WorkExperience user={user} />
+      <WorkExperience />
       <br />
-      {/* Connections */}
-      <Connections connections={user.colleagues} />
+      {/* Education And Certificates */}
     </Box>
   );
 };
