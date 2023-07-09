@@ -4,22 +4,22 @@ import { PostInterface } from "./work";
 
 export interface RootState {
   user: {
-    user: UserInterFace
+    user: UserInterFace;
   };
-  work:{
-    work:{
-      posts:PostInterface[]
-    }
-  }
-  keyPairs:{
-    keyPairs:KeysSchema[]
-  }
+  work: {
+    work: {
+      posts: PostInterface[];
+    };
+  };
+  keyPairs: {
+    keyPairs: KeysSchema[];
+  };
 }
 interface KeysSchema {
   privateKey: string;
   publicKey: string;
   generatedAt: Date;
-  generatedByUserId:string;
+  generatedByUserId: string;
   generatedForModel: string;
   modelId: string;
 }
@@ -58,33 +58,39 @@ export interface ProfilePic {
   fileSize: number;
 }
 export interface UserInterFace {
+  id: string;
+  firstname: string;
+  lastname: string;
+  username: string;
+  professionalSummary: string;
+  profilePic: {
+    fileUrl: string;
+  };
+  coverPic: {
+    fileUrl: string;
+  };
+  files: FileObject[];
+  workExperiences: [
+    {
+      title: string;
+      organizationName: string;
+      location: string;
+      employmentType: string;
+      jobDescription: string;
+      isUntillNow: boolean;
+      startDate: Date;
+      endDate: Date;
+      locationType: string;
       id: string;
-      firstname: string;
-      lastname: string;
-      username: string;
-      professionalSummary: string;
-      profilePic: {
-        fileUrl: string;
-      };
-      coverPic: {
-        fileUrl: string;
-      };
-      files:FileObject[];
-      workExperiences: [
-        {
-          title: string;
-          organizationName: string;
-          location: string;
-          employmentType: string;
-          jobDescription: string;
-          isUntillNow: boolean;
-          startDate: Date;
-          endDate: Date;
-          locationType: string;
-          id: string;
-        }
-      ];
-    } 
+    }
+  ];
+  colleagues: UserInterFace[];
+  chats: {
+    id: string;
+    colleague: string;
+    createdBY: string;
+  }[];
+}
 
 export interface CropperImageInterface {
   file: File | null;
@@ -93,11 +99,11 @@ export interface CropperImageInterface {
   fileUri: string;
   fileType: string;
   fileSize: number;
-  id?:string
+  id?: string;
 }
-export interface FileObject{
-  albumName:string,
-  file:CropperImageInterface
+export interface FileObject {
+  albumName: string;
+  file: CropperImageInterface;
 }
 export interface CroppImageAvatarProp {
   image: CropperImageInterface;

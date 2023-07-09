@@ -78,4 +78,17 @@ export const timeAgo = (date) => {
   }
   return Math.floor(seconds) + " seconds";
 };
-export default { getFileType, timeAgo };
+export function generateRandomString() {
+  const characters =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let randomString = "";
+
+  for (let i = 0; i < 18; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters.charAt(randomIndex);
+  }
+
+  return randomString;
+}
+
+export default { getFileType, timeAgo, generateRandomString };

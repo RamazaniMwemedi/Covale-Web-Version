@@ -106,7 +106,7 @@ const AddANewPost = () => {
     setPostAudience("Anyone");
     setPostContentText("");
     setSelectPhoto(false);
-    setPosting(false)
+    setPosting(false);
     setPhoto(null);
     setAllFiles([]);
   };

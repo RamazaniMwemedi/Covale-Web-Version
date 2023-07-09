@@ -15,8 +15,7 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
-import React, { useRef, useState } from "react";
+import React, { useId, useRef, useState } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
@@ -40,7 +39,7 @@ const Picker = dynamic(
 );
 
 import { CommentInterface, PostInterface } from "../../../interfaces/work";
-import { timeAgo } from "../../../tools/tools";
+import { generateRandomString, timeAgo } from "../../../tools/tools";
 import FileComponent from "../mediaFiles/FileComponent";
 import { useTheme } from "@mui/styles";
 import {
@@ -1594,29 +1593,50 @@ function AlertDialogSlide({
   handleClose: () => void;
   postId: string | null;
 }) {
+  const uuid = generateRandomString();
+
   const [selectedConnection, setSelectedConnection] = useState<string[]>([]);
   const keyPairStore = useSelector(
     (state: RootState) => state.keyPairs.keyPairs
   );
+  const userStore = useSelector((state: RootState) => state.user);
+  const user: UserInterFace | null = userStore ? userStore.user : null;
+  const colleagues: UserInterFace[] = user ? user?.colleagues : [];
   // Get Key Pair
   useGetKeyPairs();
   const token = useCheckLogedinUserToken();
   const sendPostToConnectionHandle = () => {
     if (token && selectedConnection.length > 0) {
-      selectedConnection.map((connectionId) => {
+      selectedConnection.map(async (connectionId) => {
         const keyPair = keyPairStore
           ? keyPairStore.find((key) => key.modelId === connectionId)
           : null;
-
-        sendMessageHandle(
-          `/work/posts/${postId}`,
-          keyPair?.publicKey,
-          token,
-          connectionId
-        );
+        if (keyPair) {
+          const sent = await sendMessageHandle(
+            `/work/posts/${postId}`,
+            keyPair?.publicKey,
+            token,
+            connectionId,
+            uuid
+          );
+          if (sent) {
+            handleClose();
+          }
+        } else {
+          alert("NO KEY");
+        }
       });
     }
   };
+  const chatWithUser = (selectedUserId: string): string => {
+    const chat = user?.chats.find(
+      (chat) =>
+        chat.colleague === selectedUserId || chat.createdBY === selectedUserId
+    );
+    if (chat) return chat.id;
+    return "";
+  };
+
   return (
     <div>
       <Dialog
@@ -1639,8 +1659,8 @@ function AlertDialogSlide({
                 limitTags={2}
                 id="multiple-limit-tags"
                 color="secondary"
-                options={users}
-                getOptionLabel={(person) =>
+                options={colleagues}
+                getOptionLabel={(person: UserInterFace) =>
                   person.firstname + " " + person.lastname
                 }
                 renderInput={(params) => (
@@ -1657,8 +1677,10 @@ function AlertDialogSlide({
                   </li>
                 )}
                 sx={{ width: "auto", maxHeight: "auto" }}
-                onChange={(_, values: User[]) =>
-                  setSelectedConnection(values.map((value) => String(value.id)))
+                onChange={(_, values: UserInterFace[]) =>
+                  setSelectedConnection(
+                    values.map((value) => chatWithUser(value.id))
+                  )
                 }
               />
             </>
@@ -1683,7 +1705,7 @@ function AlertDialogSlide({
   );
 }
 
-const PersonOption = ({ person }: { person: User }) => (
+const PersonOption = ({ person }: { person: UserInterFace }) => (
   <Box
     sx={{
       display: "flex",
@@ -1706,167 +1728,16 @@ const PersonOption = ({ person }: { person: User }) => (
   </Box>
 );
 
-interface User {
-  firstname: string;
-  lastname: string;
-  id: number;
-  age: number;
-  profileurl: string;
-}
-
-const users: User[] = [
-  {
-    firstname: "John",
-    lastname: "Doe",
-    id: 1,
-    age: 25,
-    profileurl: "https://example.com/johndoe",
-  },
-  {
-    firstname: "Jane",
-    lastname: "Smith",
-    id: 2,
-    age: 30,
-    profileurl: "https://example.com/janesmith",
-  },
-  {
-    firstname: "Michael",
-    lastname: "Johnson",
-    id: 3,
-    age: 28,
-    profileurl: "https://example.com/michaeljohnson",
-  },
-  {
-    firstname: "Emily",
-    lastname: "Brown",
-    id: 4,
-    age: 32,
-    profileurl: "https://example.com/emilybrown",
-  },
-  {
-    firstname: "David",
-    lastname: "Taylor",
-    id: 5,
-    age: 22,
-    profileurl: "https://example.com/davidtaylor",
-  },
-  {
-    firstname: "Sarah",
-    lastname: "Anderson",
-    id: 6,
-    age: 27,
-    profileurl: "https://example.com/sarahanderson",
-  },
-  {
-    firstname: "Christopher",
-    lastname: "Wilson",
-    id: 7,
-    age: 29,
-    profileurl: "https://example.com/christopherwilson",
-  },
-  {
-    firstname: "Olivia",
-    lastname: "Martinez",
-    id: 8,
-    age: 31,
-    profileurl: "https://example.com/oliviamartinez",
-  },
-  {
-    firstname: "Daniel",
-    lastname: "Thompson",
-    id: 9,
-    age: 26,
-    profileurl: "https://example.com/danielthompson",
-  },
-  {
-    firstname: "Sophia",
-    lastname: "Lewis",
-    id: 10,
-    age: 24,
-    profileurl: "https://example.com/sophialewis",
-  },
-  {
-    firstname: "William",
-    lastname: "Lee",
-    id: 11,
-    age: 33,
-    profileurl: "https://example.com/williamlee",
-  },
-  {
-    firstname: "Ava",
-    lastname: "Harris",
-    id: 12,
-    age: 23,
-    profileurl: "https://example.com/avaharris",
-  },
-  {
-    firstname: "Joseph",
-    lastname: "Clark",
-    id: 13,
-    age: 27,
-    profileurl: "https://example.com/josephclark",
-  },
-  {
-    firstname: "Mia",
-    lastname: "Young",
-    id: 14,
-    age: 29,
-    profileurl: "https://example.com/miayoung",
-  },
-  {
-    firstname: "Benjamin",
-    lastname: "Walker",
-    id: 15,
-    age: 26,
-    profileurl: "https://example.com/benjaminwalker",
-  },
-  {
-    firstname: "Abigail",
-    lastname: "Gonzalez",
-    id: 16,
-    age: 28,
-    profileurl: "https://example.com/abigailgonzalez",
-  },
-  {
-    firstname: "James",
-    lastname: "Parker",
-    id: 17,
-    age: 31,
-    profileurl: "https://example.com/jamesparker",
-  },
-  {
-    firstname: "Elizabeth",
-    lastname: "Carter",
-    id: 18,
-    age: 29,
-    profileurl: "https://example.com/elizabethcarter",
-  },
-  {
-    firstname: "Henry",
-    lastname: "Scott",
-    id: 19,
-    age: 27,
-    profileurl: "https://example.com/henryscott",
-  },
-  {
-    firstname: "Ella",
-    lastname: "Adams",
-    id: 20,
-    age: 25,
-    profileurl: "https://example.com/ellaadams",
-  },
-];
-
 const sendMessageHandle = async (
   message: string,
   publicKey: string | undefined,
   token: string,
-  chatId: string
-) => {
-  const uuid = uuidv4();
+  chatId: string,
+  uuid: string
+): Promise<boolean> => {
   const encryptedMessage = await encryptMessage(message, publicKey);
   const formData = new FormData();
-
+  console.log("publicKey :>>", publicKey);
   formData.append("message", encryptedMessage);
   formData.append("idFromClient", uuid);
 
@@ -1874,5 +1745,8 @@ const sendMessageHandle = async (
     const sentMessage = await sendMessege(token, chatId, formData);
 
     chatSocket.emit("send_message", sentMessage);
+    return true;
+  } else {
+    return false;
   }
 };
