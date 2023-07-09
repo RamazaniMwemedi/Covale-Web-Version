@@ -91,7 +91,10 @@ export default function DrawerComponent() {
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
-    } else if (pathname.includes("/colleagues")) {
+    } else if (
+      pathname.includes("/colleagues") ||
+      pathname.includes("/profile")
+    ) {
       setChatColor("gray");
       setPeopleColor("secondary");
       setCalendar("gray");

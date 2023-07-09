@@ -1,11 +1,6 @@
 import {
   Button,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  ListItem,
-  ListItemButton,
-  OutlinedInput,
+  useTheme,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,8 +8,6 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useRouter } from "next/router";
 import { makeStyles } from "@mui/styles";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import SearchOffRoundedIcon from "@mui/icons-material/SearchOffRounded";
 import { useState } from "react";
 
 // My Modules
@@ -23,20 +16,13 @@ import PeopleLeft from "../../components/colleagues/PeopleLeft";
 import Friend from "../../components/colleagues/Friend";
 
 import userServices from "../../../services/user";
-import { useTheme } from "@emotion/react";
 import TopComponent from "../../components/colleagues/TopComponent";
 import { useSelector } from "react-redux";
 import { useCheckLogedinUser } from "../../../hooks/hooks";
 import { useExploreColleagus } from "../../../hooks/colleagues";
 import LoadingLogo from "../../components/others/LoadingLogo";
 
-const useStyles = makeStyles({
-  text: {
-    "& :hover": {
-      cursor: "progress",
-    },
-  },
-});
+
 
 export default function People() {
   const [friends, setFriends] = React.useState([]);
@@ -80,7 +66,7 @@ export default function People() {
               flex: 1,
               grow: 1,
               height: "100%",
-              width: "100pc",
+              // width: "100pc",
               marginLeft: "-4rem",
             }}
           >
@@ -97,7 +83,6 @@ export default function People() {
                 flex: 1,
                 grow: 1,
                 height: "100%",
-                marginLeft: "-4rem",
               }}
             >
               {loading ? (
