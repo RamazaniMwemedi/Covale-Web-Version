@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }) {
       primary: "#00bcd4",
       secondary: "#ff4081",
       error: "#f44336",
-      background: "rgb(28, 10, 40)",
+      background: "rgb(28, 30, 40)",
       background1: "rgb(46, 41, 41)",
       textBackground: "rgba(0,0,0,0.6)",
       textBackground2: "rgba(0,0,0,0.1)",

@@ -15,7 +15,7 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
-import React, { useId, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
@@ -239,6 +239,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
         mt: 2,
         p: 1,
         borderRadius: 2,
+        minWidth: 400,
       }}
     >
       {/* Author Details */}
@@ -973,13 +974,14 @@ const PostComment = ({
 
           <Box
             sx={{
-              display: "grid",
-              placeContent: "center",
+              display: "flex",
+              // placeContent: "center",
             }}
           >
             <Button
-              variant="text"
+              variant="outlined"
               size="small"
+              color="secondary"
               onMouseOver={() => setShowReactions(true)}
               onMouseLeave={() => setShowReactions(false)}
               onDoubleClick={() => {
@@ -991,6 +993,7 @@ const PostComment = ({
                 gap: 1,
                 p: 1,
                 position: "relative",
+                height: 8,
               }}
             >
               {" "}
@@ -1004,16 +1007,20 @@ const PostComment = ({
               .map((reaction) =>
                 reactionIcon(reaction.type, { width: 20, height: 20 })
               )}
-            {comment.reactions.length > 0 && comment.reactions.length}
+            <sup>
+              {comment.reactions.length > 0 && comment.reactions.length}
+            </sup>
 
             <Button
-              variant="text"
+              variant="outlined"
               size="small"
+              color="secondary"
               sx={{
                 textTransform: "none",
                 gap: 1,
                 p: 1,
                 position: "relative",
+                height: 8,
               }}
               onClick={() => setIsReplyOpen((p) => !p)}
             >
@@ -1021,7 +1028,9 @@ const PostComment = ({
             </Button>
             <Typography variant="caption">
               {comment.replies && comment.replies.length} Replie
-              {comment.replies && comment.replies.length > 1 ? "s" : ""}
+              <sup>
+                {comment.replies && comment.replies.length > 1 ? "s" : ""}
+              </sup>
             </Typography>
           </Box>
         </Box>
@@ -1405,8 +1414,9 @@ const CommentReply = ({
                   }}
                 >
                   <Button
-                    variant="text"
+                    variant="outlined"
                     size="small"
+                    color="secondary"
                     onMouseOver={() => setShowReactions(true)}
                     onMouseLeave={() => setShowReactions(false)}
                     onDoubleClick={() => {
@@ -1418,6 +1428,7 @@ const CommentReply = ({
                       gap: 1,
                       p: 1,
                       position: "relative",
+                      height: 8,
                     }}
                   >
                     {" "}

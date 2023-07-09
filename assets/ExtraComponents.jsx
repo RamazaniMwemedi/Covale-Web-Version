@@ -1,4 +1,4 @@
-const { Box, IconButton, Typography } = require("@mui/material");
+const { Box, IconButton, Typography, CardMedia } = require("@mui/material");
 const { useRef, useState, useEffect } = require("react");
 const {
   PdfIcon,
@@ -33,15 +33,10 @@ const ImageComponent = React.memo(
       <Box sx={{ width: "95%", overflow: "hidden" }}>
         <Widget>
           {displayFile ? (
-            <Image
-              alt="Image"
-              src={src}
-              width={width}
-              height={height}
-              style={{
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
+            <CardMedia
+              sx={{ height: height, width: width }}
+              image={src}
+              title="green iguana"
             />
           ) : (
             <Box
