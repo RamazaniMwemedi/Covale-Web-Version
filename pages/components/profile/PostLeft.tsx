@@ -768,104 +768,112 @@ const PostLeft = () => {
   };
 
   return (
-    <>
-      <Box
-        sx={{
-          bgcolor: theme.colors.background1,
-          p: 1,
-          borderRadius: 2,
-        }}
-      >
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: "bold",
-            mb: 0.5,
-          }}
-        >
-          Summary
-        </Typography>
-        {/* Professional Summary */}
-        <ProfessionalSummary />
-        <br />
-        {/* Work Experience  */}
-        <WorkExperience />
-        <br />
-        {/* Education And Certificates */}
-      </Box>
-      <br />
-      <Box
-        sx={{
-          bgcolor: theme.colors.background1,
-          p: 1,
-          borderRadius: 2,
-        }}
-      >
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography
-            variant="h5"
+    <Box>
+      {user && (
+        <>
+          <Box
             sx={{
-              fontWeight: "bold",
-              mb: 0.5,
+              bgcolor: theme.colors.background1,
+              p: 1,
+              borderRadius: 2,
             }}
           >
-            Connections
-          </Typography>
-
-          <Button
-            color="secondary"
-            sx={{
-              // width: 150,
-              textTransform: "none",
-            }}
-          >
-            <Link
-              href="/colleagues/mycolleagues"
-              underline="none"
+            <Typography
+              variant="h5"
               sx={{
-                color: (theme) => theme.palette.secondary.main,
-                display: "flex",
-                p: 0,
+                fontWeight: "bold",
+                mb: 0.5,
               }}
             >
-              See all connections
-            </Link>
-          </Button>
-        </Box>
-        <Typography variant="body2" color="text.secondary">
-          {user.colleagues.length} Connection
-          {user.colleagues.length > 1 && "'s"}
-        </Typography>
-        <br />
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))",
-          }}
-        >
-          {user.colleagues.map((colleague) => (
-            <Card
-              sx={{ maxWidth: 135, bgcolor: theme.colors.background1, p: 1 }}
-              key={colleague.id}
-            >
-              <CardMedia
-                sx={{ height: 110, width: 110, borderRadius: 4 }}
-                image={colleague.profilePic.fileUrl}
-                title={colleague.username}
-              />
+              Summary
+            </Typography>
+            {/* Professional Summary */}
+            <ProfessionalSummary />
+            <br />
+            {/* Work Experience  */}
+            <WorkExperience />
+            <br />
+            {/* Education And Certificates */}
+          </Box>
+          <br />
+          <Box
+            sx={{
+              bgcolor: theme.colors.background1,
+              p: 1,
+              borderRadius: 2,
+            }}
+          >
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography
-                gutterBottom
-                variant="body1"
-                fontWeight={700}
-                component="div"
+                variant="h5"
+                sx={{
+                  fontWeight: "bold",
+                  mb: 0.5,
+                }}
               >
-                {colleague.firstname} {colleague.lastname}
+                Connections
               </Typography>
-            </Card>
-          ))}
-        </Box>
-      </Box>
-    </>
+
+              <Button
+                color="secondary"
+                sx={{
+                  // width: 150,
+                  textTransform: "none",
+                }}
+              >
+                <Link
+                  href="/colleagues/mycolleagues"
+                  underline="none"
+                  sx={{
+                    color: (theme) => theme.palette.secondary.main,
+                    display: "flex",
+                    p: 0,
+                  }}
+                >
+                  See all connections
+                </Link>
+              </Button>
+            </Box>
+            <Typography variant="body2" color="text.secondary">
+              {user.colleagues.length} Connection
+              {user.colleagues.length > 1 && "'s"}
+            </Typography>
+            <br />
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))",
+              }}
+            >
+              {user.colleagues.map((colleague) => (
+                <Card
+                  sx={{
+                    maxWidth: 135,
+                    bgcolor: theme.colors.background1,
+                    p: 1,
+                  }}
+                  key={colleague.id}
+                >
+                  <CardMedia
+                    sx={{ height: 110, width: 110, borderRadius: 4 }}
+                    image={colleague.profilePic.fileUrl}
+                    title={colleague.username}
+                  />
+                  <Typography
+                    gutterBottom
+                    variant="body1"
+                    fontWeight={700}
+                    component="div"
+                  >
+                    {colleague.firstname} {colleague.lastname}
+                  </Typography>
+                </Card>
+              ))}
+            </Box>
+          </Box>
+        </>
+      )}
+    </Box>
   );
 };
 const FormDialog = ({

@@ -29,7 +29,6 @@ import SwipeableViews from "react-swipeable-views";
 import Posts from "../components/profile/Posts";
 import { addCoverPic } from "../../services/user";
 import { updateCoverPhotoe } from "../../Redux/slices/user";
-import Files from "../components/profile/files";
 import defaultBackgroundImage from "../../assets/defaultBackgroundImage.jpeg";
 import {
   ContentsProps,
