@@ -323,19 +323,8 @@ function FullWidthTabs({ value, handleChange }: FullWidthTabsProps) {
         variant="fullWidth"
         aria-label="Contents Tab"
       >
-        <Tab
-          sx={{ textTransform: "unset", borderRadius: 10 }}
-          label="Posts"
-          {...a11yProps(0)}
-        />
-        <Tab sx={{ textTransform: "unset" }} label="About" {...a11yProps(1)} />
-        <Tab
-          sx={{ textTransform: "unset" }}
-          label="Connections"
-          {...a11yProps(2)}
-        />
-        <Tab sx={{ textTransform: "unset" }} label="Teams" {...a11yProps(3)} />
-        <Tab sx={{ textTransform: "unset" }} label="Files" {...a11yProps(4)} />
+        <Tab sx={{ textTransform: "unset" }} label="Posts" {...a11yProps(0)} />
+        <Tab sx={{ textTransform: "unset" }} label="Teams" {...a11yProps(1)} />
       </Tabs>
       <LongMenu handleChange={handleChange} />{" "}
     </Box>
@@ -354,24 +343,16 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
         <Posts />
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
-        About
-      </TabPanel>
-      <TabPanel value={value} index={2} dir={theme.direction}>
-        Connections
-      </TabPanel>
-      <TabPanel value={value} index={3} dir={theme.direction}>
         Teams
       </TabPanel>
-      <TabPanel value={value} index={4} dir={theme.direction}>
-        <Files />
-      </TabPanel>
-      <TabPanel value={value} index={5} dir={theme.direction}>
+
+      <TabPanel value={value} index={2} dir={theme.direction}>
         Personal Info
       </TabPanel>
-      <TabPanel value={value} index={6} dir={theme.direction}>
+      <TabPanel value={value} index={3} dir={theme.direction}>
         Data & Privacy
       </TabPanel>
-      <TabPanel value={value} index={7} dir={theme.direction}>
+      <TabPanel value={value} index={4} dir={theme.direction}>
         Security
       </TabPanel>
     </SwipeableViews>
@@ -424,7 +405,7 @@ function LongMenu({
             display: "flex",
             gap: 1,
           }}
-          onClick={() => handleChange(5)}
+          onClick={() => handleChange(2)}
         >
           <PersonalInfoIcon height={24} width={24} />
           <Typography>Personal Info</Typography>
@@ -434,13 +415,13 @@ function LongMenu({
             display: "flex",
             gap: 1,
           }}
-          onClick={() => handleChange(6)}
+          onClick={() => handleChange(3)}
         >
           <PrivacyIcon height={24} width={24} />
           <Typography>Data & Privacy</Typography>
         </MenuItem>
         <MenuItem
-          onClick={() => handleChange(7)}
+          onClick={() => handleChange(4)}
           sx={{
             display: "flex",
             gap: 1,

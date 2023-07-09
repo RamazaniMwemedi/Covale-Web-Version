@@ -26,6 +26,7 @@ import {
 import { Box } from "@mui/system";
 import {
   Button,
+  Card,
   Checkbox,
   Dialog,
   DialogActions,
@@ -43,7 +44,10 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
+  Link,
+  CardMedia,
 } from "@mui/material";
+
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -56,7 +60,8 @@ import { OrganizationIcon } from "../../../assets/Icons";
 
 const PostLeft = () => {
   const theme: any = useTheme();
-
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
   const ProfessionalSummary = () => {
     // FormDialog states and handler
     const [open, setOpen] = useState<boolean>(false);
@@ -98,8 +103,6 @@ const PostLeft = () => {
       }
     };
 
-    const userStore = useSelector((state: RootState) => state.user);
-    const user = userStore?.user;
     if (user) {
       return (
         <Box
@@ -765,30 +768,104 @@ const PostLeft = () => {
   };
 
   return (
-    <Box
-      sx={{
-        bgcolor: theme.colors.background1,
-        p: 1,
-        borderRadius: 2,
-      }}
-    >
-      <Typography
-        variant="h5"
+    <>
+      <Box
         sx={{
-          fontWeight: "bold",
-          mb: 0.5,
+          bgcolor: theme.colors.background1,
+          p: 1,
+          borderRadius: 2,
         }}
       >
-        Summary
-      </Typography>
-      {/* Professional Summary */}
-      <ProfessionalSummary />
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: "bold",
+            mb: 0.5,
+          }}
+        >
+          Summary
+        </Typography>
+        {/* Professional Summary */}
+        <ProfessionalSummary />
+        <br />
+        {/* Work Experience  */}
+        <WorkExperience />
+        <br />
+        {/* Education And Certificates */}
+      </Box>
       <br />
-      {/* Work Experience  */}
-      <WorkExperience />
-      <br />
-      {/* Education And Certificates */}
-    </Box>
+      <Box
+        sx={{
+          bgcolor: theme.colors.background1,
+          p: 1,
+          borderRadius: 2,
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bold",
+              mb: 0.5,
+            }}
+          >
+            Connections
+          </Typography>
+
+          <Button
+            color="secondary"
+            sx={{
+              // width: 150,
+              textTransform: "none",
+            }}
+          >
+            <Link
+              href="/colleagues/mycolleagues"
+              underline="none"
+              sx={{
+                color: (theme) => theme.palette.secondary.main,
+                display: "flex",
+                p: 0,
+              }}
+            >
+              See all connections
+            </Link>
+          </Button>
+        </Box>
+        <Typography variant="body2" color="text.secondary">
+          {user.colleagues.length} Connection
+          {user.colleagues.length > 1 && "'s"}
+        </Typography>
+        <br />
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))",
+          }}
+        >
+          {user.colleagues.map((colleague) => (
+            <Card
+              sx={{ maxWidth: 135, bgcolor: theme.colors.background1, p: 1 }}
+              key={colleague.id}
+            >
+              <CardMedia
+                sx={{ height: 110, width: 110, borderRadius: 4 }}
+                image={colleague.profilePic.fileUrl}
+                title={colleague.username}
+              />
+              <Typography
+                gutterBottom
+                variant="body1"
+                fontWeight={700}
+                component="div"
+              >
+                {colleague.firstname} {colleague.lastname}
+              </Typography>
+            </Card>
+          ))}
+        </Box>
+      </Box>
+    </>
   );
 };
 const FormDialog = ({
