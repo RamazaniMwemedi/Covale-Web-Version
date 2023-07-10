@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import DrawerComponent from "../components/others/DrawerComponent";
-import { Box } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useTheme } from "@mui/styles";
@@ -13,6 +12,9 @@ import {
   IconButton,
   MenuItem,
   Menu,
+  Avatar,
+  Box,
+  Link,
 } from "@mui/material";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -42,6 +44,7 @@ import {
   PrivacyIcon,
   UserShieldIcon,
 } from "../../assets/Icons";
+import moment from "moment";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
@@ -342,7 +345,7 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
         <Posts />
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
-        Teams
+        <TeamsSection />
       </TabPanel>
 
       <TabPanel value={value} index={2} dir={theme.direction}>
@@ -355,6 +358,71 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
         Security
       </TabPanel>
     </SwipeableViews>
+  );
+};
+
+const TeamsSection: FC = () => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
+  const teams = user && user.teams;
+  return (
+    <>
+      <Box>
+        <Typography variant="h4">Teams</Typography>
+        {teams && (
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: "10px",
+              p: 1,
+              ml: 1,
+            }}
+          >
+            {teams.map((team) => {
+              return (
+                <Box
+                  key={team.id}
+                  sx={{
+                    display: "flex",
+                    bgcolor: (theme) => theme.palette.action.focus,
+                    p: 2,
+                    borderRadius: 3,
+                    gap: 2,
+                  }}
+                >
+                  <Avatar>{team.teamName[0]}</Avatar>
+                  <Box display={"flex"} flexDirection={"column"}>
+                    <Link
+                      href={`/chats/t/${team.id}`}
+                      underline="none"
+                      sx={{
+                        color: (theme) => theme.palette.text.primary,
+                        display: "flex",
+                        p: 0,
+                      }}
+                    >
+                      <Typography variant="h6">{team.teamName}</Typography>
+                    </Link>
+                    <Typography variant="caption" color="text.secondary">
+                      Created{" "}
+                      {moment(team.createdAt).format("HH:MM DD MMMM YYYY")}
+                    </Typography>
+                    <br />
+                    <Typography variant="body2">
+                      Memebers: {team.members.length}
+                    </Typography>
+                    <Typography variant="body2">
+                      Projects: {team.projects.length}
+                    </Typography>
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+        )}
+      </Box>
+    </>
   );
 };
 

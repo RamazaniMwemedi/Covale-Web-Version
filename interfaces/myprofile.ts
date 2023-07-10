@@ -90,6 +90,13 @@ export interface UserInterFace {
     colleague: string;
     createdBY: string;
   }[];
+  teams: {
+    id: string;
+    teamName: string;
+    createdAt: string;
+    members: string[];
+    projects: string[];
+  }[];
 }
 
 export interface CropperImageInterface {
