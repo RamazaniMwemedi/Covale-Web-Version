@@ -62,6 +62,9 @@ export interface UserInterFace {
   firstname: string;
   lastname: string;
   username: string;
+  birthday: string;
+  gender: string;
+  email: string;
   professionalSummary: string;
   profilePic: {
     fileUrl: string;

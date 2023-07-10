@@ -16,6 +16,12 @@ import {
   Box,
   Link,
 } from "@mui/material";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
@@ -38,6 +44,7 @@ import {
   FullWidthTabsProps,
   RootState,
   TabPanelProps,
+  ThemeInterface,
 } from "../../interfaces/myprofile";
 import {
   PersonalInfoIcon,
@@ -349,7 +356,7 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
       </TabPanel>
 
       <TabPanel value={value} index={2} dir={theme.direction}>
-        Personal Info
+        <PersonalInfo />
       </TabPanel>
       <TabPanel value={value} index={3} dir={theme.direction}>
         Data & Privacy
@@ -365,6 +372,8 @@ const TeamsSection: FC = () => {
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
   const teams = user && user.teams;
+  const theme: ThemeInterface = useTheme();
+
   return (
     <>
       <Box>
@@ -385,7 +394,7 @@ const TeamsSection: FC = () => {
                   key={team.id}
                   sx={{
                     display: "flex",
-                    bgcolor: (theme) => theme.palette.action.focus,
+                    bgcolor: theme.colors.background1,
                     p: 2,
                     borderRadius: 3,
                     gap: 2,
@@ -423,6 +432,187 @@ const TeamsSection: FC = () => {
         )}
       </Box>
     </>
+  );
+};
+
+const PersonalInfo: FC = () => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const theme: ThemeInterface = useTheme();
+  const user = userStore?.user;
+  return (
+    <Box>
+      <Typography variant="h4">Personal Info</Typography>
+      {user && (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(500px, 1fr))",
+            gap: "10px",
+            p: 1,
+            ml: 1,
+          }}
+        >
+          <Box
+            sx={{
+              bgcolor: theme.colors.background1,
+              p: 2,
+              borderRadius: 2,
+              gap: 2,
+            }}
+          >
+            <Typography variant="h6">Fundemental Info</Typography>
+            <br />
+            <TableContainer
+              component={Box}
+              sx={{
+                boxShadow: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Table aria-label="simple table">
+                <TableBody>
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell>Profile Picture</TableCell>
+                    <TableCell>
+                      Personalize your account with a profile picture.
+                    </TableCell>
+                    <TableCell>
+                      <Avatar src={user.profilePic.fileUrl}>
+                        {user.firstname[0]}
+                        {user.lastname[0]}
+                      </Avatar>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": {
+                        border: 0,
+                      },
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell>Name</TableCell>
+                    <TableCell>
+                      {user.firstname} {user.lastname}
+                    </TableCell>
+                    <TableCell>
+                      <NavigateNextRoundedIcon />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+                <TableRow
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    "&:hover": {
+                      bgcolor: (theme) => theme.palette.action.hover,
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  {" "}
+                  <TableCell>Birthday</TableCell>
+                  <TableCell>
+                    {" "}
+                    {moment(user.birthday).format("MMMM DD, YYYY")}{" "}
+                  </TableCell>
+                  <TableCell>
+                    <NavigateNextRoundedIcon />
+                  </TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    "&:hover": {
+                      bgcolor: (theme) => theme.palette.action.hover,
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  {" "}
+                  <TableCell>Gender</TableCell>
+                  <TableCell>
+                    {" "}
+                    {user.gender.charAt(0).toUpperCase() +
+                      user.gender.slice(1)}{" "}
+                  </TableCell>
+                  <TableCell>
+                    <NavigateNextRoundedIcon />
+                  </TableCell>
+                </TableRow>
+              </Table>
+            </TableContainer>
+          </Box>
+          {/* Contacts Info */}
+          <Box
+            sx={{
+              bgcolor: theme.colors.background1,
+              p: 2,
+              borderRadius: 3,
+              gap: 2,
+              height: "auto",
+            }}
+          >
+            <Typography variant="h6">Contacts Info</Typography>
+            <br />
+            <TableContainer
+              component={Box}
+              sx={{
+                boxShadow: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Table aria-label="simple table">
+                <TableBody>
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell>Email</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <NavigateNextRoundedIcon />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": {
+                        border: 0,
+                      },
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell>Phone</TableCell>
+                    <TableCell> </TableCell>
+                    <TableCell>
+                      <NavigateNextRoundedIcon />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        </Box>
+      )}
+    </Box>
   );
 };
 
