@@ -116,7 +116,7 @@ function TaskStates({
   handleShowFile,
 }) {
   // Copy the values from the taskStatus to states and add "New State" to the end
-  const states = [...taskStatus, "New State"];
+  const states = [...taskStatus];
   const categorizedTasks = {};
   const dispatch = useDispatch();
   states.forEach((state) => {
