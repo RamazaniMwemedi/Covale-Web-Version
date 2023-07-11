@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { TextField, Button, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  useMediaQuery,
+  Box,
+} from "@mui/material";
 import { useRouter } from "next/router";
-import { Box } from "@mui/system";
 import { useTheme } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 // CSS
@@ -12,6 +17,8 @@ import CreateAccount from "./components/login/CreateAccount";
 import Logo from "../assets/Logo";
 
 const LoginPage = () => {
+  const isMobileView = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
   useEffect(() => {
     localStorage.setItem("darkTheme", JSON.stringify(false));
   }, []);
@@ -252,19 +259,48 @@ const LoginPage = () => {
     >
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          flex: 1,
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          width: "80vw",
-          height: "50vh",
-          transform: "translate(-50%, -50%)",
-          padding: "10px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          placeItems: "center",
           backgroundColor: theme.colors.background,
+          pt: "10%",
+          gap: 10,
         }}
       >
+        {" "}
+        <Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              // justifyContent: "space-between",
+              flex: 1,
+              gap: "100px",
+            }}
+          >
+            <Box
+              sx={{
+                borderRadius: 5,
+                backgroundColor: theme.colors.background1,
+              }}
+            >
+              <Logo height={100} width={100} />
+            </Box>
+            <Typography
+              variant="h2"
+              sx={{
+                background:
+                  "linear-gradient(to right, rgb(214, 67, 181), rgb(120, 79, 195))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+
+                marginLeft: "-80px",
+              }}
+            >
+              Covale
+            </Typography>
+          </Box>
+        </Box>
         <Box>
           <Signin
             // Signin Change Handlers
@@ -309,39 +345,6 @@ const LoginPage = () => {
           />
           <br />
         </Box>
-        <Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flex: 1,
-              gap: "100px",
-            }}
-          >
-            <Box
-              sx={{
-                borderRadius: 30,
-                backgroundColor: theme.colors.background1,
-              }}
-            >
-              <Logo height={230} width={230} />
-            </Box>
-            <Typography
-              variant="h1"
-              sx={{
-                background:
-                  "linear-gradient(to right, rgb(214, 67, 181), rgb(120, 79, 195))",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-
-                marginLeft: "-80px",
-              }}
-            >
-              Covale
-            </Typography>
-          </Box>
-        </Box>
       </Box>
     </Box>
   );
@@ -358,9 +361,9 @@ const Signin = (props) => {
         padding: "10px",
         borderStyle: "solid",
         borderWidth: "2px",
-        borderColor: "rgb(180, 17, 180)",
+        borderColor: (theme) => theme.palette.secondary.main,
         borderRadius: "10px",
-        width: "350px",
+        maxWidth: "350px",
       }}
     >
       <form onSubmit={props.signInHandlerSubmit} className={styles.signin_form}>
@@ -369,7 +372,7 @@ const Signin = (props) => {
           component="h5"
           sx={{
             fontWeight: "bold",
-            color: "rgb(180, 17, 180)",
+            color: (theme) => theme.palette.secondary.main,
             marginBottom: "1rem",
             marginTop: "10px",
           }}
@@ -380,6 +383,9 @@ const Signin = (props) => {
           label="Email"
           color="secondary"
           size="small"
+          sx={{
+            width: 300,
+          }}
           onChange={props.emailChangeHandler}
           helperText={props.emailError}
           error={props.emailErrorBoolean}
@@ -389,6 +395,9 @@ const Signin = (props) => {
         <TextField
           label="Password"
           size="small"
+          sx={{
+            width: 300,
+          }}
           type={"password"}
           color="secondary"
           onChange={props.passwordChangeHandler}
@@ -412,11 +421,21 @@ const Signin = (props) => {
             endIcon={" "}
             loadingPosition="end"
             variant="contained"
+            sx={{
+              textTransform: "none",
+            }}
           >
             Sign In
           </LoadingButton>
         ) : (
-          <Button variant="contained" type="submit" color="secondary">
+          <Button
+            sx={{
+              textTransform: "none",
+            }}
+            variant="contained"
+            type="submit"
+            color="secondary"
+          >
             Signin
           </Button>
         )}

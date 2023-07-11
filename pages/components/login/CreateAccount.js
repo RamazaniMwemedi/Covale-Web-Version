@@ -84,7 +84,14 @@ const CreateAccount = forwardRef((props, ref) => {
 
   return (
     <Box>
-      <Button variant="contained" color="success" onClick={handleClickOpen}>
+      <Button
+        variant="contained"
+        color="success"
+        sx={{
+          textTransform: "none",
+        }}
+        onClick={handleClickOpen}
+      >
         Signup
       </Button>
       <BootstrapDialog
@@ -213,6 +220,9 @@ const CreateAccount = forwardRef((props, ref) => {
                   color="success"
                   type="submit"
                   variant="contained"
+                  sx={{
+                    textTransform: "none",
+                  }}
                 >
                   Create account
                 </Button>

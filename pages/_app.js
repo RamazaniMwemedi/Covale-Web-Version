@@ -108,10 +108,7 @@ function MyApp({ Component, pageProps }) {
               name="viewport"
               content="initial-scale=1.0, width=device-width"
             />
-            <link
-              rel="icon"
-              href="https://ramazanimwemedi.github.io/sounds/covalogo.png"
-            />
+            <link rel="icon" href="/logo.svg" />
           </Head>
           <CssBaseline />
           <Component {...pageProps} />

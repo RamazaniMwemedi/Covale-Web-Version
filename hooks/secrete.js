@@ -6,9 +6,8 @@ const { allKeyPairs } = require("../Redux/slices/keys");
 const useGetKeyPairs = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    const secreteToken = JSON.parse(
-      localStorage.getItem("logedinUser")
-    ).secreteToken;
+    const logedinUser = JSON.parse(localStorage.getItem("logedinUser"));
+    const secreteToken = logedinUser && logedinUser.secreteToken;
     if (secreteToken) {
       getKeyPairs(secreteToken).then((res) => {
         if (res) dispatch(allKeyPairs(res));
