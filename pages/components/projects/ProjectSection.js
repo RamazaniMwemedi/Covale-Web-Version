@@ -35,10 +35,10 @@ const ProjectSection = () => {
   return (
     <Box
       sx={{
-        height: "100%",
+        // height: "100vh",
         width: "100%",
         backgroundColor: theme.colors.background,
-        display: "grid",
+        // display: "grid",
         placeItems: !project && "center",
       }}
     >

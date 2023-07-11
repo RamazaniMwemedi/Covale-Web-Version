@@ -87,7 +87,7 @@ const KanbanView = ({
   return (
     <>
       {members && (
-        <Box sx={{ width: showChats ? "600px" : "900px" }}>
+        <Box sx={{}}>
           <Typography variant="h6">{title}</Typography>
           <TaskStates
             tasks={tasks}
@@ -159,16 +159,21 @@ function TaskStates({
       sx={{
         width: "100%",
         height: "75vh",
-        overflowY: "hidden",
         display: "flex",
         backgroundColor: "unset",
       }}
     >
       {states.map((state) => (
-        <div
+        <Box
           key={state}
           onDrop={(event) => handleDrop(event, state)}
           onDragOver={(event) => event.preventDefault()}
+          sx={{
+            height: "100%",
+            overflowY: "scroll",
+            overflowX: "hidden",
+            width: "350px",
+          }}
         >
           <TaskBlock
             key={state}
@@ -181,7 +186,7 @@ function TaskStates({
             handleShowFile={handleShowFile}
             handleDragStart={handleDragStart}
           />
-        </div>
+        </Box>
       ))}
     </Box>
   );
@@ -207,7 +212,14 @@ const TaskBlock = ({
   };
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box
+      sx={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       {/* Top */}
       <Box
         sx={{
@@ -216,7 +228,7 @@ const TaskBlock = ({
           zIndex: 1,
           padding: "10px",
           backgroundColor: theme.colors.background,
-          width: "300px",
+          width: "350px",
         }}
       >
         <Typography variant="body1">
@@ -268,13 +280,14 @@ const TaskBlock = ({
       <Box
         sx={{
           maxHeight: "90%",
-          overflowY: "auto",
-          overflowX: "hidden",
           padding: "10px",
         }}
       >
         {tasks.map((task, i) => (
-          <div
+          <Box
+            sx={{
+              width: "300px",
+            }}
             key={task.id}
             draggable
             onDragStart={(event) => handleDragStart(event, task.id)}
@@ -286,7 +299,7 @@ const TaskBlock = ({
               handleShowFile={handleShowFile}
               index={i}
             />
-          </div>
+          </Box>
         ))}
       </Box>
     </Box>
@@ -312,6 +325,7 @@ const TaskComponent = ({ task, projectId, handleShowFile, index }) => {
         marginBottom: "10px",
         backgroundColor: theme.colors.textBackground,
         borderRadius: "10px",
+        width: "300px",
       }}
     >
       {/* Top */}

@@ -92,7 +92,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
 
           <Box
             sx={{
-              flex: 0.6,
+              // flex: 0.6,
             }}
           >
             <TabContext value={value}>

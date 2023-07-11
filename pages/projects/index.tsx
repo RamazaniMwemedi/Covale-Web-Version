@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Box,  } from "@mui/material";
+import { Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
 // My components
@@ -9,32 +9,28 @@ import ProjectLeft from "../components/projects/ProjectLeft";
 import ProjectSection from "../components/projects/ProjectSection";
 
 // Hooks
-import { useCheckLogedinUser } from "../../hooks/hooks";
+import {
+  useCheckLogedinUser,
+  useCheckLogedinUserToken,
+} from "../../hooks/hooks";
 import LoadingLogo from "../components/others/LoadingLogo";
-import { useSelector, useDispatch,  } from "react-redux";
-import { removeUser } from "../../Redux/slices/user";
+import { useSelector,  } from "react-redux";
 // Redux
 import { useGetProjects } from "../../hooks/projects";
 import { useGetTeams } from "../../hooks/teams";
+import { RootState } from "../../interfaces/myprofile";
 
 const Project = () => {
   const userLoading = useCheckLogedinUser();
-  const userStore = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const token = userStore.user ? userStore.user.token : null;
-  const projectsStore = useSelector((state) => state.projects);
-  const projects = projectsStore ? projectsStore.projects : [];
+  const userStore = useSelector((state: RootState) => state.user);
+  
+  const token = useCheckLogedinUserToken();
+  
 
   // Hooks
   useGetProjects(token);
   useGetTeams(token);
 
-  const signoutHandler = () => {
-    localStorage.removeItem("logedinUser");
-    router.push("/login");
-    dispatch(removeUser());
-  };
 
   return (
     <>
@@ -51,11 +47,8 @@ const Project = () => {
           <CssBaseline />
           {userStore.user ? (
             <>
-              <DrawerComponent
-                signoutHandler={signoutHandler}
-                user={userStore.user}
-              />
-              <ProjectLeft projects={projects} />
+              <DrawerComponent />
+              <ProjectLeft />
               <ProjectSection />
             </>
           ) : (

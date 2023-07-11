@@ -23,6 +23,6 @@
     "**/*.tsx",
     "services/user.js",
     "image/croppedImg.ts"
-, "pages/components/mediaFiles/FileComponent.jsx"  ],
+, "pages/components/mediaFiles/FileComponent.jsx", "pages/components/projects/ProjectLeft.js"  ],
   "exclude": ["node_modules"]
 }

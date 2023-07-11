@@ -14,6 +14,7 @@ export interface RootState {
   keyPairs: {
     keyPairs: KeysSchema[];
   };
+  projects: { projects: {}[] };
 }
 interface KeysSchema {
   privateKey: string;
