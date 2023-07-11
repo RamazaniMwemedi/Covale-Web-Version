@@ -193,8 +193,8 @@ export default function DrawerComponent() {
                 <Logo width={50} height={50} />
               </Box>
               <br />
-              {/* Home */}
-              {/* <Tooltip title="Work" placement="right-start">
+              {/* Work */}
+              <Tooltip title="Work" placement="right-start">
                 <ListItemButton
                   button
                   onClick={() => {
@@ -211,7 +211,7 @@ export default function DrawerComponent() {
                   </ListItemIcon>
                   <ListItemText primary="Work" />
                 </ListItemButton>
-              </Tooltip> */}
+              </Tooltip>
               {/* Chats */}
               <Tooltip title="Chats" placement="right-start">
                 <ListItemButton
