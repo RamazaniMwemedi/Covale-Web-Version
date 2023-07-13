@@ -1,22 +1,21 @@
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import "@fontsource/open-sans/500.css"; // Weight 500.
-import { useTheme } from "@mui/styles";
 import {
   Button,
   Divider,
   List,
-  ListItem,
   ListItemButton,
   ListItemIcon,
+  useTheme,
 } from "@mui/material";
+import { usePathname } from "next/navigation";
 import {
   BookMarkIcon,
-  BriefCaseIcon,
   EventIcon,
   OrganizationIcon,
   PostIcon,
@@ -24,10 +23,11 @@ import {
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import { ThemeInterface } from "../../../interfaces/myprofile";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({ theme, open }: { theme?: any; open?: boolean }) => ({
   width: "15px",
   flexShrink: 0,
   // backgroundColor: theme.colors.background,
@@ -70,7 +70,41 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function WorktLeft({}) {
-  const [showOrganizations, setShowOrganizations] = React.useState(false);
+  const [showOrganizations, setShowOrganizations] = useState(false);
+  const [postBgcolor, setPostBgcolor] = useState("");
+  const [eventBgcolor, setEventBgcolor] = useState("");
+  const [savedBgcolor, setSavedBgcolor] = useState("");
+  const pathname = usePathname();
+  const theme: ThemeInterface = useTheme();
+
+  useEffect(() => {
+    switch (pathname) {
+      case "/work":
+        setPostBgcolor(theme.colors.background1);
+        setEventBgcolor("");
+        setSavedBgcolor("");
+        break;
+      case "/work/event":
+        setPostBgcolor("");
+        setEventBgcolor(theme.colors.background1);
+        setSavedBgcolor("");
+        break;
+      case "/work/saved":
+        setPostBgcolor("");
+        setEventBgcolor("");
+        setSavedBgcolor(theme.colors.background1);
+        break;
+
+      default:
+        break;
+    }
+    return () => {
+      setPostBgcolor("");
+      setEventBgcolor("");
+      setSavedBgcolor("");
+    };
+  }, [pathname]);
+
   return (
     <Box>
       <CssBaseline />
@@ -80,20 +114,42 @@ export default function WorktLeft({}) {
             <Typography variant="h4">Work</Typography>
           </Box>
           <Box>
-            <List>
-              <ListItemButton>
+            <List
+              sx={{
+                p: 0.5,
+              }}
+            >
+              <ListItemButton
+                sx={{
+                  bgcolor: postBgcolor,
+                  borderRadius: 2,
+                  mt: 0.3,
+                }}
+              >
                 <ListItemIcon>
                   <PostIcon width={25} height={25} />
                 </ListItemIcon>
                 <Typography>Posts</Typography>
               </ListItemButton>
-              <ListItemButton>
+              <ListItemButton
+                sx={{
+                  bgcolor: eventBgcolor,
+                  borderRadius: 2,
+                  mt: 0.3,
+                }}
+              >
                 <ListItemIcon>
                   <EventIcon width={25} height={25} />
                 </ListItemIcon>
                 <Typography>Events</Typography>
               </ListItemButton>
-              <ListItemButton>
+              <ListItemButton
+                sx={{
+                  bgcolor: savedBgcolor,
+                  borderRadius: 2,
+                  mt: 0.3,
+                }}
+              >
                 <ListItemIcon>
                   <BookMarkIcon width={25} height={25} />
                 </ListItemIcon>
@@ -102,8 +158,17 @@ export default function WorktLeft({}) {
             </List>
             <br />
             <Divider />
-            <List>
-              <ListItemButton onClick={() => setShowOrganizations((p) => !p)}>
+            <List
+              sx={{
+                p: 0.5,
+              }}
+            >
+              <ListItemButton
+                sx={{
+                  borderRadius: 2,
+                }}
+                onClick={() => setShowOrganizations((p) => !p)}
+              >
                 <ListItemIcon>
                   <>
                     {showOrganizations ? (

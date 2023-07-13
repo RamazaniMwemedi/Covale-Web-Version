@@ -28,7 +28,7 @@ import {
 } from "../../hooks/hooks";
 
 // Services
-import { addFriendById, cancelFriendRequest } from "../../services/user";
+// import { addFriendById, cancelFriendRequest } from "../../services/user";
 // Extra
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector } from "react-redux";
@@ -43,7 +43,7 @@ const Work = () => {
   const theme: ThemeInterface = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
-  const token = useCheckLogedinUserToken();
+  // const token = useCheckLogedinUserToken();
   return (
     <>
       {userLoading ? (
