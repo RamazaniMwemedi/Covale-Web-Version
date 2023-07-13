@@ -23,6 +23,7 @@ import { Box } from "@mui/system";
 import React, { FC, RefObject, useRef, useState } from "react";
 import { RootState, ThemeInterface } from "../../../interfaces/myprofile";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   EventIcon,
   FileIcon,
@@ -63,12 +64,59 @@ const PostRight = () => {
   const loading = user && useGetUserPosts(user.id);
   return (
     <>
+      {/* Top component */}
+
       <AddANewPost />
       {loading ? (
         <Typography variant="h2">Loading</Typography>
       ) : (
         posts.map((post) => <Post post={post} user={user} key={post.id} />)
       )}
+    </>
+  );
+};
+
+export const FilterPosts = () => {
+  return (
+    <>
+      <Box sx={{ display: "flex", gap: 1 }}>
+        <Button
+          variant="contained"
+          color="inherit"
+          sx={{
+            bgcolor: (theme) => theme.palette.action.focus,
+          }}
+        >
+          Explore
+        </Button>
+        <Button
+          variant="contained"
+          color="inherit"
+          sx={{
+            bgcolor: (theme) => theme.palette.action.focus,
+          }}
+        >
+          Explore
+        </Button>
+        <Button
+          variant="contained"
+          color="inherit"
+          sx={{
+            bgcolor: (theme) => theme.palette.action.focus,
+          }}
+        >
+          Explore
+        </Button>
+        <Button
+          variant="contained"
+          color="inherit"
+          sx={{
+            bgcolor: (theme) => theme.palette.action.focus,
+          }}
+        >
+          Explore
+        </Button>
+      </Box>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
   Box,
   useTheme,
@@ -41,9 +41,7 @@ const Work = () => {
   const userLoading = useCheckLogedinUser();
   const userStore = useSelector((state: RootState) => state.user);
   const theme: ThemeInterface = useTheme();
-  const [requestSent, setRequestSent] = React.useState(false);
-  const [sending, setSending] = React.useState(false);
-  // const token = useCheckLogedinUserToken();
+
   return (
     <>
       {userLoading ? (
@@ -77,418 +75,12 @@ const Work = () => {
                 }}
               >
                 {/* Post Left */}
-                <Box
-                  sx={{
-                    width: "100%",
-                  }}
-                >
+                <Box>
                   <PostRight />
                 </Box>
                 {/* Post Right */}
-                <Box
-                  sx={{
-                    overflowY: "scroll",
-                    p: 5,
-                  }}
-                >
-                  {/* Connections to know */}
-                  <Box
-                    sx={{
-                      bgcolor: theme.colors.background1,
-                      p: 1,
-                      borderRadius: 3,
-                    }}
-                  >
-                    <Typography pl={2} variant="h5">
-                      Connections you may know
-                    </Typography>
-                    <List>
-                      {Array.from({ length: 4 }).map((_, i) => (
-                        <ListItem key={i}>
-                          <ListItemButton
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              borderRadius: 2,
-                            }}
-                          >
-                            <Box display={"flex"}>
-                              <ListItemAvatar>
-                                <Avatar></Avatar>
-                              </ListItemAvatar>
-                              <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  fontWeight={700}
-                                >
-                                  Hello
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                >
-                                  @Hello
-                                </Typography>
-                              </Box>
-                            </Box>
 
-                            <Box
-                              sx={{
-                                display: "flex",
-                                // justifyContent: "space-between",
-                              }}
-                            >
-                              {requestSent ? (
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    width: "100px",
-                                    height: "30px",
-                                    margin: "5px",
-                                    textTransform: "unset",
-                                    display: "flex",
-                                    gap: "20%",
-                                    bgcolor: grey[500],
-                                  }}
-                                  color="inherit"
-                                  // onClick={() => {
-                                  //   cancelFriendRequest(user.id, token).then(() =>
-                                  //     setRequestSent(false)
-                                  //   );
-                                  // }}
-                                >
-                                  <PersonRemoveAlt1RoundedIcon fontSize="small" />{" "}
-                                  Cancel
-                                </Button>
-                              ) : (
-                                <>
-                                  {sending ? (
-                                    <LoadingButton
-                                      loading
-                                      variant="contained"
-                                      color="secondary"
-                                      sx={{
-                                        margin: "5px",
-                                        height: "35px",
-                                        alignSelf: "center",
-                                      }}
-                                    />
-                                  ) : (
-                                    <Button
-                                      variant="contained"
-                                      sx={{
-                                        width: "100px",
-                                        height: "30px",
-                                        margin: "5px",
-                                        textTransform: "unset",
-                                        display: "flex",
-                                        gap: "20%",
-                                      }}
-                                      color="secondary"
-                                      // onClick={() => {
-                                      //   setSending(true);
-                                      //   addFriendById(user.id, token).then(() => {
-                                      //     setRequestSent(true);
-                                      //     setSending(false);
-                                      //   });
-                                      // }}
-                                    >
-                                      <PersonAddAlt1RoundedIcon fontSize="small" />
-                                      Connect
-                                    </Button>
-                                  )}
-                                  <br />
-                                </>
-                              )}
-                            </Box>
-                          </ListItemButton>
-                        </ListItem>
-                      ))}
-                      <ListItem>
-                        <ListItemButton
-                          sx={{
-                            borderRadius: 2,
-                          }}
-                        >
-                          <Link
-                            sx={{
-                              p: 0,
-                              color: (theme) => theme.palette.secondary.main,
-                            }}
-                            underline="none"
-                            href="/colleagues/explore"
-                          >
-                            See more
-                          </Link>
-                        </ListItemButton>
-                      </ListItem>
-                    </List>
-                  </Box>
-                  {/* Organization to follow */}
-                  <br />
-                  <Box
-                    sx={{
-                      bgcolor: theme.colors.background1,
-                      p: 1,
-                      borderRadius: 3,
-                    }}
-                  >
-                    <Typography pl={2} variant="h5">
-                      Organization to follow
-                    </Typography>
-                    <List>
-                      {Array.from({ length: 4 }).map((_, i) => (
-                        <ListItem key={i}>
-                          <ListItemButton
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              borderRadius: 2,
-                            }}
-                          >
-                            <Box display={"flex"}>
-                              <ListItemAvatar>
-                                <Avatar sx={{ borderRadius: 1 }}></Avatar>
-                              </ListItemAvatar>
-                              <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  fontWeight={700}
-                                >
-                                  Hello
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                >
-                                  @Hello
-                                </Typography>
-                              </Box>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                display: "flex",
-                                // justifyContent: "space-between",
-                              }}
-                            >
-                              {requestSent ? (
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    width: "100px",
-                                    height: "30px",
-                                    margin: "5px",
-                                    textTransform: "unset",
-                                    display: "flex",
-                                    gap: "20%",
-                                    bgcolor: grey[500],
-                                  }}
-                                  color="inherit"
-                                  // onClick={() => {
-                                  //   cancelFriendRequest(user.id, token).then(() =>
-                                  //     setRequestSent(false)
-                                  //   );
-                                  // }}
-                                >
-                                  Unfollow
-                                </Button>
-                              ) : (
-                                <>
-                                  {sending ? (
-                                    <LoadingButton
-                                      loading
-                                      variant="contained"
-                                      color="secondary"
-                                      sx={{
-                                        margin: "5px",
-                                        height: "35px",
-                                        alignSelf: "center",
-                                      }}
-                                    />
-                                  ) : (
-                                    <Button
-                                      variant="contained"
-                                      sx={{
-                                        width: "100px",
-                                        height: "30px",
-                                        margin: "5px",
-                                        textTransform: "unset",
-                                        display: "flex",
-                                        gap: "20%",
-                                      }}
-                                      color="secondary"
-                                      // onClick={() => {
-                                      //   setSending(true);
-                                      //   addFriendById(user.id, token).then(() => {
-                                      //     setRequestSent(true);
-                                      //     setSending(false);
-                                      //   });
-                                      // }}
-                                    >
-                                      Follow
-                                    </Button>
-                                  )}
-                                  <br />
-                                </>
-                              )}
-                            </Box>
-                          </ListItemButton>
-                        </ListItem>
-                      ))}
-                      <ListItem>
-                        <ListItemButton
-                          sx={{
-                            borderRadius: 2,
-                          }}
-                        >
-                          <Link
-                            sx={{
-                              p: 0,
-                              color: (theme) => theme.palette.secondary.main,
-                            }}
-                            underline="none"
-                            href="/work/organizations/explore"
-                          >
-                            See more
-                          </Link>
-                        </ListItemButton>
-                      </ListItem>
-                    </List>
-                  </Box>
-                  {/* Connection Request */}
-                  <br />
-                  <Box
-                    sx={{
-                      bgcolor: theme.colors.background1,
-                      p: 1,
-                      borderRadius: 3,
-                    }}
-                  >
-                    <Typography pl={2} variant="h5">
-                      Connection Requests
-                    </Typography>
-                    <List>
-                      {Array.from({ length: 4 }).map((_, i) => (
-                        <ListItem key={i}>
-                          <ListItemButton
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              borderRadius: 2,
-                            }}
-                          >
-                            <Box display={"flex"}>
-                              <ListItemAvatar>
-                                <Avatar ></Avatar>
-                              </ListItemAvatar>
-                              <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  fontWeight={700}
-                                >
-                                  Hello
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                >
-                                  @Hello
-                                </Typography>
-                              </Box>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                display: "flex",
-                                // justifyContent: "space-between",
-                              }}
-                            >
-                              {requestSent ? (
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    width: "100px",
-                                    height: "30px",
-                                    margin: "5px",
-                                    textTransform: "unset",
-                                    display: "flex",
-                                    gap: "20%",
-                                    bgcolor: grey[500],
-                                  }}
-                                  color="inherit"
-                                  // onClick={() => {
-                                  //   cancelFriendRequest(user.id, token).then(() =>
-                                  //     setRequestSent(false)
-                                  //   );
-                                  // }}
-                                >
-                                  Unfollow
-                                </Button>
-                              ) : (
-                                <>
-                                  {sending ? (
-                                    <LoadingButton
-                                      loading
-                                      variant="contained"
-                                      color="secondary"
-                                      sx={{
-                                        margin: "5px",
-                                        height: "35px",
-                                        alignSelf: "center",
-                                      }}
-                                    />
-                                  ) : (
-                                    <Button
-                                      variant="contained"
-                                      sx={{
-                                        width: "100px",
-                                        height: "30px",
-                                        margin: "5px",
-                                        textTransform: "unset",
-                                        display: "flex",
-                                        gap: "20%",
-                                      }}
-                                      color="secondary"
-                                      // onClick={() => {
-                                      //   setSending(true);
-                                      //   addFriendById(user.id, token).then(() => {
-                                      //     setRequestSent(true);
-                                      //     setSending(false);
-                                      //   });
-                                      // }}
-                                    >
-                                      Follow
-                                    </Button>
-                                  )}
-                                  <br />
-                                </>
-                              )}
-                            </Box>
-                          </ListItemButton>
-                        </ListItem>
-                      ))}
-                      <ListItem>
-                        <ListItemButton
-                          sx={{
-                            borderRadius: 2,
-                          }}
-                        >
-                          <Link
-                            sx={{
-                              p: 0,
-                              color: (theme) => theme.palette.secondary.main,
-                            }}
-                            underline="none"
-                            href="/work/organizations/explore"
-                          >
-                            See more
-                          </Link>
-                        </ListItemButton>
-                      </ListItem>
-                    </List>
-                  </Box>
-                </Box>
+                <RigthComponent />
               </Box>{" "}
             </>
           ) : (
@@ -503,3 +95,406 @@ const Work = () => {
 Work.propTypes = {};
 
 export default Work;
+
+const RigthComponent: FC = () => {
+  const theme: ThemeInterface = useTheme();
+  const [requestSent, setRequestSent] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  // const token = useCheckLogedinUserToken();
+  return (
+    <Box
+      sx={{
+        p: 5,
+      }}
+    >
+      {/* Connections to know */}
+      <Box
+        sx={{
+          bgcolor: theme.colors.background1,
+          p: 1,
+          borderRadius: 3,
+        }}
+      >
+        <Typography pl={2} variant="h5">
+          Connections you may know
+        </Typography>
+        <List>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <ListItem key={i}>
+              <ListItemButton
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderRadius: 2,
+                }}
+              >
+                <Box display={"flex"}>
+                  <ListItemAvatar>
+                    <Avatar></Avatar>
+                  </ListItemAvatar>
+                  <Box>
+                    <Typography variant="subtitle2" fontWeight={700}>
+                      Hello
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      @Hello
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    // justifyContent: "space-between",
+                  }}
+                >
+                  {requestSent ? (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: "100px",
+                        height: "30px",
+                        margin: "5px",
+                        textTransform: "unset",
+                        display: "flex",
+                        gap: "20%",
+                        bgcolor: grey[500],
+                      }}
+                      color="inherit"
+                      // onClick={() => {
+                      //   cancelFriendRequest(user.id, token).then(() =>
+                      //     setRequestSent(false)
+                      //   );
+                      // }}
+                    >
+                      <PersonRemoveAlt1RoundedIcon fontSize="small" /> Cancel
+                    </Button>
+                  ) : (
+                    <>
+                      {sending ? (
+                        <LoadingButton
+                          loading
+                          variant="contained"
+                          color="secondary"
+                          sx={{
+                            margin: "5px",
+                            height: "35px",
+                            alignSelf: "center",
+                          }}
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "100px",
+                            height: "30px",
+                            margin: "5px",
+                            textTransform: "unset",
+                            display: "flex",
+                            gap: "20%",
+                          }}
+                          color="secondary"
+                          // onClick={() => {
+                          //   setSending(true);
+                          //   addFriendById(user.id, token).then(() => {
+                          //     setRequestSent(true);
+                          //     setSending(false);
+                          //   });
+                          // }}
+                        >
+                          <PersonAddAlt1RoundedIcon fontSize="small" />
+                          Connect
+                        </Button>
+                      )}
+                      <br />
+                    </>
+                  )}
+                </Box>
+              </ListItemButton>
+            </ListItem>
+          ))}
+          <ListItem>
+            <Link
+              sx={{
+                p: 0,
+                color: (theme) => theme.palette.secondary.main,
+                width: "100%",
+              }}
+              underline="none"
+              href="/colleagues/explore"
+            >
+              <ListItemButton
+                sx={{
+                  borderRadius: 2,
+                }}
+              >
+                See more
+              </ListItemButton>
+            </Link>
+          </ListItem>
+        </List>
+      </Box>
+      {/* Organization to follow */}
+      <br />
+      <Box
+        sx={{
+          bgcolor: theme.colors.background1,
+          p: 1,
+          borderRadius: 3,
+        }}
+      >
+        <Typography pl={2} variant="h5">
+          Organization to follow
+        </Typography>
+        <List>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <ListItem key={i}>
+              <ListItemButton
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderRadius: 2,
+                }}
+              >
+                <Box display={"flex"}>
+                  <ListItemAvatar>
+                    <Avatar sx={{ borderRadius: 1 }}></Avatar>
+                  </ListItemAvatar>
+                  <Box>
+                    <Typography variant="subtitle2" fontWeight={700}>
+                      Hello
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      @Hello
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    // justifyContent: "space-between",
+                  }}
+                >
+                  {requestSent ? (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: "100px",
+                        height: "30px",
+                        margin: "5px",
+                        textTransform: "unset",
+                        display: "flex",
+                        gap: "20%",
+                        bgcolor: grey[500],
+                      }}
+                      color="inherit"
+                      // onClick={() => {
+                      //   cancelFriendRequest(user.id, token).then(() =>
+                      //     setRequestSent(false)
+                      //   );
+                      // }}
+                    >
+                      Unfollow
+                    </Button>
+                  ) : (
+                    <>
+                      {sending ? (
+                        <LoadingButton
+                          loading
+                          variant="contained"
+                          color="secondary"
+                          sx={{
+                            margin: "5px",
+                            height: "35px",
+                            alignSelf: "center",
+                          }}
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "100px",
+                            height: "30px",
+                            margin: "5px",
+                            textTransform: "unset",
+                            display: "flex",
+                            gap: "20%",
+                          }}
+                          color="secondary"
+                          // onClick={() => {
+                          //   setSending(true);
+                          //   addFriendById(user.id, token).then(() => {
+                          //     setRequestSent(true);
+                          //     setSending(false);
+                          //   });
+                          // }}
+                        >
+                          Follow
+                        </Button>
+                      )}
+                      <br />
+                    </>
+                  )}
+                </Box>
+              </ListItemButton>
+            </ListItem>
+          ))}
+          <ListItem>
+            {" "}
+            <ListItem>
+              <Link
+                sx={{
+                  p: 0,
+                  color: (theme) => theme.palette.secondary.main,
+                  width: "100%",
+                }}
+                underline="none"
+                href="/work/organizations/explore"
+              >
+                <ListItemButton
+                  sx={{
+                    borderRadius: 2,
+                  }}
+                >
+                  See more
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          </ListItem>
+        </List>
+      </Box>
+      {/* Connection Request */}
+      <br />
+      <Box
+        sx={{
+          bgcolor: theme.colors.background1,
+          p: 1,
+          borderRadius: 3,
+        }}
+      >
+        <Typography pl={2} variant="h5">
+          Connection Requests
+        </Typography>
+        <List>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <ListItem key={i}>
+              <ListItemButton
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderRadius: 2,
+                }}
+              >
+                <Box display={"flex"}>
+                  <ListItemAvatar>
+                    <Avatar></Avatar>
+                  </ListItemAvatar>
+                  <Box>
+                    <Typography variant="subtitle2" fontWeight={700}>
+                      Hello
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      @Hello
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    // justifyContent: "space-between",
+                  }}
+                >
+                  {requestSent ? (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: "100px",
+                        height: "30px",
+                        margin: "5px",
+                        textTransform: "unset",
+                        display: "flex",
+                        gap: "20%",
+                        bgcolor: grey[500],
+                      }}
+                      color="inherit"
+                      // onClick={() => {
+                      //   cancelFriendRequest(user.id, token).then(() =>
+                      //     setRequestSent(false)
+                      //   );
+                      // }}
+                    >
+                      Unfollow
+                    </Button>
+                  ) : (
+                    <>
+                      {sending ? (
+                        <LoadingButton
+                          loading
+                          variant="contained"
+                          color="secondary"
+                          sx={{
+                            margin: "5px",
+                            height: "35px",
+                            alignSelf: "center",
+                          }}
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          sx={{
+                            width: "100px",
+                            height: "30px",
+                            margin: "5px",
+                            textTransform: "unset",
+                            display: "flex",
+                            gap: "20%",
+                          }}
+                          color="secondary"
+                          // onClick={() => {
+                          //   setSending(true);
+                          //   addFriendById(user.id, token).then(() => {
+                          //     setRequestSent(true);
+                          //     setSending(false);
+                          //   });
+                          // }}
+                        >
+                          Follow
+                        </Button>
+                      )}
+                      <br />
+                    </>
+                  )}
+                </Box>
+              </ListItemButton>
+            </ListItem>
+          ))}
+          <ListItem>
+            <ListItem>
+              <ListItem>
+                <Link
+                  sx={{
+                    p: 0,
+                    color: (theme) => theme.palette.secondary.main,
+                    width: "100%",
+                  }}
+                  underline="none"
+                  href="/colleagues/colleaguerequests"
+                >
+                  <ListItemButton
+                    sx={{
+                      borderRadius: 2,
+                    }}
+                  >
+                    See more
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+            </ListItem>
+          </ListItem>
+        </List>
+      </Box>
+    </Box>
+  );
+};
