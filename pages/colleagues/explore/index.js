@@ -269,7 +269,7 @@ const Person = ({ user, token }) => {
               onClick={() => {
                 exploreColleagueservices
                   .cancelFriendRequest(user.id, token)
-                  .then(setRequestSent(false));
+                  .then(()=>setRequestSent(false));
               }}
             >
               <PersonRemoveAlt1RoundedIcon fontSize="small" /> Cancel

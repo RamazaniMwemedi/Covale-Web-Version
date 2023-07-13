@@ -18,6 +18,7 @@ import {
   BookMarkIcon,
   BriefCaseIcon,
   EventIcon,
+  OrganizationIcon,
   PostIcon,
 } from "../../../assets/Icons";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
@@ -110,7 +111,7 @@ export default function WorktLeft({}) {
                     ) : (
                       <KeyboardArrowDownRoundedIcon />
                     )}
-                    <BriefCaseIcon width={25} height={25} />
+                    <OrganizationIcon width={25} height={25} />
                   </>
                 </ListItemIcon>
                 <Typography>Organizations</Typography>
