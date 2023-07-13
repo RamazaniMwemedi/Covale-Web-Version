@@ -24,6 +24,7 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { ThemeInterface } from "../../../interfaces/myprofile";
+import { useRouter } from "next/router";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -75,6 +76,7 @@ export default function WorktLeft({}) {
   const [eventBgcolor, setEventBgcolor] = useState("");
   const [savedBgcolor, setSavedBgcolor] = useState("");
   const pathname = usePathname();
+  const router = useRouter();
   const theme: ThemeInterface = useTheme();
 
   useEffect(() => {
@@ -84,7 +86,7 @@ export default function WorktLeft({}) {
         setEventBgcolor("");
         setSavedBgcolor("");
         break;
-      case "/work/event":
+      case "/work/events":
         setPostBgcolor("");
         setEventBgcolor(theme.colors.background1);
         setSavedBgcolor("");
@@ -125,6 +127,7 @@ export default function WorktLeft({}) {
                   borderRadius: 2,
                   mt: 0.3,
                 }}
+                onClick={() => router.push("/work/")}
               >
                 <ListItemIcon>
                   <PostIcon width={25} height={25} />
@@ -137,6 +140,7 @@ export default function WorktLeft({}) {
                   borderRadius: 2,
                   mt: 0.3,
                 }}
+                onClick={() => router.push("/work/events")}
               >
                 <ListItemIcon>
                   <EventIcon width={25} height={25} />

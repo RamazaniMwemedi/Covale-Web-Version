@@ -124,7 +124,7 @@ export default function DrawerComponent() {
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor("");
       setMeetBackgroundColor(theme.colors.drawerBackground);
-    } else if (pathname === "/work") {
+    } else if (pathname.includes("/work")) {
       setHomeColor("secondary");
       setChatColor("gray");
       setPeopleColor("gray");
