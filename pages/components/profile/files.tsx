@@ -6,10 +6,7 @@ import { Box } from "@mui/system";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import FileComponent from "../mediaFiles/FileComponent";
-import {
-  FileObject,
-  RootState,
-} from "../../../interfaces/myprofile";
+import { FileObject, RootState } from "../../../interfaces/myprofile";
 const Files = () => {
   const [tabValue, setTabValue] = useState("all");
 
@@ -20,35 +17,36 @@ const Files = () => {
     <Box sx={{ width: "auto", ml: 7, mt: -3 }}>
       <FilesTab tabValueHandler={tabValueHandler} tabValue={tabValue} />{" "}
       <Box
-        sx={{
-          // // should be scrollable
-          // overflow: "auto",
-          // height: "360px",
-          // width: "340px",
-          // mt: 0,
-          // mb: 1,
-          // borderRadius: "10px",
-          // "& .MuiAvatar-root": {
-          //   width: 32,
-          //   height: 32,
-          //   ml: -0.5,
-          //   mr: 1,
-          // },
-          // "&:before": {
-          //   content: '""',
-          //   display: "block",
-          //   position: "absolute",
-          //   top: 0,
-          //   right: 14,
-          //   width: 10,
-          //   height: 10,
-          //   bgcolor: "background.paper",
-          //   transform: "translateY(-50%) rotate(45deg)",
-          //   zIndex: 0,
-          // },
-
-          // pb: 4,
-        }}
+        sx={
+          {
+            // // should be scrollable
+            // overflow: "auto",
+            // height: "360px",
+            // width: "340px",
+            // mt: 0,
+            // mb: 1,
+            // borderRadius: "10px",
+            // "& .MuiAvatar-root": {
+            //   width: 32,
+            //   height: 32,
+            //   ml: -0.5,
+            //   mr: 1,
+            // },
+            // "&:before": {
+            //   content: '""',
+            //   display: "block",
+            //   position: "absolute",
+            //   top: 0,
+            //   right: 14,
+            //   width: 10,
+            //   height: 10,
+            //   bgcolor: "background.paper",
+            //   transform: "translateY(-50%) rotate(45deg)",
+            //   zIndex: 0,
+            // },
+            // pb: 4,
+          }
+        }
       >
         <FilsContex tabValue={tabValue} />
       </Box>

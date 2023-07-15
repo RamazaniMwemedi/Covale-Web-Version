@@ -50,8 +50,9 @@ const Work = () => {
         <Box
           sx={{
             display: "flex",
-            height: "100%",
+            height: "100vh",
             bgcolor: theme.colors.background,
+            overflowX: "hidden",
           }}
         >
           <CssBaseline />
@@ -65,17 +66,24 @@ const Work = () => {
                   gridTemplateColumns: "55% 45%", // set explicit column widths
                   gridTemplateRows: "auto", // set the row height to auto
                   gap: "1rem",
-                  width: "90%",
+                  width: "100%",
+                  overflowY: "scroll",
                   p: 2,
                   // ml: 7,
-                  "@media screen and (max-width: 1400px)": {
+                  "@media screen and (max-width: 1000px)": {
                     gridTemplateColumns: "repeat(auto-fit, minmax(100%, 1fr))",
                     placeItems: "center",
                   },
                 }}
               >
                 {/* Post Left */}
-                <Box>
+                <Box
+                  sx={
+                    {
+                      // height: "90%",
+                    }
+                  }
+                >
                   <PostRight />
                 </Box>
                 {/* Post Right */}
