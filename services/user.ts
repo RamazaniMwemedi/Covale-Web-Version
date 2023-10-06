@@ -1,7 +1,7 @@
 import axios from "axios";
 import { SERVER_ADDRESS } from "../config/index";
 
-export const allUsers = async (token) => {
+export const allUsers = async (token: string) => {
   const response = await axios.get(
     `${SERVER_ADDRESS}/api/v1/users/colleague/explore`,
     {
@@ -14,7 +14,7 @@ export const allUsers = async (token) => {
 };
 
 // Add a friend
-export const addFriendById = async (id, token) => {
+export const addFriendById = async (id: string, token: string) => {
   const response = await axios.post(
     `${SERVER_ADDRESS}/api/v1/users/colleague/add/${id}`,
     {},
@@ -27,7 +27,7 @@ export const addFriendById = async (id, token) => {
   return response.data;
 };
 
-export const myFriends = async (token) => {
+export const myFriends = async (token: string) => {
   const response = await axios.get(
     `${SERVER_ADDRESS}/api/v1/users/colleague/mycolleagues`,
     {
@@ -40,7 +40,7 @@ export const myFriends = async (token) => {
 };
 
 // Friend Requests Received
-export const friendReqRecieved = async (token) => {
+export const friendReqRecieved = async (token: string) => {
   const response = await axios.get(
     `${SERVER_ADDRESS}/api/v1/users/colleague/colleaguesReqRecieved`,
     {
@@ -53,7 +53,7 @@ export const friendReqRecieved = async (token) => {
 };
 
 // Friend Requests Sent
-export const friendReqSent = async (token) => {
+export const friendReqSent = async (token: string) => {
   const response = await axios.get(
     `${SERVER_ADDRESS}/api/v1/users/colleague/colleagueReqSent`,
     {
@@ -67,7 +67,7 @@ export const friendReqSent = async (token) => {
 };
 
 // Accept Friend Request
-export const acceptFriendRequest = async (id, token) => {
+export const acceptFriendRequest = async (id: string, token: string) => {
   if (token && id) {
     const response = await axios.post(
       `${SERVER_ADDRESS}/api/v1/users/colleague/accept/${id}`,
@@ -83,7 +83,7 @@ export const acceptFriendRequest = async (id, token) => {
 };
 
 // Remove Friend Request
-export const removeFriendRequest = async (id, token) => {
+export const removeFriendRequest = async (id: string, token: string) => {
   const response = await axios.post(
     `${SERVER_ADDRESS}/api/v1/users/colleague/remove/${id}`,
     {},
@@ -97,7 +97,7 @@ export const removeFriendRequest = async (id, token) => {
 };
 
 //Cancel Friend Request
-export const cancelFriendRequest = async (id, token) => {
+export const cancelFriendRequest = async (id: string, token: string) => {
   const response = await axios.post(
     `${SERVER_ADDRESS}/api/v1/users/colleague/cancel/${id}`,
     {},
@@ -111,7 +111,7 @@ export const cancelFriendRequest = async (id, token) => {
 };
 
 // Find userBy id
-export const findUserById = async (token, id) => {
+export const findUserById = async (token: string, id: string) => {
   if (token) {
     try {
       const response = await axios.get(`${SERVER_ADDRESS}/api/v1/users/${id}`, {
@@ -128,7 +128,7 @@ export const findUserById = async (token, id) => {
 };
 
 // Remove user from colleagues
-export const removeColleague = async (token, id) => {
+export const removeColleague = async (token: string, id: string) => {
   if (token) {
     try {
       const response = await axios.post(
@@ -147,7 +147,7 @@ export const removeColleague = async (token, id) => {
   }
 };
 
-export const addProfilePic = async (token, formData) => {
+export const addProfilePic = async (token: string, formData: FormData) => {
   if (token && formData) {
     const response = await axios.post(
       `${SERVER_ADDRESS}/api/v1/users/profilePic`,
@@ -161,7 +161,7 @@ export const addProfilePic = async (token, formData) => {
     return response.data;
   }
 };
-export const addCoverPic = async (token, formData) => {
+export const addCoverPic = async (token: string, formData: FormData) => {
   if (token && formData) {
     const response = await axios.post(
       `${SERVER_ADDRESS}/api/v1/users/coverPhoto`,
@@ -175,7 +175,10 @@ export const addCoverPic = async (token, formData) => {
     return response.data;
   }
 };
-export const updateProfessionalSum = async (token, professionalSumm) => {
+export const updateProfessionalSum = async (
+  token: string,
+  professionalSumm: string
+) => {
   if (token && professionalSumm) {
     const response = await axios.post(
       `${SERVER_ADDRESS}/api/v1/users/updateProfessionalSummary`,
@@ -190,8 +193,10 @@ export const updateProfessionalSum = async (token, professionalSumm) => {
   }
 };
 
-export const addWorkExperience = async (token, workExperience) => {
-  console.log(token);
+export const addWorkExperience = async (
+  token: string,
+  workExperience: string
+) => {
   if (token && workExperience) {
     const response = await axios.post(
       `${SERVER_ADDRESS}/api/v1/users/addworkexperience`,
@@ -207,7 +212,11 @@ export const addWorkExperience = async (token, workExperience) => {
   }
 };
 
-export const updateWorkexperience = async (token, workExperience, id) => {
+export const updateWorkexperience = async (
+  token: string,
+  workExperience: string,
+  id: string
+) => {
   if (token && id) {
     const response = await axios.put(
       `${SERVER_ADDRESS}/api/v1/users/updateworkexperience/${id}`,
@@ -223,7 +232,7 @@ export const updateWorkexperience = async (token, workExperience, id) => {
   }
 };
 
-export const deleteWorkExperience = async (token, id) => {
+export const deleteWorkExperience = async (token: string, id: string) => {
   if (token && id) {
     const response = await axios.delete(
       `${SERVER_ADDRESS}/api/v1/users/updateworkexperience/${id}`,
@@ -235,6 +244,23 @@ export const deleteWorkExperience = async (token, id) => {
     );
     return response.data;
   }
+};
+
+export const recoverAccountConfirmEmail = async (
+  email: string
+): Promise<boolean | string> => {
+  if (email) {
+    const res = await axios.post(
+      `${SERVER_ADDRESS}/api/v1/users/recover/${email}`
+    );
+
+    if (res.data.isAvailabe) {
+      return true;
+    } else {
+      return res.data.error;
+    }
+  }
+  return false;
 };
 
 export default {
