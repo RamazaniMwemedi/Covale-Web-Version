@@ -5,6 +5,7 @@ import {
   Typography,
   useMediaQuery,
   Box,
+  Link,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
@@ -440,9 +441,9 @@ const Signin = (props) => {
           </Button>
         )}
 
-        {/* <Link href="#/recover">
-          <a>Forgot password?</a>
-        </Link> */}
+        <Link  color="secondary" href="/recover">
+          Forgot password?
+        </Link>
         <hr />
       </form>
       <CreateAccount

@@ -45,12 +45,14 @@
     "react-redux": "^8.0.5",
     "react-swipeable-views": "^0.14.0",
     "socket.io-client": "^4.5.4",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
     "@types/react-html-parser": "^2.0.2",
     "@types/react-swipeable-views": "^0.13.1",
+    "@types/validator": "^13.11.2",
     "eslint": "^8.32.0",
     "eslint-plugin-react": "^7.32.2",
     "typescript": "^5.0.4"
