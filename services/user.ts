@@ -248,19 +248,41 @@ export const deleteWorkExperience = async (token: string, id: string) => {
 
 export const recoverAccountConfirmEmail = async (
   email: string
-): Promise<boolean | string> => {
+): Promise<number> => {
   if (email) {
     const res = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/users/recover/${email}`
+      `${SERVER_ADDRESS}/api/v1/login/recover/${email}`
     );
-
-    if (res.data.isAvailabe) {
-      return true;
-    } else {
-      return res.data.error;
-    }
+    return res.status;
   }
-  return false;
+  return 500;
+};
+export const confirmOTP = async (
+  otp: string,
+  email: string
+): Promise<number> => {
+  if (otp) {
+    const res = await axios.post(
+      `${SERVER_ADDRESS}/api/v1/login/recover/verifyOTP/${email}`,
+      { otp }
+    );
+    return res.status;
+  }
+  return 500;
+};
+export const resetPasswordHandler = async (
+  email: string,
+  password: string,
+) => {
+  
+  if (email && password) {
+    console.log("Email and password",  { email, password });
+    const res = await axios.post(
+      `${SERVER_ADDRESS}/api/v1/login/resetPassword`,
+      { email, password }
+    );
+    return res.data;
+  }
 };
 
 export default {
@@ -280,4 +302,5 @@ export default {
   addWorkExperience,
   updateWorkexperience,
   deleteWorkExperience,
+  confirmOTP,
 };
