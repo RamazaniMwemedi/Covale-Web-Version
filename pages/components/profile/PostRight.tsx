@@ -17,6 +17,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Box } from "@mui/system";
@@ -61,14 +62,24 @@ const PostRight = () => {
   const user = userStore?.user;
   // const { posts } = workStore.;
 
-  const loading = user && useGetUserPosts(user.id);
+  const loading = useGetUserPosts(user.id);
+  console.log("Loadin Posts :>>", loading);
+
   return (
     <>
       {/* Top component */}
 
       <AddANewPost />
       {loading ? (
-        <Typography variant="h2">Loading</Typography>
+        <Box
+          display={"grid"}
+          sx={{
+            placeItems: "center",
+            heigh: "100%",
+          }}
+        >
+          <CircularProgress size={30} />
+        </Box>
       ) : (
         posts.map((post) => <Post post={post} user={user} key={post.id} />)
       )}
