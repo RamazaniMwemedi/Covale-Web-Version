@@ -186,22 +186,30 @@ const MyAccount = () => {
                         placeItems: "center",
                       }}
                     >
-                      <Image
-                        src={
-                          user && user.coverPic
-                            ? user.coverPic.fileUrl
-                            : defaultBackgroundImage
-                        }
-                        alt="Cover photo"
-                        width={2000}
-                        height={600}
-                        objectFit="cover"
-                        style={{
-                          width: "95%",
-                          borderBottomLeftRadius: 10,
-                          borderBottomRightRadius: 10,
-                        }}
-                      />
+                      {user && user.coverPic ? (
+                        <Image
+                          src={user.coverPic ? user.coverPic.fileUrl : ""}
+                          alt="Cover photo"
+                          width={2000}
+                          height={400}
+                          objectFit="cover"
+                          style={{
+                            width: "95%",
+                            borderBottomLeftRadius: 10,
+                            borderBottomRightRadius: 10,
+                          }}
+                        />
+                      ) : (
+                        <Box
+                          sx={{
+                            width: "95%",
+                            bgcolor: (theme) => theme.palette.action.disabled,
+                            height: 400,
+                            borderBottomLeftRadius: 10,
+                            borderBottomRightRadius: 10,
+                          }}
+                        />
+                      )}
                       <Button
                         sx={{
                           position: "absolute",

@@ -60,7 +60,7 @@ const useCheckLogedinUser = () => {
   return loading;
 };
 const useCheckLogedinUserToken = () => {
-  let [logedInUserToken, setLogedInUserToken] = useState(null);
+  let [logedInUserToken, setLogedInUserToken] = useState("");
   const router = useRouter();
   useEffect(() => {
     const signedInUser = localStorage.getItem("logedinUser");
