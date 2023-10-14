@@ -18,9 +18,9 @@ import {
   Tooltip,
   Typography,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { Box } from "@mui/system";
 import React, { FC, RefObject, useRef, useState } from "react";
 import { RootState, ThemeInterface } from "../../../interfaces/myprofile";
 import { useDispatch, useSelector } from "react-redux";
@@ -63,7 +63,6 @@ const PostRight = () => {
   // const { posts } = workStore.;
 
   const loading = useGetUserPosts(user.id);
-  console.log("Loadin Posts :>>", loading);
 
   return (
     <>
@@ -81,7 +80,35 @@ const PostRight = () => {
           <CircularProgress size={30} />
         </Box>
       ) : (
-        posts.map((post) => <Post post={post} user={user} key={post.id} />)
+        <>
+          {posts.length > 0 ? (
+            posts.map((post) => <Post post={post} user={user} key={post.id} />)
+          ) : (
+            <Box
+              display={"grid"}
+              sx={{
+                placeItems: "center",
+                heigh: "100%",
+              }}
+            >
+              <Box
+                sx={{
+                  bgcolor: (theme) => theme.palette.action.hover,
+                  borderRadius: 4,
+                  mt: 3,
+                  p: 4,
+                }}
+              >
+                <Typography variant="h5">
+                  You haven't posted anything yet
+                </Typography>
+                <Typography variant="body2" textAlign={"center"} >
+                  Click on "Publish an Update" to post
+                </Typography>
+              </Box>
+            </Box>
+          )}
+        </>
       )}
     </>
   );
