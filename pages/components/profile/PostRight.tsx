@@ -62,28 +62,16 @@ const PostRight = () => {
   const user = userStore?.user;
   // const { posts } = workStore.;
 
-  const loading = useGetUserPosts(user.id);
+  const loading = useGetUserPosts(user ? user.id : "");
 
   return (
     <>
-      {/* Top component */}
-
-      <AddANewPost />
-      {loading ? (
-        <Box
-          display={"grid"}
-          sx={{
-            placeItems: "center",
-            heigh: "100%",
-          }}
-        >
-          <CircularProgress size={30} />
-        </Box>
-      ) : (
+      {user && (
         <>
-          {posts.length > 0 ? (
-            posts.map((post) => <Post post={post} user={user} key={post.id} />)
-          ) : (
+          {/* Top component */}
+
+          <AddANewPost />
+          {loading ? (
             <Box
               display={"grid"}
               sx={{
@@ -91,22 +79,40 @@ const PostRight = () => {
                 heigh: "100%",
               }}
             >
-              <Box
-                sx={{
-                  bgcolor: (theme) => theme.palette.action.hover,
-                  borderRadius: 4,
-                  mt: 3,
-                  p: 4,
-                }}
-              >
-                <Typography variant="h5">
-                  You haven't posted anything yet
-                </Typography>
-                <Typography variant="body2" textAlign={"center"} >
-                  Click on "Publish an Update" to post
-                </Typography>
-              </Box>
+              <CircularProgress size={30} />
             </Box>
+          ) : (
+            <>
+              {posts.length > 0 ? (
+                posts.map((post) => (
+                  <Post post={post} user={user} key={post.id} />
+                ))
+              ) : (
+                <Box
+                  display={"grid"}
+                  sx={{
+                    placeItems: "center",
+                    heigh: "100%",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      bgcolor: (theme) => theme.palette.action.hover,
+                      borderRadius: 4,
+                      mt: 3,
+                      p: 4,
+                    }}
+                  >
+                    <Typography variant="h5">
+                      You haven't posted anything yet
+                    </Typography>
+                    <Typography variant="body2" textAlign={"center"}>
+                      Click on "Publish an Update" to post
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+            </>
           )}
         </>
       )}

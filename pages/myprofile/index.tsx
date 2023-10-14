@@ -366,11 +366,9 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
       <TabPanel value={value} index={2} dir={theme.direction}>
         <PersonalInfo />
       </TabPanel>
+
       <TabPanel value={value} index={3} dir={theme.direction}>
-        Data & Privacy
-      </TabPanel>
-      <TabPanel value={value} index={4} dir={theme.direction}>
-        Security
+        <Security />
       </TabPanel>
     </SwipeableViews>
   );
@@ -396,46 +394,69 @@ const TeamsSection: FC = () => {
               ml: 1,
             }}
           >
-            {teams.map((team) => {
-              return (
+            {teams.length > 0 ? (
+              teams.map((team) => {
+                return (
+                  <Box
+                    key={team.id}
+                    sx={{
+                      display: "flex",
+                      bgcolor: theme.colors.background1,
+                      p: 2,
+                      borderRadius: 3,
+                      gap: 2,
+                    }}
+                  >
+                    <Avatar>{team.teamName[0]}</Avatar>
+                    <Box display={"flex"} flexDirection={"column"}>
+                      <Link
+                        href={`/chats/t/${team.id}`}
+                        underline="none"
+                        sx={{
+                          color: (theme) => theme.palette.text.primary,
+                          display: "flex",
+                          p: 0,
+                        }}
+                      >
+                        <Typography variant="h6">{team.teamName}</Typography>
+                      </Link>
+                      <Typography variant="caption" color="text.secondary">
+                        Created{" "}
+                        {moment(team.createdAt).format("HH:MM DD MMMM YYYY")}
+                      </Typography>
+                      <br />
+                      <Typography variant="body2">
+                        Memebers: {team.members.length}
+                      </Typography>
+                      <Typography variant="body2">
+                        Projects: {team.projects.length}
+                      </Typography>
+                    </Box>
+                  </Box>
+                );
+              })
+            ) : (
+              <Box
+                display={"grid"}
+                sx={{
+                  placeItems: "center",
+                  heigh: "100%",
+                }}
+              >
                 <Box
-                  key={team.id}
                   sx={{
-                    display: "flex",
-                    bgcolor: theme.colors.background1,
-                    p: 2,
-                    borderRadius: 3,
-                    gap: 2,
+                    bgcolor: (theme) => theme.palette.action.hover,
+                    borderRadius: 4,
+                    mt: 3,
+                    p: 4,
                   }}
                 >
-                  <Avatar>{team.teamName[0]}</Avatar>
-                  <Box display={"flex"} flexDirection={"column"}>
-                    <Link
-                      href={`/chats/t/${team.id}`}
-                      underline="none"
-                      sx={{
-                        color: (theme) => theme.palette.text.primary,
-                        display: "flex",
-                        p: 0,
-                      }}
-                    >
-                      <Typography variant="h6">{team.teamName}</Typography>
-                    </Link>
-                    <Typography variant="caption" color="text.secondary">
-                      Created{" "}
-                      {moment(team.createdAt).format("HH:MM DD MMMM YYYY")}
-                    </Typography>
-                    <br />
-                    <Typography variant="body2">
-                      Memebers: {team.members.length}
-                    </Typography>
-                    <Typography variant="body2">
-                      Projects: {team.projects.length}
-                    </Typography>
-                  </Box>
+                  <Typography variant="h5">
+                    You are not in any team at the moment
+                  </Typography>
                 </Box>
-              );
-            })}
+              </Box>
+            )}
           </Box>
         )}
       </Box>
@@ -493,7 +514,191 @@ const PersonalInfo: FC = () => {
                       Personalize your account with a profile picture.
                     </TableCell>
                     <TableCell>
-                      <Avatar src={user.profilePic.fileUrl}>
+                      <Avatar
+                        src={user.profilePic ? user.profilePic.fileUrl : ""}
+                      >
+                        {user.firstname[0]}
+                        {user.lastname[0]}
+                      </Avatar>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": {
+                        border: 0,
+                      },
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell>Name</TableCell>
+                    <TableCell>
+                      {user.firstname} {user.lastname}
+                    </TableCell>
+                    <TableCell>
+                      <NavigateNextRoundedIcon />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+                <TableRow
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    "&:hover": {
+                      bgcolor: (theme) => theme.palette.action.hover,
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  {" "}
+                  <TableCell>Birthday</TableCell>
+                  <TableCell>
+                    {" "}
+                    {moment(user.birthday).format("MMMM DD, YYYY")}{" "}
+                  </TableCell>
+                  <TableCell>
+                    <NavigateNextRoundedIcon />
+                  </TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    "&:hover": {
+                      bgcolor: (theme) => theme.palette.action.hover,
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  {" "}
+                  <TableCell>Gender</TableCell>
+                  <TableCell>
+                    {" "}
+                    {user.gender.charAt(0).toUpperCase() +
+                      user.gender.slice(1)}{" "}
+                  </TableCell>
+                  <TableCell>
+                    <NavigateNextRoundedIcon />
+                  </TableCell>
+                </TableRow>
+              </Table>
+            </TableContainer>
+          </Box>
+          {/* Contacts Info */}
+          <Box
+            sx={{
+              bgcolor: theme.colors.background1,
+              p: 2,
+              borderRadius: 3,
+              gap: 2,
+              height: "auto",
+            }}
+          >
+            <Typography variant="h6">Contacts Info</Typography>
+            <br />
+            <TableContainer
+              component={Box}
+              sx={{
+                boxShadow: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Table aria-label="simple table">
+                <TableBody>
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell>Email</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <NavigateNextRoundedIcon />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": {
+                        border: 0,
+                      },
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell>Phone</TableCell>
+                    <TableCell> </TableCell>
+                    <TableCell>
+                      <NavigateNextRoundedIcon />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        </Box>
+      )}
+    </Box>
+  );
+};
+const Security: FC = () => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const theme: ThemeInterface = useTheme();
+  const user = userStore?.user;
+  return (
+    <Box>
+      <Typography variant="h4">Security</Typography>
+      {user && (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(500px, 1fr))",
+            gap: "10px",
+            p: 1,
+            ml: 1,
+          }}
+        >
+          <Box
+            sx={{
+              bgcolor: theme.colors.background1,
+              p: 2,
+              borderRadius: 2,
+              gap: 2,
+            }}
+          >
+            <Typography variant="h6">Fundemental Info</Typography>
+            <br />
+            <TableContainer
+              component={Box}
+              sx={{
+                boxShadow: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Table aria-label="simple table">
+                <TableBody>
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell>Profile Picture</TableCell>
+                    <TableCell>
+                      Personalize your account with a profile picture.
+                    </TableCell>
+                    <TableCell>
+                      <Avatar
+                        src={user.profilePic ? user.profilePic.fileUrl : ""}
+                      >
                         {user.firstname[0]}
                         {user.lastname[0]}
                       </Avatar>
@@ -675,18 +880,9 @@ function LongMenu({
           <PersonalInfoIcon height={24} width={24} />
           <Typography>Personal Info</Typography>
         </MenuItem>
+
         <MenuItem
-          sx={{
-            display: "flex",
-            gap: 1,
-          }}
           onClick={() => handleChange(3)}
-        >
-          <PrivacyIcon height={24} width={24} />
-          <Typography>Data & Privacy</Typography>
-        </MenuItem>
-        <MenuItem
-          onClick={() => handleChange(4)}
           sx={{
             display: "flex",
             gap: 1,

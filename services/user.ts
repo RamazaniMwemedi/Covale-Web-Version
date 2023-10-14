@@ -1,5 +1,6 @@
 import axios from "axios";
 import { SERVER_ADDRESS } from "../config/index";
+import { WorkExperience } from "../interfaces/myprofile";
 
 export const allUsers = async (token: string) => {
   const response = await axios.get(
@@ -195,7 +196,17 @@ export const updateProfessionalSum = async (
 
 export const addWorkExperience = async (
   token: string,
-  workExperience: string
+  workExperience: {
+        title: string,
+        location: string,
+        jobDescription: string,
+        organizationName: string,
+        employmentType: string,
+        startDate: moment.MomentInput,
+        endDate: moment.MomentInput,
+        isUntillNow: boolean,
+        locationType: string,
+      }
 ) => {
   if (token && workExperience) {
     const response = await axios.post(
@@ -214,7 +225,7 @@ export const addWorkExperience = async (
 
 export const updateWorkexperience = async (
   token: string,
-  workExperience: string,
+  workExperience: WorkExperience,
   id: string
 ) => {
   if (token && id) {

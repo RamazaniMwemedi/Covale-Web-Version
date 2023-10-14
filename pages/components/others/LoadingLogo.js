@@ -36,8 +36,10 @@ const LoadingLogo = () => {
         <br />
         <Typography
           sx={{
-            fontFamily:
-              "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif",
+            background:
+              "linear-gradient(to right, rgb(214, 67, 181), rgb(120, 79, 195))",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
           }}
           variant="h4"
           color="action"
