@@ -223,9 +223,10 @@ const Topics = ({ topics, handleClickedTopic }) => {
           flexDirection: "column",
           backgroundColor: theme.colors.background1,
           padding: "10px",
+          borderRadius: 2,
         }}
       >
-        {topics.length > 0 ? (
+        {topics && topics.length > 0 ? (
           topics.map((topic) => (
             <Topic
               key={topic.id}

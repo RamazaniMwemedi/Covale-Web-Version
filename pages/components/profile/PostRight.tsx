@@ -165,7 +165,7 @@ export const FilterPosts = () => {
   );
 };
 
-const AddANewPost = () => {
+export const AddANewPost = () => {
   const theme: ThemeInterface = useTheme();
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;

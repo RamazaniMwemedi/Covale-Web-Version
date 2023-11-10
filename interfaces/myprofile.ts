@@ -1,4 +1,4 @@
-import { SelectChangeEvent } from "@mui/material";
+import { Breakpoints, SelectChangeEvent } from "@mui/material";
 import { MomentInput } from "moment";
 import { PostInterface } from "./work";
 
@@ -48,6 +48,7 @@ export interface ThemeInterface {
     meetBackground: string;
   };
   themeChengeHandler: (theme: string) => void;
+  breakpoints: Breakpoints;
 }
 
 export interface ProfilePic {

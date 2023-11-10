@@ -58,7 +58,7 @@ const Drawer = styled(MuiDrawer, {
       overflowX: "hidden",
       width: `calc(${theme.spacing(23)} + 1px)`,
       [theme.breakpoints.up("sm")]: {
-        width: `calc(${theme.spacing(35)} + 1px)`,
+        width: `calc(${theme.spacing(32)} + 1px)`,
         marginLeft: theme.spacing(8),
       },
       justifyContent: "spaceBetween",
