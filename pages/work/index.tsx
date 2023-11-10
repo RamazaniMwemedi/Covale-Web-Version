@@ -12,6 +12,7 @@ import {
   Link,
   useMediaQuery,
   Toolbar,
+  CircularProgress,
 } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
@@ -36,6 +37,8 @@ import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector } from "react-redux";
 import { RootState, ThemeInterface } from "../../interfaces/myprofile";
 import { AddANewPost } from "../components/profile/PostRight";
+import { useGetAllPosts } from "../../hooks/work";
+import Post from "../components/work/Post";
 
 // Redux
 
@@ -45,6 +48,17 @@ const Work = () => {
   const theme: ThemeInterface = useTheme();
   const isMobileView = useMediaQuery(() => theme.breakpoints.down("sm"));
   const isVerySmallPcView = useMediaQuery(() => theme.breakpoints.down("md"));
+  const mapStateToProps = (state: RootState) => {
+    const sortedState = state.work?.work.posts
+      .slice()
+      .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+    return sortedState;
+  };
+  const posts = useSelector((state: RootState) => mapStateToProps(state));
+  const user = userStore?.user;
+  // const { posts } = workStore.
+
+  const loading = useGetAllPosts();
 
   return (
     <>
@@ -86,23 +100,49 @@ const Work = () => {
                   <Box p={isVerySmallPcView ? 2 : 6}>
                     <AddANewPost />
                     <Toolbar />
-                    {Array.from({ length: 500 }).map((_, i) => (
+                    {loading ? (
                       <Box
-                        key={i}
+                        display={"grid"}
                         sx={{
-                          bgcolor: theme.colors.background1,
-                          borderRadius: 2,
-                          p: 2,
-                          mb: 2,
+                          placeItems: "center",
+                          heigh: "100%",
                         }}
                       >
-                        <Typography variant="h6">Hello</Typography>
-                        <Typography variant="body1">
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Doloremque, voluptatum.
-                        </Typography>
+                        <CircularProgress size={30} />
                       </Box>
-                    ))}
+                    ) : (
+                      <>
+                        {posts.length > 0 ? (
+                          posts.map((post) => (
+                            <Post post={post} user={user} key={post.id} />
+                          ))
+                        ) : (
+                          <Box
+                            display={"grid"}
+                            sx={{
+                              placeItems: "center",
+                              heigh: "100%",
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                bgcolor: (theme) => theme.palette.action.hover,
+                                borderRadius: 4,
+                                mt: 3,
+                                p: 4,
+                              }}
+                            >
+                              <Typography variant="h5">
+                                No Post to show yet.
+                              </Typography>
+                              <Typography variant="body2" textAlign={"center"}>
+                                Click on "Publish an Update" to create a post.
+                              </Typography>
+                            </Box>
+                          </Box>
+                        )}
+                      </>
+                    )}
                   </Box>
                 </Box>
                 {/* Post Right */}

@@ -1,5 +1,5 @@
 import { addPosts } from "../Redux/slices/work";
-import { getUserPosts } from "../services/work";
+import { getAllPosts, getUserPosts } from "../services/work";
 import { useCheckLogedinUserToken } from "./hooks";
 
 const { useEffect, useState } = require("react");
@@ -25,3 +25,25 @@ export const useGetUserPosts = (userId: string): boolean => {
 
   return loading;
 };
+
+// Get all posts
+
+export const useGetAllPosts = (): boolean => {
+  const token = useCheckLogedinUserToken();
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (token) {
+      getAllPosts(token).then((userPosts) => {
+        if (userPosts) {
+          dispatch(addPosts(userPosts));
+          setLoading(false);
+        }
+      });
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
+
+  return loading;
+}

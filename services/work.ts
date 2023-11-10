@@ -49,7 +49,7 @@ export const postNewCommentToPost = async (
  * @param token the main server token for the logged in user
  * @param formData of the comment which includes comment text and files
  * @param postId id of the post being commented
- * @param commentId id for the comment 
+ * @param commentId id for the comment
  * @returns new comment
  */
 export const postNewReplyToComment = async (
@@ -82,6 +82,26 @@ export const getUserPosts = async (token: string, userId: string) => {
   if (token) {
     const response = await axios.get(
       `${SERVER_ADDRESS}/api/v1/work/circle/post/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
+
+// Get all posts
+/**
+ *
+ * @param token servers token
+ * @returns Post[]
+ */
+export const getAllPosts = async (token: string) => {
+  if (token) {
+    const response = await axios.get(
+      `${SERVER_ADDRESS}/api/v1/work/circle/posts`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -160,4 +180,3 @@ export const reactOnApostComment = async (
     return response.status;
   }
 };
-
