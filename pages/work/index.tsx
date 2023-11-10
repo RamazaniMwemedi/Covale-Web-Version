@@ -11,6 +11,7 @@ import {
   Button,
   Link,
   useMediaQuery,
+  Toolbar,
 } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
@@ -84,6 +85,7 @@ const Work = () => {
                 >
                   <Box p={isVerySmallPcView ? 2 : 6}>
                     <AddANewPost />
+                    <Toolbar />
                     {Array.from({ length: 500 }).map((_, i) => (
                       <Box
                         key={i}
