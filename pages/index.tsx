@@ -4,11 +4,10 @@ import Box from "@mui/material/Box";
 import Logo from "../assets/Logo";
 import { useTheme } from "@mui/styles";
 import { Button, TextField, Typography } from "@mui/material";
+import { ThemeInterface } from "../interfaces/myprofile";
 
 function Index() {
-  // Coming soon Page
-
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   React.useEffect(() => {
     theme.themeChengeHandler("dark-mode");
   }, []);
@@ -62,8 +61,6 @@ function Index() {
   };
 
   const ComingSoon = () => {
-    
-
     return (
       <Box
         sx={{
@@ -76,7 +73,7 @@ function Index() {
       >
         <br />
         <br />
-        
+
         <Box
           sx={{
             // Rotateing the logo animation in 360 degree
@@ -91,7 +88,7 @@ function Index() {
             },
           }}
         >
-          <Logo height={300} width={300} />
+          <Logo height={200} width={200} />
         </Box>
         <Typography
           variant="h2"
@@ -100,12 +97,7 @@ function Index() {
             textAlign: "center",
           }}
         >
-          <span
-            
-            className="comming_soon"
-          >
-            Coming Soon
-          </span>
+          <span className="comming_soon">Coming Soon</span>
         </Typography>
         <br />
         <br />
@@ -130,11 +122,11 @@ function Index() {
     const [emailError, setEmailError] = React.useState(false);
     const [emailHelperText, setEmailHelperText] = React.useState("");
 
-    const handleEmailChange = (e) => {
+    const handleEmailChange = (e: any) => {
       setEmail(e.target.value);
     };
 
-    const handleEmailBlur = (e) => {
+    const handleEmailBlur = (e: any) => {
       if (e.target.value === "") {
         setEmailError(true);
         setEmailHelperText("Email is required");
@@ -237,7 +229,7 @@ function Index() {
     <Box
       sx={{
         bgcolor: theme.colors.background,
-        height: "100vh",
+        height: "100%",
       }}
     >
       <NavBar />

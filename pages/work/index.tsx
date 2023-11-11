@@ -187,9 +187,9 @@ const RigthComponent: FC = () => {
           top: 10,
           // Scrollable
           height: "90vh",
-          overflowY: "scroll",
-          "&::-webkit-scrollbar": {
-            width: "0.4em",
+          overflow: "hidden", // Start with hidden overflow
+          "&:hover": {
+            overflow: "auto", // Change to visible overflow on hover
           },
         }}
         width={"95%"}
