@@ -1,15 +1,15 @@
-const { useState, useEffect } = require("react");
-const { useDispatch } = require("react-redux");
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const { allUsers } = require("../services/user");
 const { addExploreColleagues } = require("../Redux/slices/colleagues");
-const useExploreColleagus = (token) => {
+export const useExploreColleagus = (token: string) => {
   //   let token;
 
   const dispatch = useDispatch();
   useEffect(() => {
     if (token) {
-      allUsers(token).then((res) => {
+      allUsers(token).then((res: any) => {
         if (res) dispatch(addExploreColleagues(res));
       });
     }
@@ -17,6 +17,7 @@ const useExploreColleagus = (token) => {
   }, [token]);
 };
 
-module.exports = {
+const modul = {
   useExploreColleagus,
 };
+export default modul;
