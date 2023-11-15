@@ -11,11 +11,10 @@ import {
   TextField,
   Box,
   Typography,
+  Skeleton,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import SearchOffRoundedIcon from "@mui/icons-material/SearchOffRounded";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import PersonRemoveAlt1RoundedIcon from "@mui/icons-material/PersonRemoveAlt1Rounded";
@@ -24,7 +23,6 @@ import PersonRemoveAlt1RoundedIcon from "@mui/icons-material/PersonRemoveAlt1Rou
 import exploreColleagueservices from "../../../services/user";
 import DrawerComponent from "../../components/others/DrawerComponent";
 import PeopleLeft from "../../components/colleagues/PeopleLeft";
-import DiscoverPeopleSkeleton from "../../components/colleagues/DiscoverPeopleSkeleton";
 import { useDispatch, useSelector } from "react-redux";
 
 import { removeColleagueFromExplore } from "../../../Redux/slices/colleagues";
@@ -109,7 +107,7 @@ const People: React.FC<{
   handleToggleShowSearch,
   token,
 }) => {
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   const router = useRouter();
   return (
     <>
@@ -122,24 +120,92 @@ const People: React.FC<{
       />
       <Box
         sx={{
-          // Display Grid
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, 210px)",
-          // gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 2,
-          alignContent: "center",
-          placeItems: !exploreColleagues ? "center" : "unset",
-          justifyContent:
-            exploreColleagues && exploreColleagues.length < 4
-              ? "flex-start"
-              : "center",
-          pt: 1,
-          pl: 1,
-          height: !exploreColleagues ? "100%" : "auto",
+          p: 1,
         }}
       >
         {!exploreColleagues ? (
-          <DiscoverPeopleSkeleton />
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: 2,
+              alignContent: "center",
+            }}
+          >
+            {Array.from({ length: 9 }).map((_, i) => (
+              <Box
+                key={i}
+                sx={{
+                  width: "300px",
+                  borderRadius: "8px",
+                  boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
+                  // alignItems: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "relative",
+                }}
+              >
+                <Skeleton
+                  variant="circular"
+                  width={30}
+                  height={30}
+                  style={{ position: "absolute", top: 5, right: 5 }}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height={150}
+                  style={{ borderRadius: 8 }}
+                />
+                <Box
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    mt: -5,
+                  }}
+                >
+                  <Box display={"flex"} justifyContent={"space-around"}>
+                    <Skeleton variant="circular" width={80} height={80} />
+                    <Box
+                      sx={{
+                        display: "flow",
+                        mt: 5,
+                      }}
+                    >
+                      <Skeleton
+                        variant="rectangular"
+                        width={100}
+                        height={30}
+                        style={{ margin: "5px", borderRadius: 8 }}
+                      />
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      mt: 2,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
+                      <Skeleton variant="text" width={60} />
+                      <Skeleton variant="text" width={60} />
+                    </Box>
+                    <Box sx={{ textAlign: "left" }}>
+                      <Skeleton variant="text" width={80} />
+                      <Skeleton variant="text" width={"100%"} />
+                      <Skeleton variant="text" width={"80%"} />
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+            ))}
+          </Box>
         ) : exploreColleagues.length < 1 ? (
           <NoDiscToShow />
         ) : (
