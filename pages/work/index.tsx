@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   Box,
   useTheme,
@@ -35,10 +35,15 @@ import {
 // Extra
 import LoadingLogo from "../components/others/LoadingLogo";
 import { useSelector } from "react-redux";
-import { RootState, ThemeInterface } from "../../interfaces/myprofile";
+import {
+  RootState,
+  ThemeInterface,
+  UserInterFace,
+} from "../../interfaces/myprofile";
 import { AddANewPost } from "../components/profile/PostRight";
 import { useGetAllPosts } from "../../hooks/work";
 import Post from "../components/work/Post";
+import { getConnectionsYouMayKnow } from "../../services/work";
 
 // Redux
 
@@ -167,9 +172,23 @@ const RigthComponent: FC = () => {
   const theme: ThemeInterface = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
-  // const token = useCheckLogedinUserToken();
+  const token = useCheckLogedinUserToken();
   const isVerySmallPcView = useMediaQuery(() => theme.breakpoints.down("md"));
+  const [connectionsYouMightKnow, setConnectionsYouMightKnow] = useState<
+    UserInterFace[]
+  >([]);
+  const [loadingConYMK, setLoadingConYMK] = useState(true);
 
+  React.useEffect(() => {
+    getConnectionsYouMayKnow(token)
+      .then((res) => {
+        setConnectionsYouMightKnow(res);
+        setLoadingConYMK(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [token]);
   return (
     <Box
       flex={0.4}
@@ -206,100 +225,127 @@ const RigthComponent: FC = () => {
             Connections you may know
           </Typography>
           <List>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <ListItem key={i}>
-                <ListItemButton
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    borderRadius: 2,
-                  }}
-                >
-                  <Box display={"flex"}>
-                    <ListItemAvatar>
-                      <Avatar></Avatar>
-                    </ListItemAvatar>
-                    <Box>
-                      <Typography variant="subtitle2" fontWeight={700}>
-                        Hello
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        @Hello
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      display: "flex",
-                      // justifyContent: "space-between",
-                    }}
-                  >
-                    {requestSent ? (
-                      <Button
-                        variant="contained"
+            {loadingConYMK ? (
+              <Box
+                display={"grid"}
+                sx={{
+                  placeItems: "center",
+                  heigh: "100%",
+                }}
+              >
+                <CircularProgress size={30} />
+              </Box>
+            ) : (
+              <>
+                {connectionsYouMightKnow &&
+                  connectionsYouMightKnow.map((user) => (
+                    <ListItem key={user.id}>
+                      <ListItemButton
                         sx={{
-                          width: "100px",
-                          height: "30px",
-                          margin: "5px",
-                          textTransform: "unset",
                           display: "flex",
-                          gap: "20%",
-                          bgcolor: grey[500],
+                          justifyContent: "space-between",
+                          borderRadius: 2,
                         }}
-                        color="inherit"
-                        // onClick={() => {
-                        //   cancelFriendRequest(user.id, token).then(() =>
-                        //     setRequestSent(false)
-                        //   );
-                        // }}
                       >
-                        <PersonRemoveAlt1RoundedIcon fontSize="small" /> Cancel
-                      </Button>
-                    ) : (
-                      <>
-                        {sending ? (
-                          <LoadingButton
-                            loading
-                            variant="contained"
-                            color="secondary"
-                            sx={{
-                              margin: "5px",
-                              height: "35px",
-                              alignSelf: "center",
-                            }}
-                          />
-                        ) : (
-                          <Button
-                            variant="contained"
-                            sx={{
-                              width: "100px",
-                              height: "30px",
-                              margin: "5px",
-                              textTransform: "unset",
-                              display: "flex",
-                              gap: "20%",
-                            }}
-                            color="secondary"
-                            // onClick={() => {
-                            //   setSending(true);
-                            //   addFriendById(user.id, token).then(() => {
-                            //     setRequestSent(true);
-                            //     setSending(false);
-                            //   });
-                            // }}
-                          >
-                            <PersonAddAlt1RoundedIcon fontSize="small" />
-                            Connect
-                          </Button>
-                        )}
-                        <br />
-                      </>
-                    )}
-                  </Box>
-                </ListItemButton>
-              </ListItem>
-            ))}
+                        <Box display={"flex"}>
+                          <ListItemAvatar>
+                            <Avatar
+                              src={
+                                user.profilePic ? user.profilePic.fileUrl : ""
+                              }
+                            >
+                              {user.firstname[0]}
+                              {user.lastname[0]}
+                            </Avatar>
+                          </ListItemAvatar>
+                          <Box>
+                            <Typography variant="subtitle2" fontWeight={700}>
+                              {user.firstname} {user.lastname}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
+                              @{user.username}
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        <Box
+                          sx={{
+                            display: "flex",
+                            // justifyContent: "space-between",
+                          }}
+                        >
+                          {requestSent ? (
+                            <Button
+                              variant="contained"
+                              sx={{
+                                width: "100px",
+                                height: "30px",
+                                margin: "5px",
+                                textTransform: "unset",
+                                display: "flex",
+                                gap: "20%",
+                                bgcolor: grey[500],
+                              }}
+                              color="inherit"
+                              // onClick={() => {
+                              //   cancelFriendRequest(user.id, token).then(() =>
+                              //     setRequestSent(false)
+                              //   );
+                              // }}
+                            >
+                              <PersonRemoveAlt1RoundedIcon fontSize="small" />{" "}
+                              Cancel
+                            </Button>
+                          ) : (
+                            <>
+                              {sending ? (
+                                <LoadingButton
+                                  loading
+                                  variant="contained"
+                                  color="secondary"
+                                  sx={{
+                                    margin: "5px",
+                                    height: "35px",
+                                    alignSelf: "center",
+                                  }}
+                                />
+                              ) : (
+                                <Button
+                                  variant="contained"
+                                  sx={{
+                                    width: "100px",
+                                    height: "30px",
+                                    margin: "5px",
+                                    textTransform: "unset",
+                                    display: "flex",
+                                    gap: "20%",
+                                  }}
+                                  color="secondary"
+                                  // onClick={() => {
+                                  //   setSending(true);
+                                  //   addFriendById(user.id, token).then(() => {
+                                  //     setRequestSent(true);
+                                  //     setSending(false);
+                                  //   });
+                                  // }}
+                                >
+                                  <PersonAddAlt1RoundedIcon fontSize="small" />
+                                  Connect
+                                </Button>
+                              )}
+                              <br />
+                            </>
+                          )}
+                        </Box>
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+              </>
+            )}
+
             <ListItem>
               <Link
                 sx={{

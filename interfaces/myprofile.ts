@@ -15,6 +15,7 @@ export interface RootState {
     keyPairs: KeysSchema[];
   };
   projects: { projects: {}[] };
+  colleagues: { colleagues: { explore: UserInterFace[] } };
 }
 interface KeysSchema {
   privateKey: string;
@@ -61,6 +62,7 @@ export interface ProfilePic {
 }
 export interface UserInterFace {
   id: string;
+  token: string;
   firstname: string;
   lastname: string;
   username: string;

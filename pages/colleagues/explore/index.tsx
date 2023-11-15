@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import * as React from "react";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -10,6 +9,7 @@ import {
   InputAdornment,
   OutlinedInput,
   TextField,
+  Box,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
@@ -34,17 +34,22 @@ import TopComponent from "../../components/colleagues/TopComponent";
 import { grey } from "@mui/material/colors";
 import { useCheckLogedinUser } from "../../../hooks/hooks";
 import LoadingLogo from "../../components/others/LoadingLogo";
+import {
+  RootState,
+  ThemeInterface,
+  UserInterFace,
+} from "../../../interfaces/myprofile";
 
 export default function Explore() {
-  const colleagueStore = useSelector((state) => state.colleagues);
+  const colleagueStore = useSelector((state: RootState) => state.colleagues);
   const exploreColleagues = colleagueStore.colleagues
     ? colleagueStore.colleagues.explore
     : null;
   const router = useRouter();
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   const [showSearchField, setShowSearchField] = useState(false);
 
-  const userStore = useSelector((state) => state.user);
+  const userStore = useSelector((state: RootState) => state.user);
   const user = userStore.user ? userStore.user : null;
   const token = user ? user.token : null;
 
@@ -92,7 +97,12 @@ export default function Explore() {
   );
 }
 
-const People = ({
+const People: React.FC<{
+  exploreColleagues: UserInterFace[] | null;
+  showSearchField: boolean;
+  handleToggleShowSearch: () => void;
+  token: string | null;
+}> = ({
   exploreColleagues,
   showSearchField,
   handleToggleShowSearch,
@@ -117,7 +127,7 @@ const People = ({
           // gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: 2,
           alignContent: "center",
-          placeItems: !exploreColleagues && "center",
+          placeItems: !exploreColleagues ? "center" : "unset",
           justifyContent:
             exploreColleagues && exploreColleagues.length < 4
               ? "flex-start"
@@ -158,13 +168,17 @@ const NoDiscToShow = () => {
   );
 };
 
-const Person = ({ user, token }) => {
-  const theme = useTheme();
+const Person: React.FC<{
+  user: UserInterFace;
+  token: string | null;
+}> = ({ user, token }) => {
+  const theme: ThemeInterface = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
   const dispatch = useDispatch();
 
   const removeColleagueFromUser = async () => {
+    if (!token) return;
     const res = await removeColleague(token, user.id);
     if (res) {
       dispatch(
@@ -206,7 +220,10 @@ const Person = ({ user, token }) => {
             flexDirection: "column",
           }}
         >
-          <Avatar sx={{ width: 80, height: 80, textTransform: "uppercase" }}>
+          <Avatar
+            src={user.profilePic.fileUrl}
+            sx={{ width: 80, height: 80, textTransform: "uppercase" }}
+          >
             {user.firstname[0]}
             {user.lastname[0]}
           </Avatar>
@@ -236,7 +253,7 @@ const Person = ({ user, token }) => {
                 }}
                 variant="caption"
               >
-                Gender: {user.gender}
+                Gender: {user.professionalSummary}
               </Typography>
             </Box>
           </Box>
@@ -265,11 +282,12 @@ const Person = ({ user, token }) => {
                 gap: "20%",
                 bgcolor: grey[500],
               }}
-              color="action"
+              color="inherit"
               onClick={() => {
+                if (!token) return;
                 exploreColleagueservices
                   .cancelFriendRequest(user.id, token)
-                  .then(()=>setRequestSent(false));
+                  .then(() => setRequestSent(false));
               }}
             >
               <PersonRemoveAlt1RoundedIcon fontSize="small" /> Cancel
@@ -300,6 +318,7 @@ const Person = ({ user, token }) => {
                   }}
                   color="secondary"
                   onClick={() => {
+                    if (!token) return;
                     setSending(true);
                     exploreColleagueservices
                       .addFriendById(user.id, token)

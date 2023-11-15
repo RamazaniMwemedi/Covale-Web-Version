@@ -180,3 +180,25 @@ export const reactOnApostComment = async (
     return response.status;
   }
 };
+
+// Get connections you may know
+
+/**
+ *
+ * @param token server token
+ * @returns User[]
+ */
+
+export const getConnectionsYouMayKnow = async (token: string) => {
+  if (token) {
+    const response = await axios.get(
+      `${SERVER_ADDRESS}/api/v1/work/circle/connectionsYouMK`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+};
