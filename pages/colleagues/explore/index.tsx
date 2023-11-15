@@ -39,6 +39,7 @@ import {
   ThemeInterface,
   UserInterFace,
 } from "../../../interfaces/myprofile";
+import Image from "next/image";
 
 export default function Explore() {
   const colleagueStore = useSelector((state: RootState) => state.colleagues);
@@ -192,19 +193,21 @@ const Person: React.FC<{
     <>
       <Box
         sx={{
-          width: "200px",
+          width: "300px",
           borderRadius: "8px",
           boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
           backgroundColor: theme.colors.textBackground,
           alignItems: "center",
           display: "flex",
           flexDirection: "column",
+          position: "relative",
         }}
       >
         <IconButton
           sx={{
-            display: "flex",
-            alignSelf: "flex-end",
+            position: "absolute",
+            top: 5,
+            right: 5,
             bgcolor: theme.colors.textBackground2,
           }}
           size="small"
@@ -212,100 +215,51 @@ const Person: React.FC<{
         >
           <HighlightOffRoundedIcon fontSize="medium" />
         </IconButton>
+        {user.coverPic.fileUrl ? (
+          <Image
+            alt="Cover Photo"
+            src={user.coverPic.fileUrl}
+            width={1000}
+            height={1000}
+            style={{
+              height: 150,
+              width: "100%",
+              borderRadius: 8,
+            }}
+          />
+        ) : (
+          <Box
+            sx={{
+              height: 150,
+              width: "100%",
+              backgroundColor: (theme) => theme.palette.action.disabled,
+              borderRadius: 8,
+            }}
+          />
+        )}
         <Box
           sx={{
             p: 1,
             display: "flex",
-            alignItems: "center",
             flexDirection: "column",
+            mt: -5,
           }}
         >
-          <Avatar
-            src={user.profilePic.fileUrl}
-            sx={{ width: 80, height: 80, textTransform: "uppercase" }}
-          >
-            {user.firstname[0]}
-            {user.lastname[0]}
-          </Avatar>
-          <Box
-            sx={{
-              pt: "10px",
-              marginLeft: "-10px",
-            }}
-          >
+          <Box display={"flex"} justifyContent={"space-around"}>
+            <Avatar
+              src={user.profilePic.fileUrl}
+              sx={{ width: 80, height: 80, textTransform: "uppercase" }}
+            >
+              {user.firstname[0]}
+              {user.lastname[0]}
+            </Avatar>
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-evenly",
-                gap: 1,
+                display: "flow",
+                mt: 5,
               }}
             >
-              <Typography variant="body1">{user.firstname}</Typography>
-              <Typography variant="body1">{user.lastname}</Typography>
-            </Box>
-            <Box sx={{ textAlign: "left" }}>
-              <Typography variant="caption">@{user.username}</Typography>
-              <br />
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                }}
-                variant="caption"
-              >
-                Gender: {user.professionalSummary}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-        <br />
-        <Box
-          sx={{
-            alignItems: "center",
-            justifyContent: "space-evenly",
-          }}
-        ></Box>
-        <Box
-          sx={{
-            display: "flow",
-          }}
-        >
-          {requestSent ? (
-            <Button
-              variant="contained"
-              sx={{
-                width: "100px",
-                height: "30px",
-                margin: "5px",
-                textTransform: "unset",
-                display: "flex",
-                gap: "20%",
-                bgcolor: grey[500],
-              }}
-              color="inherit"
-              onClick={() => {
-                if (!token) return;
-                exploreColleagueservices
-                  .cancelFriendRequest(user.id, token)
-                  .then(() => setRequestSent(false));
-              }}
-            >
-              <PersonRemoveAlt1RoundedIcon fontSize="small" /> Cancel
-            </Button>
-          ) : (
-            <>
-              {sending ? (
-                <LoadingButton
-                  loading
-                  variant="contained"
-                  color="secondary"
-                  sx={{
-                    margin: "5px",
-                    height: "35px",
-                    alignSelf: "center",
-                  }}
-                />
-              ) : (
+              {requestSent ? (
                 <Button
                   variant="contained"
                   sx={{
@@ -315,26 +269,94 @@ const Person: React.FC<{
                     textTransform: "unset",
                     display: "flex",
                     gap: "20%",
+                    bgcolor: grey[500],
                   }}
-                  color="secondary"
+                  color="inherit"
                   onClick={() => {
                     if (!token) return;
-                    setSending(true);
                     exploreColleagueservices
-                      .addFriendById(user.id, token)
-                      .then(() => {
-                        setRequestSent(true);
-                        setSending(false);
-                      });
+                      .cancelFriendRequest(user.id, token)
+                      .then(() => setRequestSent(false));
                   }}
                 >
-                  <PersonAddAlt1RoundedIcon fontSize="small" />
-                  Connect
+                  <PersonRemoveAlt1RoundedIcon fontSize="small" /> Cancel
                 </Button>
+              ) : (
+                <>
+                  {sending ? (
+                    <LoadingButton
+                      loading
+                      variant="contained"
+                      color="secondary"
+                      sx={{
+                        margin: "5px",
+                        height: "35px",
+                        alignSelf: "center",
+                      }}
+                    />
+                  ) : (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        width: "100px",
+                        height: "30px",
+                        margin: "5px",
+                        textTransform: "unset",
+                        display: "flex",
+                        gap: "20%",
+                      }}
+                      color="secondary"
+                      onClick={() => {
+                        if (!token) return;
+                        setSending(true);
+                        exploreColleagueservices
+                          .addFriendById(user.id, token)
+                          .then(() => {
+                            setRequestSent(true);
+                            setSending(false);
+                          });
+                      }}
+                    >
+                      <PersonAddAlt1RoundedIcon fontSize="small" />
+                      Connect
+                    </Button>
+                  )}
+                  <br />
+                </>
               )}
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              mt: -2,
+              // marginLeft: "-10px",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                // justifyContent: "space-evenly",
+                gap: 1,
+              }}
+            >
+              <Typography fontWeight={700} variant="body1">
+                {user.firstname}
+              </Typography>
+              <Typography fontWeight={700} variant="body1">
+                {user.lastname}
+              </Typography>
+            </Box>
+            <Box sx={{ textAlign: "left" }}>
+              <Typography variant="caption" color="text.secondary">
+                @{user.username}
+              </Typography>
               <br />
-            </>
-          )}
+              <Typography variant="caption">
+                {user.professionalSummary}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </>
