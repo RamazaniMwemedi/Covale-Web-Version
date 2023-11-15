@@ -54,7 +54,7 @@ export default function Explore() {
   const token = user ? user.token : null;
 
   useCheckLogedinUser();
-  useExploreColleagus(token);
+  useExploreColleagus(token ? token : "");
 
   const handleToggleShowSearch = () => {
     setShowSearchField((prev) => !prev);
