@@ -3,8 +3,13 @@ import { Button, Menu } from "@mui/material";
 import { Box } from "@mui/system";
 
 import FileComponent from "./FileComponent";
+import { FC } from "react";
+import { FileInterface } from "../../../interfaces/myprofile";
 
-const FileDisplayComponent = ({ handleCloseShowVideoPlayer, file }) => {
+const FileDisplayComponent: FC<{
+  handleCloseShowVideoPlayer: () => void;
+  file: FileInterface;
+}> = ({ handleCloseShowVideoPlayer, file }) => {
   return (
     <Menu
       sx={{
@@ -30,7 +35,7 @@ const FileDisplayComponent = ({ handleCloseShowVideoPlayer, file }) => {
           backgroundColor: "unset",
         },
       }}
-      transformOrigin={{ horizontal: "center", vertical: "" }}
+      transformOrigin={{ horizontal: "center", vertical: "bottom" }}
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       open={true}
     >
@@ -69,7 +74,6 @@ const FileDisplayComponent = ({ handleCloseShowVideoPlayer, file }) => {
             file={file}
             width={1000}
             height={600}
-            controls={true}
             displayFile={true}
           />
         </Box>
