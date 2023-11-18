@@ -55,12 +55,12 @@ import {
   createATopic,
   replyToTopic,
 } from "../../services/teams";
-import { RTC_ADDRESS } from "../../config";
-import { useGetKeyPairs } from "../../hooks/secrete";
+import config from "../../config";
+import secreteHook from "../../hooks/secrete";
 import { encryptMessage } from "../../services/encrypt";
 // Socket.IO
-const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
-const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
+const teamSocket = io.connect(`${config.RTC_ADDRESS}/team`);
+const chatSocket = io.connect(`${config.RTC_ADDRESS}/chat`);
 
 export default function Chat() {
   // Global States
@@ -125,7 +125,7 @@ export default function Chat() {
   useRecieveNewNotification(user);
 
   // Get Key Pair
-  useGetKeyPairs();
+  secreteHook.useGetKeyPairs();
 
   const messageChangeHandler = (e) => {
     setChatMessage(e.target.value);
@@ -137,7 +137,7 @@ export default function Chat() {
     router.push("/login");
   };
 
-  const onEmojiClick = (event, emojiObject) => {
+  const onEmojiClick = (_, emojiObject) => {
     setChatMessage(chatMessage + emojiObject.emoji);
   };
   const handleChooseFileIcon = () => {
@@ -174,10 +174,10 @@ export default function Chat() {
   const sendMessageHandle = async (event) => {
     event.preventDefault();
     const uuid = uuidv4();
-     const encryptedMessage = await encryptMessage(
-       chatMessage,
-       keyPair.publicKey
-     );
+    const encryptedMessage = await encryptMessage(
+      chatMessage,
+      keyPair.publicKey
+    );
     const formData = new FormData();
 
     for (const file of chatFiles) {
@@ -216,7 +216,7 @@ export default function Chat() {
   };
 
   // Teams handlers
-  const teamOnEmojiClick = (event, emojiObject) => {
+  const teamOnEmojiClick = (_, emojiObject) => {
     setTeamMessage(teamMessage + emojiObject.emoji);
   };
 

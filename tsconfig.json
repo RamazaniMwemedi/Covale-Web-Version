@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,7 +26,11 @@
     "**/*.ts",
     "**/*.tsx",
     "services/user.ts",
-    "image/croppedImg.ts"
-, "pages/components/mediaFiles/FileComponent.jsx", "pages/components/projects/ProjectLeft.js"  ],
-  "exclude": ["node_modules"]
+    "image/croppedImg.ts",
+    "pages/components/mediaFiles/FileComponent.tsx",
+    "pages/components/projects/ProjectLeft.js"
+, "hooks/projects.ts", "Redux/slices/calendar.js", "Redux/slices/chat.js", "pages/components/chats/ChatSectionLeft.tsx"  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

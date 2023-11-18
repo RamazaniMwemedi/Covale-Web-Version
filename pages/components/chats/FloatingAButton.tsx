@@ -3,7 +3,11 @@ import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function FloatingActionButtonSize({ buttonHandler }) {
+export default function FloatingActionButtonSize({
+  buttonHandler,
+}: {
+  buttonHandler: () => void;
+}) {
   return (
     <Box
       sx={{
@@ -13,9 +17,7 @@ export default function FloatingActionButtonSize({ buttonHandler }) {
         left: 270,
         zIndex: 1,
       }}
-      onClick={() => {
-        buttonHandler();
-      }}
+      onClick={buttonHandler}
     >
       <Fab color="secondary" aria-label="add">
         <AddIcon

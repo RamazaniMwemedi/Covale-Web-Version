@@ -1,9 +1,9 @@
 import axios from "axios";
-import { SERVER_ADDRESS } from "../config/index";
+import config from "../config/index";
 
 // Get all chats
 const getEventsForCalendar = async (token) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/calendar/event`, {
+  const response = await axios.get(`${config.SERVER_ADDRESS}/api/v1/calendar/event`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -14,7 +14,7 @@ const getEventsForCalendar = async (token) => {
 // Create a new Event
 const createNewEventForCalendar = async (token, formData) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/calendar/event/new`,
+    `${config.SERVER_ADDRESS}/api/v1/calendar/event/new`,
     formData,
     {
       headers: {

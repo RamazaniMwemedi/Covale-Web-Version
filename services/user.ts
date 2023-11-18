@@ -1,10 +1,10 @@
 import axios from "axios";
-import { SERVER_ADDRESS } from "../config/index";
+import config from "../config/index";
 import { WorkExperience } from "../interfaces/myprofile";
 
 export const allUsers = async (token: string) => {
   const response = await axios.get(
-    `${SERVER_ADDRESS}/api/v1/users/colleague/explore`,
+    `${config.SERVER_ADDRESS}/api/v1/users/colleague/explore`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -17,7 +17,7 @@ export const allUsers = async (token: string) => {
 // Add a friend
 export const addFriendById = async (id: string, token: string) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/users/colleague/add/${id}`,
+    `${config.SERVER_ADDRESS}/api/v1/users/colleague/add/${id}`,
     {},
     {
       headers: {
@@ -30,7 +30,7 @@ export const addFriendById = async (id: string, token: string) => {
 
 export const myFriends = async (token: string) => {
   const response = await axios.get(
-    `${SERVER_ADDRESS}/api/v1/users/colleague/mycolleagues`,
+    `${config.SERVER_ADDRESS}/api/v1/users/colleague/mycolleagues`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export const myFriends = async (token: string) => {
 // Friend Requests Received
 export const friendReqRecieved = async (token: string) => {
   const response = await axios.get(
-    `${SERVER_ADDRESS}/api/v1/users/colleague/colleaguesReqRecieved`,
+    `${config.SERVER_ADDRESS}/api/v1/users/colleague/colleaguesReqRecieved`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export const friendReqRecieved = async (token: string) => {
 // Friend Requests Sent
 export const friendReqSent = async (token: string) => {
   const response = await axios.get(
-    `${SERVER_ADDRESS}/api/v1/users/colleague/colleagueReqSent`,
+    `${config.SERVER_ADDRESS}/api/v1/users/colleague/colleagueReqSent`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ export const friendReqSent = async (token: string) => {
 export const acceptFriendRequest = async (id: string, token: string) => {
   if (token && id) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/users/colleague/accept/${id}`,
+      `${config.SERVER_ADDRESS}/api/v1/users/colleague/accept/${id}`,
       {},
       {
         headers: {
@@ -86,7 +86,7 @@ export const acceptFriendRequest = async (id: string, token: string) => {
 // Remove Friend Request
 export const removeFriendRequest = async (id: string, token: string) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/users/colleague/remove/${id}`,
+    `${config.SERVER_ADDRESS}/api/v1/users/colleague/remove/${id}`,
     {},
     {
       headers: {
@@ -100,7 +100,7 @@ export const removeFriendRequest = async (id: string, token: string) => {
 //Cancel Friend Request
 export const cancelFriendRequest = async (id: string, token: string) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/users/colleague/cancel/${id}`,
+    `${config.SERVER_ADDRESS}/api/v1/users/colleague/cancel/${id}`,
     {},
     {
       headers: {
@@ -115,7 +115,7 @@ export const cancelFriendRequest = async (id: string, token: string) => {
 export const findUserById = async (token: string, id: string) => {
   if (token) {
     try {
-      const response = await axios.get(`${SERVER_ADDRESS}/api/v1/users/${id}`, {
+      const response = await axios.get(`${config.SERVER_ADDRESS}/api/v1/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -133,7 +133,7 @@ export const removeColleague = async (token: string, id: string) => {
   if (token) {
     try {
       const response = await axios.post(
-        `${SERVER_ADDRESS}/api/v1/users/colleague/explore/remove/${id}`,
+        `${config.SERVER_ADDRESS}/api/v1/users/colleague/explore/remove/${id}`,
         {},
         {
           headers: {
@@ -151,7 +151,7 @@ export const removeColleague = async (token: string, id: string) => {
 export const addProfilePic = async (token: string, formData: FormData) => {
   if (token && formData) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/users/profilePic`,
+      `${config.SERVER_ADDRESS}/api/v1/users/profilePic`,
       formData,
       {
         headers: {
@@ -165,7 +165,7 @@ export const addProfilePic = async (token: string, formData: FormData) => {
 export const addCoverPic = async (token: string, formData: FormData) => {
   if (token && formData) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/users/coverPhoto`,
+      `${config.SERVER_ADDRESS}/api/v1/users/coverPhoto`,
       formData,
       {
         headers: {
@@ -182,7 +182,7 @@ export const updateProfessionalSum = async (
 ) => {
   if (token && professionalSumm) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/users/updateProfessionalSummary`,
+      `${config.SERVER_ADDRESS}/api/v1/users/updateProfessionalSummary`,
       { professionalSummary: professionalSumm },
       {
         headers: {
@@ -210,7 +210,7 @@ export const addWorkExperience = async (
 ) => {
   if (token && workExperience) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/users/addworkexperience`,
+      `${config.SERVER_ADDRESS}/api/v1/users/addworkexperience`,
       workExperience,
       {
         headers: {
@@ -230,7 +230,7 @@ export const updateWorkexperience = async (
 ) => {
   if (token && id) {
     const response = await axios.put(
-      `${SERVER_ADDRESS}/api/v1/users/updateworkexperience/${id}`,
+      `${config.SERVER_ADDRESS}/api/v1/users/updateworkexperience/${id}`,
       workExperience,
 
       {
@@ -246,7 +246,7 @@ export const updateWorkexperience = async (
 export const deleteWorkExperience = async (token: string, id: string) => {
   if (token && id) {
     const response = await axios.delete(
-      `${SERVER_ADDRESS}/api/v1/users/updateworkexperience/${id}`,
+      `${config.SERVER_ADDRESS}/api/v1/users/updateworkexperience/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -262,7 +262,7 @@ export const recoverAccountConfirmEmail = async (
 ): Promise<number> => {
   if (email) {
     const res = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/login/recover/${email}`
+      `${config.SERVER_ADDRESS}/api/v1/login/recover/${email}`
     );
     return res.status;
   }
@@ -274,7 +274,7 @@ export const confirmOTP = async (
 ): Promise<number> => {
   if (otp) {
     const res = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/login/recover/verifyOTP/${email}`,
+      `${config.SERVER_ADDRESS}/api/v1/login/recover/verifyOTP/${email}`,
       { otp }
     );
     return res.status;
@@ -289,7 +289,7 @@ export const resetPasswordHandler = async (
   if (email && password) {
     console.log("Email and password",  { email, password });
     const res = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/login/resetPassword`,
+      `${config.SERVER_ADDRESS}/api/v1/login/resetPassword`,
       { email, password }
     );
     return res.data;

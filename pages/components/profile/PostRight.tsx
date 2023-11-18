@@ -45,7 +45,7 @@ import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { CropeImageDialog } from "./UserCard";
 import FileComponent from "../mediaFiles/FileComponent";
 import { createNewPostService } from "../../../services/work";
-import { useCheckLogedinUserToken } from "../../../hooks/hooks";
+import hookHooks from "../../../hooks/hooks";
 import { addPost } from "../../../Redux/slices/work";
 import Post from "../work/Post";
 import { useGetUserPosts } from "../../../hooks/work";
@@ -169,7 +169,7 @@ export const AddANewPost = () => {
   const theme: ThemeInterface = useTheme();
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
-  const token = useCheckLogedinUserToken();
+  const token = hookHooks.useCheckLogedinUserToken();
   const dispatch = useDispatch();
   // States
   const [open, setOpen] = useState(false);

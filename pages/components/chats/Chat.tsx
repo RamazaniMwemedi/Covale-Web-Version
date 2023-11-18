@@ -13,11 +13,16 @@ import { useTheme } from "@mui/material/styles";
 import { timeAgo } from "../../../tools/tools";
 import { decryptMessage } from "../../../services/encrypt";
 import { useSelector } from "react-redux";
+import {
+  ChatInterface,
+  RootState,
+  ThemeInterface,
+} from "../../../interfaces/myprofile";
 
-export default function Chat({ chat }) {
+export default function Chat({ chat }: { chat: ChatInterface }) {
   const router = useRouter();
   const id = router.query.id;
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   // messages
   const messages = chat ? chat.messages : null;
   // last message in messages array if there is a message else return an empty string using higher order function
@@ -27,16 +32,18 @@ export default function Chat({ chat }) {
 
   const [decryptedMessage, setDecryptedMessage] = useState("");
   // key pair
-  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPairStore = useSelector(
+    (state: RootState) => state.keyPairs.keyPairs
+  );
   const keyPair = keyPairStore
     ? keyPairStore.find((key) => key.modelId === chat.id)
     : null;
   const decreptMessageHandler = async () => {
     const messageToDecrypt = lastMessage;
-
-    setDecryptedMessage(
-      await decryptMessage(messageToDecrypt, keyPair.privateKey)
-    );
+    if (keyPair)
+      setDecryptedMessage(
+        await decryptMessage(messageToDecrypt, keyPair.privateKey)
+      );
   };
 
   useEffect(() => {

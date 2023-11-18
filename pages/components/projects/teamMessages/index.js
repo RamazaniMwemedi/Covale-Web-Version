@@ -32,13 +32,13 @@ import {
 } from "../../../../Redux/slices/team";
 import FileDisplayComponent from "../../mediaFiles/FileDisplayComponent";
 
-import { RTC_ADDRESS } from "../../../../config";
+import config from "../../../../config";
 import { io } from "socket.io-client";
 import { TheaterComedy } from "@mui/icons-material";
 import { useTheme } from "@mui/styles";
 import { useRouter } from "next/router";
 // Socket.IO
-const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
+const teamSocket = io.connect(`${config.RTC_ADDRESS}/team`);
 
 const TeamChats = ({ selectedTeam }) => {
   const userStore = useSelector((state) => state.user);

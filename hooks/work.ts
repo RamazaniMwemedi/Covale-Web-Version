@@ -1,13 +1,13 @@
 import { addPosts } from "../Redux/slices/work";
 import { getAllPosts, getUserPosts } from "../services/work";
-import { useCheckLogedinUserToken } from "./hooks";
+import hookHooks from "./hooks";
 
-const { useEffect, useState } = require("react");
+import { useEffect, useState } from "react";
 
-const { useDispatch } = require("react-redux");
+import { useDispatch } from "react-redux";
 
 export const useGetUserPosts = (userId: string): boolean => {
-  const token = useCheckLogedinUserToken();
+  const token = hookHooks.useCheckLogedinUserToken();
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -29,7 +29,7 @@ export const useGetUserPosts = (userId: string): boolean => {
 // Get all posts
 
 export const useGetAllPosts = (): boolean => {
-  const token = useCheckLogedinUserToken();
+  const token = hookHooks.useCheckLogedinUserToken();
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -46,4 +46,4 @@ export const useGetAllPosts = (): boolean => {
   }, [token]);
 
   return loading;
-}
+};

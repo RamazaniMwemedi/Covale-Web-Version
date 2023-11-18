@@ -1,34 +1,37 @@
-const { useEffect } = require("react");
+import { useEffect } from "react";
 // React-Redux hooks
-const { useDispatch } = require("react-redux");
+import { useDispatch } from "react-redux";
 
-const io = require("socket.io-client");
-const { RTC_ADDRESS } = require("../config");
+import io from "socket.io-client";
+import config from "../config";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
+const socketIO: any = io;
 
-const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`);
+const notificationSocket = socketIO.connect(
+  `${config.RTC_ADDRESS}/notification`
+);
 
-const {
+import {
   getallNotifications,
   deleteNotification,
-} = require("../services/notification");
-const {
+} from "../services/notification";
+import {
   allNotifications,
   addNewNotification,
-} = require("../Redux/slices/notifications");
+} from "../Redux/slices/notifications";
 
-const useGetNotification = (token) => {
+export const useGetNotification = (token: string) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    getallNotifications(token).then((data) => {
+    getallNotifications(token).then((data: any) => {
       dispatch(allNotifications(data));
     });
   }, [token]);
 };
 
-const useJoinNotificationRoom = (userId) => {
+export const useJoinNotificationRoom = (userId: string) => {
   useEffect(() => {
     if (userId) {
       notificationSocket.emit("join_notification_room", userId);
@@ -36,10 +39,10 @@ const useJoinNotificationRoom = (userId) => {
   }, [userId]);
 };
 
-const useRecieveNewNotification = (user) => {
+export const useRecieveNewNotification = (user: string) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    notificationSocket.on("new_notification", (data) => {
+    notificationSocket.on("new_notification", (data: any) => {
       dispatch(addNewNotification(data));
     });
   }, [notificationSocket, user]);

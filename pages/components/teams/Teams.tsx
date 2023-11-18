@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import {
   ListItem,
   Box,
@@ -21,13 +21,21 @@ import Team from "./Team";
 import FloatingATeamB from "./FloatingATeamB";
 import CreateTeam from "./CreateTeam";
 import { useSelector } from "react-redux";
+import {
+  RootState,
+  TeamInterface,
+  ThemeInterface,
+} from "../../../interfaces/myprofile";
 
-const Teams = ({ openCreateTeam, toggleShowTeam }) => {
-  const theme = useTheme();
+const Teams: FC<{
+  openCreateTeam: boolean;
+  toggleShowTeam: () => void;
+}> = ({ openCreateTeam, toggleShowTeam }) => {
+  const theme: ThemeInterface = useTheme();
   const [filterTeamName, setfilterTeamName] = useState("");
-  const [allFilteredTeams, setAllFilteredTeams] = useState([]);
+  const [allFilteredTeams, setAllFilteredTeams] = useState<TeamInterface[]>([]);
   let teamLoading = true;
-  const teams = useSelector((state) => {
+  const teams = useSelector((state: RootState) => {
     if (state.teams.teams) {
       teamLoading = false;
     }
@@ -118,7 +126,7 @@ const Teams = ({ openCreateTeam, toggleShowTeam }) => {
               >
                 {/* Avatar skeleton */}
                 <Skeleton
-                  variant="circle"
+                  variant="circular"
                   width={40}
                   height={40}
                   style={{ borderRadius: "50%" }}
@@ -126,13 +134,13 @@ const Teams = ({ openCreateTeam, toggleShowTeam }) => {
                 {/* Skeleton for user first and lastname */}
                 <Box sx={{}}>
                   <Skeleton
-                    variant="rect"
+                    variant="rectangular"
                     width={185}
                     height={20}
                     style={{ marginLeft: "10px" }}
                   />
                   <Skeleton
-                    variant="rect"
+                    variant="rectangular"
                     width={185}
                     height={8}
                     style={{ marginLeft: "10px", marginTop: "8px" }}

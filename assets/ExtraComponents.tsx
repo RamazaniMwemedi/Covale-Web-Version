@@ -10,63 +10,18 @@ const {
   File,
 } = require("./Icons");
 
-import * as React from "react";
+import React, { FC } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Image from "next/image";
+import { ThemeInterface } from "../interfaces/myprofile";
 
-const ImageComponent = React.memo(
-  ({ src, fileName, width, height, displayFile }) => {
-    const Widget = styled("div")(({ theme }) => ({
-      borderRadius: 6,
-      width: width,
-      maxWidth: "100%",
-      margin: displayFile ? "auto" : "none",
-      position: "relative",
-      backgroundColor:
-        theme.palette.mode === "dark"
-          ? "rgba(0,0,0,0.6)"
-          : "rgba(255,255,255,0.4)",
-      backdropFilter: "blur(40px)",
-    }));
-
-    return (
-      <Box sx={{ width: "95%", overflow: "hidden" }}>
-        <Widget>
-          {displayFile ? (
-            <CardMedia
-              sx={{ height: height, width: width }}
-              image={src}
-              title="green iguana"
-            />
-          ) : (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                textAlign: "center",
-              }}
-            >
-              <ImageIcon width={width} height={height} />
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  fontSize: "12px",
-                  whiteSpace: "nowrap",
-                  wordBreak: "keep-all",
-                }}
-              >
-                {/* First 10 characters and .{fileExtension} */}
-                {fileName.substring(0, 10)}...{fileName.split(".").pop()}
-              </Typography>
-            </Box>
-          )}
-        </Widget>
-      </Box>
-    );
-  }
-);
-
-const Video = React.memo(({ src, fileName, width, height, displayFile }) => {
+const ImageComponent: FC<{
+  src: string;
+  fileName: string;
+  height: number;
+  width: number;
+  displayFile?: boolean;
+}> = ({ src, fileName, width, height, displayFile }) => {
   const Widget = styled("div")(({ theme }) => ({
     borderRadius: 6,
     width: width,
@@ -80,7 +35,63 @@ const Video = React.memo(({ src, fileName, width, height, displayFile }) => {
     backdropFilter: "blur(40px)",
   }));
 
-  const theme = useTheme();
+  return (
+    <Box sx={{ width: "95%", overflow: "hidden" }}>
+      <Widget>
+        {displayFile ? (
+          <CardMedia
+            sx={{ height: height, width: width }}
+            image={src}
+            title="green iguana"
+          />
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <ImageIcon width={width} height={height} />
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontSize: "12px",
+                whiteSpace: "nowrap",
+                wordBreak: "keep-all",
+              }}
+            >
+              {/* First 10 characters and .{fileExtension} */}
+              {fileName.substring(0, 10)}...{fileName.split(".").pop()}
+            </Typography>
+          </Box>
+        )}
+      </Widget>
+    </Box>
+  );
+};
+
+const Video: FC<{
+  src: string;
+  fileName: string;
+  height: number;
+  width: number;
+  displayFile?: boolean;
+}> = ({ src, fileName, width, height, displayFile }) => {
+  const Widget = styled(Box)(({ theme }) => ({
+    borderRadius: 6,
+    width: width,
+    maxWidth: "100%",
+    margin: displayFile ? "auto" : "none",
+    position: "relative",
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? "rgba(0,0,0,0.6)"
+        : "rgba(255,255,255,0.4)",
+    backdropFilter: "blur(40px)",
+  }));
+
+  const theme: ThemeInterface = useTheme();
   const mainIconColor = theme.palette.mode === "dark" ? "#fff" : "#000";
 
   return (
@@ -116,10 +127,16 @@ const Video = React.memo(({ src, fileName, width, height, displayFile }) => {
       </Widget>
     </Box>
   );
-});
+};
 
-const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
-  const Widget = styled("div")(({ theme }) => ({
+const Pdf: FC<{
+  src: string;
+  fileName: string;
+  height: number;
+  width: number;
+  displayFile?: boolean;
+}> = ({ src, fileName, width, height, displayFile }) => {
+  const Widget = styled(Box)(({ theme }) => ({
     borderRadius: 6,
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
@@ -130,7 +147,7 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
     justifyContent: "center",
     alignItems: "center",
   }));
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
 
   return (
     <Box
@@ -157,7 +174,7 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
               // className={filetype}
               width="100%"
               height="600"
-              frameborder="0"
+              // frameborder="0"
               src={src}
             ></iframe>
           </Box>
@@ -189,10 +206,15 @@ const Pdf = React.memo(({ src, fileName, width, height, displayFile }) => {
       </Widget>
     </Box>
   );
-});
+};
 
-const Audio = React.memo(({ src, width, height }) => {
-  const theme = useTheme();
+const Audio: FC<{
+  src: string;
+  fileName: string;
+  height: number;
+  width: number;
+}> = ({ src, width, height }) => {
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{
@@ -204,26 +226,31 @@ const Audio = React.memo(({ src, width, height }) => {
       }}
     >
       <audio
-        sx={{
-          width: "100%",
+        style={{
+          width: width,
           maxWidth: "100%",
           margin: "auto",
           // Customized
           backgroundColor: theme.colors.background1,
           borderRadius: 6,
+          height: height,
         }}
         src={src}
-        width={width}
-        height={height}
         controls
       />
     </Box>
   );
-});
+};
 
-const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
-  const theme = useTheme();
-  const Widget = styled("div")(({ theme }) => ({
+const Docx: FC<{
+  src: string;
+  fileName: string;
+  height: number;
+  width: number;
+  displayFile?: boolean;
+}> = ({ src, fileName, width, height, displayFile }) => {
+  const theme: ThemeInterface = useTheme();
+  const Widget = styled(Box)(({ theme }) => ({
     borderRadius: 6,
     width: width,
     maxWidth: "100%",
@@ -261,7 +288,7 @@ const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
             <iframe
               width={width}
               height={height}
-              frameborder="0"
+              // frameborder="0"
               src={`https://view.officeapps.live.com/op/embed.aspx?src=${src}&embedded=true`}
             ></iframe>
           ) : (
@@ -290,11 +317,17 @@ const Docx = React.memo(({ src, fileName, width, height, displayFile }) => {
       </Widget>
     </Box>
   );
-});
+};
 
 // xls
-const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
-  const Widget = styled("div")(({ theme }) => ({
+const Xls: FC<{
+  src: string;
+  fileName: string;
+  height: number;
+  width: number;
+  displayFile?: boolean;
+}> = ({ src, fileName, width, height, displayFile }) => {
+  const Widget = styled(Box)(({ theme }) => ({
     borderRadius: 6,
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
@@ -305,7 +338,7 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
     justifyContent: "center",
     alignItems: "center",
   }));
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
 
   return (
     <Box
@@ -321,7 +354,7 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
             // className={filetype}
             width={width}
             height={height}
-            frameborder="0"
+            // frameborder="0"
             src={`https://view.officeapps.live.com/op/embed.aspx?src=${src}&embedded=true`}
           ></iframe>
         ) : (
@@ -351,10 +384,16 @@ const Xls = React.memo(({ src, fileName, width, height, displayFile }) => {
       </Widget>
     </Box>
   );
-});
+};
 
-const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
-  const Widget = styled("div")(({ theme }) => ({
+const Ppt: FC<{
+  src: string;
+  fileName: string;
+  height: number;
+  width: number;
+  displayFile?: boolean;
+}> = ({ src, fileName, width, height, displayFile }) => {
+  const Widget = styled(Box)(({ theme }) => ({
     borderRadius: 6,
     maxWidth: "100%",
     margin: displayFile ? "auto" : "none",
@@ -365,7 +404,7 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
     justifyContent: "center",
     alignItems: "center",
   }));
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
 
   return (
     <Box sx={{ overflow: "hidden" }}>
@@ -375,7 +414,7 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
             // className={filetype}
             width={width}
             height={height}
-            frameborder="0"
+            // frameborder="0"
             src={`https://view.officeapps.live.com/op/embed.aspx?src=${src}&embedded=true`}
           ></iframe>
         ) : (
@@ -406,52 +445,54 @@ const Ppt = React.memo(({ src, fileName, width, height, displayFile }) => {
       </Widget>
     </Box>
   );
-});
+};
 
-const OtherFile = React.memo(
-  ({ src, fileName, width, height, displayFile }) => {
-    const Widget = styled("div")(({ theme }) => ({
-      borderRadius: 6,
-      maxWidth: "100%",
-      margin: displayFile ? "auto" : "none",
-      position: "relative",
-      backgroundColor: displayFile
-        ? theme.colors.textBackground
-        : "transparent",
-      backdropFilter: "blur(40px)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    }));
-    const theme = useTheme();
-    return (
-      <Widget>
-        <Box
+const OtherFile: FC<{
+  src: string;
+  fileName: string;
+  height: number;
+  width: number;
+  displayFile?: boolean;
+}> = ({ src, fileName, width, height, displayFile }) => {
+  const Widget = styled(Box)(({ theme }) => ({
+    borderRadius: 6,
+    maxWidth: "100%",
+    margin: displayFile ? "auto" : "none",
+    position: "relative",
+    backgroundColor: displayFile ? theme.colors.textBackground : "transparent",
+    backdropFilter: "blur(40px)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }));
+  const theme: ThemeInterface = useTheme();
+  return (
+    <Widget>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <File height={height} width={width} />
+        <Typography
+          variant="subtitle2"
           sx={{
-            display: "flex",
-            alignItems: "center",
-            textAlign: "center",
+            fontSize: "12px",
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            bgcolor: theme.colors.textBackground,
+            p: 1,
           }}
         >
-          <File height={height} width={width} />
-          <Typography
-            variant="subtitle2"
-            sx={{
-              fontSize: "12px",
-              position: "absolute",
-              bottom: 0,
-              width: "100%",
-              bgcolor: theme.colors.textBackground,
-              p: 1,
-            }}
-          >
-            {/* First 10 characters and .{fileExtension} */}
-            {fileName.substring(0, 10)}...{fileName.split(".").pop()}
-          </Typography>
-        </Box>
-      </Widget>
-    );
-  }
-);
+          {/* First 10 characters and .{fileExtension} */}
+          {fileName.substring(0, 10)}...{fileName.split(".").pop()}
+        </Typography>
+      </Box>
+    </Widget>
+  );
+};
 
 export { ImageComponent, Video, Pdf, Audio, Docx, Xls, Ppt, OtherFile };

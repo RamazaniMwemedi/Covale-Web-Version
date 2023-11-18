@@ -1,9 +1,13 @@
-const { default: axios } = require("axios");
-const { SECRETE_SERVER_ADDRESS } = require("../config/index");
+import axios from "axios";
+import config from "../config/index";
 
-const generateNewKeyPair = async (modelName, modelId, secreteToken) => {
+const generateNewKeyPair = async (
+  modelName: string,
+  modelId: string,
+  secreteToken: string
+) => {
   const response = await axios.post(
-    `${SECRETE_SERVER_ADDRESS}/api/v1/keys/generate`,
+    `${config.SECRETE_SERVER_ADDRESS}/api/v1/keys/generate`,
     {
       modelName,
       modelId,
@@ -17,9 +21,9 @@ const generateNewKeyPair = async (modelName, modelId, secreteToken) => {
   return response.data;
 };
 
-const getKeyPairs = async (secreteToken) => {
+const getKeyPairs = async (secreteToken: string) => {
   const response = await axios.get(
-    `${SECRETE_SERVER_ADDRESS}/api/v1/keys`,
+    `${config.SECRETE_SERVER_ADDRESS}/api/v1/keys`,
 
     {
       headers: {
@@ -30,7 +34,7 @@ const getKeyPairs = async (secreteToken) => {
   return response.data;
 };
 
-const encryptMessage = async (message, privateKey) => {
+export const encryptMessage = async (message: string, privateKey: string) => {
   const response = await axios.post("/api/encrypt", {
     text: message,
     privateKey: privateKey,
@@ -38,7 +42,7 @@ const encryptMessage = async (message, privateKey) => {
   return response.data.message;
 };
 
-const decryptMessage = async (message, publicKey) => {
+export const decryptMessage = async (message: string, publicKey: string) => {
   const response = await axios.post("/api/decrypt", {
     text: message,
     publicKey: publicKey,
@@ -46,9 +50,11 @@ const decryptMessage = async (message, publicKey) => {
   return response.data.message;
 };
 
-module.exports = {
+const mod = {
   generateNewKeyPair,
   getKeyPairs,
   encryptMessage,
   decryptMessage,
 };
+
+export default mod;

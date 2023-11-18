@@ -29,16 +29,32 @@ export interface PostInterface {
 }
 
 export interface CommentInterface {
-  author: UserInterFace;
+  author: {
+    id: string;
+    firstname: string;
+    lastname: string;
+    professionalSummary: string;
+
+    profilePic: {
+      fileUrl: string;
+    };
+  };
   commentText: string;
   date: string;
   id: string;
   updatedAt: string;
   reactions: {
-    user: UserInterFace;
+    user: {
+      id: string;
+      firstname: string;
+      lastname: string;
+      profilePic: {
+        fileUrl: string;
+      };
+    };
     type: string;
     id?: string;
   }[];
   files: CropperImageInterface[];
-  replies:CommentInterface[]
+  replies: CommentInterface[];
 }

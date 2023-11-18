@@ -5,6 +5,13 @@ import React from "react";
 import ChatSectionLeft from "./ChatSectionLeft";
 import ChatSectionRight from "./ChatSectionRight";
 import { useSelector } from "react-redux";
+import {
+  ChatInterface,
+  FileInterface,
+  MessageInterface,
+  RootState,
+  ThemeInterface,
+} from "../../../interfaces/myprofile";
 
 const ChatSection = ({
   chat,
@@ -20,13 +27,28 @@ const ChatSection = ({
   chatFiles,
   handleChooseFileIcon2,
   chatFileInput2,
+}: {
+  chat: ChatInterface;
+  messageChangeHandler: (e: React.ChangeEvent) => void;
+  message: string;
+  sendNewMessage: (e: React.FormEvent) => void;
+  messages: MessageInterface[];
+  onEmojiClick: (_: any, emojiObject: any) => void;
+  chatFileInput: any;
+  handleChooseFileIcon: () => void;
+  handleRemoveFile: (file: FileInterface) => void;
+  handleChooseFile: () => void;
+  chatFiles: FileInterface[];
+  handleChooseFileIcon2: () => void;
+  chatFileInput2: any;
 }) => {
   const [showRight, setShowRight] = React.useState(false);
-  const user = useSelector((state) => state.user);
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore.user;
   const showRightHandler = () => {
     setShowRight(!showRight);
   };
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   return (
     <>
       {chat ? (
@@ -57,7 +79,6 @@ const ChatSection = ({
               sendNewMessage={sendNewMessage}
               message={message}
               messages={messages}
-              colleagueUsername={chat.colleagueUsername}
               showRightHandler={showRightHandler}
               showRight={showRight}
               onEmojiClick={onEmojiClick}

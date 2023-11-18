@@ -15,7 +15,7 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
@@ -59,8 +59,8 @@ import {
 } from "../../../assets/Icons";
 import { CropperImageInterface } from "../../../interfaces/myprofile";
 import { IEmojiData } from "emoji-picker-react";
-import { useCheckLogedinUserToken } from "../../../hooks/hooks";
-import { useGetKeyPairs } from "../../../hooks/secrete";
+import hookHook from "../../../hooks/hooks";
+import secreteHook from "../../../hooks/secrete";
 import { LoadingButton } from "@mui/lab";
 import {
   postNewCommentToPost,
@@ -75,11 +75,13 @@ import {
   reactOnPostCommentState,
   reactOnPostState,
 } from "../../../Redux/slices/work";
-import { sendMessege } from "../../../services/chats";
+import chatServices from "../../../services/chats";
 import { connect } from "socket.io-client";
-import { encryptMessage } from "../../../services/encrypt";
-import { RTC_ADDRESS } from "../../../config";
-const chatSocket = connect(`${RTC_ADDRESS}/chat`);
+import encryptMessageServices from "../../../services/encrypt";
+import config from "../../../config/index";
+import axios from "axios";
+import { set } from "date-fns";
+const chatSocket = connect(`${config.RTC_ADDRESS}/chat`);
 
 const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
   const author: UserInterFace | null = post ? post.author : null;
@@ -96,7 +98,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       }[]
     | null = post ? post.reactions : null;
   const theme: ThemeInterface = useTheme();
-  const token = useCheckLogedinUserToken();
+  const token = hookHook.useCheckLogedinUserToken();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
@@ -636,8 +638,8 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
       {showCommentSection && (
         <PostComments
           postId={id ? id : ""}
-          comments={comments ? comments : []}
           user={user}
+          token={token ? token : ""}
         />
       )}
     </Box>
@@ -724,16 +726,16 @@ const FileSlider = ({ files }: { files: CropperImageInterface[] }) => {
 };
 
 const PostComments = ({
-  comments,
   user,
   postId,
+  token,
 }: {
-  comments: CommentInterface[];
   user: UserInterFace;
   postId: string;
+  token: string;
 }) => {
   const [visibleComments, setVisibleComments] = useState(2); // Number of initially visible comments
-
+  const [comments, setComments] = useState<CommentInterface[]>([]);
   // sort the comments by createdAt in descending order
   const sortedComments = comments
     .slice()
@@ -742,6 +744,26 @@ const PostComments = ({
   const handleLoadMore = () => {
     setVisibleComments((prevCount) => prevCount + 10); // Increase the visible comment count
   };
+
+  useEffect(() => {
+    axios
+      .get(
+        `${config.SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comments`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      .then((response) => {
+        setComments(response.data);
+      });
+
+    return () => {
+      setComments([]);
+    };
+  }, [postId, token]);
 
   return (
     <Box>
@@ -770,7 +792,7 @@ const PostComment = ({
   postId: string;
 }) => {
   const dispatch = useDispatch();
-  const token = useCheckLogedinUserToken();
+  const token = hookHook.useCheckLogedinUserToken();
   const [showReactions, setShowReactions] = useState(false);
   const { id } = comment;
   const reactionHandle = async (
@@ -1281,7 +1303,7 @@ const CommentReply = ({
   commentId: string;
 }) => {
   const dispatch = useDispatch();
-  const token = useCheckLogedinUserToken();
+  const token = hookHook.useCheckLogedinUserToken();
   const [showReactions, setShowReactions] = useState(false);
   const { id } = comment;
   const reactionHandle = async (
@@ -1614,8 +1636,8 @@ function AlertDialogSlide({
   const user: UserInterFace | null = userStore ? userStore.user : null;
   const colleagues: UserInterFace[] = user ? user?.colleagues : [];
   // Get Key Pair
-  useGetKeyPairs();
-  const token = useCheckLogedinUserToken();
+  secreteHook.useGetKeyPairs();
+  const token = hookHook.useCheckLogedinUserToken();
   const sendPostToConnectionHandle = () => {
     if (token && selectedConnection.length > 0) {
       selectedConnection.map(async (connectionId) => {
@@ -1746,14 +1768,17 @@ const sendMessageHandle = async (
   chatId: string,
   uuid: string
 ): Promise<boolean> => {
-  const encryptedMessage = await encryptMessage(message, publicKey);
+  const encryptedMessage = await encryptMessageServices.encryptMessage(
+    message,
+    publicKey
+  );
   const formData = new FormData();
   console.log("publicKey :>>", publicKey);
   formData.append("message", encryptedMessage);
   formData.append("idFromClient", uuid);
 
   if (token && chatId) {
-    const sentMessage = await sendMessege(token, chatId, formData);
+    const sentMessage = await chatServices.sendMessege(token, chatId, formData);
 
     chatSocket.emit("send_message", sentMessage);
     return true;

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, FC } from "react";
 import { Box } from "@mui/system";
 import {
   Avatar,
@@ -34,15 +34,21 @@ import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
 
 import dynamic from "next/dynamic";
-import Image from "next/image";
 
 import FileComponent from "../mediaFiles/FileComponent";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
-import { getFileType } from "../../../tools/tools";
 import FileIcone from "../mediaFiles/FileIcon";
 import { useSelector } from "react-redux";
 import { decryptMessage } from "../../../services/encrypt";
 import { useRouter } from "next/router";
+import {
+  ChatInterface,
+  FileInterface,
+  MessageInterface,
+  RootState,
+  ThemeInterface,
+  UserInterFace,
+} from "../../../interfaces/myprofile";
 
 const Picker = dynamic(
   () => {
@@ -62,7 +68,6 @@ const ChatSectionLeft = ({
   showRightHandler,
   showRight,
   onEmojiClick,
-  unsentMessages,
   chatFileInput,
   handleChooseFileIcon,
   handleChooseFile,
@@ -70,10 +75,28 @@ const ChatSectionLeft = ({
   chatFiles,
   handleChooseFileIcon2,
   chatFileInput2,
+}: {
+  id: string;
+  user: UserInterFace;
+  chat: ChatInterface;
+  messageChangeHandler: (e: React.ChangeEvent) => void;
+  sendNewMessage: (e: React.FormEvent) => void;
+  message: string;
+  messages: MessageInterface[];
+  showRightHandler: () => void;
+  showRight: boolean;
+  onEmojiClick: (_: any, emojiObject: any) => void;
+  chatFileInput: any;
+  handleChooseFileIcon: () => void;
+  handleChooseFile: () => void;
+  handleRemoveFile: (file: FileInterface) => void;
+  chatFiles: FileInterface[];
+  handleChooseFileIcon2: () => void;
+  chatFileInput2: any;
 }) => {
   const [showFile, setShowFile] = useState(false);
-  const [file, setFile] = useState(null);
-  const handleShowFile = (file) => {
+  const [file, setFile] = useState<FileInterface | null>(null);
+  const handleShowFile = (file: FileInterface) => {
     // If file.fileUrl includes https:// then setFile to file and setShowVideoPlayer to true
     if (file.fileUrl.includes("https://")) {
       setFile(file);
@@ -107,7 +130,6 @@ const ChatSectionLeft = ({
             colleagueProfilePic={
               chat.colleagueProfilePic && chat.colleagueProfilePic.fileUrl
             }
-            id={id}
           />
           <Box
             sx={{
@@ -122,7 +144,6 @@ const ChatSectionLeft = ({
               <Mid
                 user={user}
                 messages={messages}
-                unsentMessages={unsentMessages}
                 handleShowFile={handleShowFile}
               />
             )}
@@ -153,8 +174,13 @@ const TopBar = ({
   showRightHandler,
   showRight,
   colleagueProfilePic,
+}: {
+  colleagueUsername: string;
+  showRightHandler: () => void;
+  showRight: boolean;
+  colleagueProfilePic: string;
 }) => {
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{
@@ -258,8 +284,16 @@ const TopBar = ({
   );
 };
 
-const Mid = ({ user, messages, handleShowFile }) => {
-  const toBottomWhenNewMessage = useRef(null);
+const Mid = ({
+  user,
+  messages,
+  handleShowFile,
+}: {
+  user: UserInterFace;
+  messages: MessageInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}) => {
+  const toBottomWhenNewMessage = useRef<HTMLLIElement>(null);
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
     toBottomWhenNewMessage.current?.scrollIntoView({ behavior: "smooth" });
@@ -282,7 +316,7 @@ const Mid = ({ user, messages, handleShowFile }) => {
         }}
       >
         {messages.map((message) => {
-          return message.sender === user.user.id ? (
+          return message.sender === user.id ? (
             <UserMessage message={message} handleShowFile={handleShowFile} />
           ) : (
             <ColleagueMessage
@@ -298,25 +332,35 @@ const Mid = ({ user, messages, handleShowFile }) => {
   );
 };
 
-const UserMessage = ({ message, handleShowFile }) => {
+const UserMessage: FC<{
+  message: MessageInterface;
+  handleShowFile: (file: {
+    fileName: string;
+    fileUrl: string;
+    fileUri: string;
+    fileType: string;
+  }) => void;
+}> = ({ message, handleShowFile }) => {
   const purple1 = purple[700];
   const purple2 = purple[400];
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   let idProvided = message.id ? true : false;
   const router = useRouter();
   const id = router.query.id;
   const [decryptedMessage, setDecryptedMessage] = useState("");
   // key pair
-  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPairStore = useSelector(
+    (state: RootState) => state.keyPairs.keyPairs
+  );
   const keyPair = keyPairStore
     ? keyPairStore.find((key) => key.modelId === id)
     : null;
   const decreptMessageHandler = async () => {
     const messageToDecrypt = message.message;
-
-    setDecryptedMessage(
-      await decryptMessage(messageToDecrypt, keyPair.privateKey)
-    );
+    if (keyPair)
+      setDecryptedMessage(
+        await decryptMessage(messageToDecrypt, keyPair.privateKey)
+      );
   };
 
   const messageToDisplay = decryptedMessage
@@ -430,22 +474,32 @@ const UserMessage = ({ message, handleShowFile }) => {
   );
 };
 
-const ColleagueMessage = ({ message, handleShowFile }) => {
-  const theme = useTheme();
+const ColleagueMessage: FC<{
+  message: MessageInterface;
+  handleShowFile: (file: {
+    fileName: string;
+    fileUrl: string;
+    fileUri: string;
+    fileType: string;
+  }) => void;
+}> = ({ message, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const router = useRouter();
   const id = router.query.id;
   const [decryptedMessage, setDecryptedMessage] = useState("");
   // key pair
-  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPairStore = useSelector(
+    (state: RootState) => state.keyPairs.keyPairs
+  );
   const keyPair = keyPairStore
     ? keyPairStore.find((key) => key.modelId === id)
     : null;
   const decreptMessageHandler = async () => {
     const messageToDecrypt = message.message;
-
-    setDecryptedMessage(
-      await decryptMessage(messageToDecrypt, keyPair.privateKey)
-    );
+    if (keyPair)
+      setDecryptedMessage(
+        await decryptMessage(messageToDecrypt, keyPair.privateKey)
+      );
   };
 
   const messageToDisplay = decryptedMessage
@@ -522,7 +576,13 @@ const ColleagueMessage = ({ message, handleShowFile }) => {
                 }}
                 onClick={() => handleShowFile(file)}
               >
-                <FileComponent file={file} />
+                <FileComponent
+                  displayFile
+                  height={200}
+                  width={200}
+                  key={"FileComponent"}
+                  file={file}
+                />
               </Box>
             );
           })}
@@ -535,7 +595,24 @@ const ColleagueMessage = ({ message, handleShowFile }) => {
   );
 };
 
-const Bottom = ({
+const Bottom: FC<{
+  messageChangeHandler: (e: React.ChangeEvent) => void;
+  sendNewMessage: (e: React.FormEvent) => void;
+  message: string;
+  onEmojiClick: (_: any, emojiObject: any) => void;
+  handleChooseFileIcon: () => void;
+  chatFileInput: any;
+  handleChooseFile: () => void;
+  handleRemoveFile: (file: {
+    fileName: string;
+    fileUrl: string;
+    fileUri: string;
+    fileType: string;
+  }) => void;
+  chatFiles: FileInterface[];
+  handleChooseFileIcon2: () => void;
+  chatFileInput2: any;
+}> = ({
   messageChangeHandler,
   sendNewMessage,
   message,
@@ -549,7 +626,7 @@ const Bottom = ({
   chatFileInput2,
 }) => {
   const [showEmojiPeaker, setShowEmojiPeaker] = useState(false);
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
 
   return (
     <Box
@@ -652,14 +729,14 @@ const Bottom = ({
                   variant="contained"
                   color="secondary"
                   size="small"
-                  onClick={(e) => handleChooseFileIcon2(e)}
+                  onClick={handleChooseFileIcon2}
                 >
                   <AddIcon />
                   <input
                     type="file"
                     hidden
                     ref={chatFileInput2}
-                    onChange={(e) => handleChooseFile(e)}
+                    onChange={handleChooseFile}
                   />
                 </Button>
               </Box>
@@ -778,28 +855,28 @@ const Bottom = ({
     </Box>
   );
 };
-function MenuListComposition({
-  handleChooseFileIcon,
-  chatFileInput,
-  handleChooseFile,
-}) {
+const MenuListComposition: FC<{
+  handleChooseFileIcon: () => void;
+  chatFileInput: any;
+  handleChooseFile: () => void;
+}> = ({ handleChooseFileIcon, chatFileInput, handleChooseFile }) => {
   const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  const anchorRef: any = React.useRef(null);
 
-  const handleToggle = (e) => {
+  const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = (e) => {
+  const handleClose = (e: any) => {
     e.stopPropagation();
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (anchorRef.current && anchorRef.current.contains(e.target)) {
       return;
     }
 
     setOpen(false);
   };
 
-  function handleListKeyDown(event) {
+  function handleListKeyDown(event: any) {
     if (event.key === "Tab") {
       event.preventDefault();
       setOpen(false);
@@ -855,11 +932,7 @@ function MenuListComposition({
                     aria-labelledby="composition-button"
                     onKeyDown={handleListKeyDown}
                   >
-                    <MenuItem
-                      onClick={(e) => {
-                        handleChooseFileIcon(e);
-                      }}
-                    >
+                    <MenuItem onClick={handleChooseFileIcon}>
                       <ListItemIcon>
                         <FileUploadRoundedIcon
                           fontSize="small"
@@ -874,7 +947,7 @@ function MenuListComposition({
                         }}
                         onChange={(e) => {
                           handleClose(e);
-                          handleChooseFile(e);
+                          handleChooseFile();
                         }}
                       />
                       Upload file
@@ -894,4 +967,4 @@ function MenuListComposition({
       </Box>
     </Stack>
   );
-}
+};

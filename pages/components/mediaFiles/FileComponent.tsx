@@ -11,8 +11,15 @@ import {
   Ppt,
   OtherFile,
 } from "../../../assets/ExtraComponents";
+import { FC } from "react";
+import { FileInterface } from "../../../interfaces/myprofile";
 
-const FileComponent = ({ file, height, width, displayFile }) => {
+const FileComponent: FC<{
+  file: FileInterface;
+  height?: number;
+  width?: number;
+  displayFile?: boolean;
+}> = ({ file, height, width, displayFile }) => {
   if (file) {
     if (file.fileType) {
       if (file.fileType.includes("image")) {

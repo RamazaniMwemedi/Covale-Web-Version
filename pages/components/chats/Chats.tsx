@@ -23,29 +23,36 @@ import AddIcon from "@mui/icons-material/Add";
 import StartAChatWithColleague from "./StartAChatWithColleague";
 import Chat from "./Chat";
 import { useSelector } from "react-redux";
+import {
+  ChatInterface,
+  RootState,
+  ThemeInterface,
+  UserInterFace,
+} from "../../../interfaces/myprofile";
 
 const Chats = ({
-  friends,
+  colleagues,
   showMoreFriends,
   showButton,
-  friendClicked,
   buttonHandler,
   closeMorePeopleHandler,
-  sendMessage,
-  clickFriendHandler,
-  clearFriendHandler,
-  messageChangeHandler,
+}: {
+  colleagues: UserInterFace[];
+  showMoreFriends: boolean;
+  showButton: boolean;
+  buttonHandler: () => void;
+  closeMorePeopleHandler: () => void;
 }) => {
   let loading = true;
-  const chats = useSelector((state) => {
+  const chats = useSelector((state: RootState) => {
     if (state.chats.chats) {
       loading = false;
     }
     return state.chats.chats;
   });
   const [filterChatName, setFilterChatName] = useState("");
-  const [allFilteredChats, setAllFilteredChats] = useState([]);
-  const theme = useTheme();
+  const [allFilteredChats, setAllFilteredChats] = useState<ChatInterface[]>([]);
+  const theme: ThemeInterface = useTheme();
   return (
     <>
       <Box
@@ -86,10 +93,10 @@ const Chats = ({
                 e.target.value.length < 1
                   ? []
                   : chats.filter((chat) =>
-                    chat.friendUsername
-                      .toLowerCase()
-                      .includes(e.target.value.toLowerCase())
-                  )
+                      chat.colleagueUsername
+                        .toLowerCase()
+                        .includes(e.target.value.toLowerCase())
+                    )
               );
             }}
             sx={{
@@ -131,7 +138,7 @@ const Chats = ({
               >
                 {/* Avatar skeleton */}
                 <Skeleton
-                  variant="circle"
+                  variant="circular"
                   width={40}
                   height={40}
                   style={{ borderRadius: "50%" }}
@@ -139,13 +146,13 @@ const Chats = ({
                 {/* Skeleton for user first and lastname */}
                 <Box sx={{}}>
                   <Skeleton
-                    variant="rect"
+                    variant="rectangular"
                     width={185}
                     height={20}
                     style={{ marginLeft: "10px" }}
                   />
                   <Skeleton
-                    variant="rect"
+                    variant="rectangular"
                     width={185}
                     height={8}
                     style={{ marginLeft: "10px", marginTop: "8px" }}
@@ -160,7 +167,7 @@ const Chats = ({
             {filterChatName.length > 0 && allFilteredChats.length > 0 ? (
               <Box>
                 {allFilteredChats.map((chat) => {
-                  return <Chat key={chat.chatId} chat={chat} />;
+                  return <Chat key={chat.id} chat={chat} />;
                 })}
               </Box>
             ) : (
@@ -180,12 +187,7 @@ const Chats = ({
                   {showMoreFriends && (
                     <StartAChatWithColleague
                       closeMorePeopleHandler={closeMorePeopleHandler}
-                      messageChangeHandler={messageChangeHandler}
-                      sendMessage={sendMessage}
-                      clearFriendHandler={clearFriendHandler}
-                      friendClicked={friendClicked}
-                      clickFriendHandler={clickFriendHandler}
-                      friends={friends}
+                      colleagues={colleagues}
                     />
                   )}
 
@@ -196,7 +198,7 @@ const Chats = ({
                   {chats
                     .filter((chat) => chat.messages.length > 0)
                     .map((chat) => {
-                      return <Chat key={chat.chatId} chat={chat} />;
+                      return <Chat key={chat.id} chat={chat} />;
                     })}
                 </Box>
               ) : (
@@ -204,13 +206,7 @@ const Chats = ({
                   {showMoreFriends && (
                     <StartAChatWithColleague
                       closeMorePeopleHandler={closeMorePeopleHandler}
-                      messageChangeHandler={messageChangeHandler}
-                      sendMessage={sendMessage}
-                      // message={message}
-                      clearFriendHandler={clearFriendHandler}
-                      friendClicked={friendClicked}
-                      clickFriendHandler={clickFriendHandler}
-                      friends={friends}
+                      colleagues={colleagues}
                     />
                   )}
 

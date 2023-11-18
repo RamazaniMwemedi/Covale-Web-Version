@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Avatar, Button, IconButton, Typography } from "@mui/material";
+import React, { FC, useState } from "react";
+import { Avatar, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useTheme } from "@mui/styles";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -12,7 +12,6 @@ import Image from "next/image";
 import VedeoOpen from "./VideoOpen";
 import FileDisplayComponent from "../mediaFiles/FileDisplayComponent";
 import FileComponent from "../mediaFiles/FileComponent";
-import { purple } from "@mui/material/colors";
 import {
   DocxIcon,
   ImageIcon,
@@ -21,15 +20,16 @@ import {
   VideoIcon,
   XlsIcon,
 } from "../../../assets/Icons";
+import { FileInterface, ThemeInterface } from "../../../interfaces/myprofile";
 
-const ChatSectionRight = ({
-  colleagueUsername,
-  files,
-  colleagueProfilePic,
-}) => {
+const ChatSectionRight: FC<{
+  colleagueUsername: string;
+  files: FileInterface[];
+  colleagueProfilePic: string;
+}> = ({ colleagueUsername, files, colleagueProfilePic }) => {
   const [showFile, setShowFile] = useState(false);
-  const [file, setFile] = useState(null);
-  const handleShowFile = (file) => {
+  const [file, setFile] = useState<FileInterface | null>(null);
+  const handleShowFile = (file: FileInterface) => {
     if (file.fileUrl.includes("https://")) {
       setFile(file);
       setShowFile(true);
@@ -71,7 +71,7 @@ const ChatSectionRight = ({
               flexDirection: "column",
             }}
           >
-            <Friend
+            <Colleague
               colleagueUsername={colleagueUsername}
               colleagueProfilePic={colleagueProfilePic}
             />
@@ -97,7 +97,10 @@ export default ChatSectionRight;
 
 // Friend short details
 
-const Friend = ({ colleagueUsername, colleagueProfilePic }) => {
+const Colleague: FC<{
+  colleagueUsername: string;
+  colleagueProfilePic: string;
+}> = ({ colleagueUsername, colleagueProfilePic }) => {
   return (
     <Box
       sx={{
@@ -135,8 +138,11 @@ const Friend = ({ colleagueUsername, colleagueProfilePic }) => {
 };
 
 // Media
-const Media = ({ files, handleShowFile }) => {
-  const theme = useTheme();
+const Media: FC<{
+  files: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ files, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const imageFiles = files.filter((file) => file.fileType.includes("image"));
   const videoFiles = files.filter((file) => file.fileType.includes("video"));
   const documentFiles = files.filter((file) =>
@@ -345,8 +351,11 @@ const Media = ({ files, handleShowFile }) => {
   );
 };
 
-const ImageMedia = ({ imageFiles, handleShowFile }) => {
-  const theme = useTheme();
+const ImageMedia: FC<{
+  imageFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ imageFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -369,12 +378,11 @@ const ImageMedia = ({ imageFiles, handleShowFile }) => {
           rowHeight={80}
         >
           {imageFiles.map((imageFile) => (
-            <ImageListItem key={imageFile.img}>
+            <ImageListItem key={imageFile.fileUrl}>
               <Image
                 onClick={() => handleShowFile(imageFile)}
                 src={`${imageFile.fileUrl}?w=110&h=80&fit=crop&auto=format`}
-                srcSet={`${imageFile.fileUrl}?w=110&h=80&fit=crop&auto=format&dpr=2 2x`}
-                alt="Picture of the author"
+                alt="Images"
                 width={110}
                 height={80}
                 quality={100}
@@ -390,8 +398,11 @@ const ImageMedia = ({ imageFiles, handleShowFile }) => {
   );
 };
 
-const MediaVideos = ({ videoFiles, handleShowFile }) => {
-  const theme = useTheme();
+const MediaVideos: FC<{
+  videoFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ videoFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -430,8 +441,11 @@ const MediaVideos = ({ videoFiles, handleShowFile }) => {
   );
 };
 
-const MediaDocuments = ({ documentFiles, handleShowFile }) => {
-  const theme = useTheme();
+const MediaDocuments: FC<{
+  documentFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ documentFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -467,8 +481,11 @@ const MediaDocuments = ({ documentFiles, handleShowFile }) => {
     </Box>
   );
 };
-const MediaXls = ({ xlsFiles, handleShowFile }) => {
-  const theme = useTheme();
+const MediaXls: FC<{
+  xlsFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ xlsFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -504,13 +521,16 @@ const MediaXls = ({ xlsFiles, handleShowFile }) => {
     </Box>
   );
 };
-const MediaPdf = ({ pdfFiles, handleShowFile }) => {
+const MediaPdf: FC<{
+  pdfFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ pdfFiles, handleShowFile }) => {
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
     setShow((prev) => !prev);
   };
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   return (
     <Box>
       <MediaName name="Pdf" show={show} toggleShow={toggleShow} />
@@ -541,8 +561,11 @@ const MediaPdf = ({ pdfFiles, handleShowFile }) => {
     </Box>
   );
 };
-const MediaPpt = ({ pptFiles, handleShowFile }) => {
-  const theme = useTheme();
+const MediaPpt: FC<{
+  pptFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ pptFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -579,7 +602,11 @@ const MediaPpt = ({ pptFiles, handleShowFile }) => {
   );
 };
 
-const MediaName = ({ name, show, toggleShow }) => {
+const MediaName: FC<{
+  name: string;
+  show: boolean;
+  toggleShow: () => void;
+}> = ({ name, show, toggleShow }) => {
   return (
     <Box
       sx={{

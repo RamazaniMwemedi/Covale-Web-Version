@@ -10,7 +10,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import "@fontsource/open-sans/500.css"; // Weight 500.
 import { useTheme } from "@mui/styles";
-import { Avatar } from "@mui/material";
+import { Avatar, Theme } from "@mui/material";
 
 import Chats from "./Chats";
 import { useGetFriends } from "../../../hooks/hooks";
@@ -18,8 +18,9 @@ import { useGetFriends } from "../../../hooks/hooks";
 import chatService from "../../../services/chats";
 import { getTeams } from "../../../services/teams";
 import Teams from "../teams/Teams";
+import { ThemeInterface, UserInterFace } from "../../../interfaces/myprofile";
 
-const closedMixin = (theme) => ({
+const closedMixin = (theme: ThemeInterface) => ({
   //
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
@@ -39,37 +40,32 @@ const closedMixin = (theme) => ({
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({ theme }: { theme: ThemeInterface }) => ({
   width: "15px",
   flexShrink: 0,
   backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
-
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
 }));
 
 function Tabs({
-  teams,
   value,
-  friends,
+  colleagues,
   showMoreFriends,
   showButton,
-  friendClicked,
   buttonHandler,
   closeMorePeopleHandler,
-  clickFriendHandler,
-  clearFriendHandler,
   toggleShowTeam,
   openCreateTeam,
-  teamLoading,
+}: {
+  value: "chats" | "team";
+  colleagues: UserInterFace[];
+  showMoreFriends: boolean;
+  showButton: boolean;
+  buttonHandler: () => void;
+  closeMorePeopleHandler: () => void;
+  toggleShowTeam: () => void;
+  openCreateTeam: boolean;
 }) {
   return (
     <Box sx={{ width: "100%", typography: "body1", overflow: "hidden" }}>
@@ -81,19 +77,24 @@ function Tabs({
             }}
           >
             <Chats
-              friends={friends}
-              showMoreFriends={showMoreFriends}
-              showButton={showButton}
-              friendClicked={friendClicked}
               buttonHandler={buttonHandler}
               closeMorePeopleHandler={closeMorePeopleHandler}
-              clickFriendHandler={clickFriendHandler}
-              clearFriendHandler={clearFriendHandler}
+              colleagues={colleagues}
+              showButton={showButton}
+              showMoreFriends={showMoreFriends}
+              key={"Chats-Component"}
+              // friends={friends}
+              // showMoreFriends={showMoreFriends}
+              // showButton={showButton}
+              // friendClicked={friendClicked}
+              // buttonHandler={buttonHandler}
+              // closeMorePeopleHandler={closeMorePeopleHandler}
+              // clickFriendHandler={clickFriendHandler}
+              // clearFriendHandler={clearFriendHandler}
             />
           </Box>
         </TabPanel>
         <TabPanel value="team">
-          {" "}
           <Box
             sx={{
               margin: "-20px",
@@ -101,9 +102,7 @@ function Tabs({
           >
             <Teams
               toggleShowTeam={toggleShowTeam}
-              teams={teams}
               openCreateTeam={openCreateTeam}
-              teamLoading={teamLoading}
             />
           </Box>
         </TabPanel>
@@ -112,14 +111,14 @@ function Tabs({
   );
 }
 
-export default function ChatLeft({ user }) {
-  const [value, setValue] = React.useState("chats");
-  const friends = useGetFriends();
+export default function ChatLeft({ user }: { user: UserInterFace }) {
+  const [value, setValue] = React.useState<"chats" | "team">("chats");
+  const friends: UserInterFace[] = useGetFriends();
   const [showMoreFriends, setShowMoreFriends] = React.useState(false);
   const [showButton, setShowButton] = React.useState(true);
-  const [friendClicked, setFriendClicked] = React.useState(null);
   // Team States
   const [openCreateTeam, setOpenCreateTeam] = React.useState(false);
+  // const theme: ThemeInterface = useTheme();
 
   const buttonHandler = () => {
     setShowMoreFriends(true);
@@ -130,15 +129,7 @@ export default function ChatLeft({ user }) {
     setShowButton(true);
   };
 
-  const clickFriendHandler = (friend) => {
-    setFriendClicked(friend);
-  };
-
-  const clearFriendHandler = () => {
-    setFriendClicked(null);
-  };
-
-  const handleChange = (event, newValue) => {
+  const handleChange = (_: any, newValue: "chats" | "team") => {
     setValue(newValue);
   };
 
@@ -160,15 +151,12 @@ export default function ChatLeft({ user }) {
 
         <Tabs
           value={value}
-          handleChange={handleChange}
-          friends={friends}
+          // handleChange={handleChange}
+          colleagues={friends}
           showMoreFriends={showMoreFriends}
           showButton={showButton}
-          friendClicked={friendClicked}
           buttonHandler={buttonHandler}
           closeMorePeopleHandler={closeMorePeopleHandler}
-          clickFriendHandler={clickFriendHandler}
-          clearFriendHandler={clearFriendHandler}
           // Teams
           toggleShowTeam={toggleShowTeam}
           openCreateTeam={openCreateTeam}
@@ -178,8 +166,12 @@ export default function ChatLeft({ user }) {
   );
 }
 
-const ProfileDialog = ({ user, handleChange, value }) => {
-  const theme = useTheme();
+const ProfileDialog: React.FC<{
+  user: UserInterFace;
+  handleChange: (_: any, newValue: "chats" | "team") => void;
+  value: "chats" | "team";
+}> = ({ user, handleChange, value }) => {
+  const theme: ThemeInterface = useTheme();
   return (
     <>
       {user ? (
@@ -205,7 +197,7 @@ const ProfileDialog = ({ user, handleChange, value }) => {
             >
               <Box>
                 {" "}
-                <Avatar src={user.profilePic ? user.profilePic.fileUrl : null}>
+                <Avatar src={user.profilePic ? user.profilePic.fileUrl : ""}>
                   {user && user.username[0]}
                 </Avatar>{" "}
               </Box>

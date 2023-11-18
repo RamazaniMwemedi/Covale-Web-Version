@@ -57,13 +57,13 @@ import {
   createATopic,
   replyToTopic,
 } from "../../../services/teams";
-import { RTC_ADDRESS } from "../../../config";
+import config from "../../../config";
 import { useGetKeyPairs } from "../../../hooks/secrete";
 import { encryptString } from "../../../encryption/encrypt";
 import { encryptMessage } from "../../../services/encrypt";
 // Socket.IO
-const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
-const chatSocket = io.connect(`${RTC_ADDRESS}/chat`);
+const teamSocket = io.connect(`${config.RTC_ADDRESS}/team`);
+const chatSocket = io.connect(`${config.RTC_ADDRESS}/chat`);
 
 export default function Chat() {
   // Global States

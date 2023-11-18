@@ -1,8 +1,8 @@
-const axios = require("axios");
-const { SERVER_ADDRESS } = require("../config/index");
+import axios from "axios";
+import config from "../config/index";
 
-const getProjects = async (token) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/project`, {
+const getProjects = async (token: string) => {
+  const response = await axios.get(`${config.SERVER_ADDRESS}/api/v1/project`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -10,9 +10,9 @@ const getProjects = async (token) => {
   return response.data;
 };
 
-const createNewProject = async (project, token) => {
+const createNewProject = async (project: string, token: string) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/project`,
+    `${config.SERVER_ADDRESS}/api/v1/project`,
     project,
     {
       headers: {
@@ -24,14 +24,14 @@ const createNewProject = async (project, token) => {
 };
 
 const createNewSubProject = async (
-  token,
-  title,
-  description,
-  projectId,
-  options
+  token: string,
+  title: string,
+  description: string,
+  projectId: string,
+  options: string[]
 ) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/subproject/${projectId}`,
+    `${config.SERVER_ADDRESS}/api/v1/subproject/${projectId}`,
     {
       title,
       description,
@@ -46,9 +46,13 @@ const createNewSubProject = async (
   return response.data;
 };
 
-const createNewTask = async (token, formData, subProjectId) => {
+const createNewTask = async (
+  token: string,
+  formData: FormData,
+  subProjectId: string
+) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/subproject/${subProjectId}/task/new`,
+    `${config.SERVER_ADDRESS}/api/v1/subproject/${subProjectId}/task/new`,
     formData,
     {
       headers: {
@@ -59,9 +63,9 @@ const createNewTask = async (token, formData, subProjectId) => {
   return response.data;
 };
 
-const commmentTask = async (token, taskId, content) => {
+const commmentTask = async (token: string, taskId: string, content: string) => {
   const response = await axios.post(
-    `${SERVER_ADDRESS}/api/v1/subproject/tasks/${taskId}/comment`,
+    `${config.SERVER_ADDRESS}/api/v1/subproject/tasks/${taskId}/comment`,
     { content },
     {
       headers: {
@@ -72,11 +76,15 @@ const commmentTask = async (token, taskId, content) => {
   return response.data;
 };
 
-const modifyTask = async (token, taskId, data) => {
+const modifyTask = async (
+  token: string,
+  taskId: string,
+  data: { flag: string; status: string }
+) => {
   //  flag, status;
   if (token && taskId) {
     const response = await axios.patch(
-      `${SERVER_ADDRESS}/api/v1/subproject/tasks/${taskId}/modify`,
+      `${config.SERVER_ADDRESS}/api/v1/subproject/tasks/${taskId}/modify`,
       { flag: data.flag, status: data.status },
       {
         headers: {
@@ -88,7 +96,7 @@ const modifyTask = async (token, taskId, data) => {
   }
 };
 
-module.exports = {
+const mod = {
   getProjects,
   createNewProject,
   createNewSubProject,
@@ -96,3 +104,5 @@ module.exports = {
   commmentTask,
   modifyTask,
 };
+
+export default mod;

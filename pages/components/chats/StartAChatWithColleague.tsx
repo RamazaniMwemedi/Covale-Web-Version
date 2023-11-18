@@ -4,27 +4,22 @@ import {
   Divider,
   IconButton,
   ListItem,
-  Skeleton,
-  Stack,
   Typography,
 } from "@mui/material";
 import React from "react";
 import { useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
-import dynamic from "next/dynamic";
-import ChatSectionLeft from "./ChatSectionLeft";
-import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import { ThemeInterface, UserInterFace } from "../../../interfaces/myprofile";
 
 const StartAChatWithColleague = ({
-  friends: colleagues,
-  sendNewMessage,
-  friendClicked,
-  clickFriendHandler,
+  colleagues,
   closeMorePeopleHandler,
+}: {
+  colleagues: UserInterFace[];
+  closeMorePeopleHandler: () => void;
 }) => {
-  const theme = useTheme();
-  const user = useSelector((state) => state.user);
+  const theme: ThemeInterface = useTheme();
 
   return (
     <>
@@ -39,7 +34,6 @@ const StartAChatWithColleague = ({
             borderTopLeftRadius: "10px",
             blur: "5px",
             backgroundColor: theme.colors.background1,
-            position: "fixed",
             zIndex: "1",
           }}
         >
@@ -100,12 +94,18 @@ const StartAChatWithColleague = ({
 
 export default StartAChatWithColleague;
 
-const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
-  const theme = useTheme();
+const ColleaguesList = ({
+  colleagues,
+  closeMorePeopleHandler,
+}: {
+  colleagues: UserInterFace[];
+  closeMorePeopleHandler: () => void;
+}) => {
+  const theme: ThemeInterface = useTheme();
   const router = useRouter();
   return (
     <>
-      {colleagues.map((friend, i) => {
+      {colleagues.map((colleague, i) => {
         return (
           <Box
             key={i}
@@ -119,8 +119,8 @@ const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
               onClick={(e) => {
                 e.preventDefault();
                 router.push(
-                  `/chats/?c=c&id=${friend.chatId}`,
-                  `/chats/c/${friend.chatId}`,
+                  `/chats/?c=c&id=${colleague.chatId}`,
+                  `/chats/c/${colleague.chatId}`,
                   {
                     shallow: true,
                   }
@@ -147,10 +147,8 @@ const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
                 alignItems: "center",
               }}
             >
-              <Avatar
-                alt={friend.username[0]}
-              >
-                {friend.username[0]}
+              <Avatar alt={colleague.username[0]}>
+                {colleague.username[0]}
               </Avatar>
               <Box
                 sx={{
@@ -160,7 +158,7 @@ const ColleaguesList = ({ colleagues, closeMorePeopleHandler }) => {
                 }}
               >
                 <Typography variant="subtitle2">
-                  {friend.firstname} {friend.lastname}
+                  {colleague.firstname} {colleague.lastname}
                 </Typography>
               </Box>
             </ListItem>

@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   AudioIcon,
   ImageIcon,
@@ -9,7 +10,11 @@ import {
   File,
 } from "../../../assets/Icons";
 
-const FileIcone = ({ fileType, height, width }) => {
+const FileIcone: FC<{ fileType: string; height?: number; width?: number }> = ({
+  fileType,
+  height,
+  width,
+}) => {
   if (fileType) {
     if (fileType.includes("image")) {
       return (

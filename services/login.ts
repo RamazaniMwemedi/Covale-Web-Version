@@ -1,16 +1,15 @@
 import axios from "axios";
-const { SERVER_ADDRESS } = require("../config/index");
-const { SECRETE_SERVER_ADDRESS } = require("../config/index");
+import config from "../config/index";
 
-const signIn = async (data) => {
+const signIn = async (data: { email: string; password: string }) => {
   const { email, password } = data;
-  const response = await axios.post(`${SERVER_ADDRESS}/api/v1/login/`, {
+  const response = await axios.post(`${config.SERVER_ADDRESS}/api/v1/login/`, {
     email,
     password,
   });
   if (response.status == 200) {
     const responseFromSecreteServer = await axios.post(
-      `${SECRETE_SERVER_ADDRESS}/api/v1/authorization`,
+      `${config.SECRETE_SERVER_ADDRESS}/api/v1/authorization`,
       {
         email,
         password,
@@ -27,23 +26,34 @@ const signIn = async (data) => {
   return response.data;
 };
 
-const signUp = async (data) => {
+const signUp = async (data: {
+  email: string;
+  password: string;
+  firstname: string;
+  lastname: string;
+  username: string;
+  birthday: string;
+  gender: string;
+}) => {
   if (data) {
     const { email, password, firstname, lastname, username, birthday, gender } =
       data;
-    const response = await axios.post(`${SERVER_ADDRESS}/api/v1/login/signup`, {
-      email,
-      password,
-      firstname,
-      lastname,
-      username,
-      birthday,
-      gender,
-    });
+    const response = await axios.post(
+      `${config.SERVER_ADDRESS}/api/v1/login/signup`,
+      {
+        email,
+        password,
+        firstname,
+        lastname,
+        username,
+        birthday,
+        gender,
+      }
+    );
 
     if (response.status == 201) {
       const responseFromSecreteServer = await axios.post(
-        `${SECRETE_SERVER_ADDRESS}/api/v1/authorization`,
+        `${config.SECRETE_SERVER_ADDRESS}/api/v1/authorization`,
         {
           email,
           password,
@@ -64,7 +74,7 @@ const signUp = async (data) => {
 };
 
 const getUsers = async () => {
-  const response = await axios.get(`${SERVER_ADDRESS}/users/`);
+  const response = await axios.get(`${config.SERVER_ADDRESS}/users/`);
   return response.data;
 };
 export default { signIn, signUp, getUsers };

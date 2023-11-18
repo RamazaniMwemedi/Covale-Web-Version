@@ -25,10 +25,7 @@ import DrawerComponent from "../components/others/DrawerComponent";
 import WorktLeft from "../components/work/WorkLeft";
 
 // Hooks
-import {
-  useCheckLogedinUser,
-  useCheckLogedinUserToken,
-} from "../../hooks/hooks";
+import hookHooks from "../../hooks/hooks";
 
 // Services
 // import { addFriendById, cancelFriendRequest } from "../../services/user";
@@ -48,7 +45,7 @@ import { getConnectionsYouMayKnow } from "../../services/work";
 // Redux
 
 const Work = () => {
-  const userLoading = useCheckLogedinUser();
+  const userLoading = hookHooks.useCheckLogedinUser();
   const userStore = useSelector((state: RootState) => state.user);
   const theme: ThemeInterface = useTheme();
   const isMobileView = useMediaQuery(() => theme.breakpoints.down("sm"));
@@ -172,7 +169,7 @@ const RigthComponent: FC = () => {
   const theme: ThemeInterface = useTheme();
   const [requestSent, setRequestSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
-  const token = useCheckLogedinUserToken();
+  const token = hookHooks.useCheckLogedinUserToken();
   const isVerySmallPcView = useMediaQuery(() => theme.breakpoints.down("md"));
   const [connectionsYouMightKnow, setConnectionsYouMightKnow] = useState<
     UserInterFace[]

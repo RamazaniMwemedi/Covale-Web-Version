@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SERVER_ADDRESS } from "../config/index";
+import config from "../config/index";
 
 export const createNewPostService = async (
   token: string,
@@ -7,7 +7,7 @@ export const createNewPostService = async (
 ) => {
   if (token && formData) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/work/circle/post/new`,
+      `${config.SERVER_ADDRESS}/api/v1/work/circle/post/new`,
       formData,
       {
         headers: {
@@ -33,7 +33,7 @@ export const postNewCommentToPost = async (
 ) => {
   if (token && formData) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comment/new`,
+      `${config.SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comment/new`,
       formData,
       {
         headers: {
@@ -60,7 +60,7 @@ export const postNewReplyToComment = async (
 ) => {
   if (token && formData) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comment/${commentId}/reply`,
+      `${config.SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comment/${commentId}/reply`,
       formData,
       {
         headers: {
@@ -81,7 +81,7 @@ export const postNewReplyToComment = async (
 export const getUserPosts = async (token: string, userId: string) => {
   if (token) {
     const response = await axios.get(
-      `${SERVER_ADDRESS}/api/v1/work/circle/post/${userId}`,
+      `${config.SERVER_ADDRESS}/api/v1/work/circle/post/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ export const getUserPosts = async (token: string, userId: string) => {
 export const getAllPosts = async (token: string) => {
   if (token) {
     const response = await axios.get(
-      `${SERVER_ADDRESS}/api/v1/work/circle/posts`,
+      `${config.SERVER_ADDRESS}/api/v1/work/circle/posts`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -133,7 +133,7 @@ export const reactOnApost = async (
 ) => {
   if (token && postId) {
     const response = await axios.put(
-      `${SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/react`,
+      `${config.SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/react`,
       {
         reaction,
       },
@@ -167,7 +167,7 @@ export const reactOnApostComment = async (
 ) => {
   if (token && commentId) {
     const response = await axios.put(
-      `${SERVER_ADDRESS}/api/v1/work/circle/post/comment/${commentId}/react`,
+      `${config.SERVER_ADDRESS}/api/v1/work/circle/post/comment/${commentId}/react`,
       {
         reaction,
       },
@@ -192,7 +192,7 @@ export const reactOnApostComment = async (
 export const getConnectionsYouMayKnow = async (token: string) => {
   if (token) {
     const response = await axios.get(
-      `${SERVER_ADDRESS}/api/v1/work/circle/connectionsYouMK`,
+      `${config.SERVER_ADDRESS}/api/v1/work/circle/connectionsYouMK`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

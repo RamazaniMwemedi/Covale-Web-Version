@@ -1,8 +1,7 @@
 import axios from "axios";
-const { SERVER_ADDRESS } = require("../config/index");
-
-const getTeams = async (token) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/team`, {
+import config from "../config/index";
+const getTeams = async (token: string) => {
+  const response = await axios.get(`${config.SERVER_ADDRESS}/api/v1/team`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -10,25 +9,28 @@ const getTeams = async (token) => {
   return response.data;
 };
 
-const getTeamById = async (token, id) => {
-  const response = await axios.get(`${SERVER_ADDRESS}/api/v1/team/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const getTeamById = async (token: string, id: string) => {
+  const response = await axios.get(
+    `${config.SERVER_ADDRESS}/api/v1/team/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };
 
 const createNewTeam = async (
-  token,
-  teamName,
-  isPrivate,
-  teamMission,
-  teamVission
+  token: string,
+  teamName: string,
+  isPrivate: string,
+  teamMission: string,
+  teamVission: string
 ) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/team`,
+      `${config.SERVER_ADDRESS}/api/v1/team`,
       { teamName, isPrivate, teamMission, teamVission },
       {
         headers: {
@@ -39,11 +41,15 @@ const createNewTeam = async (
     return response.data;
   }
 };
-const inviteFriends = async (token, teamId, colleagues) => {
+const inviteFriends = async (
+  token: string,
+  teamId: string,
+  colleagues: string[]
+) => {
   if (token) {
     if (colleagues.length > 0) {
       const response = await axios.post(
-        `${SERVER_ADDRESS}/api/v1/team/invite`,
+        `${config.SERVER_ADDRESS}/api/v1/team/invite`,
         { teamId, colleagues },
         {
           headers: {
@@ -56,10 +62,10 @@ const inviteFriends = async (token, teamId, colleagues) => {
   }
 };
 
-const acceptInvite = async (userToken, invitationToken) => {
+const acceptInvite = async (userToken: string, invitationToken: string) => {
   if (userToken && invitationToken) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/team/invite/accept`,
+      `${config.SERVER_ADDRESS}/api/v1/team/invite/accept`,
       { token: invitationToken },
       {
         headers: {
@@ -71,10 +77,10 @@ const acceptInvite = async (userToken, invitationToken) => {
   }
 };
 
-const declineInvite = async (userToken, invitationToken) => {
+const declineInvite = async (userToken: string, invitationToken: string) => {
   if (userToken && invitationToken) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/team/decline`,
+      `${config.SERVER_ADDRESS}/api/v1/team/decline`,
       { token: invitationToken },
       {
         headers: {
@@ -87,10 +93,14 @@ const declineInvite = async (userToken, invitationToken) => {
 };
 
 // send a team message
-const sendTeamMessege = async (token, id, formData) => {
+const sendTeamMessege = async (
+  token: string,
+  id: string,
+  formData: FormData
+) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/team/messages/new/${id}`,
+      `${config.SERVER_ADDRESS}/api/v1/team/messages/new/${id}`,
       formData,
       {
         headers: {
@@ -103,21 +113,24 @@ const sendTeamMessege = async (token, id, formData) => {
 };
 
 // delete TEAM BY ID
-const deleteTeamById = async (token, id) => {
+const deleteTeamById = async (token: string, id: string) => {
   if (token) {
-    const response = await axios.delete(`${SERVER_ADDRESS}/api/v1/team/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.delete(
+      `${config.SERVER_ADDRESS}/api/v1/team/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.status;
   }
 };
 
-const createATopic = async (token, teamId, topicObject) => {
+const createATopic = async (token: string, teamId: string, topicObject: string) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/team/${teamId}/topics/new`,
+      `${config.SERVER_ADDRESS}/api/v1/team/${teamId}/topics/new`,
       topicObject,
       {
         headers: {
@@ -130,10 +143,10 @@ const createATopic = async (token, teamId, topicObject) => {
 };
 
 // /topics/:topicId/reply
-const replyToTopic = async (token, topicId, messageObject) => {
+const replyToTopic = async (token: string, topicId: string, messageObject: string) => {
   if (token) {
     const response = await axios.post(
-      `${SERVER_ADDRESS}/api/v1/team/topics/${topicId}/reply`,
+      `${config.SERVER_ADDRESS}/api/v1/team/topics/${topicId}/reply`,
       messageObject,
       {
         headers: {

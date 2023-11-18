@@ -18,6 +18,7 @@ import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
+import { ThemeInterface } from "../../../interfaces/myprofile";
 
 const ChatSectionSkeleton = () => {
   return (
@@ -47,7 +48,7 @@ const ChatSectionSkeleton = () => {
 export default ChatSectionSkeleton;
 
 const TopBar = () => {
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{

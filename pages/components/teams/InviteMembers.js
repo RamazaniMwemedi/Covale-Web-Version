@@ -14,10 +14,10 @@ import io from "socket.io-client";
 
 import { inviteFriends } from "../../../services/teams";
 import { useGetFriends, useCheckLogedinUserToken } from "../../../hooks/hooks";
-import { RTC_ADDRESS } from "../../../config";
+import config from "../../../config";
 import { useSelector } from "react-redux";
 
-const notificationSocket = io.connect(`${RTC_ADDRESS}/notification`, {
+const notificationSocket = io.connect(`${config.RTC_ADDRESS}/notification`, {
   reconnectionDelayMax: 10000,
   auth: {
     token: "123",

@@ -1,23 +1,25 @@
-const { useRouter } = require("next/router");
-const { useEffect, useState } = require("react");
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 // React-Redux hooks
-const { useDispatch, useSelector } = require("react-redux");
-const io = require("socket.io-client");
+import { useDispatch, useSelector } from "react-redux";
+import io from "socket.io-client";
 
-const { addNewMessageToTeamIdFromSender } = require("../Redux/slices/team");
-const { RTC_ADDRESS } = require("../config");
+import { addNewMessageToTeamIdFromSender } from "../Redux/slices/team";
+import config from "../config";
 // Socket.IO
 // https://rtcommunication.herokuapp.com/
 // http://localhost:5005/
+const socketIO: any = io;
 
-const teamSocket = io.connect(`${RTC_ADDRESS}/team`);
+const teamSocket = socketIO.connect(`${config.RTC_ADDRESS}/team`);
 
-const { getTeams } = require("../services/teams");
-const { allTeams } = require("../Redux/slices/team");
+import { getTeams } from "../services/teams";
+import { allTeams } from "../Redux/slices/team";
+import { RootState, TeamInterface } from "../interfaces/myprofile";
 
-const useTeamId = (id) => {
-  const allTeams = useSelector((state) => state.teams);
-  const [team, setTeam] = useState(null);
+export const useTeamId = (id: string) => {
+  const allTeams = useSelector((state: RootState) => state.teams);
+  const [team, setTeam] = useState<TeamInterface>();
   useEffect(() => {
     if (allTeams.teams) {
       if (allTeams.teams.length > 0 && id) {
@@ -29,7 +31,7 @@ const useTeamId = (id) => {
   return team;
 };
 
-const useGetTeams = (token) => {
+export const useGetTeams = (token: string) => {
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -46,7 +48,7 @@ const useGetTeams = (token) => {
   }, [token]);
 };
 
-const useJoinTeamRoom = (id) => {
+export const useJoinTeamRoom = (id: string) => {
   useEffect(() => {
     if (id) {
       teamSocket.emit("join_team_room", id);
@@ -54,10 +56,10 @@ const useJoinTeamRoom = (id) => {
   }, [id]);
 };
 
-const useRecieveNewTeamMessage = (user, userId) => {
+export const useRecieveNewTeamMessage = (user: string, userId: string) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    teamSocket.on("receive_message_to_team", (data) => {
+    teamSocket.on("receive_message_to_team", (data: any) => {
       if (data && data.sender != userId) {
         dispatch(
           addNewMessageToTeamIdFromSender({
@@ -69,9 +71,11 @@ const useRecieveNewTeamMessage = (user, userId) => {
     });
   }, [teamSocket, user]);
 };
-module.exports = {
+const mod = {
   useTeamId,
   useGetTeams,
   useJoinTeamRoom,
   useRecieveNewTeamMessage,
 };
+
+export default mod;

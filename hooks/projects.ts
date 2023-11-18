@@ -1,26 +1,30 @@
-const { useEffect, useState } = require("react");
+import { useEffect, useState } from "react";
 // React-Redux hooks
-const { useDispatch, useSelector } = require("react-redux");
+import { useDispatch, useSelector } from "react-redux";
 
-const { getProjects } = require("../services/projects");
-const { addProjects } = require("../Redux/slices/projects");
+import projectServices from "../services/projects";
+import { addProjects } from "../Redux/slices/projects";
+import {
+  ProjectInterface,
+  RootState,
+  SubProjectsInterface,
+} from "../interfaces/myprofile";
 
-const useGetProjects = (token) => {
+export const useGetProjects = (token: string) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (token) {
-      getProjects(token).then((res) => {
+      projectServices.getProjects(token).then((res) => {
         dispatch(addProjects(res));
       });
     }
-
   }, [token]);
 };
 
-const useProject = (id) => {
-  const allProjects = useSelector((state) => state.projects);
-  const [project, setProject] = useState(null);
+export const useProject = (id: string) => {
+  const allProjects = useSelector((state: RootState) => state.projects);
+  const [project, setProject] = useState<ProjectInterface>();
   useEffect(() => {
     if (allProjects.projects) {
       if (allProjects.projects.length > 0 && id) {
@@ -32,9 +36,13 @@ const useProject = (id) => {
   return project;
 };
 
-const useSubProjectsTasks = (projectId, subprojectId) => {
-  const allProjects = useSelector((state) => state.projects);
-  const [subProjectTasks, setSubProjectTasks] = useState([]);
+export const useSubProjectsTasks = (
+  projectId: string,
+  subprojectId: string
+) => {
+  const allProjects = useSelector((state: RootState) => state.projects);
+  const [subProjectTasks, setSubProjectTasks] =
+    useState<SubProjectsInterface>();
   useEffect(() => {
     if (allProjects.projects) {
       let project;
@@ -54,8 +62,10 @@ const useSubProjectsTasks = (projectId, subprojectId) => {
   return subProjectTasks;
 };
 
-module.exports = {
+const mod = {
   useGetProjects,
   useProject,
   useSubProjectsTasks,
 };
+
+export default mod;

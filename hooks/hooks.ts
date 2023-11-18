@@ -1,24 +1,24 @@
-const { useEffect, useState, useLayoutEffect } = require("react");
-const { useRouter } = require("next/router");
+import { useEffect, useState, useLayoutEffect } from "react";
+import { useRouter } from "next/router";
 
-const { getChats } = require("../services/chats");
-const { getTeamById } = require("../services/teams");
-const { myFriends } = require("../services/user");
+import chatServices from "../services/chats";
+import { getTeamById } from "../services/teams";
+import { myFriends } from "../services/user";
 
 // React-Redux hooks
-const { useDispatch } = require("react-redux");
+import { useDispatch } from "react-redux";
 
 // Reducers
-const { teamAdd, teamReset } = require("../Redux/slices/team");
-const { allChats, chatReset } = require("../Redux/slices/chat");
-const { addUser, removeUser } = require("../Redux/slices/user");
+import { allChats, chatReset } from "../Redux/slices/chat";
+import { addUser, removeUser } from "../Redux/slices/user";
 
 // Services
-const { findUserById } = require("../services/user");
-const useCheckLogedinUser = () => {
+import { findUserById } from "../services/user";
+import { ChatInterface, UserInterFace } from "../interfaces/myprofile";
+export const useCheckLogedinUser = () => {
   const [loading, setloading] = useState(true);
-  var logedInUser;
-  var token;
+  var logedInUser: any;
+  var token: string = "";
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -59,7 +59,7 @@ const useCheckLogedinUser = () => {
 
   return loading;
 };
-const useCheckLogedinUserToken = () => {
+export const useCheckLogedinUserToken = () => {
   let [logedInUserToken, setLogedInUserToken] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -74,7 +74,7 @@ const useCheckLogedinUserToken = () => {
   return logedInUserToken;
 };
 
-const useGetChats = (token) => {
+export const useGetChats = (token: string) => {
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -84,38 +84,17 @@ const useGetChats = (token) => {
     // Clear Chat Store
 
     if (token) {
-      getChats(token).then((res) => {
+      chatServices.getChats(token).then((res: ChatInterface[]) => {
         dispatch(allChats(res));
       });
     }
   }, [token]);
 };
-const useGetTeamById = (token, id) => {
-  const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
-  const router = useRouter();
 
-  // Get chat by id and set it to chat
+export const useGetTheme = () => {
+  const [theme, setTheme] = useState(false);
   useEffect(() => {
-    setLoading(true);
-    // Clear Team store
-    dispatch(teamReset());
-    if (router.pathname.includes("chats/t")) {
-      if ((token, id)) {
-        getTeamById(token, id).then((res) => {
-          dispatch(teamAdd(res));
-          setLoading(false);
-        });
-      }
-    }
-  }, [token, id]);
-  return loading;
-};
-
-const useGetTheme = () => {
-  const [theme, setTheme] = useState("");
-  useEffect(() => {
-    const darkTheme = JSON.parse(localStorage.getItem("darkTheme"));
+    const darkTheme = JSON.parse(localStorage.getItem("darkTheme") || "{}");
     if (darkTheme) {
       setTheme(darkTheme);
     } else {
@@ -125,9 +104,11 @@ const useGetTheme = () => {
   return theme;
 };
 
-const useGetFriends = () => {
-  const [friends, setFriends] = useState(null);
-  const [logedInUser, setLogedInUser] = useState("");
+export const useGetFriends = () => {
+  const [friends, setFriends] = useState<UserInterFace[]>([]);
+  const [logedInUser, setLogedInUser] = useState<{
+    token: string;
+  } | null>();
   const router = useRouter();
   useEffect(() => {
     const signedInUser = localStorage.getItem("logedinUser");
@@ -139,18 +120,20 @@ const useGetFriends = () => {
   }, []);
 
   useEffect(() => {
-    if (logedInUser.token) {
+    if (logedInUser && logedInUser.token) {
       myFriends(logedInUser.token).then((res) => {
         setFriends(res);
       });
     }
-  }, [logedInUser.token]);
+  }, [logedInUser && logedInUser.token]);
 
   return friends;
 };
 
 const useWindow = () => {
-  const [myWindow, setMyWindow] = useState(null);
+  const [myWindow, setMyWindow] = useState<(Window & typeof globalThis) | null>(
+    null
+  );
   useLayoutEffect(() => {
     if (window) {
       setMyWindow(window);
@@ -162,7 +145,7 @@ const useWindow = () => {
   return myWindow;
 };
 
-const useUserId = () => {
+export const useUserId = () => {
   let logedInUser;
   const [id, setId] = useState("");
   useEffect(() => {
@@ -174,14 +157,14 @@ const useUserId = () => {
   }, [logedInUser]);
   return id;
 };
-
-module.exports = {
+const mod = {
   useCheckLogedinUser,
   useCheckLogedinUserToken,
   useGetChats,
-  useGetTeamById,
   useGetTheme,
   useGetFriends,
   useWindow,
   useUserId,
 };
+
+export default mod;
