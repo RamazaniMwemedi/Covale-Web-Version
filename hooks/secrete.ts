@@ -17,7 +17,7 @@ export const useGetKeyPairs = () => {
 };
 
 export const useGetSecreteToken = () => {
-  const [secreteToken, setSecreteToken] = useState(null);
+  const [secreteToken, setSecreteToken] = useState<string>("");
   useEffect(() => {
     const logedinUser = JSON.parse(localStorage.getItem("logedinUser") || "{}");
     const secreteToken = logedinUser && logedinUser.secreteToken;

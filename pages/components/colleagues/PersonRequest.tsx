@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { Avatar, Box, Button, Link, Typography } from "@mui/material";
 
 import IconButton from "@mui/material/IconButton";
@@ -13,9 +13,12 @@ import { useRouter } from "next/router";
 import { useGetSecreteToken } from "../../../hooks/secrete";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { generateNewKeyPair } from "../../../services/encrypt";
+import { ThemeInterface, UserInterFace } from "../../../interfaces/myprofile";
 
-const PersonRequest = ({ user }) => {
-  const theme = useTheme();
+const PersonRequest: FC<{
+  user: UserInterFace;
+}> = ({ user }) => {
+  const theme: ThemeInterface = useTheme();
   const [accepting, setAccepeting] = useState(false);
   const [declining, setDeclining] = useState(false);
   const [showCommunication, setShowCommunication] = useState(false);
@@ -147,7 +150,7 @@ const PersonRequest = ({ user }) => {
                       gap: "20%",
                       bgcolor: purple[500],
                     }}
-                    color="action"
+                    color="inherit"
                     onClick={acceptingConnectionHandler}
                   >
                     Accept
@@ -178,7 +181,7 @@ const PersonRequest = ({ user }) => {
                       gap: "20%",
                       bgcolor: grey[500],
                     }}
-                    color="action"
+                    color="inherit"
                     onClick={decliningConnectionHandler}
                   >
                     Decline

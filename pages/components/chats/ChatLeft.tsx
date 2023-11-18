@@ -20,10 +20,9 @@ import { ThemeInterface, UserInterFace } from "../../../interfaces/myprofile";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme }) => ({
+})(() => ({
   width: "15px",
   flexShrink: 0,
-  // backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
 }));
@@ -117,7 +116,7 @@ export default function ChatLeft({ user }: { user: UserInterFace }) {
   const toggleShowTeam = () => {
     setOpenCreateTeam((prev) => !prev);
   };
-
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{
@@ -126,7 +125,12 @@ export default function ChatLeft({ user }: { user: UserInterFace }) {
       }}
     >
       <CssBaseline />
-      <Drawer variant="permanent">
+      <Drawer
+        sx={{
+          bgcolor: theme.colors.background,
+        }}
+        variant="permanent"
+      >
         <ProfileDialog handleChange={handleChange} value={value} user={user} />
 
         <Tabs

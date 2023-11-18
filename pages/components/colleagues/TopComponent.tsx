@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import PropTypes from "prop-types";
 import { Box } from "@mui/system";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -16,8 +16,19 @@ import {
 import { useTheme } from "@mui/styles";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import {
+  RootState,
+  ThemeInterface,
+  UserInterFace,
+} from "../../../interfaces/myprofile";
 
-const TopComponent = ({
+const TopComponent: FC<{
+  showSearchField: boolean;
+  handleToggleShowSearch: () => void;
+  title: string;
+  routeUrl: string;
+  routeText: string;
+}> = ({
   showSearchField,
   handleToggleShowSearch,
   title,
@@ -25,10 +36,10 @@ const TopComponent = ({
   routeText,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const handleSearchTerm = (e) => {
-    setSearchTerm(e.target.value);
+  const handleSearchTerm = (value: string) => {
+    setSearchTerm(value);
   };
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   const router = useRouter();
   return (
     <Box
@@ -88,7 +99,7 @@ const TopComponent = ({
                 }}
                 color="secondary"
                 placeholder="Search for colleagues"
-                onChange={handleSearchTerm}
+                onChange={(e) => handleSearchTerm(e.target.value)}
                 value={searchTerm}
               />
             </FormControl>
@@ -177,8 +188,8 @@ export default TopComponent;
 
 // Search field and results display
 
-const SearchField = ({ searchTerm }) => {
-  const colleaguesStore = useSelector((state) => state.colleagues);
+const SearchField: FC<{ searchTerm: string }> = ({ searchTerm }) => {
+  const colleaguesStore = useSelector((state: RootState) => state.colleagues);
   const colleagues =
     colleaguesStore.colleagues.explore && colleaguesStore.colleagues.explore
       ? colleaguesStore.colleagues.explore
@@ -245,8 +256,8 @@ const SearchField = ({ searchTerm }) => {
   );
 };
 
-const ColleagueCard = ({ colleague }) => {
-  const theme = useTheme();
+const ColleagueCard: FC<{ colleague: UserInterFace }> = ({ colleague }) => {
+  const theme: ThemeInterface = useTheme();
   const router = useRouter();
 
   return (
@@ -299,9 +310,10 @@ const ColleagueCard = ({ colleague }) => {
             </Typography>
             <Typography variant="caption">
               {/* Colleague Bio */}
-              {colleague.bio && colleague.bio.length > 30
-                ? colleague.bio.slice(0, 30) + "..."
-                : colleague.bio}
+              {colleague.professionalSummary &&
+              colleague.professionalSummary.length > 30
+                ? colleague.professionalSummary.slice(0, 30) + "..."
+                : colleague.professionalSummary}
             </Typography>
           </Box>
         </Box>

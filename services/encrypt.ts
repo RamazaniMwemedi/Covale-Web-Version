@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "../config/index";
 
-const generateNewKeyPair = async (
+export const generateNewKeyPair = async (
   modelName: string,
   modelId: string,
   secreteToken: string
@@ -21,7 +21,7 @@ const generateNewKeyPair = async (
   return response.data;
 };
 
-const getKeyPairs = async (secreteToken: string) => {
+export const getKeyPairs = async (secreteToken: string) => {
   const response = await axios.get(
     `${config.SECRETE_SERVER_ADDRESS}/api/v1/keys`,
 

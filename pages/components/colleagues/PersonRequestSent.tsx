@@ -1,9 +1,14 @@
-import React from "react";
+import React, { FC } from "react";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 
 import userServices from "../../../services/user";
+import { UserInterFace } from "../../../interfaces/myprofile";
 
-const PersonRequest = ({ user, token, removeUser }) => {
+const PersonRequest: FC<{
+  user: UserInterFace;
+  token: string;
+  removeUser: (id: string) => void;
+}> = ({ user, token, removeUser }) => {
   return (
     <>
       {user && (

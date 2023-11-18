@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { Box, Typography, Avatar, Link } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/styles";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
+import { ThemeInterface, UserInterFace } from "../../../interfaces/myprofile";
 // My modules
 
-const Friend = ({ friend, token }) => {
-  const theme = useTheme();
-  const [messege, setMessege] = useState("");
+const Colleague: FC<{ colleague: UserInterFace; token: string }> = ({
+  colleague,
+  token,
+}) => {
+  const theme: ThemeInterface = useTheme();
 
   // Friend Component
   return (
     <>
-      {friend && (
+      {colleague && (
         <Box
           sx={{
             borderRadius: "10px",
@@ -24,7 +27,7 @@ const Friend = ({ friend, token }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            // backgroundColor: theme.colors.background1,
+            backgroundColor: theme.colors.background1,
             "&:hover": {
               boxShadow: 4,
             },
@@ -42,7 +45,7 @@ const Friend = ({ friend, token }) => {
                 height: "70px",
                 margin: "10px",
               }}
-              src={friend.profilePic.fileUrl}
+              src={colleague.profilePic.fileUrl}
             />
             {/* Friend Details */}
             <Box>
@@ -55,7 +58,7 @@ const Friend = ({ friend, token }) => {
                 }}
               >
                 <Link
-                  href={`/profile/${friend.id}`}
+                  href={`/profile/${colleague.id}`}
                   underline="none"
                   sx={{
                     pl: 0,
@@ -65,9 +68,9 @@ const Friend = ({ friend, token }) => {
                   }}
                 >
                   <Typography variant="h6" component="p">
-                    {friend.firstname}
+                    {colleague.firstname}
                   </Typography>
-                  <Typography variant="h6">{friend.lastname}</Typography>
+                  <Typography variant="h6">{colleague.lastname}</Typography>
                 </Link>
               </Box>
               <Box>
@@ -76,14 +79,14 @@ const Friend = ({ friend, token }) => {
                   component={"p"}
                   color="text.secondary"
                 >
-                  @{friend.username}
+                  @{colleague.username}
                 </Typography>
                 <Typography
                   variant="caption"
                   component={"p"}
                   color="text.secondary"
                 >
-                  {friend.professionalSummary}
+                  {colleague.professionalSummary}
                 </Typography>
               </Box>
             </Box>
@@ -99,4 +102,4 @@ const Friend = ({ friend, token }) => {
   );
 };
 
-export default Friend;
+export default Colleague;

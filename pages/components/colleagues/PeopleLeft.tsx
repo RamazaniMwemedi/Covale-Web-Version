@@ -21,6 +21,7 @@ import ExploreIcon from "@mui/icons-material/Explore";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Groups3Icon from "@mui/icons-material/Groups3";
+import { ThemeInterface } from "../../../interfaces/myprofile";
 const drawerWidth = 300;
 
 const useStyles = makeStyles({
@@ -30,52 +31,29 @@ const useStyles = makeStyles({
   },
 });
 
-const closedMixin = (theme) => ({
-  //
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(23)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(35)} + 1px)`,
-    marginLeft: theme.spacing(8),
-  },
-  justifyContent: "spaceBetween",
-  borderLeft: `2px solid ${theme.colors.background1}`,
-  borderRight: `2px solid ${theme.colors.background1}`,
-  backgroundColor: theme.colors.background,
-});
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({ open }) => ({
   width: "15px",
   flexShrink: 0,
-  backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
-
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
 }));
 
 export default function PeopleLeft() {
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   const classes = useStyles();
   const router = useRouter();
   const pathname = router.pathname;
-  const [friendsRequestColor, setFriendsRequestColor] =
-    React.useState("action");
-  const [friendsColor, setFriendsColor] = React.useState("action");
-  const [exploreColor, setExploreColor] = React.useState("action");
+  const [friendsRequestColor, setFriendsRequestColor] = React.useState<
+    "action" | "secondary"
+  >("action");
+  const [friendsColor, setFriendsColor] = React.useState<
+    "action" | "secondary"
+  >("action");
+  const [exploreColor, setExploreColor] = React.useState<
+    "action" | "secondary"
+  >("action");
 
   React.useEffect(() => {
     if (pathname.includes("/friends")) {
@@ -96,7 +74,10 @@ export default function PeopleLeft() {
   return (
     <Box>
       <CssBaseline />
-      <Drawer variant="permanent">
+      <Drawer
+        sx={{ backgroundColor: theme.colors.background }}
+        variant="permanent"
+      >
         <Box
           sx={{
             display: "flex",

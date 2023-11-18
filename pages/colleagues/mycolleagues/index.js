@@ -1,7 +1,4 @@
-import {
-  Button,
-  useTheme,
-} from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
@@ -13,7 +10,7 @@ import { useState } from "react";
 // My Modules
 import DrawerComponent from "../../components/others/DrawerComponent";
 import PeopleLeft from "../../components/colleagues/PeopleLeft";
-import Friend from "../../components/colleagues/Friend";
+import Colleague from "../../components/colleagues/Colleague";
 
 import userServices from "../../../services/user";
 import TopComponent from "../../components/colleagues/TopComponent";
@@ -21,8 +18,6 @@ import { useSelector } from "react-redux";
 import { useCheckLogedinUser } from "../../../hooks/hooks";
 import { useExploreColleagus } from "../../../hooks/colleagues";
 import LoadingLogo from "../../components/others/LoadingLogo";
-
-
 
 export default function People() {
   const [friends, setFriends] = React.useState([]);
@@ -121,7 +116,7 @@ const Friends = ({ friends, token }) => {
         }}
       >
         {friends.map((friend) => (
-          <Friend key={friend.id} token={token} friend={friend} />
+          <Colleague key={friend.id} token={token} friend={friend} />
         ))}
       </Box>
     </>
