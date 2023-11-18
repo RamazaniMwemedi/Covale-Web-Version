@@ -19,31 +19,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
 import { signOut } from "../../../Redux/slices/user";
+import { RootState, ThemeInterface } from "../../../interfaces/myprofile";
 
-export default function AccountMenu({ myProfileBackgroundColor }) {
-  const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+export default function AccountMenu({
+  myProfileBackgroundColor,
+}: {
+  myProfileBackgroundColor: string;
+}) {
+  const theme: ThemeInterface = useTheme();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const userStore = useSelector((state) => state.user);
+  const userStore = useSelector((state: RootState) => state.user);
   const user = userStore ? userStore.user : null;
-  const [themeAnchor, setThemeAnchor] = useState(null);
+  const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
   const themeOpen = Boolean(themeAnchor);
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const themeHandleClick = (event) => {
-    setThemeAnchor(event.currentTarget);
+  const themeHandleClick = (value: HTMLElement) => {
+    setThemeAnchor(value);
   };
   const themeHandleClose = () => {
     setThemeAnchor(null);
   };
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (value: HTMLElement) => {
+    setAnchorEl(value);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const changeTheme = (mode) => {
+  const changeTheme = (mode: string) => {
     localStorage.setItem("theme", mode);
     theme.themeChengeHandler(mode);
   };
@@ -66,7 +71,7 @@ export default function AccountMenu({ myProfileBackgroundColor }) {
           >
             <Tooltip title="Account ">
               <IconButton
-                onClick={handleClick}
+                onClick={(event) => handleClick(event.currentTarget)}
                 size="small"
                 sx={{
                   ml: 2,
@@ -144,7 +149,7 @@ export default function AccountMenu({ myProfileBackgroundColor }) {
               aria-controls={open ? "basic-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
-              onClick={themeHandleClick}
+              onClick={(event) => themeHandleClick(event.currentTarget)}
             >
               <ListItemIcon>
                 <Brightness4Icon />
@@ -187,7 +192,6 @@ export default function AccountMenu({ myProfileBackgroundColor }) {
                 themeHandleClose();
               }}
             >
-              {" "}
               <ListItemIcon>
                 <DarkModeIcon />
               </ListItemIcon>{" "}
