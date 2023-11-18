@@ -705,7 +705,11 @@ const Bottom: FC<{
                       justifyContent: "space-between",
                     }}
                   >
-                    <FileIcone fileType={file.fileType} />
+                    <FileIcone
+                      height={25}
+                      width={25}
+                      fileType={file.fileType}
+                    />
                     <Typography variant="body1">
                       {file.fileName.length > 15
                         ? file.fileName.substring(0, 15) + "..."

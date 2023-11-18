@@ -1763,11 +1763,12 @@ const PersonOption = ({ person }: { person: UserInterFace }) => (
 
 const sendMessageHandle = async (
   message: string,
-  publicKey: string | undefined,
+  publicKey: string,
   token: string,
   chatId: string,
   uuid: string
 ): Promise<boolean> => {
+  if (!publicKey || !message) return false;
   const encryptedMessage = await encryptMessageServices.encryptMessage(
     message,
     publicKey

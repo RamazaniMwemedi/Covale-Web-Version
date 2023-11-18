@@ -10,7 +10,7 @@ import {
   File,
 } from "../../../assets/Icons";
 
-const FileIcone: FC<{ fileType: string; height?: number; width?: number }> = ({
+const FileIcone: FC<{ fileType: string; height: number; width: number }> = ({
   fileType,
   height,
   width,
@@ -71,6 +71,7 @@ const FileIcone: FC<{ fileType: string; height?: number; width?: number }> = ({
     }
     return <File height={height ? height : 25} width={width ? width : 25} />;
   }
+  return null;
 };
 
 export default FileIcone;

@@ -10,40 +10,20 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import "@fontsource/open-sans/500.css"; // Weight 500.
 import { useTheme } from "@mui/styles";
-import { Avatar, Theme } from "@mui/material";
+import { Avatar } from "@mui/material";
 
 import Chats from "./Chats";
 import { useGetFriends } from "../../../hooks/hooks";
 
-import chatService from "../../../services/chats";
-import { getTeams } from "../../../services/teams";
 import Teams from "../teams/Teams";
 import { ThemeInterface, UserInterFace } from "../../../interfaces/myprofile";
 
-const closedMixin = (theme: ThemeInterface) => ({
-  //
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(23)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(35)} + 1px)`,
-    marginLeft: theme.spacing(8),
-  },
-  justifyContent: "spaceBetween",
-  borderLeft: `2px solid ${theme.colors.background1}`,
-  borderRight: `2px solid ${theme.colors.background1}`,
-  backgroundColor: theme.colors.background,
-});
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme }: { theme: ThemeInterface }) => ({
+})(({ theme }) => ({
   width: "15px",
   flexShrink: 0,
-  backgroundColor: theme.colors.background,
+  // backgroundColor: theme.colors.background,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
 }));
