@@ -108,12 +108,12 @@ const ChatSectionLeft = ({
   };
   return (
     <>
-      {showFile && (
+      {showFile && file ? (
         <FileDisplayComponent
           handleCloseShowVideoPlayer={handleCloseShowFile}
           file={file}
         />
-      )}
+      ) : null}
       {chat ? (
         <Box
           sx={{

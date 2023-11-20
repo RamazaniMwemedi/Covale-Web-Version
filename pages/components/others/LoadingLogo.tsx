@@ -4,9 +4,10 @@ import React from "react";
 import Logo from "../../../assets/Logo";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/styles";
+import { ThemeInterface } from "../../../interfaces/myprofile";
 
 const LoadingLogo = () => {
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{

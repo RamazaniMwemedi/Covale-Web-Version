@@ -1,4 +1,4 @@
-import { Breakpoints, SelectChangeEvent } from "@mui/material";
+import { Breakpoints, SelectChangeEvent, Theme } from "@mui/material";
 import { MomentInput } from "moment";
 import { PostInterface } from "./work";
 
@@ -22,6 +22,9 @@ export interface RootState {
   };
   projects: { projects: ProjectInterface[] };
   colleagues: { colleagues: { explore: UserInterFace[] } };
+  notifications: {
+    notifications: NotificationInterface[];
+  };
 }
 interface KeysSchema {
   privateKey: string;
@@ -32,13 +35,11 @@ interface KeysSchema {
   modelId: string;
 }
 
-export interface ThemeInterface {
+export interface ThemeInterface extends Theme {
   typography: {
     fontFamily: string;
   };
-  palette: {
-    mode: string;
-  };
+
   colors: {
     primary: string;
     secondary: string;
@@ -55,9 +56,9 @@ export interface ThemeInterface {
     meetBackground: string;
   };
   themeChengeHandler: (theme: string) => void;
-  breakpoints: Breakpoints;
-  transitions: TransitionsOptions;
-  spacing: (val: number) => number;
+  // breakpoints: Breakpoints;
+  // transitions: TransitionsOptions;
+  // spacing: (val: number) => number;
 }
 
 export interface Easing {
@@ -331,4 +332,16 @@ export interface ProjectInterface {
 export interface SubProjectsInterface {
   id: string;
   tasks: {}[];
+}
+
+export interface NotificationInterface {
+  id: string;
+  read: boolean;
+  category: "chats" | "work" | "project" | "callendar" | "meetings";
+  subject: string;
+  preview: string;
+  token: string;
+  time: string;
+  priority: string;
+  type: string;
 }

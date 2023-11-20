@@ -23,8 +23,9 @@ import NewMeet from "../meets/NewMeet";
 import Signout from "../login/Signout";
 import Notification from "./Notification";
 import Groups3Icon from "@mui/icons-material/Groups3";
+import { ThemeInterface } from "../../../interfaces/myprofile";
 
-const closedMixin = (theme) => ({
+const closedMixin = (theme: any): React.CSSProperties => ({
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -47,10 +48,6 @@ const Drawer = styled(MuiDrawer, {
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   borderRight: "1px solid black",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
   ...(!open && {
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
@@ -59,15 +56,65 @@ const Drawer = styled(MuiDrawer, {
 
 export default function DrawerComponent() {
   const router = useRouter();
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
 
   const [open, setOpen] = useState(false);
-  const [homeColor, setHomeColor] = useState("");
-  const [chatColor, setChatColor] = useState("gray");
-  const [peopleColor, setPeopleColor] = useState("gray");
-  const [calendar, setCalendar] = useState("gray");
-  const [meet, setMeet] = useState("gray");
-  const [projectsColor, setProjectsColor] = useState("action");
+  const [homeColor, setHomeColor] = useState<"action" | "secondary">("action");
+  const [chatColor, setChatColor] = useState<
+    | "inherit"
+    | "action"
+    | "disabled"
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning"
+  >("inherit");
+  const [peopleColor, setPeopleColor] = useState<
+    | "inherit"
+    | "action"
+    | "disabled"
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning"
+  >("inherit");
+  const [calendar, setCalendar] = useState<
+    | "inherit"
+    | "action"
+    | "disabled"
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning"
+  >("inherit");
+  const [meet, setMeet] = useState<
+    | "inherit"
+    | "action"
+    | "disabled"
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning"
+  >("inherit");
+  const [projectsColor, setProjectsColor] = useState<
+    | "inherit"
+    | "action"
+    | "disabled"
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning"
+  >("inherit");
   // Background color
   const [homeBackgroundColor, setHomeBackgroundColor] = useState("");
   const [chatBackgroundColor, setChatBackgroundColor] = useState("");
@@ -83,9 +130,9 @@ export default function DrawerComponent() {
     if (pathname.includes("/chat")) {
       setHomeColor("action");
       setChatColor("secondary");
-      setPeopleColor("gray");
-      setCalendar("gray");
-      setMeet("gray");
+      setPeopleColor("inherit");
+      setCalendar("inherit");
+      setMeet("inherit");
       // Background color
       setChatBackgroundColor(theme.colors.drawerBackground);
       setPeopleBackgroundColor("");
@@ -95,29 +142,29 @@ export default function DrawerComponent() {
       pathname.includes("/colleagues") ||
       pathname.includes("/profile")
     ) {
-      setChatColor("gray");
+      setChatColor("inherit");
       setPeopleColor("secondary");
-      setCalendar("gray");
-      setMeet("gray");
+      setCalendar("inherit");
+      setMeet("inherit");
       // Background color
       setChatBackgroundColor("");
       setPeopleBackgroundColor(theme.colors.drawerBackground);
       setCalenderBackgroundColor("");
       setMeetBackgroundColor("");
     } else if (pathname === "/calender") {
-      setChatColor("gray");
-      setPeopleColor("gray");
+      setChatColor("inherit");
+      setPeopleColor("inherit");
       setCalendar("secondary");
-      setMeet("gray");
+      setMeet("inherit");
       // Background color
       setChatBackgroundColor("");
       setPeopleBackgroundColor("");
       setCalenderBackgroundColor(theme.colors.drawerBackground);
       setMeetBackgroundColor("");
     } else if (pathname === "/meet") {
-      setChatColor("gray");
-      setPeopleColor("gray");
-      setCalendar("gray");
+      setChatColor("inherit");
+      setPeopleColor("inherit");
+      setCalendar("inherit");
       setMeet("secondary");
       // Background color
       setChatBackgroundColor("");
@@ -126,9 +173,9 @@ export default function DrawerComponent() {
       setMeetBackgroundColor(theme.colors.drawerBackground);
     } else if (pathname.includes("/work")) {
       setHomeColor("secondary");
-      setChatColor("gray");
-      setPeopleColor("gray");
-      setCalendar("gray");
+      setChatColor("inherit");
+      setPeopleColor("inherit");
+      setCalendar("inherit");
       setMeet("action");
       // Background color
       setChatBackgroundColor("");
@@ -137,9 +184,9 @@ export default function DrawerComponent() {
       setHomeBackgroundColor(theme.colors.drawerBackground);
     } else if (pathname.includes("/projects")) {
       setHomeColor("action");
-      setChatColor("gray");
-      setPeopleColor("gray");
-      setCalendar("gray");
+      setChatColor("inherit");
+      setPeopleColor("inherit");
+      setCalendar("inherit");
       setMeet("action");
       setProjectsColor("secondary");
       // Background color
@@ -150,9 +197,9 @@ export default function DrawerComponent() {
       setProjectBackgroundColor(theme.colors.drawerBackground);
     } else if (pathname.includes("/myprofile")) {
       setHomeColor("action");
-      setChatColor("gray");
-      setPeopleColor("gray");
-      setCalendar("gray");
+      setChatColor("inherit");
+      setPeopleColor("inherit");
+      setCalendar("inherit");
       setMeet("action");
       setProjectsColor("action");
       // Background color
@@ -196,7 +243,7 @@ export default function DrawerComponent() {
               {/* Work */}
               <Tooltip title="Work" placement="right-start">
                 <ListItemButton
-                  button
+                  // button
                   onClick={() => {
                     router.push("/work");
                   }}
@@ -215,10 +262,10 @@ export default function DrawerComponent() {
               {/* Chats */}
               <Tooltip title="Chats" placement="right-start">
                 <ListItemButton
-                  button
-                  onClick={() => {
-                    router.push("/chats");
-                  }}
+                  // onClick={() => {
+                  //   router.push("/chats");
+                  // }}
+                  href="/chats"
                   sx={{
                     borderRadius: "10px",
                     margin: "5px",
@@ -237,10 +284,9 @@ export default function DrawerComponent() {
               {/* People */}
               <Tooltip title="Colleagues" placement="right-start">
                 <ListItemButton
-                  button
-                  onClick={() => {
-                    router.push("/colleagues/explore");
-                  }}
+                  // button
+
+                  href="/colleagues/explore"
                   sx={{
                     borderRadius: "10px",
                     margin: "5px",
@@ -256,10 +302,7 @@ export default function DrawerComponent() {
               {/* Insight */}
               <Tooltip title="Projects" placement="right-start">
                 <ListItemButton
-                  button
-                  onClick={() => {
-                    router.push("/projects/explore");
-                  }}
+                  href="/projects/explore"
                   sx={{
                     borderRadius: "10px",
                     margin: "5px",

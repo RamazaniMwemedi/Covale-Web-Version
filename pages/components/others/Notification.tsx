@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { FC } from "react";
 import Box from "@mui/material/Box";
 import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
 import Menu from "@mui/material/Menu";
@@ -19,11 +19,10 @@ import {
   CircularProgress,
   FormControl,
   FormControlLabel,
-  Slide,
+  useTheme,
 } from "@mui/material";
-import { styled, useTheme } from "@mui/styles";
-import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { styled } from "@mui/styles";
+import { grey } from "@mui/material/colors";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -33,16 +32,26 @@ import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import { purple } from "@mui/material/colors";
 import { useRouter } from "next/router";
 import { updateReadNotification } from "../../../Redux/slices/notifications";
+import {
+  NotificationInterface,
+  RootState,
+  ThemeInterface,
+} from "../../../interfaces/myprofile";
+import moment from "moment";
 
 export default function Notification() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const notificationsStore = useSelector((state) => state.notifications);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const notificationsStore = useSelector(
+    (state: RootState) => state.notifications
+  );
   const notifications = notificationsStore.notifications
     ? notificationsStore.notifications
     : [];
-  const [category, setCategory] = React.useState("all");
+  const [category, setCategory] = React.useState<
+    "all" | "chats" | "work" | "project" | "callendar" | "meetings"
+  >("all");
 
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   const open = Boolean(anchorEl);
 
   const notificationsLength = notifications.filter(
@@ -82,11 +91,13 @@ export default function Notification() {
     (notification) => notification.read === false
   ).length;
 
-  const categoryHandler = (value) => {
+  const categoryHandler = (
+    value: "all" | "chats" | "work" | "project" | "callendar" | "meetings"
+  ) => {
     setCategory(value);
   };
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (value: HTMLElement) => {
+    setAnchorEl(value);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -98,7 +109,9 @@ export default function Notification() {
         <Tooltip title="Notification" placement="top">
           <Badge badgeContent={notificationsLength} color="secondary">
             <IconButton
-              onClick={handleClick}
+              onClick={(event) => {
+                handleClick(event.currentTarget);
+              }}
               size="small"
               sx={{ ml: 1 }}
               aria-controls={open ? "account-menu" : undefined}
@@ -133,7 +146,7 @@ export default function Notification() {
               mr: 1,
             },
             "&:before": {
-              content: "\"\"",
+              content: '""',
               display: "block",
               position: "absolute",
               top: 0,
@@ -210,7 +223,7 @@ export default function Notification() {
               mr: 1,
             },
             "&:before": {
-              content: "\"\"",
+              content: '""',
               display: "block",
               position: "absolute",
               top: 0,
@@ -231,7 +244,7 @@ export default function Notification() {
             // Category
             chatNotifications={chatNotifications}
             workNotifications={workNotifications}
-            projectNotifications={projectNotifications}
+            // projectNotifications={projectNotifications}
             callendarNotifications={callendarNotifications}
             meetingsNotifications={meetingsNotifications}
           />
@@ -241,7 +254,7 @@ export default function Notification() {
   );
 }
 
-const NavButton = styled(Button)(({ theme }) => ({
+const NavButton = styled(Button)(() => ({
   fontWeight: "bold",
   fontSize: "11px",
   "&:hover": {
@@ -254,23 +267,36 @@ const NavButton = styled(Button)(({ theme }) => ({
   // justifyContent: "flex-start",
 }));
 
-const UnReadNotificationsBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    backgroundColor: purple[500],
-    color: "white",
-    fontWeight: "bold",
-    fontSize: "10px",
-    width: "20px",
-    height: "20px",
-    borderRadius: "50%",
-    top: 13,
-    right: 7,
-    p: "0 4px",
-    border: `2px solid ${theme.palette.background.paper}`,
-  },
-}));
+const UnReadNotificationsBadge = styled(Badge)(
+  ({ theme }: { theme: ThemeInterface }) => ({
+    "& .MuiBadge-badge": {
+      backgroundColor: purple[500],
+      color: "white",
+      fontWeight: "bold",
+      fontSize: "10px",
+      width: "20px",
+      height: "20px",
+      borderRadius: "50%",
+      top: 13,
+      right: 7,
+      p: "0 4px",
+      border: `2px solid ${theme.palette.background.paper}`,
+    },
+  })
+);
 
-const NavigationBar = ({
+const NavigationBar: React.FC<{
+  category: "all" | "chats" | "work" | "project" | "callendar" | "meetings";
+  categoryHandler: (
+    category: "all" | "chats" | "work" | "project" | "callendar" | "meetings"
+  ) => void;
+  notificationsLength: number;
+  chatNotificationsLength: number;
+  workNotificationsLength: number;
+  projectNotificationsLength: number;
+  callendarNotificationsLength: number;
+  meetingsNotificationsLength: number;
+}> = ({
   category,
   categoryHandler,
   notificationsLength,
@@ -302,12 +328,12 @@ const NavigationBar = ({
           sx={
             category === "all"
               ? {
-                borderBottom: `2px solid ${purpleColor}`,
-                color: purpleColor,
-              }
+                  borderBottom: `2px solid ${purpleColor}`,
+                  color: purpleColor,
+                }
               : {
-                color: "grey",
-              }
+                  color: "grey",
+                }
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -341,13 +367,13 @@ const NavigationBar = ({
       >
         <NavButton
           sx={
-            category === "chat"
+            category === "chats"
               ? { borderBottom: `2px solid ${purpleColor}`, color: purpleColor }
               : { color: "grey" }
           }
           onClick={(e) => {
             e.stopPropagation();
-            categoryHandler("chat");
+            categoryHandler("chats");
           }}
         >
           Chat
@@ -361,12 +387,12 @@ const NavigationBar = ({
           sx={
             category === "callendar"
               ? {
-                borderBottom: `2px solid ${purpleColor}`,
-                color: purpleColor,
-              }
+                  borderBottom: `2px solid ${purpleColor}`,
+                  color: purpleColor,
+                }
               : {
-                color: "grey",
-              }
+                  color: "grey",
+                }
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -384,12 +410,12 @@ const NavigationBar = ({
           sx={
             category === "meetings"
               ? {
-                borderBottom: `2px solid ${purpleColor}`,
-                color: purpleColor,
-              }
+                  borderBottom: `2px solid ${purpleColor}`,
+                  color: purpleColor,
+                }
               : {
-                color: "grey",
-              }
+                  color: "grey",
+                }
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -405,7 +431,7 @@ const NavigationBar = ({
 
 // Notifications
 
-const Dot = ({ read }) => {
+const Dot: React.FC<{ read: boolean }> = ({ read }) => {
   const theme = useTheme();
   const purpleColor = purple[500];
   return (
@@ -422,7 +448,14 @@ const Dot = ({ read }) => {
   );
 };
 
-const NotificationToDisplay = ({
+const NotificationToDisplay: FC<{
+  category: "all" | "chats" | "work" | "project" | "callendar" | "meetings";
+  notifications: NotificationInterface[];
+  chatNotifications: NotificationInterface[];
+  workNotifications: NotificationInterface[];
+  callendarNotifications: NotificationInterface[];
+  meetingsNotifications: NotificationInterface[];
+}> = ({
   category,
   notifications,
   chatNotifications,
@@ -432,35 +465,38 @@ const NotificationToDisplay = ({
 }) => {
   const token = useCheckLogedinUserToken();
   switch (category) {
-  case "all":
-    return <AllNotifications notifications={notifications} token={token} />;
+    case "all":
+      return <AllNotifications notifications={notifications} token={token} />;
 
-  case "work":
-    return <WorkNotifications workNotifications={workNotifications} />;
+    case "work":
+      return <WorkNotifications workNotifications={workNotifications} />;
 
-  case "chat":
-    return (
-      <ChatNotifications
-        chatNotifications={chatNotifications}
-        token={token}
-      />
-    );
-  case "callendar":
-    return (
-      <CallendarNotifications
-        callendarNotifications={callendarNotifications}
-      />
-    );
-  case "meetings":
-    return (
-      <MeetingsNotifications meetingsNotifications={meetingsNotifications} />
-    );
-  default:
-    return <AllNotifications notifications={notifications} token={token} />;
+    case "chats":
+      return (
+        <ChatNotifications
+          chatNotifications={chatNotifications}
+          token={token}
+        />
+      );
+    case "callendar":
+      return (
+        <CallendarNotifications
+          callendarNotifications={callendarNotifications}
+        />
+      );
+    case "meetings":
+      return (
+        <MeetingsNotifications meetingsNotifications={meetingsNotifications} />
+      );
+    default:
+      return <AllNotifications notifications={notifications} token={token} />;
   }
 };
 
-const AllNotifications = ({ notifications, token }) => {
+const AllNotifications: FC<{
+  notifications: NotificationInterface[];
+  token: string;
+}> = ({ notifications, token }) => {
   return (
     <Box
       sx={{
@@ -506,7 +542,9 @@ const AllNotifications = ({ notifications, token }) => {
   );
 };
 
-const WorkNotifications = () => {
+const WorkNotifications: FC<{
+  workNotifications: NotificationInterface[];
+}> = () => {
   return (
     <Box
       sx={{
@@ -526,7 +564,10 @@ const WorkNotifications = () => {
   );
 };
 
-const ChatNotifications = ({ chatNotifications, token }) => {
+const ChatNotifications: FC<{
+  chatNotifications: NotificationInterface[];
+  token: string;
+}> = ({ chatNotifications, token }) => {
   return (
     <Box
       sx={{
@@ -572,7 +613,9 @@ const ChatNotifications = ({ chatNotifications, token }) => {
   );
 };
 
-const CallendarNotifications = () => {
+const CallendarNotifications: FC<{
+  callendarNotifications: NotificationInterface[];
+}> = () => {
   return (
     <Box
       sx={{
@@ -592,7 +635,9 @@ const CallendarNotifications = () => {
   );
 };
 
-const MeetingsNotifications = () => {
+const MeetingsNotifications: FC<{
+  meetingsNotifications: NotificationInterface[];
+}> = () => {
   return (
     <Box
       sx={{
@@ -612,53 +657,34 @@ const MeetingsNotifications = () => {
   );
 };
 
-const NotificationByType = ({ notification, token }) => {
+const NotificationByType: FC<{
+  notification: NotificationInterface;
+  token: string;
+}> = ({ notification, token }) => {
   const { type } = notification;
   switch (type) {
-  case "invitation":
-    return (
-      <InvitationNotification notification={notification} userToken={token} />
-    );
-  case "invitationAccepted":
-    return <InvitationAcceptedNotification notification={notification} />;
+    case "invitation":
+      return (
+        <InvitationNotification notification={notification} userToken={token} />
+      );
+    case "invitationAccepted":
+      return <InvitationAcceptedNotification notification={notification} />;
   }
+  return <></>;
 };
 // Notification type component
 // Join Team Notification component
-const InvitationNotification = ({ userToken, notification }) => {
-  const theme = useTheme();
+const InvitationNotification: FC<{
+  notification: NotificationInterface;
+  userToken: string;
+}> = ({ userToken, notification }) => {
+  const theme: ThemeInterface = useTheme();
   const router = useRouter();
   const dispatch = useDispatch();
   const { subject, preview, read, token, time, priority, id } = notification;
   const [accepting, setAccepting] = React.useState(false);
-  // time ago function to show time ago from now in notification
-  const timeAgo = (date) => {
-    const seconds = Math.floor((new Date() - date) / 1000);
-    let interval = seconds / 31536000;
-    if (interval > 1) {
-      return Math.floor(interval) + " years";
-    }
-    interval = seconds / 2592000;
-    if (interval > 1) {
-      return Math.floor(interval) + " months";
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-      return Math.floor(interval) + " days";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-      return Math.floor(interval) + " hours";
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-      return Math.floor(interval) + " minutes";
-    }
-    return Math.floor(seconds) + " seconds";
-  };
 
-  const acceptInviteHandler = async (e) => {
-    e.stopPropagation();
+  const acceptInviteHandler = async () => {
     setAccepting(true);
     const response = await acceptInvite(userToken, token);
     if (response) {
@@ -671,7 +697,6 @@ const InvitationNotification = ({ userToken, notification }) => {
     }
   };
 
-  const timePast = timeAgo(new Date(time));
   return (
     <Box
       sx={{
@@ -684,12 +709,12 @@ const InvitationNotification = ({ userToken, notification }) => {
         backgroundColor: "background.paper",
         "&:hover": {
           backgroundColor:
-            theme.palette.mode === "dark" ? "#1e1e1e" : theme.palette.grey[200],
+            theme.palette.mode === "dark" ? "#1e1e1e" : grey[200],
           cursor: "pointer",
         },
         mb: 1,
         // borger style
-        border: `1px solid ${theme.palette.grey[300]}`,
+        border: `1px solid ${grey[300]}`,
         borderRadius: "10px",
       }}
     >
@@ -714,7 +739,7 @@ const InvitationNotification = ({ userToken, notification }) => {
               component="div"
               sx={{ display: "flex", justifyContent: "flex-end" }}
             >
-              {timePast} ago
+              {moment(time).fromNow()}
             </Typography>
           </Box>
         </Box>
@@ -725,7 +750,10 @@ const InvitationNotification = ({ userToken, notification }) => {
                 variant="contained"
                 size="small"
                 color="secondary"
-                onClick={acceptInviteHandler}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  acceptInviteHandler();
+                }}
                 sx={{
                   textTransform: "none",
                   // make it smaller
@@ -761,35 +789,12 @@ const InvitationNotification = ({ userToken, notification }) => {
   );
 };
 
-const InvitationAcceptedNotification = ({ notification }) => {
-  const theme = useTheme();
+const InvitationAcceptedNotification: FC<{
+  notification: NotificationInterface;
+}> = ({ notification }) => {
+  const theme: ThemeInterface = useTheme();
   const { subject, preview, read, time, priority, id } = notification;
-  const timeAgo = (date) => {
-    const seconds = Math.floor((new Date() - date) / 1000);
-    let interval = seconds / 31536000;
-    if (interval > 1) {
-      return Math.floor(interval) + " years";
-    }
-    interval = seconds / 2592000;
-    if (interval > 1) {
-      return Math.floor(interval) + " months";
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-      return Math.floor(interval) + " days";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-      return Math.floor(interval) + " hours";
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-      return Math.floor(interval) + " minutes";
-    }
-    return Math.floor(seconds) + " seconds";
-  };
 
-  const timePast = timeAgo(new Date(time));
   return (
     <Box
       sx={{
@@ -802,12 +807,12 @@ const InvitationAcceptedNotification = ({ notification }) => {
         backgroundColor: "background.paper",
         "&:hover": {
           backgroundColor:
-            theme.palette.mode === "dark" ? "#1e1e1e" : theme.palette.grey[200],
+            theme.palette.mode === "dark" ? "#1e1e1e" : grey[200],
           cursor: "pointer",
         },
         mb: 1,
         // borger style
-        border: `1px solid ${theme.palette.grey[300]}`,
+        border: `1px solid ${grey[300]}`,
         borderRadius: "10px",
       }}
     >
@@ -832,7 +837,7 @@ const InvitationAcceptedNotification = ({ notification }) => {
               component="div"
               sx={{ display: "flex", justifyContent: "flex-end" }}
             >
-              {timePast} ago
+              {moment(time).fromNow()}
             </Typography>
           </Box>
         </Box>

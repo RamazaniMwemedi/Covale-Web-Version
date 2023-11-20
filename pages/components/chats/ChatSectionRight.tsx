@@ -40,12 +40,12 @@ const ChatSectionRight: FC<{
   };
   return (
     <>
-      {showFile && (
+      {showFile && file ? (
         <FileDisplayComponent
           handleCloseShowVideoPlayer={handleCloseShowFile}
           file={file}
         />
-      )}
+      ) : null}
       {colleagueUsername && (
         <Box
           sx={{
