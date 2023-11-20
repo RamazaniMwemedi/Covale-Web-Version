@@ -299,7 +299,7 @@ const Person: React.FC<{
               height: 150,
               width: "100%",
               backgroundColor: (theme) => theme.palette.action.disabled,
-              borderRadius: 8,
+              borderRadius: 2,
             }}
           />
         )}
