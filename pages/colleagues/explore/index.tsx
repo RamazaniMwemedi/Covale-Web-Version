@@ -281,7 +281,7 @@ const Person: React.FC<{
         >
           <HighlightOffRoundedIcon fontSize="medium" />
         </IconButton>
-        {user.coverPic.fileUrl ? (
+        {user.coverPic ? (
           <Image
             alt="Cover Photo"
             src={user.coverPic ? user.coverPic.fileUrl : ""}
