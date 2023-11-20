@@ -284,7 +284,7 @@ const Person: React.FC<{
         {user.coverPic.fileUrl ? (
           <Image
             alt="Cover Photo"
-            src={user.coverPic.fileUrl}
+            src={user.coverPic ? user.coverPic.fileUrl : ""}
             width={1000}
             height={1000}
             style={{
