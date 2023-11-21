@@ -77,7 +77,6 @@ const {
 } = projectsSlice.actions;
 const reducer = projectsSlice.reducer;
 export {
-  reducer,
   addProjects,
   addProject,
   addSubProjectId,
@@ -86,3 +85,5 @@ export {
   addCommentToTask,
   updateTasks,
 };
+
+export default reducer;

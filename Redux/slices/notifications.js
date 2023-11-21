@@ -65,3 +65,4 @@ export {
   updateReadNotification,
   reducer,
 };
+export default reducer;

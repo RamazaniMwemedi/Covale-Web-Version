@@ -81,7 +81,6 @@ const {
 } = chatSlice.actions;
 const reducer = chatSlice.reducer;
 export {
-  reducer,
   chatAdd,
   chatReset,
   addNewMessageToChatId,
@@ -89,3 +88,5 @@ export {
   allChats,
   addNewMessageToChatIdFromSender,
 };
+
+export default reducer;

@@ -29,5 +29,6 @@ const reducer = keyPairsSlice.reducer;
 export {
   allKeyPairs,
   addNewKeyPair,
-  reducer,
 };
+export default reducer;
+

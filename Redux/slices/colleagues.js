@@ -28,7 +28,7 @@ const { addExploreColleagues, removeColleagueFromExplore } =
 const reducer = colleagueSlice.reducer;
 
 export {
-  reducer,
   addExploreColleagues,
   removeColleagueFromExplore,
 };
+export default reducer;

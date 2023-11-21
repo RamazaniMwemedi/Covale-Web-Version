@@ -84,4 +84,5 @@ export const {
   updateworkexperienceState,
   removeWorkExperienceFromState,
 } = userSlice.actions;
-export const reducer = userSlice.reducer;
+const reducer = userSlice.reducer;
+export default reducer;

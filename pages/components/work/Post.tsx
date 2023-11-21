@@ -71,6 +71,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   addCommentToPost,
+  addCommentsToPost,
   addReplyToComment,
   reactOnPostCommentState,
   reactOnPostState,
@@ -414,7 +415,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
           onClick={() => setShowCommentSection((prev) => !prev)}
         >
           <CommentRoundedIcon />
-          {comments && comments.length} Comments
+          {post && post.commentsLength} Comments
         </Button>
 
         <Button
@@ -734,49 +735,66 @@ const PostComments = ({
   postId: string;
   token: string;
 }) => {
-  const [visibleComments, setVisibleComments] = useState(2); // Number of initially visible comments
-  const [comments, setComments] = useState<CommentInterface[]>([]);
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(1); // Add a state variable for the current page
+
+  const postsStore = useSelector((state: RootState) => state.work.work.posts);
+  const post = postsStore.find((post) => post.id === postId);
+  const comments = post ? post.comments : [];
+  const [isLoading, setIsLoading] = useState(true);
+
   // sort the comments by createdAt in descending order
   const sortedComments = comments
-    .slice()
-    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+    ? comments.slice().sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+    : [];
 
   const handleLoadMore = () => {
-    setVisibleComments((prevCount) => prevCount + 10); // Increase the visible comment count
+    setPage((prevPage) => prevPage + 1); // Increment the page number
   };
 
   useEffect(() => {
     axios
       .get(
-        `${config.SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comments`,
+        `${config.SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comments?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       )
-
       .then((response) => {
-        setComments(response.data);
+        if (!response.data) return;
+        dispatch(
+          addCommentsToPost({ postId: postId, newComments: response.data })
+        );
+        setIsLoading(false);
       });
 
     return () => {
-      setComments([]);
+      setIsLoading(true);
     };
-  }, [postId, token]);
+  }, [postId, token, page]); // Include page in the dependencies array
 
   return (
     <Box>
-      {sortedComments.slice(0, visibleComments).map((comment) => (
-        <PostComment
-          user={user}
-          postId={postId}
-          comment={comment}
-          key={comment.id}
-        />
-      ))}
-      {sortedComments.length > visibleComments && (
-        <Button onClick={handleLoadMore}>Load more</Button>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          {sortedComments.map((comment) => (
+            <div>
+              {comment && (
+                <PostComment
+                  comment={comment}
+                  user={user}
+                  postId={postId}
+                  key={comment.id}
+                />
+              )}
+            </div>
+          ))}
+          <Button onClick={handleLoadMore}>Load more</Button>
+        </>
       )}
     </Box>
   );
@@ -1066,16 +1084,14 @@ const PostComment = ({
           pl: 10,
         }}
       >
-        {comment.replies &&
-          comment.replies.length > 0 &&
-          comment.replies.map((reply) => (
-            <CommentReply
-              comment={reply}
-              user={user}
-              commentId={comment.id}
-              key={reply.id}
-            />
-          ))}
+        {comment.replies?.map((reply) => (
+          <CommentReply
+            comment={reply}
+            user={user}
+            commentId={comment.id}
+            key={reply.id}
+          />
+        ))}
       </Box>
 
       {isReplyOpen && (
@@ -1339,141 +1355,143 @@ const CommentReply = ({
   };
 
   const theme: ThemeInterface = useTheme();
-
+  if (!comment.author) return <></>;
   return (
     <>
-      {comment.author && (
-        <Box sx={{ p: 2, position: "relative" }}>
-          <Box sx={{ display: "flex", position: "relative" }}>
-            <Avatar
-              sx={{
-                height: 30,
-                width: 30,
-                mt: 0.3,
-              }}
-              src={comment.author.profilePic?.fileUrl}
-            >
-              {comment.author.firstname[0]}
-              {comment.author.lastname[0]}
-            </Avatar>
-            <Box
-              sx={{
-                bgcolor: theme.colors.textBackground2,
-                width: "100%",
-                p: 1,
-                borderRadius: 2,
-                borderTopLeftRadius: 0,
-              }}
-            >
-              <Box>
-                <Typography variant={"subtitle1"} fontWeight={700}>
-                  {comment.author.firstname} {comment.author.lastname}
-                </Typography>
-                <Tooltip
-                  title={comment.author.professionalSummary}
-                  placement="right-start"
-                >
-                  <Typography variant="caption" color="action">
-                    {comment.author.professionalSummary &&
-                    comment.author.professionalSummary.length > 80
-                      ? `${comment.author.professionalSummary.substring(
-                          0,
-                          80
-                        )}...`
-                      : comment.author.professionalSummary}
-                  </Typography>
-                </Tooltip>
-              </Box>
-              <Typography>{comment.commentText}</Typography>
-
-              {/* All files grid */}
+      <>
+        {comment.author && (
+          <Box sx={{ p: 2, position: "relative" }}>
+            <Box sx={{ display: "flex", position: "relative" }}>
+              <Avatar
+                sx={{
+                  height: 30,
+                  width: 30,
+                  mt: 0.3,
+                }}
+                src={comment.author.profilePic?.fileUrl}
+              >
+                {/* {comment.author.firstname[0]}
+                {comment.author.lastname[0]} */}
+              </Avatar>
               <Box
                 sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(90px, 90px))",
+                  bgcolor: theme.colors.textBackground2,
+                  width: "100%",
                   p: 1,
+                  borderRadius: 2,
+                  borderTopLeftRadius: 0,
                 }}
               >
-                {" "}
-                {comment.files.length > 0 &&
-                  comment.files.map((file) => {
-                    const displayFile = (myFile: CropperImageInterface) => {
-                      if (
-                        myFile.fileType.includes("image") ||
-                        myFile.fileType.includes("video")
-                      ) {
-                        return true;
-                      } else {
-                        return false;
-                      }
-                    };
-                    const displayFileBool = displayFile(file);
+                <Box>
+                  <Typography variant={"subtitle1"} fontWeight={700}>
+                    {comment.author.firstname} {comment.author.lastname}
+                  </Typography>
+                  <Tooltip
+                    title={comment.author.professionalSummary}
+                    placement="right-start"
+                  >
+                    <Typography variant="caption" color="action">
+                      {comment.author.professionalSummary &&
+                      comment.author.professionalSummary.length > 80
+                        ? `${comment.author.professionalSummary.substring(
+                            0,
+                            80
+                          )}...`
+                        : comment.author.professionalSummary}
+                    </Typography>
+                  </Tooltip>
+                </Box>
+                <Typography>{comment.commentText}</Typography>
 
-                    return (
-                      <Box key={file.id}>
-                        <FileComponent
-                          file={file}
-                          width={displayFileBool ? 90 : 90}
-                          height={90}
-                          displayFile={displayFileBool}
-                        />
-                      </Box>
-                    );
-                  })}
-              </Box>
+                {/* All files grid */}
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(90px, 90px))",
+                    p: 1,
+                  }}
+                >
+                  {" "}
+                  {comment.files.length > 0 &&
+                    comment.files.map((file) => {
+                      const displayFile = (myFile: CropperImageInterface) => {
+                        if (
+                          myFile.fileType.includes("image") ||
+                          myFile.fileType.includes("video")
+                        ) {
+                          return true;
+                        } else {
+                          return false;
+                        }
+                      };
+                      const displayFileBool = displayFile(file);
 
-              {/*  Comment Reactions*/}
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
+                      return (
+                        <Box key={file.id}>
+                          <FileComponent
+                            file={file}
+                            width={displayFileBool ? 90 : 90}
+                            height={90}
+                            displayFile={displayFileBool}
+                          />
+                        </Box>
+                      );
+                    })}
+                </Box>
+
+                {/*  Comment Reactions*/}
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
                   }}
                 >
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    color="secondary"
-                    onMouseOver={() => setShowReactions(true)}
-                    onMouseLeave={() => setShowReactions(false)}
-                    onDoubleClick={() => {
-                      reactionHandle("like");
-                      setShowReactions(false);
-                    }}
+                  <Box
                     sx={{
-                      textTransform: "none",
-                      gap: 1,
-                      p: 1,
-                      position: "relative",
-                      height: 8,
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
-                    {" "}
-                    {showReactions && (
-                      <PostReactions reactionHandle={reactionHandle} />
-                    )}
-                    Like
-                  </Button>
-                  {comment.reactions
-                    .slice(0, 3)
-                    .map((reaction) =>
-                      reactionIcon(reaction.type, { width: 20, height: 20 })
-                    )}
-                  {comment.reactions.length > 0 && comment.reactions.length}
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      color="secondary"
+                      onMouseOver={() => setShowReactions(true)}
+                      onMouseLeave={() => setShowReactions(false)}
+                      onDoubleClick={() => {
+                        reactionHandle("like");
+                        setShowReactions(false);
+                      }}
+                      sx={{
+                        textTransform: "none",
+                        gap: 1,
+                        p: 1,
+                        position: "relative",
+                        height: 8,
+                      }}
+                    >
+                      {" "}
+                      {showReactions && (
+                        <PostReactions reactionHandle={reactionHandle} />
+                      )}
+                      Like
+                    </Button>
+                    {comment.reactions
+                      .slice(0, 3)
+                      .map((reaction) =>
+                        reactionIcon(reaction.type, { width: 20, height: 20 })
+                      )}
+                    {comment.reactions.length > 0 && comment.reactions.length}
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-          {/* Comments Section */}
+            {/* Comments Section */}
 
-          {/* End Comments Section */}
-        </Box>
-      )}
+            {/* End Comments Section */}
+          </Box>
+        )}
+      </>
     </>
   );
 };
@@ -1769,7 +1787,7 @@ const sendMessageHandle = async (
   uuid: string
 ): Promise<boolean> => {
   if (!publicKey || !message) return false;
-  const encryptedMessage = await encryptMessageServices.encryptMessage(
+  const encryptedMessage: string = await encryptMessageServices.encryptMessage(
     message,
     publicKey
   );

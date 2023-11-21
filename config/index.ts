@@ -11,7 +11,7 @@ const URLS = {
   // Secrete server url
 };
 const mod = {
-  SERVER_ADDRESS: URLS.prodServerURL,
+  SERVER_ADDRESS: URLS.devServerURL,
   RTC_ADDRESS: URLS.prodRtcURL, 
   SECRETE_SERVER_ADDRESS: URLS.prodSecuritySerURL,
 };

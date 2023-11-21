@@ -28,5 +28,6 @@ const reducer = calendarSlice.reducer;
 
 export{
   allEvents,
-  reducer,
 };
+export default reducer;
+

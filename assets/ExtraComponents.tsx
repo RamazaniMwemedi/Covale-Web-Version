@@ -40,9 +40,21 @@ const ImageComponent: FC<{
       <Widget>
         {displayFile ? (
           <CardMedia
-            sx={{ height: height, width: width }}
+            sx={{
+               height: height, 
+               width: width, 
+              //  Image to be responsive and containe only space that it needs
+               maxWidth: "100%",
+                maxHeight: "100%",
+                margin: "auto",
+                display: "block",
+                objectFit: "contain",
+                
+            
+            }}
             image={src}
             title="green iguana"
+            component="img"
           />
         ) : (
           <Box

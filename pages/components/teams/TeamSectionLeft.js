@@ -719,6 +719,14 @@ const UserMessage = ({
             color={purple[800]}
             noShowTopicThings={noShowTopicThings}
           />
+          <Avatar
+            sx={{
+              width: 25,
+              height: 25,
+              marginRight: "6px",
+            }}
+            src={user.profilePic && user.profilePic.fileUrl}
+          />
         </>
       ) : (
         <>

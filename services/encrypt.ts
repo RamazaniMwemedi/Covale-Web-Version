@@ -43,6 +43,8 @@ export const encryptMessage = async (message: string, privateKey: string) => {
 };
 
 export const decryptMessage = async (message: string, publicKey: string) => {
+  if (!message || !publicKey) return Promise.resolve("");
+
   const response = await axios.post("/api/decrypt", {
     text: message,
     publicKey: publicKey,

@@ -1,4 +1,4 @@
-import { PostInterface } from "./../../interfaces/work";
+import { CommentInterface, PostInterface } from "./../../interfaces/work";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: {
@@ -35,6 +35,7 @@ const workSlice = createSlice({
         const updatedPost = {
           ...state.work.posts[postIndex],
           comments: [...state.work.posts[postIndex].comments, newComment],
+          commentsLength: state.work.posts[postIndex].commentsLength + 1,
         };
 
         // Create a new array of posts with the updated post object
@@ -163,14 +164,12 @@ const workSlice = createSlice({
     },
     addReplyToComment(state, { payload }) {
       const { postId, commentId, reply } = payload;
-      console.log(reply)
+      console.log(reply);
 
       const updatedPosts = state.work.posts.map((post) => {
         if (post.id === postId) {
           const updatedComments = post.comments.map((comment) => {
             if (comment.id === commentId) {
-             
-
               const updatedReplies = [...comment.replies, reply];
 
               return { ...comment, replies: updatedReplies };
@@ -191,7 +190,57 @@ const workSlice = createSlice({
         },
       };
     },
-    
+    addCommentsToPost(state, { payload }) {
+      const postId = payload.postId;
+      const newComments: CommentInterface[] = payload.newComments;
+
+      // Find the post with the matching ID
+      const postIndex: number = state.work.posts.findIndex(
+        (post) => post.id === postId
+      );
+
+      if (postIndex !== -1) {
+        // Ensure comments is an array
+        const existingComments = Array.isArray(
+          state.work.posts[postIndex].comments
+        )
+          ? state.work.posts[postIndex].comments
+          : [];
+
+        // Filter newComments to only include those that don't already exist in existingComments
+        const uniqueNewComments = newComments.filter(
+          (newComment) =>
+            !existingComments.some(
+              (existingComment) => existingComment.id === newComment.id
+            )
+        );
+
+        // Create a new post object with the updated comments array
+        const updatedPost = {
+          ...state.work.posts[postIndex],
+          comments: [...existingComments, ...uniqueNewComments],
+        };
+
+        // Create a new array of posts with the updated post object
+        const updatedPosts = [
+          ...state.work.posts.slice(0, postIndex),
+          updatedPost,
+          ...state.work.posts.slice(postIndex + 1),
+        ];
+
+        // Return a new state object with the updated posts array
+        return {
+          ...state,
+          work: {
+            ...state.work,
+            posts: updatedPosts,
+          },
+        };
+      }
+
+      // If the post with the matching ID is not found, return the original state object
+      return state;
+    },
   },
 });
 
@@ -202,5 +251,7 @@ export const {
   reactOnPostState,
   reactOnPostCommentState,
   addReplyToComment,
+  addCommentsToPost,
 } = workSlice.actions;
-export const reducer = workSlice.reducer;
+const reducer = workSlice.reducer;
+export default reducer;

@@ -115,7 +115,6 @@ const {
 } = teamSlice.actions;
 const reducer = teamSlice.reducer;
 export {
-  reducer,
   allTeams,
   addNewMessageToTeamId,
   addNewMessageToTeamIdFromSender,
@@ -124,3 +123,5 @@ export {
   replyToTopicId,
   updateTopicMessageId,
 };
+
+export default reducer;

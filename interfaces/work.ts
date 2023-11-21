@@ -18,6 +18,7 @@ export interface PostInterface {
     id?: string;
   }[];
   comments: CommentInterface[];
+  commentsLength: number;
   shares: {
     user: UserInterFace;
     createdAt: string;
