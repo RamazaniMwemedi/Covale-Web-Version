@@ -14,6 +14,8 @@ import {
   Tooltip,
   Autocomplete,
   TextField,
+  Link,
+  CircularProgress,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
@@ -82,6 +84,7 @@ import encryptMessageServices from "../../../services/encrypt";
 import config from "../../../config/index";
 import axios from "axios";
 import { set } from "date-fns";
+import moment from "moment";
 const chatSocket = connect(`${config.RTC_ADDRESS}/chat`);
 
 const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
@@ -742,17 +745,18 @@ const PostComments = ({
   const post = postsStore.find((post) => post.id === postId);
   const comments = post ? post.comments : [];
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // sort the comments by createdAt in descending order
-  const sortedComments = comments
-    ? comments.slice().sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
-    : [];
 
   const handleLoadMore = () => {
     setPage((prevPage) => prevPage + 1); // Increment the page number
   };
 
   useEffect(() => {
+    if (page > 1) {
+      setIsLoadingMore(true);
+    }
     axios
       .get(
         `${config.SERVER_ADDRESS}/api/v1/work/circle/post/${postId}/comments?page=${page}`,
@@ -768,20 +772,26 @@ const PostComments = ({
           addCommentsToPost({ postId: postId, newComments: response.data })
         );
         setIsLoading(false);
+        setIsLoadingMore(false);
       });
-
-    return () => {
-      setIsLoading(true);
-    };
   }, [postId, token, page]); // Include page in the dependencies array
-
+  const theme: ThemeInterface = useTheme();
   return (
     <Box>
       {isLoading ? (
-        <div>Loading...</div>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100px",
+          }}
+        >
+          <CircularProgress size={25} color="secondary" />
+        </Box>
       ) : (
         <>
-          {sortedComments.map((comment) => (
+          {comments.map((comment) => (
             <div>
               {comment && (
                 <PostComment
@@ -793,7 +803,35 @@ const PostComments = ({
               )}
             </div>
           ))}
-          <Button onClick={handleLoadMore}>Load more</Button>
+          {isLoadingMore && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100px",
+              }}
+            >
+              <CircularProgress size={20} color="secondary" />
+            </Box>
+          )}
+          <Link
+            sx={{
+              color: theme.palette.grey[500],
+              cursor: "pointer",
+              "&:hover": {
+                fontWeight: 700,
+              },
+              p: 0,
+              m: 0,
+              pl: 2,
+            }}
+            color="inherit"
+            underline="hover"
+            onClick={handleLoadMore}
+          >
+            Load more comments
+          </Link>
         </>
       )}
     </Box>
@@ -1018,8 +1056,11 @@ const PostComment = ({
               // placeContent: "center",
             }}
           >
+            <Typography color="text.secondary" variant="caption">
+              {moment(comment.date).fromNow()}
+            </Typography>
             <Button
-              variant="outlined"
+              variant="text"
               size="small"
               color="secondary"
               onMouseOver={() => setShowReactions(true)}
@@ -1052,7 +1093,7 @@ const PostComment = ({
             </sup>
 
             <Button
-              variant="outlined"
+              variant="text"
               size="small"
               color="secondary"
               sx={{

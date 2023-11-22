@@ -34,7 +34,7 @@ const workSlice = createSlice({
         // Create a new post object with the updated comments array
         const updatedPost = {
           ...state.work.posts[postIndex],
-          comments: [...state.work.posts[postIndex].comments, newComment],
+          comments: [newComment, ...state.work.posts[postIndex].comments], // Add newComment as the first element
           commentsLength: state.work.posts[postIndex].commentsLength + 1,
         };
 
@@ -58,6 +58,7 @@ const workSlice = createSlice({
       // If the post with the matching ID is not found, return the original state object
       return state;
     },
+
     reactOnPostState(state, { payload }) {
       const { postId, statusCode, newReaction, user } = payload;
       console.log("statusCode :>>", statusCode);
