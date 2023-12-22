@@ -12,7 +12,7 @@ export interface PostInterface {
   pinned: Boolean;
   priority: string;
   files: CropperImageInterface[];
-  reactions: {
+  reacts: {
     user: UserInterFace;
     type: string;
     id?: string;

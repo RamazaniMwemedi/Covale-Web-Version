@@ -2,8 +2,14 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 
 import Logo from "../assets/Logo";
-import { useTheme } from "@mui/styles";
-import { Button, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  styled,
+} from "@mui/material";
 import { ThemeInterface } from "../interfaces/myprofile";
 
 function Index() {
@@ -61,6 +67,9 @@ function Index() {
   };
 
   const ComingSoon = () => {
+    const theme: ThemeInterface = useTheme();
+    const isMobileView = useMediaQuery(() => theme.breakpoints.down("sm"));
+
     return (
       <Box
         sx={{
@@ -74,20 +83,7 @@ function Index() {
         <br />
         <br />
 
-        <Box
-          sx={{
-            // Rotateing the logo animation in 360 degree
-            animation: "spin 50s linear infinite",
-            "@keyframes spin": {
-              "0%": {
-                transform: "rotate(0deg)",
-              },
-              "100%": {
-                transform: "rotate(360deg)",
-              },
-            },
-          }}
-        >
+        <Box>
           <Logo height={200} width={200} />
         </Box>
         <Typography
@@ -101,18 +97,31 @@ function Index() {
         </Typography>
         <br />
         <br />
+        <CenteredBox>
+          <Typography
+            sx={
+              {
+                // color: "#1C2B33",
+              }
+            }
+            width={isMobileView ? "100%" : 900}
+            variant={isMobileView ? "h6" : "h5"}
+            fontWeight={500}
+          >
+            Are you ready to take your team's productivity to the next level?
+            Covale has the solution. Our platform is designed to streamline
+            processes, improve collaboration, and create a more engaged and
+            motivated workforce. Stay tuned for our launch, and experience the
+            power of Covale for yourself.
+          </Typography>
+        </CenteredBox>
         <Typography
           sx={{
             textAlign: "center",
+            width: "50%",
           }}
           variant="body1"
-        >
-          Are you ready to take your team's productivity to the next level?
-          Covale has the solution. Our platform is designed to streamline
-          processes, improve collaboration, and create a more engaged and
-          motivated workforce. Stay tuned for our launch, and experience the
-          power of Covale for yourself.
-        </Typography>
+        ></Typography>
       </Box>
     );
   };
@@ -229,7 +238,6 @@ function Index() {
     <Box
       sx={{
         bgcolor: theme.colors.background,
-        height: "100%",
       }}
     >
       <NavBar />
@@ -240,3 +248,10 @@ function Index() {
 }
 
 export default Index;
+
+const CenteredBox = styled(Box)`
+  display: grid;
+  place-content: center;
+  height: auto;
+  text-align: center;
+`;

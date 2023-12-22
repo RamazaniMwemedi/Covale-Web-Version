@@ -65,20 +65,20 @@ const workSlice = createSlice({
 
       const updatedPosts = state.work.posts.map((post: PostInterface) => {
         if (post.id === postId) {
-          const existingReaction = post.reactions.find(
+          const existingReaction = post.reacts.find(
             (reaction) => reaction.user.id === user.id
           );
 
           if (Number(statusCode) === 204) {
             // If the user has already reacted with the same reaction type, remove the reaction
-            const updatedReactions = post.reactions.filter(
+            const updatedReactions = post.reacts.filter(
               (reaction) => reaction.user.id !== user.id
             );
 
             return { ...post, reactions: updatedReactions };
           } else if (existingReaction) {
             // If the user has not yet reacted with the same reaction type, update the reaction
-            const updatedReactions = post.reactions.map((reaction) => {
+            const updatedReactions = post.reacts.map((reaction) => {
               if (reaction.user.id === user.id) {
                 return { ...reaction, type: newReaction };
               }
@@ -92,7 +92,7 @@ const workSlice = createSlice({
               user: user,
               type: newReaction,
             };
-            const updatedReactions = [...post.reactions, newReactionObj];
+            const updatedReactions = [...post.reacts, newReactionObj];
 
             return { ...post, reactions: updatedReactions };
           }

@@ -41,11 +41,8 @@ const BootstrapDialogTitle: React.FC<{
   const theme: ThemeInterface = useTheme();
 
   return (
-    <DialogTitle
-      sx={{ m: 0, p: 2, backgroundColor: theme.colors.background }}
-      {...other}
-    >
-      {children}(
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
       <IconButton
         aria-label="close"
         onClick={onClose}
@@ -58,7 +55,6 @@ const BootstrapDialogTitle: React.FC<{
       >
         <CloseIcon />
       </IconButton>
-      )
     </DialogTitle>
   );
 };
@@ -128,7 +124,6 @@ const CreateAccount = forwardRef(
           onClose={handleClose}
           aria-labelledby="customized-dialog-title"
           open={open}
-          sx={{ backgroundColor: theme.colors.background }}
         >
           <BootstrapDialogTitle onClose={handleClose}>
             <Typography variant="h5">Create an account</Typography>

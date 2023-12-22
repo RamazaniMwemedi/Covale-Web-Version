@@ -110,7 +110,7 @@ const Work = () => {
                           heigh: "100%",
                         }}
                       >
-                        <CircularProgress size={30} />
+                        <CircularProgress color="secondary" size={30} />
                       </Box>
                     ) : (
                       <>

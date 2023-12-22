@@ -100,7 +100,7 @@ const Post = ({ post, user }: { post: PostInterface; user: UserInterFace }) => {
         type: string;
         id?: string | undefined;
       }[]
-    | null = post ? post.reactions : null;
+    | null = post ? post.reacts : null;
   const theme: ThemeInterface = useTheme();
   const token = hookHook.useCheckLogedinUserToken();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

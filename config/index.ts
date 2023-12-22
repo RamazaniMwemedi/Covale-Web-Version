@@ -12,8 +12,8 @@ const URLS = {
 };
 const mod = {
   SERVER_ADDRESS: URLS.devServerURL,
-  RTC_ADDRESS: URLS.prodRtcURL, 
-  SECRETE_SERVER_ADDRESS: URLS.prodSecuritySerURL,
+  RTC_ADDRESS: URLS.devRtcURL,
+  SECRETE_SERVER_ADDRESS: URLS.devSecuritySerURL,
 };
 
 export default mod;

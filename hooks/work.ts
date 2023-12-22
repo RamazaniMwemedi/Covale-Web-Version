@@ -40,8 +40,6 @@ export const useGetAllPosts = (): boolean => {
           setLoading(false);
         }
       });
-    } else {
-      setLoading(false);
     }
   }, [token]);
 
