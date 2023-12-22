@@ -16,9 +16,9 @@ import {
 import { usePathname } from "next/navigation";
 import {
   BookMarkIcon,
+  DashboardIcon,
   EventIcon,
   OrganizationIcon,
-  PostIcon,
 } from "../../../assets/Icons";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
@@ -40,16 +40,16 @@ const Drawer = styled(MuiDrawer, {
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: "hidden",
-    width: `calc(${theme.spacing(23)} + 1px)`,
+    // width: `calc(${theme.spacing(23)} + 1px)`,
     [theme.breakpoints.up("sm")]: {
-      width: `calc(${theme.spacing(35)} + 1px)`,
+      width: `calc(${theme.spacing(24)} + 1px)`,
       marginLeft: theme.spacing(8),
     },
     justifyContent: "spaceBetween",
     borderLeft: `2px solid ${theme.colors.background1}`,
     borderRight: `2px solid ${theme.colors.background1}`,
     backgroundColor: theme.colors.background,
-    p: 10,
+    // p: 10,
     "& .MuiDrawer-paper": {
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
@@ -65,14 +65,14 @@ const Drawer = styled(MuiDrawer, {
       borderLeft: `2px solid ${theme.colors.background1}`,
       borderRight: `2px solid ${theme.colors.background1}`,
       backgroundColor: theme.colors.background,
-      p: 10,
+      // p: 10,
     },
   }),
 }));
 
 export default function WorktLeft({}) {
   const [showOrganizations, setShowOrganizations] = useState(false);
-  const [postBgcolor, setPostBgcolor] = useState("");
+  const [dashboardBgColorq, setDashboardBgColorq] = useState("");
   const [eventBgcolor, setEventBgcolor] = useState("");
   const [savedBgcolor, setSavedBgcolor] = useState("");
   const pathname = usePathname();
@@ -82,17 +82,17 @@ export default function WorktLeft({}) {
   useEffect(() => {
     switch (pathname) {
       case "/work":
-        setPostBgcolor(theme.colors.background1);
+        setDashboardBgColorq(theme.colors.background1);
         setEventBgcolor("");
         setSavedBgcolor("");
         break;
       case "/work/events":
-        setPostBgcolor("");
+        setDashboardBgColorq("");
         setEventBgcolor(theme.colors.background1);
         setSavedBgcolor("");
         break;
       case "/work/saved":
-        setPostBgcolor("");
+        setDashboardBgColorq("");
         setEventBgcolor("");
         setSavedBgcolor(theme.colors.background1);
         break;
@@ -101,7 +101,7 @@ export default function WorktLeft({}) {
         break;
     }
     return () => {
-      setPostBgcolor("");
+      setDashboardBgColorq("");
       setEventBgcolor("");
       setSavedBgcolor("");
     };
@@ -123,16 +123,16 @@ export default function WorktLeft({}) {
             >
               <ListItemButton
                 sx={{
-                  bgcolor: postBgcolor,
+                  bgcolor: dashboardBgColorq,
                   borderRadius: 2,
                   mt: 0.3,
                 }}
                 onClick={() => router.push("/work/")}
               >
                 <ListItemIcon>
-                  <PostIcon width={25} height={25} />
+                  <DashboardIcon width={25} height={25} />
                 </ListItemIcon>
-                <Typography>Posts</Typography>
+                <Typography>Dashboard</Typography>
               </ListItemButton>
               <ListItemButton
                 sx={{

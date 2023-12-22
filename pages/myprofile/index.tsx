@@ -34,7 +34,6 @@ import Image from "next/image";
 import { purple } from "@mui/material/colors";
 
 import SwipeableViews from "react-swipeable-views";
-import Posts from "../components/profile/Posts";
 import { addCoverPic } from "../../services/user";
 import { updateCoverPhotoe } from "../../Redux/slices/user";
 import defaultBackgroundImage from "../../assets/defaultBackgroundImage.jpeg";
@@ -47,8 +46,10 @@ import {
   ThemeInterface,
 } from "../../interfaces/myprofile";
 import {
+  GroupIcon,
   PersonalInfoIcon,
   PrivacyIcon,
+  UserIcon,
   UserShieldIcon,
 } from "../../assets/Icons";
 import moment from "moment";
@@ -250,7 +251,10 @@ const MyAccount = () => {
                       <UserCard />
                     </Box>
                   </Box>
+                  <br/>
+                  <br/>
                 </Box>
+
                 {/* Tabs */}
                 <Box
                   sx={{
@@ -340,10 +344,72 @@ function FullWidthTabs({ value, handleChange }: FullWidthTabsProps) {
         variant="fullWidth"
         aria-label="Contents Tab"
       >
-        <Tab sx={{ textTransform: "unset" }} label="Posts" {...a11yProps(0)} />
-        <Tab sx={{ textTransform: "unset" }} label="Teams" {...a11yProps(1)} />
+        <Tab
+          sx={{ textTransform: "unset", width: 200 }}
+          label={
+            <Box
+              component={"div"}
+              sx={{
+                display: "flex",
+                gap: 1,
+              }}
+            >
+              <UserIcon height={24} width={24} />
+              <Typography>About</Typography>
+            </Box>
+          }
+          {...a11yProps(0)}
+        />
+        <Tab
+          sx={{ textTransform: "unset", width: 200 }}
+          label={
+            <Box
+              component={"div"}
+              sx={{
+                display: "flex",
+                gap: 1,
+              }}
+            >
+              <GroupIcon height={24} width={24} />
+              <Typography>Teams</Typography>
+            </Box>
+          }
+          {...a11yProps(1)}
+        />
+        <Tab
+          sx={{ textTransform: "unset", width: 200 }}
+          label={
+            <Box
+              component={"div"}
+              sx={{
+                display: "flex",
+                gap: 1,
+              }}
+            >
+              <PersonalInfoIcon height={24} width={24} />
+              <Typography>Personal Info</Typography>
+            </Box>
+          }
+          {...a11yProps(2)}
+        />
+        <Tab
+          sx={{ textTransform: "unset", width: 200 }}
+          label={
+            <Box
+              component={"div"}
+              sx={{
+                display: "flex",
+                gap: 1,
+              }}
+            >
+              <UserShieldIcon height={24} width={24} />
+              <Typography>Security</Typography>
+            </Box>
+          }
+          {...a11yProps(3)}
+        />
       </Tabs>
-      <LongMenu handleChange={handleChange} />{" "}
+      {/* <LongMenu handleChange={handleChange} />{" "} */}
     </Box>
   );
 }
@@ -356,9 +422,7 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
       index={value}
       onChangeIndex={handleChangeIndex}
     >
-      <TabPanel value={value} index={0} dir={theme.direction}>
-        <Posts />
-      </TabPanel>
+      <TabPanel value={value} index={0} dir={theme.direction}></TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
         <TeamsSection />
       </TabPanel>
@@ -876,10 +940,7 @@ function LongMenu({
             gap: 1,
           }}
           onClick={() => handleChange(2)}
-        >
-          <PersonalInfoIcon height={24} width={24} />
-          <Typography>Personal Info</Typography>
-        </MenuItem>
+        ></MenuItem>
 
         <MenuItem
           onClick={() => handleChange(3)}
@@ -887,10 +948,7 @@ function LongMenu({
             display: "flex",
             gap: 1,
           }}
-        >
-          <UserShieldIcon height={24} width={24} />
-          <Typography>Security</Typography>
-        </MenuItem>
+        ></MenuItem>
       </Menu>
     </div>
   );

@@ -37,9 +37,6 @@ import {
   ThemeInterface,
   UserInterFace,
 } from "../../interfaces/myprofile";
-import { AddANewPost } from "../components/profile/PostRight";
-import { useGetAllPosts } from "../../hooks/work";
-import Post from "../components/work/Post";
 import { getConnectionsYouMayKnow } from "../../services/work";
 
 // Redux
@@ -48,19 +45,9 @@ const Work = () => {
   const userLoading = hookHooks.useCheckLogedinUser();
   const userStore = useSelector((state: RootState) => state.user);
   const theme: ThemeInterface = useTheme();
-  const isMobileView = useMediaQuery(() => theme.breakpoints.down("sm"));
   const isVerySmallPcView = useMediaQuery(() => theme.breakpoints.down("md"));
-  const mapStateToProps = (state: RootState) => {
-    const sortedState = state.work?.work.posts
-      .slice()
-      .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
-    return sortedState;
-  };
-  const posts = useSelector((state: RootState) => mapStateToProps(state));
-  const user = userStore?.user;
-  // const { posts } = workStore.
 
-  const loading = useGetAllPosts();
+  const user = userStore?.user;
 
   return (
     <>
@@ -79,77 +66,25 @@ const Work = () => {
               <DrawerComponent />
               <WorktLeft />
               <Box
-                sx={
-                  !isMobileView
-                    ? {
-                        display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%",
-                      }
-                    : {}
-                }
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
               >
                 {/* Post Left */}
                 <Box
-                  sx={
-                    !isMobileView
-                      ? {
-                          flex: isVerySmallPcView ? 1 : 0.6,
-                        }
-                      : {}
-                  }
+                  sx={{
+                    flex: isVerySmallPcView ? 1 : 0.6,
+                  }}
                 >
-                  <Box p={isVerySmallPcView ? 2 : 6}>
-                    <AddANewPost />
-                    <Toolbar />
-                    {loading ? (
-                      <Box
-                        display={"grid"}
-                        sx={{
-                          placeItems: "center",
-                          heigh: "100%",
-                        }}
-                      >
-                        <CircularProgress color="secondary" size={30} />
-                      </Box>
-                    ) : (
-                      <>
-                        {posts.length > 0 ? (
-                          posts.map((post) => (
-                            <Post post={post} user={user} key={post.id} />
-                          ))
-                        ) : (
-                          <Box
-                            display={"grid"}
-                            sx={{
-                              placeItems: "center",
-                              heigh: "100%",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                bgcolor: (theme) => theme.palette.action.hover,
-                                borderRadius: 4,
-                                mt: 3,
-                                p: 4,
-                              }}
-                            >
-                              <Typography variant="h5">
-                                No Post to show yet.
-                              </Typography>
-                              <Typography variant="body2" textAlign={"center"}>
-                                Click on "Publish an Update" to create a post.
-                              </Typography>
-                            </Box>
-                          </Box>
-                        )}
-                      </>
-                    )}
+                  <Box pt={isVerySmallPcView ? 1 : 2}>
+                    <Typography variant="h5">Dashboard</Typography>
                   </Box>
                 </Box>
                 {/* Post Right */}
 
-                {!isMobileView && <RigthComponent />}
+                {!isVerySmallPcView && <RigthComponent />}
               </Box>{" "}
             </Box>
           ) : (

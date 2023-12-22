@@ -1,15 +1,12 @@
 import { Breakpoints, SelectChangeEvent, Theme } from "@mui/material";
 import { MomentInput } from "moment";
-import { PostInterface } from "./work";
 
 export interface RootState {
   user: {
     user: UserInterFace;
   };
   work: {
-    work: {
-      posts: PostInterface[];
-    };
+    work: {};
   };
   keyPairs: {
     keyPairs: KeysSchema[];

@@ -75,7 +75,6 @@ const Events = () => {
                   // gridTemplateRows: "auto", // set the row height to auto
                   // gap: "1rem",
                   width: "90%",
-                  ml: -7,
                   pt: 2,
                   // ml: 7,
                   //   "@media screen and (max-width: 1400px)": {

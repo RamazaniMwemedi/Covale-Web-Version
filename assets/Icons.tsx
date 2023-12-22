@@ -115,6 +115,18 @@ export const UserShieldIcon: FC<{ width: number; height: number }> = ({
     src="/icons/shield.png"
   />
 );
+export const UserIcon: FC<{ width: number; height: number }> = ({
+  width,
+  height,
+}) => (
+  <Image width={width} height={height} alt="UserIcon" src="/icons/user.png" />
+);
+export const GroupIcon: FC<{ width: number; height: number }> = ({
+  width,
+  height,
+}) => (
+  <Image width={width} height={height} alt="GroupIcon" src="/icons/group.png" />
+);
 
 export const GraduetionCap: FC<{ width: number; height: number }> = ({
   width,
@@ -220,10 +232,17 @@ export const FunnyIcon: FC<{ width: number; height: number }> = ({
     src="/icons/funny.png"
   />
 );
-export const PostIcon: FC<{ width: number; height: number }> = ({
+export const DashboardIcon: FC<{ width: number; height: number }> = ({
   width,
   height,
-}) => <Image alt="Post" width={width} height={height} src="/icons/post.png" />;
+}) => (
+  <Image
+    alt="DashboardIcon"
+    width={width}
+    height={height}
+    src="/icons/dashboard.png"
+  />
+);
 export const BookMarkIcon: FC<{ width: number; height: number }> = ({
   width,
   height,
