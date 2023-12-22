@@ -53,6 +53,7 @@ import {
   UserShieldIcon,
 } from "../../assets/Icons";
 import moment from "moment";
+import About from "../components/profile/About";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
@@ -251,8 +252,8 @@ const MyAccount = () => {
                       <UserCard />
                     </Box>
                   </Box>
-                  <br/>
-                  <br/>
+                  <br />
+                  <br />
                 </Box>
 
                 {/* Tabs */}
@@ -422,7 +423,9 @@ const Contents = ({ value, handleChangeIndex }: ContentsProps) => {
       index={value}
       onChangeIndex={handleChangeIndex}
     >
-      <TabPanel value={value} index={0} dir={theme.direction}></TabPanel>
+      <TabPanel value={value} index={0} dir={theme.direction}>
+        <About />
+      </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
         <TeamsSection />
       </TabPanel>

@@ -265,6 +265,8 @@ export interface WorkExperienceDialogProp {
   closeDialogHandler: () => void;
 }
 
+
+
 export interface SelectWorkExperienceProp {
   title: string;
   organizationName: string;
