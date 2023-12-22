@@ -3,6 +3,7 @@ import React, { FC, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import {
+  addEducationAndCertificates,
   addWorkExperience,
   deleteWorkExperience,
   updateProfessionalSum,
@@ -15,6 +16,7 @@ import {
   updateworkexperienceState,
 } from "../../../Redux/slices/user";
 import {
+  AddNewEducationAndCertificatesProp,
   AddNewWorkExperinceProp,
   CardWithAvatarAndDateProps,
   FormDialogProp,
@@ -1673,66 +1675,111 @@ const EducationAndCertificates: FC<{
   const dispatch = useDispatch();
 
   const token = useCheckLogedinUserToken();
+
+  const [type, setType] = useState<"education" | "certificate">("education");
+  const [schoolName, setSchoolName] = useState("");
+  const [degree, setDegree] = useState("");
+  const [fieldOfStudy, setFieldOfStudy] = useState("");
+  const [certificateName, setCertificateName] = useState("");
+  const [isUntillNow, setIsUntillNow] = useState(false);
+  const [startDate, setStartDate] = useState<MomentInput>(moment());
+  const [endDate, setEndDate] = useState<MomentInput>(moment());
+  const [skills, setSkills] = useState<string[]>([]);
+  const [sourceUrl, setSourceUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
+  const [description, setDescription] = useState("");
+  const [file, setFile] = useState<File | undefined>(undefined);
+
+
+
+  // End
   const [open, setOpen] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [titleValue, setTitleValue] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [jobDescriptionValue, setJobDescriptionValue] = useState<string>("");
-  const [isUntillNow, setIsUntillNow] = useState<boolean>(false);
-
-  const [organizationName, setOrganizationName] = useState<string>("");
-  const [employmentTypeValue, setEmploymentTypeValue] = useState<string>("");
-  const [locationTypeValue, setLocationTypeValue] = useState<string>("");
-  const [startDate, setStartDate] = useState<MomentInput>(moment());
-  const [endDate, setEndDate] = useState<MomentInput>(moment());
 
   const handleClose = () => setOpen(false);
-  const onTitleValueChange = (
+
+  const onTypeChange = (newType: "education" | "certificate") => {
+    setType(newType);
+  };
+
+  const onSchoolNameChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setTitleValue(e.target.value);
+    setSchoolName(e.target.value);
   };
-  const onLocationValueChange = (
+
+  const onDegreeChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setLocation(e.target.value);
+    setDegree(e.target.value);
   };
-  const onEmplymentTypeValueChange = (e: SelectChangeEvent<string>) => {
-    setEmploymentTypeValue(e.target.value);
+
+  const onFieldOfStudyChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFieldOfStudy(e.target.value);
   };
-  const onLocationTypeValueChange = (e: SelectChangeEvent<string>) => {
-    setLocationTypeValue(e.target.value);
+
+  const onCertificateNameChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setCertificateName(e.target.value);
+  };
+
+  const onIsUntillNowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsUntillNow(e.target.checked);
+  };
+
+  const onStartDateChange = (newStartDate: MomentInput) => {
+    setStartDate(newStartDate);
+  };
+
+  const onEndDateChange = (newEndDate: MomentInput) => {
+    setEndDate(newEndDate);
+  };
+
+  const onSkillsChange = (newSkills: string[]) => {
+    setSkills(newSkills);
+  };
+
+  const onSourceUrlChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setSourceUrl(e.target.value);
+  };
+
+  const onTitleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setTitle(e.target.value);
+  };
+
+  const onThumbnailChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setThumbnail(e.target.value);
+  };
+
+  const onDescriptionChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setDescription(e.target.value);
+  };
+
+  const onFileChange = (file:File|undefined) => {
+    
+      setFile(file);
   };
   const untilNowHandler = () => {
     setIsUntillNow((prevState) => !prevState);
   };
-  const onJobDescriptionValueChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setJobDescriptionValue(e.target.value);
-  };
-  const onOrganizationNameValueChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setOrganizationName(e.target.value);
-  };
-  const onStartDateValueChange = (newStartDate: MomentInput) => {
-    setStartDate(newStartDate);
-  };
-  const onEndDateValueChange = (newEndDate: MomentInput) => {
-    setEndDate(newEndDate);
-  };
+
   const handleSaveChange = async () => {
     // Check if something is missing
-    if (
-      !titleValue ||
-      !location ||
-      !jobDescriptionValue ||
-      !organizationName ||
-      !employmentTypeValue
-    ) {
+    if (!title) {
       setError(true);
       setErrorMessage("Please fill all fields");
       setTimeout(() => {
@@ -1742,29 +1789,55 @@ const EducationAndCertificates: FC<{
       return;
     }
     setSaving(true);
-    const workExperienceObject = {
-      title: titleValue,
-      location: location,
-      jobDescription: jobDescriptionValue,
-      organizationName: organizationName,
-      employmentType: employmentTypeValue,
-      startDate: startDate,
-      endDate: endDate,
-      isUntillNow: isUntillNow,
-      locationType: locationTypeValue,
+    const educationAndCertificates: {
+      type: "education" | "certificate";
+      details: {
+        schoolName: string;
+        degree: string;
+        fieldOfStudy: string;
+        certificateName: string;
+        isUntillNow: boolean;
+        startDate: MomentInput;
+        endDate: MomentInput;
+        skills: string[];
+        media: {
+          sourceUrl: string;
+          title: string;
+          thumbnail: string;
+          description: string;
+          file: File | undefined;
+        };
+      };
+    } = {
+      type,
+      details: {
+        certificateName,
+        degree,
+        endDate,
+        fieldOfStudy,
+        isUntillNow,
+        media: {
+          file: file,
+          description: description,
+          sourceUrl: sourceUrl,
+          thumbnail: thumbnail,
+          title: title,
+        },
+        schoolName,
+        skills,
+        startDate,
+      },
     };
-    const response = await addWorkExperience(token, workExperienceObject);
+    const response = await addEducationAndCertificates(
+      token,
+      educationAndCertificates
+    );
     dispatch(addWorkExperienceToState(response));
 
     setError(false);
     setErrorMessage("");
     if (response) {
       setOpen(false);
-      setTitleValue("");
-      setLocation("");
-      setJobDescriptionValue("");
-      setOrganizationName("");
-      setEmploymentTypeValue("");
       setStartDate(moment());
       setEndDate(moment());
       setIsUntillNow(false);
@@ -1818,8 +1891,8 @@ const EducationAndCertificates: FC<{
           </IconButton>
         </Box>
       </Box>
-      {user && user.workExperiences.length > 1 ? (
-        user.workExperiences.map((workExperience) => {
+      {user && user.educationAndCertificates.length > 1 ? (
+        user.educationAndCertificates.map((educationAndCertificate) => {
           return (
             <Box
               sx={{
@@ -1827,17 +1900,10 @@ const EducationAndCertificates: FC<{
               }}
               onClick={() => {
                 setOpenWorkExperienceDialog(true);
-                setSelectedWorkExperience(workExperience);
+                // setSelectedWorkExperience(workExperience);
               }}
             >
-              <CardWithAvatarAndDate
-                title={workExperience.title}
-                subTitle={workExperience.organizationName}
-                startDate={workExperience.startDate}
-                endDate={workExperience.endDate}
-                isUntillNow={workExperience.isUntillNow}
-                jobDescription={workExperience.jobDescription}
-              />
+              <EducationAndCertificationCard {...educationAndCertificate} />
             </Box>
           );
         })
@@ -1856,7 +1922,7 @@ const EducationAndCertificates: FC<{
             }}
             component={"p"}
           >
-            No work experience, click on the{" "}
+            No work education and certificates found, click on the{" "}
             <IconButton onClick={() => setOpen(true)} size="small">
               <AddRoundedIcon fontSize="small" />
             </IconButton>{" "}
@@ -1881,33 +1947,400 @@ const EducationAndCertificates: FC<{
           id={selectedWorkExperience.id}
         />
       )}
-      <AddNewWorkExperince
-        titleValue={titleValue}
-        error={error}
-        errorMessage={errorMessage}
-        handleClose={handleClose}
-        handleSaveChange={handleSaveChange}
-        onTitleValueChange={onTitleValueChange}
+      <AddNewEducationAndCertificates
         open={open}
         saving={saving}
-        endDate={endDate}
-        onEndDateValueChange={onEndDateValueChange}
-        onOrganizationNameValueChange={onOrganizationNameValueChange}
-        onStartDateValueChange={onStartDateValueChange}
-        organizationName={organizationName}
-        startDate={startDate}
         isUntillNow={isUntillNow}
-        location={location}
-        onLocationValueChange={onLocationValueChange}
+        handleClose={handleClose}
+        handleSaveChange={handleSaveChange}
         untilNowHandler={untilNowHandler}
-        employmentTypeValue={employmentTypeValue}
-        onEmplymentTypeValueChange={onEmplymentTypeValueChange}
-        jobDescriptionValue={jobDescriptionValue}
-        onJobDescriptionValueChange={onJobDescriptionValueChange}
-        onLocationTypeValueChange={onLocationTypeValueChange}
-        locationTypeValue={locationTypeValue}
+        error={error}
+        errorMessage={errorMessage}
+        type={type}
+        schoolName={schoolName}
+        degree={degree}
+        fieldOfStudy={fieldOfStudy}
+        certificateName={certificateName}
+        startDate={startDate}
+        endDate={endDate}
+        skills={skills}
+        sourceUrl={sourceUrl}
+        title={title}
+        thumbnail={thumbnail}
+        description={description}
+        file={file}
+        onTypeChange={onTypeChange}
+        onSchoolNameChange={onSchoolNameChange}
+        onDegreeChange={onDegreeChange}
+        onFieldOfStudyChange={onFieldOfStudyChange}
+        onCertificateNameChange={onCertificateNameChange}
+        onIsUntillNowChange={onIsUntillNowChange}
+        onStartDateChange={onStartDateChange}
+        onEndDateChange={onEndDateChange}
+        onSkillsChange={onSkillsChange}
+        onSourceUrlChange={onSourceUrlChange}
+        onTitleChange={onTitleChange}
+        onThumbnailChange={onThumbnailChange}
+        onDescriptionChange={onDescriptionChange}
+        onFileChange={onFileChange}
       />
     </Box>
+  );
+};
+interface EducationAndCertificationCardProp {
+  type: "education" | "certificate";
+  details: {
+    schoolName: string;
+    degree: string;
+    fieldOfStudy: string;
+    certificateName: string;
+    isUntillNow: boolean;
+    startDate: Date;
+    endDate: Date;
+    skills: string[];
+    media: {
+      sourceUrl: string;
+      title: string;
+      thumbnail: string;
+      description: string;
+      file: File;
+    };
+  };
+}
+const EducationAndCertificationCard: FC<EducationAndCertificationCardProp> = ({
+  type,
+  details: {
+    schoolName,
+    degree,
+    fieldOfStudy,
+    certificateName,
+    isUntillNow,
+    startDate,
+    endDate,
+    skills,
+    media,
+  },
+}) => {
+  const duration = moment.duration(moment(endDate).diff(moment(startDate)));
+  const years = duration.years();
+  const months = duration.months();
+  const formattedDuration = `${years} years and ${months} months`;
+  const theme: ThemeInterface = useTheme();
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        gap: 1,
+        boxShadow: 1,
+        mt: 3,
+        borderRadius: 2,
+        bgcolor: theme.colors.textBackground2,
+        p: 1,
+        transition: "box-shadow 0.3s, background-color 0.3s", // Add animation
+        "&:hover": {
+          boxShadow: 3,
+          bgcolor: theme.colors.itemBackground,
+        },
+      }}
+    >
+      <OrganizationIcon height={45} width={40} />
+      <Box>
+        <Typography variant="subtitle1" fontWeight={"bold"}>
+          {" "}
+          {schoolName}{" "}
+        </Typography>
+        <Typography variant="body1"> {degree} </Typography>
+        <Typography variant="body2">
+          {moment(startDate).format("MMMM YYYY")}
+          {` `}&middot;{" "}
+          {isUntillNow ? "Present" : moment(endDate).format("MMMM YYYY")}
+        </Typography>
+        <Typography variant="caption" fontWeight={"bold"}>
+          {formattedDuration}
+        </Typography>
+        <br />
+      </Box>
+    </Box>
+  );
+};
+
+// ... (existing imports)
+
+const AddNewEducationAndCertificates = ({
+  open,
+  handleClose,
+  type,
+  schoolName,
+  degree,
+  fieldOfStudy,
+  certificateName,
+  isUntillNow,
+  startDate,
+  endDate,
+  skills,
+  sourceUrl,
+  title,
+  thumbnail,
+  description,
+  file,
+  onTypeChange,
+  onSchoolNameChange,
+  onDegreeChange,
+  onFieldOfStudyChange,
+  onCertificateNameChange,
+  onIsUntillNowChange,
+  onStartDateChange,
+  onEndDateChange,
+  onSkillsChange,
+  onSourceUrlChange,
+  onTitleChange,
+  onThumbnailChange,
+  onDescriptionChange,
+  onFileChange,
+  saving,
+  handleSaveChange,
+  untilNowHandler,
+  error,
+  errorMessage,
+}: AddNewEducationAndCertificatesProp) => {
+  const theme: ThemeInterface = useTheme();
+
+  return (
+    <div>
+      <Dialog open={open}>
+        <DialogTitle>Add Education or Certificates</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter your education or certification details below. This
+            information can help others, such as colleagues or potential
+            employers, better understand your academic background and
+            certifications you've achieved.
+          </DialogContentText>
+
+          <br />
+          <FormControl sx={{ width: "100%", ml: 3 }}>
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="school-name"
+              label="School Name"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={schoolName}
+              onChange={onSchoolNameChange}
+            />
+
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="degree"
+              label="Degree"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={degree}
+              onChange={onDegreeChange}
+            />
+
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="field-of-study"
+              label="Field of Study"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={fieldOfStudy}
+              onChange={onFieldOfStudyChange}
+            />
+
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="certificate-name"
+              label="Certificate Name"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={certificateName}
+              onChange={onCertificateNameChange}
+            />
+
+            {/* Skills (as a placeholder, replace it with your actual implementation) */}
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="skills"
+              label="Skills"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={skills.join(", ")}
+              onChange={(e) => onSkillsChange(e.target.value.split(", "))}
+            />
+
+            {/* Source URL (as a placeholder, replace it with your actual implementation) */}
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="source-url"
+              label="Source URL"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={sourceUrl}
+              onChange={onSourceUrlChange}
+            />
+
+            {/* Title (as a placeholder, replace it with your actual implementation) */}
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="title"
+              label="Title"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={title}
+              onChange={onTitleChange}
+            />
+
+            {/* Thumbnail (as a placeholder, replace it with your actual implementation) */}
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="thumbnail"
+              label="Thumbnail"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={thumbnail}
+              onChange={onThumbnailChange}
+            />
+
+            {/* Description (as a placeholder, replace it with your actual implementation) */}
+            <TextField
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+              variant="outlined"
+              size="small"
+              color="secondary"
+              margin="dense"
+              id="description"
+              label="Description"
+              fullWidth
+              inputProps={{ minLength: 50, maxLength: 350 }}
+              value={description}
+              onChange={onDescriptionChange}
+            />
+
+            {/* File (as a placeholder, replace it with your actual implementation) */}
+            <input
+              type="file"
+              id="file"
+              accept=".pdf,.doc,.docx"
+              onChange={(e) => onFileChange(e.target.files?.[0])}
+            />
+
+            {error && <Typography color="error">{errorMessage}</Typography>}
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            sx={{
+              textTransform: "none",
+            }}
+            color="inherit"
+            onClick={handleClose}
+            size="small"
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+          {saving ? (
+            <LoadingButton
+              loading
+              endIcon={<SendIcon />}
+              loadingPosition="end"
+              variant="contained"
+            />
+          ) : (
+            <Button
+              color="secondary"
+              variant="contained"
+              sx={{
+                textTransform: "none",
+              }}
+              onClick={handleSaveChange}
+              size="small"
+            >
+              Save Changes
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 };
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "../config/index";
 import { WorkExperience } from "../interfaces/myprofile";
+import { MomentInput } from "moment";
 
 export const allUsers = async (token: string) => {
   const response = await axios.get(
@@ -296,6 +297,43 @@ export const resetPasswordHandler = async (
   }
 };
 
+export const addEducationAndCertificates = async (
+  token: string,
+  educationAndCertificates:  {
+      type:"education" | "certificate",
+      details: {
+        schoolName: string,
+        degree: string,
+        fieldOfStudy: string,
+        certificateName: string,
+        isUntillNow: boolean,
+        startDate: MomentInput,
+        endDate: MomentInput,
+        skills: string[],
+        media: {
+          sourceUrl: string,
+          title: string,
+          thumbnail: string,
+          description: string,
+          file: File|undefined,
+        },
+      },
+    },
+) => {
+  if (token && educationAndCertificates.type) {
+    const response = await axios.post(
+      `${config.SERVER_ADDRESS}/api/v1/users/addeducationAndCertificates`,
+      educationAndCertificates,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  }
+};
 export default {
   allUsers,
   addFriendById,

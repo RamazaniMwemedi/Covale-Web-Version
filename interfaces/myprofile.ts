@@ -33,10 +33,6 @@ interface KeysSchema {
 }
 
 export interface ThemeInterface extends Theme {
-  typography: {
-    fontFamily: string;
-  };
-
   colors: {
     primary: string;
     secondary: string;
@@ -56,39 +52,6 @@ export interface ThemeInterface extends Theme {
   // breakpoints: Breakpoints;
   // transitions: TransitionsOptions;
   // spacing: (val: number) => number;
-}
-
-export interface Easing {
-  easeInOut: string;
-  easeOut: string;
-  easeIn: string;
-  sharp: string;
-}
-export const easing: Easing;
-
-export interface Duration {
-  shortest: number;
-  shorter: number;
-  short: number;
-  standard: number;
-  complex: number;
-  enteringScreen: number;
-  leavingScreen: number;
-}
-export const duration: Duration;
-
-export interface TransitionsOptions {
-  easing: Partial<Easing>;
-  duration: Partial<Duration>;
-  create: (
-    props: string | string[],
-    options: Partial<{
-      duration: number | string;
-      easing: string;
-      delay: number | string;
-    }>
-  ) => string;
-  getAutoHeightDuration?: (height: number) => number;
 }
 
 export interface ProfilePic {
@@ -117,20 +80,38 @@ export interface UserInterFace {
     fileUrl: string;
   };
   files: FileObject[];
-  workExperiences: [
-    {
-      title: string;
-      organizationName: string;
-      location: string;
-      employmentType: string;
-      jobDescription: string;
-      isUntillNow: boolean;
-      startDate: Date;
-      endDate: Date;
-      locationType: string;
-      id: string;
-    }
-  ];
+  workExperiences: {
+    title: string;
+    organizationName: string;
+    location: string;
+    employmentType: string;
+    jobDescription: string;
+    isUntillNow: boolean;
+    startDate: Date;
+    endDate: Date;
+    locationType: string;
+    id: string;
+  }[];
+  educationAndCertificates: {
+    type: "education" | "certificate",
+    details: {
+      schoolName: string,
+      degree: string,
+      fieldOfStudy: string,
+      certificateName: string,
+      isUntillNow: boolean,
+      startDate: Date,
+      endDate: Date,
+      skills: string[],
+      media: {
+        sourceUrl: string,
+        title: string,
+        thumbnail: string,
+        description: string,
+        file: File,
+      },
+    },
+  }[]
   colleagues: UserInterFace[];
   chats: {
     id: string;
@@ -263,6 +244,61 @@ export interface WorkExperienceDialogProp {
   locationType: string;
   id: string;
   closeDialogHandler: () => void;
+}
+
+
+export interface AddNewEducationAndCertificatesProp {
+  open: boolean;
+  saving: boolean;
+  handleClose: () => void;
+  handleSaveChange: () => void;
+  untilNowHandler: () => void;
+  error: boolean;
+  errorMessage: string;
+  type: "education" | "certificate";
+  schoolName: string;
+  degree: string;
+  fieldOfStudy: string;
+  certificateName: string;
+  isUntillNow: boolean;
+  startDate: MomentInput;
+  endDate: MomentInput;
+  skills: string[];
+  sourceUrl: string;
+  title: string;
+  thumbnail: string;
+  description: string;
+  file: File | undefined;
+  onTypeChange: (newType: "education" | "certificate") => void;
+  onSchoolNameChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onDegreeChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onFieldOfStudyChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onCertificateNameChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onIsUntillNowChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onStartDateChange: (newStartDate: MomentInput) => void;
+  onEndDateChange: (newEndDate: MomentInput) => void;
+  onSkillsChange: (newSkills: string[]) => void;
+  onSourceUrlChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onTitleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onThumbnailChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onDescriptionChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onFileChange: (  file: File | undefined) => void;
 }
 
 
