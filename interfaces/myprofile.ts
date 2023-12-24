@@ -93,25 +93,34 @@ export interface UserInterFace {
     id: string;
   }[];
   educationAndCertificates: {
-    type: "education" | "certificate",
+    type: "education" | "certificate";
     details: {
-      schoolName: string,
-      degree: string,
-      fieldOfStudy: string,
-      certificateName: string,
-      isUntillNow: boolean,
-      startDate: Date,
-      endDate: Date,
-      skills: string[],
+      schoolName: string;
+      degree: string;
+      fieldOfStudy: string;
+      certificateName: string;
+      isUntillNow: boolean;
+      startDate: Date;
+      endDate: Date;
+      skills: string[];
       media: {
-        sourceUrl: string,
-        title: string,
-        thumbnail: string,
-        description: string,
-        file: File,
-      },
-    },
-  }[]
+        sourceUrl: string;
+        title: string;
+        thumbnail: string;
+        description: string;
+        file:
+          | {
+              file: File;
+              fileName: string;
+              fileUrl: string;
+              fileUri: string;
+              fileType: string;
+              fileSize: number;
+            }
+          | undefined;
+      };
+    };
+  }[];
   colleagues: UserInterFace[];
   chats: {
     id: string;
@@ -246,7 +255,6 @@ export interface WorkExperienceDialogProp {
   closeDialogHandler: () => void;
 }
 
-
 export interface AddNewEducationAndCertificatesProp {
   open: boolean;
   saving: boolean;
@@ -268,7 +276,16 @@ export interface AddNewEducationAndCertificatesProp {
   title: string;
   thumbnail: string;
   description: string;
-  file: File | undefined;
+  file:
+    | {
+        file: File;
+        fileName: string;
+        fileUrl: string;
+        fileUri: string;
+        fileType: string;
+        fileSize: number;
+      }
+    | undefined;
   onTypeChange: (newType: "education" | "certificate") => void;
   onSchoolNameChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -298,10 +315,10 @@ export interface AddNewEducationAndCertificatesProp {
   onDescriptionChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
-  onFileChange: (  file: File | undefined) => void;
+  onFileChange: (file: File | undefined) => void;
+  handleChooseFile: () => void;
+  fileInputRef: React.RefObject<HTMLInputElement>;
 }
-
-
 
 export interface SelectWorkExperienceProp {
   title: string;

@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/styles";
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCheckLogedinUserToken } from "../../../hooks/hooks";
 import {
@@ -53,6 +53,7 @@ import {
 } from "@mui/material";
 
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import moment, { MomentInput } from "moment";
@@ -61,6 +62,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import SendIcon from "@mui/icons-material/Send";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { OrganizationIcon } from "../../../assets/Icons";
+import FileIcone from "../mediaFiles/FileIcon";
 
 const About = () => {
   const theme: ThemeInterface = useTheme();
@@ -1689,9 +1691,18 @@ const EducationAndCertificates: FC<{
   const [title, setTitle] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [description, setDescription] = useState("");
-  const [file, setFile] = useState<File | undefined>(undefined);
-
-
+  const [file, setFile] = useState<
+    | {
+        file: File;
+        fileName: string;
+        fileUrl: string;
+        fileUri: string;
+        fileType: string;
+        fileSize: number;
+      }
+    | undefined
+  >(undefined);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // End
   const [open, setOpen] = useState<boolean>(false);
@@ -1768,10 +1779,26 @@ const EducationAndCertificates: FC<{
   ) => {
     setDescription(e.target.value);
   };
-
-  const onFileChange = (file:File|undefined) => {
-    
-      setFile(file);
+  const handleChooseFile = () => {
+    fileInputRef.current?.click();
+  };
+  const onFileChange = (file: File | undefined) => {
+    if (!file) {
+      setFile(undefined);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFile({
+        file: file,
+        fileName: file.name,
+        fileUrl: reader.result as string,
+        fileUri: reader.result as string,
+        fileType: file.type,
+        fileSize: file.size,
+      });
+    };
+    reader.readAsDataURL(file);
   };
   const untilNowHandler = () => {
     setIsUntillNow((prevState) => !prevState);
@@ -1817,7 +1844,7 @@ const EducationAndCertificates: FC<{
         fieldOfStudy,
         isUntillNow,
         media: {
-          file: file,
+          file: file?.file,
           description: description,
           sourceUrl: sourceUrl,
           thumbnail: thumbnail,
@@ -1983,6 +2010,8 @@ const EducationAndCertificates: FC<{
         onThumbnailChange={onThumbnailChange}
         onDescriptionChange={onDescriptionChange}
         onFileChange={onFileChange}
+        fileInputRef={fileInputRef}
+        handleChooseFile={handleChooseFile}
       />
     </Box>
   );
@@ -2003,7 +2032,16 @@ interface EducationAndCertificationCardProp {
       title: string;
       thumbnail: string;
       description: string;
-      file: File;
+      file:
+        | {
+            file: File;
+            fileName: string;
+            fileUrl: string;
+            fileUri: string;
+            fileType: string;
+            fileSize: number;
+          }
+        | undefined;
     };
   };
 }
@@ -2064,8 +2102,6 @@ const EducationAndCertificationCard: FC<EducationAndCertificationCardProp> = ({
   );
 };
 
-// ... (existing imports)
-
 const AddNewEducationAndCertificates = ({
   open,
   handleClose,
@@ -2083,6 +2119,8 @@ const AddNewEducationAndCertificates = ({
   thumbnail,
   description,
   file,
+  fileInputRef,
+  handleChooseFile,
   onTypeChange,
   onSchoolNameChange,
   onDegreeChange,
@@ -2118,6 +2156,48 @@ const AddNewEducationAndCertificates = ({
           </DialogContentText>
 
           <br />
+          {/* Type */}
+          <FormControl
+            color="secondary"
+            fullWidth
+            sx={{ width: "100%", ml: 3 }}
+          >
+            <InputLabel id="demo-simple-select-label">Type</InputLabel>
+
+            <Select
+              labelId="type-label"
+              id="type"
+              value={type}
+              onChange={(event: SelectChangeEvent) => {
+                onTypeChange(event.target.value as "education" | "certificate");
+              }}
+              size="small"
+              color="secondary"
+              sx={{
+                width: "90%",
+                backgroundColor: theme.colors.textBackground,
+                borderStyle: "none",
+                marginTop: 1,
+              }}
+            >
+              <MenuItem
+                sx={{
+                  fontSize: 12,
+                }}
+                value="education"
+              >
+                Education
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  fontSize: 12,
+                }}
+                value="certificate"
+              >
+                Certificate
+              </MenuItem>
+            </Select>
+          </FormControl>
           <FormControl sx={{ width: "100%", ml: 3 }}>
             <TextField
               sx={{
@@ -2137,25 +2217,45 @@ const AddNewEducationAndCertificates = ({
               value={schoolName}
               onChange={onSchoolNameChange}
             />
-
-            <TextField
-              sx={{
-                width: "90%",
-                backgroundColor: theme.colors.textBackground,
-                borderStyle: "none",
-                marginTop: 1,
-              }}
-              variant="outlined"
-              size="small"
-              color="secondary"
-              margin="dense"
-              id="degree"
-              label="Degree"
-              fullWidth
-              inputProps={{ minLength: 50, maxLength: 350 }}
-              value={degree}
-              onChange={onDegreeChange}
-            />
+            {type === "education" ? (
+              <TextField
+                sx={{
+                  width: "90%",
+                  backgroundColor: theme.colors.textBackground,
+                  borderStyle: "none",
+                  marginTop: 1,
+                }}
+                variant="outlined"
+                size="small"
+                color="secondary"
+                margin="dense"
+                id="degree"
+                label="Degree"
+                fullWidth
+                inputProps={{ minLength: 50, maxLength: 350 }}
+                value={degree}
+                onChange={onDegreeChange}
+              />
+            ) : (
+              <TextField
+                sx={{
+                  width: "90%",
+                  backgroundColor: theme.colors.textBackground,
+                  borderStyle: "none",
+                  marginTop: 1,
+                }}
+                variant="outlined"
+                size="small"
+                color="secondary"
+                margin="dense"
+                id="certificate-name"
+                label="Certificate Name"
+                fullWidth
+                inputProps={{ minLength: 50, maxLength: 350 }}
+                value={certificateName}
+                onChange={onCertificateNameChange}
+              />
+            )}
 
             <TextField
               sx={{
@@ -2175,26 +2275,92 @@ const AddNewEducationAndCertificates = ({
               value={fieldOfStudy}
               onChange={onFieldOfStudyChange}
             />
-
-            <TextField
-              sx={{
-                width: "90%",
-                backgroundColor: theme.colors.textBackground,
-                borderStyle: "none",
-                marginTop: 1,
-              }}
-              variant="outlined"
-              size="small"
-              color="secondary"
-              margin="dense"
-              id="certificate-name"
-              label="Certificate Name"
-              fullWidth
-              inputProps={{ minLength: 50, maxLength: 350 }}
-              value={certificateName}
-              onChange={onCertificateNameChange}
-            />
-
+            <br />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Start date"
+                value={startDate}
+                onChange={(selectedStartDate: MomentInput) => {
+                  onStartDateChange(moment(selectedStartDate));
+                }}
+                views={["year", "month"]}
+                openTo="year"
+                renderInput={(params) => (
+                  <TextField
+                    sx={{
+                      width: "90%",
+                      backgroundColor: theme.colors.textBackground,
+                      borderStyle: "none",
+                      marginTop: 1,
+                    }}
+                    size="small"
+                    color="secondary"
+                    margin="dense"
+                    fullWidth
+                    {...params}
+                    // helperText={params?.inputProps?.placeholder}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              {!isUntillNow && (
+                <DatePicker
+                  label="End date"
+                  value={endDate}
+                  onChange={(selectedEndDate: MomentInput) => {
+                    onEndDateChange(moment(selectedEndDate));
+                  }}
+                  views={["year", "month"]}
+                  openTo="year"
+                  renderInput={(params) => (
+                    <>
+                      <TextField
+                        sx={{
+                          width: "90%",
+                          backgroundColor: theme.colors.textBackground,
+                          borderStyle: "none",
+                          marginTop: 1,
+                        }}
+                        size="small"
+                        color="secondary"
+                        margin="dense"
+                        fullWidth
+                        {...params}
+                        // helperText={params?.inputProps?.placeholder}
+                      />{" "}
+                    </>
+                  )}
+                />
+              )}
+              {/* Add check box to check if until now  */}
+              <FormControlLabel
+                sx={{
+                  // Be on the right side
+                  justifyContent: "flex-end",
+                  "& .MuiCheckbox-root": {
+                    borderRadius: 4,
+                  },
+                }}
+                control={
+                  <Checkbox
+                    checked={isUntillNow}
+                    onChange={untilNowHandler}
+                    name="checkedB"
+                    size="small"
+                    color="secondary"
+                    sx={{ borderRadius: 4 }}
+                  />
+                }
+                label={
+                  <Typography variant="body2" sx={{ fontSize: "small" }}>
+                    Until now
+                  </Typography>
+                }
+              />
+            </LocalizationProvider>
+            <br />
+            <Typography variant="body1">Skills</Typography>
             {/* Skills (as a placeholder, replace it with your actual implementation) */}
             <TextField
               sx={{
@@ -2215,93 +2381,138 @@ const AddNewEducationAndCertificates = ({
               onChange={(e) => onSkillsChange(e.target.value.split(", "))}
             />
 
-            {/* Source URL (as a placeholder, replace it with your actual implementation) */}
-            <TextField
-              sx={{
-                width: "90%",
-                backgroundColor: theme.colors.textBackground,
-                borderStyle: "none",
-                marginTop: 1,
-              }}
-              variant="outlined"
-              size="small"
-              color="secondary"
-              margin="dense"
-              id="source-url"
-              label="Source URL"
-              fullWidth
-              inputProps={{ minLength: 50, maxLength: 350 }}
-              value={sourceUrl}
-              onChange={onSourceUrlChange}
-            />
-
-            {/* Title (as a placeholder, replace it with your actual implementation) */}
-            <TextField
-              sx={{
-                width: "90%",
-                backgroundColor: theme.colors.textBackground,
-                borderStyle: "none",
-                marginTop: 1,
-              }}
-              variant="outlined"
-              size="small"
-              color="secondary"
-              margin="dense"
-              id="title"
-              label="Title"
-              fullWidth
-              inputProps={{ minLength: 50, maxLength: 350 }}
-              value={title}
-              onChange={onTitleChange}
-            />
-
-            {/* Thumbnail (as a placeholder, replace it with your actual implementation) */}
-            <TextField
-              sx={{
-                width: "90%",
-                backgroundColor: theme.colors.textBackground,
-                borderStyle: "none",
-                marginTop: 1,
-              }}
-              variant="outlined"
-              size="small"
-              color="secondary"
-              margin="dense"
-              id="thumbnail"
-              label="Thumbnail"
-              fullWidth
-              inputProps={{ minLength: 50, maxLength: 350 }}
-              value={thumbnail}
-              onChange={onThumbnailChange}
-            />
-
-            {/* Description (as a placeholder, replace it with your actual implementation) */}
-            <TextField
-              sx={{
-                width: "90%",
-                backgroundColor: theme.colors.textBackground,
-                borderStyle: "none",
-                marginTop: 1,
-              }}
-              variant="outlined"
-              size="small"
-              color="secondary"
-              margin="dense"
-              id="description"
-              label="Description"
-              fullWidth
-              inputProps={{ minLength: 50, maxLength: 350 }}
-              value={description}
-              onChange={onDescriptionChange}
-            />
+            <br />
+            <Typography variant="body1">Media</Typography>
 
             {/* File (as a placeholder, replace it with your actual implementation) */}
-            <input
-              type="file"
-              id="file"
-              accept=".pdf,.doc,.docx"
-              onChange={(e) => onFileChange(e.target.files?.[0])}
-            />
+            {!file ? (
+              <Box
+                sx={{
+                  width: "90%",
+                  backgroundColor: theme.colors.textBackground,
+                  borderStyle: "none",
+                  marginTop: 1,
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  sx={{
+                    textTransform: "none",
+                  }}
+                  endIcon={
+                    <FileUploadRoundedIcon fontSize="small" color="secondary" />
+                  }
+                  onClick={handleChooseFile}
+                >
+                  <input
+                    type={"file"}
+                    ref={fileInputRef}
+                    style={{
+                      display: "none",
+                    }}
+                    id="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={(e) => onFileChange(e.target.files?.[0])}
+                  />
+                  Upload file
+                </Button>
+              </Box>
+            ) : (
+              <Box
+                pr={3}
+                sx={{
+                  backgroundColor:
+                    theme.palette.mode === "dark"
+                      ? theme.colors.background1
+                      : theme.colors.background1,
+                  p: 1,
+                  mt: 0.3,
+                  ml: 0.3,
+                  borderRadius: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "90%",
+                }}
+              >
+                <FileIcone height={25} width={25} fileType={file.fileType} />
+
+                <Typography variant="body1">
+                  {file.fileName.length > 15
+                    ? file.fileName.substring(0, 15) + "..."
+                    : file.fileName}
+                </Typography>
+                <IconButton onClick={() => onFileChange(undefined)}>
+                  <CloseRoundedIcon />
+                </IconButton>
+              </Box>
+            )}
+            {file?.fileName && (
+              <Box pr={3}>
+                {/* Title (as a placeholder, replace it with your actual implementation) */}
+                <TextField
+                  sx={{
+                    width: "90%",
+                    backgroundColor: theme.colors.textBackground,
+                    borderStyle: "none",
+                    marginTop: 1,
+                  }}
+                  variant="outlined"
+                  size="small"
+                  color="secondary"
+                  margin="dense"
+                  id="title"
+                  label="Title"
+                  fullWidth
+                  inputProps={{ minLength: 50, maxLength: 350 }}
+                  value={title}
+                  onChange={onTitleChange}
+                />
+
+                {/* Thumbnail (as a placeholder, replace it with your actual implementation) */}
+                <TextField
+                  sx={{
+                    width: "90%",
+                    backgroundColor: theme.colors.textBackground,
+                    borderStyle: "none",
+                    marginTop: 1,
+                  }}
+                  variant="outlined"
+                  size="small"
+                  color="secondary"
+                  margin="dense"
+                  id="thumbnail"
+                  label="Thumbnail"
+                  fullWidth
+                  inputProps={{ minLength: 50, maxLength: 350 }}
+                  value={thumbnail}
+                  onChange={onThumbnailChange}
+                />
+
+                {/* Description (as a placeholder, replace it with your actual implementation) */}
+                <TextField
+                  sx={{
+                    width: "90%",
+                    backgroundColor: theme.colors.textBackground,
+                    borderStyle: "none",
+                    marginTop: 1,
+                  }}
+                  variant="outlined"
+                  size="small"
+                  color="secondary"
+                  margin="dense"
+                  id="description"
+                  label="Description"
+                  fullWidth
+                  multiline
+                  rows={3}
+                  inputProps={{ minLength: 50, maxLength: 350 }}
+                  value={description}
+                  onChange={onDescriptionChange}
+                />
+              </Box>
+            )}
 
             {error && <Typography color="error">{errorMessage}</Typography>}
           </FormControl>

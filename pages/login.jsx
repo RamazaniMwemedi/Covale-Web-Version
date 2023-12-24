@@ -391,8 +391,8 @@ const Signin = (props) => {
           helperText={props.emailError}
           error={props.emailErrorBoolean}
         />
-        {/* <br /> */}
         <br />
+        {/* <br /> */}
         <TextField
           label="Password"
           size="small"
@@ -441,7 +441,7 @@ const Signin = (props) => {
           </Button>
         )}
 
-        <Link  color="secondary" href="/recover">
+        <Link color="secondary" href="/recover">
           Forgot password?
         </Link>
         <hr />
