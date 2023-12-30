@@ -156,23 +156,6 @@ const UserCard = () => {
               </Typography>
             </Tooltip>
           </Box>
-          <Button
-            sx={{
-              position: "absolute",
-              bottom: 10,
-              right: 30,
-              height: "30px",
-              textTransform: "unset",
-              display: "flex",
-              bgcolor: purple[500],
-              gap: 1,
-            }}
-            variant="contained"
-            size="small"
-            color="secondary"
-          >
-            <ModeEditRoundedIcon fontSize="small" /> Edit profile
-          </Button>
         </Box>
       )}
     </>

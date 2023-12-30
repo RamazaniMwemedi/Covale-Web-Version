@@ -24,7 +24,7 @@ import TableRow from "@mui/material/TableRow";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
   useCheckLogedinUser,
   useCheckLogedinUserToken,
@@ -738,7 +738,7 @@ const Security: FC = () => {
               gap: 2,
             }}
           >
-            <Typography variant="h6">Fundemental Info</Typography>
+            <Typography variant="h6">Password</Typography>
             <br />
             <TableContainer
               component={Box}
@@ -747,6 +747,9 @@ const Security: FC = () => {
                 borderRadius: 2,
               }}
             >
+              <TableCell>
+                A strong password helps keep your account secure.
+              </TableCell>
               <Table aria-label="simple table">
                 <TableBody>
                   <TableRow
@@ -758,78 +761,13 @@ const Security: FC = () => {
                       },
                     }}
                   >
-                    <TableCell>Profile Picture</TableCell>
-                    <TableCell>
-                      Personalize your account with a profile picture.
-                    </TableCell>
-                    <TableCell>
-                      <Avatar
-                        src={user.profilePic ? user.profilePic.fileUrl : ""}
-                      >
-                        {user.firstname[0]}
-                        {user.lastname[0]}
-                      </Avatar>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{
-                      "&:last-child td, &:last-child th": {
-                        border: 0,
-                      },
-                      "&:hover": {
-                        bgcolor: (theme) => theme.palette.action.hover,
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
-                    <TableCell>Name</TableCell>
-                    <TableCell>
-                      {user.firstname} {user.lastname}
-                    </TableCell>
+                    <TableCell>{"••••••••"}</TableCell>
+                    <TableCell></TableCell>
                     <TableCell>
                       <NavigateNextRoundedIcon />
                     </TableCell>
                   </TableRow>
                 </TableBody>
-                <TableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    "&:hover": {
-                      bgcolor: (theme) => theme.palette.action.hover,
-                      cursor: "pointer",
-                    },
-                  }}
-                >
-                  {" "}
-                  <TableCell>Birthday</TableCell>
-                  <TableCell>
-                    {" "}
-                    {moment(user.birthday).format("MMMM DD, YYYY")}{" "}
-                  </TableCell>
-                  <TableCell>
-                    <NavigateNextRoundedIcon />
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    "&:hover": {
-                      bgcolor: (theme) => theme.palette.action.hover,
-                      cursor: "pointer",
-                    },
-                  }}
-                >
-                  {" "}
-                  <TableCell>Gender</TableCell>
-                  <TableCell>
-                    {" "}
-                    {user.gender.charAt(0).toUpperCase() +
-                      user.gender.slice(1)}{" "}
-                  </TableCell>
-                  <TableCell>
-                    <NavigateNextRoundedIcon />
-                  </TableCell>
-                </TableRow>
               </Table>
             </TableContainer>
           </Box>
