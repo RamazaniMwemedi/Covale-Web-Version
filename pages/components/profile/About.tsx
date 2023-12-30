@@ -50,6 +50,7 @@ import {
   Typography,
   Link,
   CardMedia,
+  Chip,
 } from "@mui/material";
 
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -61,7 +62,7 @@ import { LoadingButton } from "@mui/lab";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import SendIcon from "@mui/icons-material/Send";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import { OrganizationIcon } from "../../../assets/Icons";
+import { GraduetionCap, OrganizationIcon } from "../../../assets/Icons";
 import FileIcone from "../mediaFiles/FileIcon";
 
 const About = () => {
@@ -184,7 +185,7 @@ const FormDialog = ({
   error,
   saving,
 }: FormDialogProp) => {
-  const theme: any = useTheme();
+  const theme: ThemeInterface = useTheme();
 
   return (
     <div>
@@ -1710,6 +1711,8 @@ const EducationAndCertificates: FC<{
   const [saving, setSaving] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
+  console.log(user.educationAndCertificates);
+
   const handleClose = () => setOpen(false);
 
   const onTypeChange = (newType: "education" | "certificate") => {
@@ -1918,7 +1921,7 @@ const EducationAndCertificates: FC<{
           </IconButton>
         </Box>
       </Box>
-      {user && user.educationAndCertificates.length > 1 ? (
+      {user && user.educationAndCertificates.length > 0 ? (
         user.educationAndCertificates.map((educationAndCertificate) => {
           return (
             <Box
@@ -2081,7 +2084,7 @@ const EducationAndCertificationCard: FC<EducationAndCertificationCardProp> = ({
         },
       }}
     >
-      <OrganizationIcon height={45} width={40} />
+      <GraduetionCap height={45} width={40} />
       <Box>
         <Typography variant="subtitle1" fontWeight={"bold"}>
           {" "}
@@ -2097,6 +2100,15 @@ const EducationAndCertificationCard: FC<EducationAndCertificationCardProp> = ({
           {formattedDuration}
         </Typography>
         <br />
+        <Box sx={{
+          display:"grid",
+          gridTemplateColumns:"repeat(min-content, auto)",
+          gap:""
+        }}>
+          {skills.map((skill) => (
+            <Chip key={skill} label={skill} size="small" sx={{ mr: 1 }} />
+          ))}
+        </Box>
       </Box>
     </Box>
   );
