@@ -15,6 +15,11 @@ import {
   Avatar,
   Box,
   Link,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -24,7 +29,7 @@ import TableRow from "@mui/material/TableRow";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import PeopleIcon from "@mui/icons-material/People";
 import {
   useCheckLogedinUser,
   useCheckLogedinUserToken,
@@ -34,9 +39,9 @@ import Image from "next/image";
 import { purple } from "@mui/material/colors";
 
 import SwipeableViews from "react-swipeable-views";
-import { addCoverPic } from "../../services/user";
-import { updateCoverPhotoe } from "../../Redux/slices/user";
-import defaultBackgroundImage from "../../assets/defaultBackgroundImage.jpeg";
+import { addCoverPic, editUserNames } from "../../services/user";
+import { addUser, updateCoverPhotoe } from "../../Redux/slices/user";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   ContentsProps,
   CropperImageInterface,
@@ -45,10 +50,10 @@ import {
   TabPanelProps,
   ThemeInterface,
 } from "../../interfaces/myprofile";
+
 import {
   GroupIcon,
   PersonalInfoIcon,
-  PrivacyIcon,
   UserIcon,
   UserShieldIcon,
 } from "../../assets/Icons";
@@ -531,10 +536,16 @@ const TeamsSection: FC = () => {
   );
 };
 
+// Personal Info
+
 const PersonalInfo: FC = () => {
-  const userStore = useSelector((state: RootState) => state.user);
   const theme: ThemeInterface = useTheme();
+  const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
+  const [isEditNameOpen, setIsEditNameOpen] = useState(false);
+  const [isEditBirthdaypen, setIsEditBirthdayOpen] = useState(false);
+  const [isEditGenderOpen, setIsEditGenderOpen] = useState(false);
+
   return (
     <Box>
       <Typography variant="h4">Personal Info</Typography>
@@ -590,6 +601,8 @@ const PersonalInfo: FC = () => {
                     </TableCell>
                   </TableRow>
                   <TableRow
+                    component={Box}
+                    onClick={() => setIsEditNameOpen(true)}
                     sx={{
                       "&:last-child td, &:last-child th": {
                         border: 0,
@@ -708,11 +721,163 @@ const PersonalInfo: FC = () => {
               </Table>
             </TableContainer>
           </Box>
+          <EditNameDialog
+            open={isEditNameOpen}
+            handleClose={() => setIsEditNameOpen(false)}
+          />
         </Box>
       )}
     </Box>
   );
 };
+
+const EditNameDialog: FC<{
+  open: boolean;
+  handleClose: () => void;
+}> = ({ handleClose, open }) => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
+  const [firstname, setFirstname] = useState(user.firstname);
+  const [lastname, setLastname] = useState(user.lastname);
+  const [username, setUsername] = useState(user.username);
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const dispatch = useDispatch();
+
+  return (
+    <Dialog maxWidth="sm" fullWidth onClose={handleClose} open={open}>
+      <DialogTitle>Name</DialogTitle>
+      <DialogContent>
+        {/* First Name */}
+        <TextField
+          autoFocus
+          margin="dense"
+          id="firstname"
+          label="First Name"
+          type="text"
+          fullWidth
+          value={firstname}
+          onChange={(e) => setFirstname(e.target.value)}
+          variant="outlined"
+          color="secondary"
+          size="small"
+          sx={{
+            borderRadius: 3,
+          }}
+        />
+        {/* Last Name */}
+        <TextField
+          autoFocus
+          margin="dense"
+          id="lastname"
+          value={lastname}
+          onChange={(e) => setLastname(e.target.value)}
+          label="Last Name"
+          type="text"
+          fullWidth
+          variant="outlined"
+          color="secondary"
+          size="small"
+          sx={{
+            borderRadius: 3,
+          }}
+        />
+        {/* Username */}
+        <TextField
+          autoFocus
+          margin="dense"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          label="Last Name"
+          type="text"
+          fullWidth
+          variant="outlined"
+          color="secondary"
+          size="small"
+          sx={{
+            borderRadius: 3,
+          }}
+        />
+        <br />
+        <br />
+
+        <Typography variant="body1" fontWeight={700}>
+          Who can see your name
+        </Typography>
+        <Box display={"flex"} p={1} gap={2}>
+          <PeopleIcon color="action" />
+          <Typography variant="body2" color="text.secondary">
+            This information is visible to anyone engaging in communication with
+            you or accessing content you shared on Covale.
+          </Typography>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color="secondary"
+          variant="outlined"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        <LoadingButton
+          color="secondary"
+          variant="contained"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          disabled={
+            firstname === user.firstname &&
+            lastname === user.lastname &&
+            username === user.username
+          }
+          onClick={async () => {
+            setIsSaving(true);
+            const response = await editUserNames(
+              user.token,
+              firstname,
+              lastname,
+              username
+            );
+            if (response && response.status === 200) {
+              dispatch(
+                addUser({
+                  ...user,
+                  firstname,
+                  lastname,
+                  username,
+                })
+              );
+              setIsSaving(false);
+              handleClose();
+            } else {
+              alert("Something went wrong while saving your names");
+              setIsSaving(false);
+            }
+          }}
+          loadingPosition="start"
+          loading={isSaving}
+        >
+          {
+            isSaving ? "Saving changes" : "Save changes"
+          }
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+// Security Settings
+
 const Security: FC = () => {
   const userStore = useSelector((state: RootState) => state.user);
   const theme: ThemeInterface = useTheme();

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import config from "../config/index";
 import { WorkExperience } from "../interfaces/myprofile";
 import { MomentInput } from "moment";
@@ -116,11 +116,14 @@ export const cancelFriendRequest = async (id: string, token: string) => {
 export const findUserById = async (token: string, id: string) => {
   if (token) {
     try {
-      const response = await axios.get(`${config.SERVER_ADDRESS}/api/v1/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${config.SERVER_ADDRESS}/api/v1/users/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response;
     } catch (error) {
       // Redirect to the login page
@@ -198,16 +201,16 @@ export const updateProfessionalSum = async (
 export const addWorkExperience = async (
   token: string,
   workExperience: {
-        title: string,
-        location: string,
-        jobDescription: string,
-        organizationName: string,
-        employmentType: string,
-        startDate: moment.MomentInput,
-        endDate: moment.MomentInput,
-        isUntillNow: boolean,
-        locationType: string,
-      }
+    title: string;
+    location: string;
+    jobDescription: string;
+    organizationName: string;
+    employmentType: string;
+    startDate: moment.MomentInput;
+    endDate: moment.MomentInput;
+    isUntillNow: boolean;
+    locationType: string;
+  }
 ) => {
   if (token && workExperience) {
     const response = await axios.post(
@@ -282,13 +285,9 @@ export const confirmOTP = async (
   }
   return 500;
 };
-export const resetPasswordHandler = async (
-  email: string,
-  password: string,
-) => {
-  
+export const resetPasswordHandler = async (email: string, password: string) => {
   if (email && password) {
-    console.log("Email and password",  { email, password });
+    console.log("Email and password", { email, password });
     const res = await axios.post(
       `${config.SERVER_ADDRESS}/api/v1/login/resetPassword`,
       { email, password }
@@ -299,26 +298,26 @@ export const resetPasswordHandler = async (
 
 export const addEducationAndCertificates = async (
   token: string,
-  educationAndCertificates:  {
-      type:"education" | "certificate",
-      details: {
-        schoolName: string,
-        degree: string,
-        fieldOfStudy: string,
-        certificateName: string,
-        isUntillNow: boolean,
-        startDate: MomentInput,
-        endDate: MomentInput,
-        skills: string[],
-        media: {
-          sourceUrl: string,
-          title: string,
-          thumbnail: string,
-          description: string,
-          file: File|undefined,
-        },
-      },
-    },
+  educationAndCertificates: {
+    type: "education" | "certificate";
+    details: {
+      schoolName: string;
+      degree: string;
+      fieldOfStudy: string;
+      certificateName: string;
+      isUntillNow: boolean;
+      startDate: MomentInput;
+      endDate: MomentInput;
+      skills: string[];
+      media: {
+        sourceUrl: string;
+        title: string;
+        thumbnail: string;
+        description: string;
+        file: File | undefined;
+      };
+    };
+  }
 ) => {
   if (token && educationAndCertificates.type) {
     const response = await axios.post(
@@ -332,6 +331,35 @@ export const addEducationAndCertificates = async (
     );
 
     return response.data;
+  }
+};
+
+export const editUserNames = async (
+  token: string,
+  firstName: string,
+  lastName: string,
+  userName: string
+): Promise<AxiosResponse<any, any> | null> => {
+  try {
+    if (token && firstName && lastName) {
+      const response = await axios.post(
+        `${config.SERVER_ADDRESS}/api/v1/users/editUserNames`,
+        { firstName, lastName, userName },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response;
+    } else {
+      // Handle missing parameters
+      throw new Error("Missing required parameters");
+    }
+  } catch (error: any) {
+    // Handle other errors
+    console.error("Error editing user names:", error.message);
+    return null;
   }
 };
 export default {
