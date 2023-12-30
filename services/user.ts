@@ -342,7 +342,7 @@ export const editUserNames = async (
 ): Promise<AxiosResponse<any, any> | null> => {
   try {
     if (token && firstName && lastName) {
-      const response = await axios.post(
+      const response = await axios.put(
         `${config.SERVER_ADDRESS}/api/v1/users/editUserNames`,
         { firstName, lastName, userName },
         {
