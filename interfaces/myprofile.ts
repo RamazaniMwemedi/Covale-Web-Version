@@ -71,6 +71,7 @@ export interface UserInterFace {
   birthday: string;
   gender: string;
   email: string;
+  phoneNumber: string;
   chatId: string;
   professionalSummary: string;
   profilePic: {

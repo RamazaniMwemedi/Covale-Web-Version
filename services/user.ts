@@ -389,6 +389,85 @@ export const editUserBirthday = async (
     return null;
   }
 };
+
+export const editUserGender = async (
+  token: string,
+  gender: string
+): Promise<AxiosResponse<any, any> | null> => {
+  try {
+    if (token && gender) {
+      const response = await axios.put(
+        `${config.SERVER_ADDRESS}/api/v1/users/editUserGender`,
+        { gender },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response;
+    } else {
+      // Handle missing parameters
+      throw new Error("Missing required parameters");
+    }
+  } catch (error: any) {
+    // Handle other errors
+    return null;
+  }
+};
+
+export const editUserEmail = async (
+  token: string,
+  email: string
+): Promise<AxiosResponse<any, any> | null> => {
+  try {
+    if (token && email) {
+      const response = await axios.put(
+        `${config.SERVER_ADDRESS}/api/v1/users/editUserEmail`,
+        { email },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response;
+    } else {
+      // Handle missing parameters
+      throw new Error("Missing required parameters");
+    }
+  } catch (error: any) {
+    // Handle other errors
+    return null;
+  }
+};
+
+export const editPhoneNumber = async (
+  token: string,
+  phoneNumber: string
+): Promise<AxiosResponse<any, any> | null> => {
+  try {
+    if (token && phoneNumber) {
+      const response = await axios.put(
+        `${config.SERVER_ADDRESS}/api/v1/users/editUserPhoneNumber`,
+        { phoneNumber },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response;
+    } else {
+      // Handle missing parameters
+      throw new Error("Missing required parameters");
+    }
+  } catch (error: any) {
+    // Handle other errors
+    return null;
+  }
+};
+
 export default {
   allUsers,
   addFriendById,
@@ -407,4 +486,7 @@ export default {
   updateWorkexperience,
   deleteWorkExperience,
   confirmOTP,
+  editUserGender,
+  editUserEmail,
+  editPhoneNumber,
 };

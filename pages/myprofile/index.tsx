@@ -20,6 +20,11 @@ import {
   DialogContent,
   TextField,
   DialogActions,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -41,7 +46,10 @@ import { purple } from "@mui/material/colors";
 import SwipeableViews from "react-swipeable-views";
 import {
   addCoverPic,
+  editPhoneNumber,
   editUserBirthday,
+  editUserEmail,
+  editUserGender,
   editUserNames,
 } from "../../services/user";
 import { addUser, updateCoverPhotoe } from "../../Redux/slices/user";
@@ -550,6 +558,8 @@ const PersonalInfo: FC = () => {
   const [isEditNameOpen, setIsEditNameOpen] = useState(false);
   const [isEditBirthdayOpen, setIsEditBirthdayOpen] = useState(false);
   const [isEditGenderOpen, setIsEditGenderOpen] = useState(false);
+  const [isEditEmailOpen, setIsEditEmailOpen] = useState(false);
+  const [isEditPhoneOpen, setIsEditPhoneOpen] = useState(false);
 
   return (
     <Box>
@@ -649,6 +659,8 @@ const PersonalInfo: FC = () => {
                   </TableCell>
                 </TableRow>
                 <TableRow
+                  component={Box}
+                  onClick={() => setIsEditGenderOpen(true)}
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                     "&:hover": {
@@ -700,6 +712,8 @@ const PersonalInfo: FC = () => {
                         cursor: "pointer",
                       },
                     }}
+                    component={Box}
+                    onClick={() => setIsEditEmailOpen(true)}
                   >
                     <TableCell>Email</TableCell>
                     <TableCell>{user.email}</TableCell>
@@ -717,9 +731,11 @@ const PersonalInfo: FC = () => {
                         cursor: "pointer",
                       },
                     }}
+                    component={Box}
+                    onClick={() => setIsEditPhoneOpen(true)}
                   >
                     <TableCell>Phone</TableCell>
-                    <TableCell> </TableCell>
+                    <TableCell>{user.phoneNumber}</TableCell>
                     <TableCell>
                       <NavigateNextRoundedIcon />
                     </TableCell>
@@ -735,6 +751,18 @@ const PersonalInfo: FC = () => {
           <EditBirthdayDialog
             open={isEditBirthdayOpen}
             handleClose={() => setIsEditBirthdayOpen(false)}
+          />
+          <EditGenderDialog
+            open={isEditGenderOpen}
+            handleClose={() => setIsEditGenderOpen(false)}
+          />
+          <EditEmailDialog
+            open={isEditEmailOpen}
+            handleClose={() => setIsEditEmailOpen(false)}
+          />
+          <EditPhoneDialog
+            open={isEditPhoneOpen}
+            handleClose={() => setIsEditPhoneOpen(false)}
           />
         </Box>
       )}
@@ -912,7 +940,7 @@ const EditBirthdayDialog: FC<{
         <br />
 
         <Typography variant="body1" fontWeight={700}>
-          Who can see your name
+          Who can see your birthday
         </Typography>
         <Box display={"flex"} p={1} gap={2}>
           <PeopleIcon color="action" />
@@ -971,6 +999,305 @@ const EditBirthdayDialog: FC<{
   );
 };
 
+const EditGenderDialog: FC<{
+  open: boolean;
+  handleClose: () => void;
+}> = ({ handleClose, open }) => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
+  const [gender, setGender] = useState<string>(user.gender);
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const dispatch = useDispatch();
+
+  return (
+    <Dialog maxWidth="sm" fullWidth onClose={handleClose} open={open}>
+      <DialogTitle>Gender</DialogTitle>
+      <DialogContent>
+        {/* Gender */}
+        <FormControl>
+          <RadioGroup
+            aria-labelledby="radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            value={gender}
+            onChange={(e) => {
+              setGender(e.target.value);
+            }}
+          >
+            <FormControlLabel
+              value="female"
+              control={<Radio color="secondary" />}
+              label="Female"
+            />
+            <FormControlLabel
+              value="male"
+              control={<Radio color="secondary" />}
+              label="Male"
+            />
+            <FormControlLabel
+              value="rather not say"
+              control={<Radio color="secondary" />}
+              label="Rather not say"
+            />
+          </RadioGroup>
+        </FormControl>
+        <br />
+        <br />
+
+        <Typography variant="body1" fontWeight={700}>
+          Who can see your gender
+        </Typography>
+        <Box display={"flex"} p={1} gap={2}>
+          <PeopleIcon color="action" />
+          <Typography variant="body2" color="text.secondary">
+            This information is visible to anyone engaging in communication with
+            you or accessing content you shared on Covale.
+          </Typography>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color="secondary"
+          variant="outlined"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        <LoadingButton
+          color="secondary"
+          variant="contained"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          disabled={gender === user.gender}
+          onClick={async () => {
+            setIsSaving(true);
+            const response = await editUserGender(user.token, gender);
+            if (response && response.status === 200) {
+              dispatch(
+                addUser({
+                  ...user,
+                  gender,
+                })
+              );
+              setIsSaving(false);
+              handleClose();
+            } else {
+              alert("Something went wrong while saving your names");
+              setIsSaving(false);
+            }
+          }}
+          loadingPosition="start"
+          loading={isSaving}
+        >
+          {isSaving ? "Saving changes" : "Save changes"}
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const EditEmailDialog: FC<{
+  open: boolean;
+  handleClose: () => void;
+}> = ({ handleClose, open }) => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
+  const [email, setEmail] = useState<string>(user.email);
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const dispatch = useDispatch();
+
+  return (
+    <Dialog maxWidth="sm" fullWidth onClose={handleClose} open={open}>
+      <DialogTitle>Email</DialogTitle>
+      <DialogContent>
+        {/* First Name */}
+        <TextField
+          autoFocus
+          margin="dense"
+          id="email"
+          label="Email"
+          type="email"
+          fullWidth
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          variant="outlined"
+          color="secondary"
+          size="small"
+          sx={{
+            borderRadius: 3,
+          }}
+        />
+
+        <br />
+        <br />
+
+        <Typography variant="body1" fontWeight={700}>
+          Who can see your name
+        </Typography>
+        <Box display={"flex"} p={1} gap={2}>
+          <PeopleIcon color="action" />
+          <Typography variant="body2" color="text.secondary">
+            This information is visible to anyone engaging in communication with
+            you or accessing content you shared on Covale.
+          </Typography>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color="secondary"
+          variant="outlined"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        <LoadingButton
+          color="secondary"
+          variant="contained"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          disabled={email === user.email}
+          onClick={async () => {
+            setIsSaving(true);
+            const response = await editUserEmail(user.token, email);
+            if (response && response.status === 200) {
+              dispatch(
+                addUser({
+                  ...user,
+                  email,
+                })
+              );
+              setIsSaving(false);
+              handleClose();
+            } else {
+              alert("Something went wrong while saving your email");
+              setIsSaving(false);
+            }
+          }}
+          loadingPosition="start"
+          loading={isSaving}
+        >
+          {isSaving ? "Saving changes" : "Save changes"}
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const EditPhoneDialog: FC<{
+  open: boolean;
+  handleClose: () => void;
+}> = ({ handleClose, open }) => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
+  const [phoneNumber, setPhoneNumber] = useState<string>(user.phoneNumber);
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const dispatch = useDispatch();
+
+  return (
+    <Dialog maxWidth="sm" fullWidth onClose={handleClose} open={open}>
+      <DialogTitle>Phone Number</DialogTitle>
+      <DialogContent>
+        {/* First Name */}
+        <TextField
+          autoFocus
+          margin="dense"
+          id="phone Number"
+          label="Phone Number"
+          type="text"
+          fullWidth
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          variant="outlined"
+          color="secondary"
+          size="small"
+          sx={{
+            borderRadius: 3,
+          }}
+        />
+
+        <br />
+        <br />
+
+        <Typography variant="body1" fontWeight={700}>
+          Who can see your phone number
+        </Typography>
+        <Box display={"flex"} p={1} gap={2}>
+          <PeopleIcon color="action" />
+          <Typography variant="body2" color="text.secondary">
+            This information is visible to anyone engaging in communication with
+            you or accessing content you shared on Covale.
+          </Typography>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color="secondary"
+          variant="outlined"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        <LoadingButton
+          color="secondary"
+          variant="contained"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          disabled={phoneNumber === user.phoneNumber}
+          onClick={async () => {
+            setIsSaving(true);
+            const response = await editPhoneNumber(user.token, phoneNumber);
+            if (response && response.status === 200) {
+              dispatch(
+                addUser({
+                  ...user,
+                  phoneNumber,
+                })
+              );
+              setIsSaving(false);
+              handleClose();
+            } else {
+              alert("Something went wrong while saving your phone number");
+              setIsSaving(false);
+            }
+          }}
+          loadingPosition="start"
+          loading={isSaving}
+        >
+          {isSaving ? "Saving changes" : "Save changes"}
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
 // Security Settings
 
 const Security: FC = () => {
