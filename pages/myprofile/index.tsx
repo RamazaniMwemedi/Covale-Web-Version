@@ -39,7 +39,11 @@ import Image from "next/image";
 import { purple } from "@mui/material/colors";
 
 import SwipeableViews from "react-swipeable-views";
-import { addCoverPic, editUserNames } from "../../services/user";
+import {
+  addCoverPic,
+  editUserBirthday,
+  editUserNames,
+} from "../../services/user";
 import { addUser, updateCoverPhotoe } from "../../Redux/slices/user";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
@@ -59,6 +63,7 @@ import {
 } from "../../assets/Icons";
 import moment from "moment";
 import About from "../components/profile/About";
+import DatePickerFunc from "../components/calender/DatePicker";
 
 const MyAccount = () => {
   const userLoading = useCheckLogedinUser();
@@ -543,7 +548,7 @@ const PersonalInfo: FC = () => {
   const userStore = useSelector((state: RootState) => state.user);
   const user = userStore?.user;
   const [isEditNameOpen, setIsEditNameOpen] = useState(false);
-  const [isEditBirthdaypen, setIsEditBirthdayOpen] = useState(false);
+  const [isEditBirthdayOpen, setIsEditBirthdayOpen] = useState(false);
   const [isEditGenderOpen, setIsEditGenderOpen] = useState(false);
 
   return (
@@ -623,6 +628,8 @@ const PersonalInfo: FC = () => {
                   </TableRow>
                 </TableBody>
                 <TableRow
+                  component={Box}
+                  onClick={() => setIsEditBirthdayOpen(true)}
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                     "&:hover": {
@@ -724,6 +731,10 @@ const PersonalInfo: FC = () => {
           <EditNameDialog
             open={isEditNameOpen}
             handleClose={() => setIsEditNameOpen(false)}
+          />
+          <EditBirthdayDialog
+            open={isEditBirthdayOpen}
+            handleClose={() => setIsEditBirthdayOpen(false)}
           />
         </Box>
       )}
@@ -867,9 +878,93 @@ const EditNameDialog: FC<{
           loadingPosition="start"
           loading={isSaving}
         >
-          {
-            isSaving ? "Saving changes" : "Save changes"
-          }
+          {isSaving ? "Saving changes" : "Save changes"}
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const EditBirthdayDialog: FC<{
+  open: boolean;
+  handleClose: () => void;
+}> = ({ handleClose, open }) => {
+  const userStore = useSelector((state: RootState) => state.user);
+  const user = userStore?.user;
+  const [birthday, setBirthday] = useState<Date | null | string>(user.birthday);
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const dispatch = useDispatch();
+
+  return (
+    <Dialog maxWidth="sm" fullWidth onClose={handleClose} open={open}>
+      <DialogTitle>Birthday</DialogTitle>
+      <DialogContent>
+        {/* Birthday */}
+        <DatePickerFunc
+          signupBirthdayChangeHandler={(date: Date | null) => {
+            setBirthday(date);
+          }}
+          signupBirthday={birthday}
+        />
+        <br />
+        <br />
+
+        <Typography variant="body1" fontWeight={700}>
+          Who can see your name
+        </Typography>
+        <Box display={"flex"} p={1} gap={2}>
+          <PeopleIcon color="action" />
+          <Typography variant="body2" color="text.secondary">
+            This information is visible to anyone engaging in communication with
+            you or accessing content you shared on Covale.
+          </Typography>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color="secondary"
+          variant="outlined"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        <LoadingButton
+          color="secondary"
+          variant="contained"
+          sx={{
+            borderRadius: 3,
+            textTransform: "none",
+          }}
+          autoFocus
+          disabled={birthday === user.birthday}
+          onClick={async () => {
+            setIsSaving(true);
+            const response = await editUserBirthday(user.token, birthday);
+            if (response && response.status === 200) {
+              dispatch(
+                addUser({
+                  ...user,
+                  birthday,
+                })
+              );
+              setIsSaving(false);
+              handleClose();
+            } else {
+              alert("Something went wrong while saving your names");
+              setIsSaving(false);
+            }
+          }}
+          loadingPosition="start"
+          loading={isSaving}
+        >
+          {isSaving ? "Saving changes" : "Save changes"}
         </LoadingButton>
       </DialogActions>
     </Dialog>

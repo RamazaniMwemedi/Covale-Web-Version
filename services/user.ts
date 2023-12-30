@@ -336,15 +336,15 @@ export const addEducationAndCertificates = async (
 
 export const editUserNames = async (
   token: string,
-  firstName: string,
-  lastName: string,
-  userName: string
+  firstname: string,
+  lastname: string,
+  username: string
 ): Promise<AxiosResponse<any, any> | null> => {
   try {
-    if (token && firstName && lastName) {
+    if (token && firstname && lastname) {
       const response = await axios.put(
         `${config.SERVER_ADDRESS}/api/v1/users/editUserNames`,
-        { firstName, lastName, userName },
+        { firstname, lastname, username },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -359,6 +359,33 @@ export const editUserNames = async (
   } catch (error: any) {
     // Handle other errors
     console.error("Error editing user names:", error.message);
+    return null;
+  }
+};
+
+export const editUserBirthday = async (
+  token: string,
+  birthday: Date | null | string
+): Promise<AxiosResponse<any, any> | null> => {
+  alert(birthday);
+  try {
+    if (token && birthday) {
+      const response = await axios.put(
+        `${config.SERVER_ADDRESS}/api/v1/users/editUserBirthday`,
+        { birthday },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response;
+    } else {
+      // Handle missing parameters
+      throw new Error("Missing required parameters");
+    }
+  } catch (error: any) {
+    // Handle other errors
     return null;
   }
 };
