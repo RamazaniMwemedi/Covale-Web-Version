@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "../config/index";
 
-const getProjects = async (token: string) => {
+export const getProjects = async (token: string) => {
   const response = await axios.get(`${config.SERVER_ADDRESS}/api/v1/project`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -10,7 +10,7 @@ const getProjects = async (token: string) => {
   return response.data;
 };
 
-const createNewProject = async (project: string, token: string) => {
+export const createNewProject = async (project: string, token: string) => {
   const response = await axios.post(
     `${config.SERVER_ADDRESS}/api/v1/project`,
     project,
@@ -23,12 +23,16 @@ const createNewProject = async (project: string, token: string) => {
   return response.data;
 };
 
-const createNewSubProject = async (
+export const createNewSubProject = async (
   token: string,
   title: string,
   description: string,
   projectId: string,
-  options: string[]
+  options: {
+    all: [boolean, boolean];
+    member: boolean;
+    manager: boolean;
+  }
 ) => {
   const response = await axios.post(
     `${config.SERVER_ADDRESS}/api/v1/subproject/${projectId}`,
@@ -46,7 +50,7 @@ const createNewSubProject = async (
   return response.data;
 };
 
-const createNewTask = async (
+export const createNewTask = async (
   token: string,
   formData: FormData,
   subProjectId: string
@@ -63,7 +67,11 @@ const createNewTask = async (
   return response.data;
 };
 
-const commmentTask = async (token: string, taskId: string, content: string) => {
+export const commmentTask = async (
+  token: string,
+  taskId: string,
+  content: string
+) => {
   const response = await axios.post(
     `${config.SERVER_ADDRESS}/api/v1/subproject/tasks/${taskId}/comment`,
     { content },
@@ -76,7 +84,7 @@ const commmentTask = async (token: string, taskId: string, content: string) => {
   return response.data;
 };
 
-const modifyTask = async (
+export const modifyTask = async (
   token: string,
   taskId: string,
   data: { flag: string; status: string }

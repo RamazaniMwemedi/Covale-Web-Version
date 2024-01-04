@@ -379,6 +379,7 @@ export interface TeamInterface {
 
 export interface ProjectInterface {
   id: string;
+  title: string;
   subProjects: SubProjectsInterface[];
 }
 

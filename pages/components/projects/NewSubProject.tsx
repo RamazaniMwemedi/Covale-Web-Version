@@ -14,8 +14,17 @@ import SaveIcon from "@mui/icons-material/Save";
 
 import Checkbox from "@mui/material/Checkbox";
 import { addSubProjectId } from "../../../Redux/slices/projects";
+import {
+  ProjectInterface,
+  RootState,
+  ThemeInterface,
+} from "../../../interfaces/myprofile";
 
-export default function NewSubProject({ project }) {
+export default function NewSubProject({
+  project,
+}: {
+  project: ProjectInterface;
+}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -25,7 +34,6 @@ export default function NewSubProject({ project }) {
   const handleClose = () => {
     setOpen(false);
   };
-
 
   return (
     <>
@@ -59,7 +67,7 @@ export default function NewSubProject({ project }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: ThemeInterface) => ({
   container: {
     display: "flex",
     flexWrap: "wrap",
@@ -73,39 +81,52 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-function SubProjectForm({ project, handleClose }) {
+function SubProjectForm({
+  project,
+  handleClose,
+}: {
+  project: ProjectInterface;
+  handleClose: () => void;
+}) {
   const classes = useStyles();
   const [values, setValues] = React.useState({
     title: "",
     description: "",
   });
   const [creatingSubProject, setCreatingSubProject] = React.useState(false);
-  const userStore = useSelector((state) => state.user);
+  const userStore = useSelector((state: RootState) => state.user);
   const user = userStore.user;
-  const token = user ? user.token : null;
+  const token = user ? user.token : "";
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [checked, setChecked] = React.useState([true, false]);
+  const [checked, setChecked] = React.useState<[boolean, boolean]>([
+    true,
+    false,
+  ]);
 
-  const handleChange1 = (event) => {
+  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked([event.target.checked, event.target.checked]);
   };
 
-  const handleChange2 = (event) => {
+  const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked([event.target.checked, checked[1]]);
   };
 
-  const handleChange3 = (event) => {
+  const handleChange3 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked([checked[0], event.target.checked]);
   };
 
-  const handleChange = (prop) => (event) => {
+  interface ChangeHandler {
+    (prop: string): React.ChangeEventHandler<HTMLInputElement>;
+  }
+
+  const handleChange: ChangeHandler = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (event: any) => {
+    event?.preventDefault();
     setCreatingSubProject(true);
     const response = await createNewSubProject(
       token,
@@ -239,6 +260,11 @@ function IndeterminateCheckbox({
   handleChange2,
   handleChange3,
   checked,
+}: {
+  handleChange1: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange2: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange3: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  checked: [boolean, boolean];
 }) {
   const children = (
     <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
