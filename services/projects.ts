@@ -10,7 +10,18 @@ export const getProjects = async (token: string) => {
   return response.data;
 };
 
-export const createNewProject = async (project: string, token: string) => {
+export const createNewProject = async (
+  project: {
+    name: string;
+    description: string;
+    teamId: string[];
+    subProjects: {
+      name: string;
+      description: string;
+    }[];
+  },
+  token: string
+) => {
   const response = await axios.post(
     `${config.SERVER_ADDRESS}/api/v1/project`,
     project,

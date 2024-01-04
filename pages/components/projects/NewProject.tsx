@@ -21,8 +21,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { createNewProject } from "../../../services/projects";
 import { addProject } from "../../../Redux/slices/projects";
 import { useRouter } from "next/router";
+import {
+  RootState,
+  TeamInterface,
+  ThemeInterface,
+  UserInterFace,
+} from "../../../interfaces/myprofile";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: ThemeInterface) => ({
   container: {
     display: "flex",
     flexWrap: "wrap",
@@ -39,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function NewProject() {
   const [open, setOpen] = React.useState(false);
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -92,7 +98,7 @@ export default function NewProject() {
   );
 }
 
-function ProjectForm({ handleClose }) {
+function ProjectForm({ handleClose }: { handleClose: () => void }) {
   const classes = useStyles();
   const [projectName, setProjectName] = React.useState("");
   const [projectDescription, setProjectDescription] = React.useState("");
@@ -103,7 +109,7 @@ function ProjectForm({ handleClose }) {
 
   // Share with team
   const [shareWithTeam, setShareWithTeam] = React.useState(false);
-  const [teamId, setTeamId] = React.useState([]);
+  const [teamId, setTeamId] = React.useState<string[]>([]);
   // Task Status
   const [taskStatus, setTaskStatus] = React.useState([]);
   // Defualt Task Status
@@ -117,14 +123,14 @@ function ProjectForm({ handleClose }) {
   const dispatch = useDispatch();
   const router = useRouter();
   //   Loged in user token from redux
-  const userStore = useSelector((state) => state.user);
+  const userStore = useSelector((state: RootState) => state.user);
   const user = userStore.user ? userStore.user : null;
-  const token = userStore ? userStore.user.token : null;
+  const token = userStore ? userStore.user.token : "";
   //  Team list from redux
-  const teamStore = useSelector((state) => state.teams);
-  const teamList = teamStore ? teamStore.teams : null;
+  const teamStore = useSelector((state: RootState) => state.teams);
+  const teamList = teamStore ? teamStore.teams : [];
 
-  const teamChangeHandler = (value) => {
+  const teamChangeHandler = (value: { id: string }[]) => {
     // Add only ids to teamId
 
     setTeamId(value.map((team) => team.id));
@@ -142,11 +148,18 @@ function ProjectForm({ handleClose }) {
   const [subProjectDescriptionError, setSubProjectDescriptionError] =
     React.useState(false);
   const [subProjctError, setSubProjctError] = React.useState(false);
-  const [subProjects, setSubProjects] = React.useState([]);
-  const onSubprojectNameChange = (e) => {
+  const [subProjects, setSubProjects] = React.useState<
+    {
+      name: string;
+      description: string;
+    }[]
+  >([]);
+  const onSubprojectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubprojectName(e.target.value);
   };
-  const onSubprojectDescriptionChange = (e) => {
+  const onSubprojectDescriptionChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setSubprojectDescription(e.target.value);
   };
 
@@ -162,7 +175,7 @@ function ProjectForm({ handleClose }) {
       setSubProjectDescriptionError(false);
     }
 
-    if (subprojectName !== "" && subprojectDescription !== "") {
+    if (subprojectName !== "" && subprojectDescription.trim() !== "") {
       setSubProjects([
         ...subProjects,
         {
@@ -175,7 +188,7 @@ function ProjectForm({ handleClose }) {
     }
   };
 
-  const DeleteSubprojectHandler = (index) => {
+  const DeleteSubprojectHandler = (index: number) => {
     setSubProjects((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -189,33 +202,43 @@ function ProjectForm({ handleClose }) {
   const [step4, setStep4] = React.useState(false);
 
   // Value State Handler
-  const onProjectNameChange = (e) => {
+  const onProjectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(e.target.value);
   };
 
-  const onProjectDescriptionChange = (e) => {
+  const onProjectDescriptionChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setProjectDescription(e.target.value);
   };
 
-  const onShareWithTeamChange = (e) => {
+  const onShareWithTeamChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShareWithTeam(e.target.checked);
   };
 
-  const onTeamIdChange = (e) => {
-    setTeamId(e.target.value);
-  };
+  const onTeamIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTeamId((prevTeamId) => {
+      const updatedTeamId = e.target.value
+        .split(",")
+        .map((teamId) => teamId.trim())
+        .filter((teamId) => teamId !== "");
 
-  const onTaskStatusChange = (e) => {
-    setTaskStatus(e.target.value);
+      return updatedTeamId;
+    });
   };
+  // const onTaskStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setTaskStatus(e.target.value);
+  // };
 
-  const onDefaultTaskStatusChange = (e) => {
-    setDefaultTaskStatus(e.target.value);
-  };
+  // const onDefaultTaskStatusChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setDefaultTaskStatus(e.target.value);
+  // };
 
-  const onLastTaskStatusChange = (e) => {
-    setLastTaskStatus(e.target.value);
-  };
+  // const onLastTaskStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setLastTaskStatus(e.target.value);
+  // };
 
   //   Next Step Handler
   const nextStep1 = () => {
@@ -329,9 +352,9 @@ function ProjectForm({ handleClose }) {
         >
           <ShareWithTeam
             onShareWithTeamChange={onShareWithTeamChange}
-            onTeamIdChange={onTeamIdChange}
+            // onTeamIdChange={onTeamIdChange}
             shareWithTeam={shareWithTeam}
-            teamId={teamId}
+            // teamId={teamId}
             teamList={teamList}
             teamChangeHandler={teamChangeHandler}
             user={user}
@@ -533,7 +556,11 @@ function ProjectForm({ handleClose }) {
     </form>
   );
 }
-function HorizontalLabelPositionBelowStepper({ activeStep }) {
+function HorizontalLabelPositionBelowStepper({
+  activeStep,
+}: {
+  activeStep: number;
+}) {
   const steps = [
     "Project Details",
     "Share with team",
@@ -561,6 +588,13 @@ function ProjectDetails({
   onProjectDescriptionChange,
   projectNameError,
   projectDescriptionError,
+}: {
+  projectName: string;
+  projectDescription: string;
+  onProjectNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onProjectDescriptionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  projectNameError: boolean;
+  projectDescriptionError: boolean;
 }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -603,6 +637,12 @@ function ShareWithTeam({
   teamList,
   teamChangeHandler,
   user,
+}: {
+  shareWithTeam: boolean;
+  onShareWithTeamChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  teamList: TeamInterface[];
+  teamChangeHandler: (value: { id: string }[]) => void;
+  user: UserInterFace | null;
 }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -644,10 +684,20 @@ function ShareWithTeam({
   );
 }
 
-const AddTeam = ({ teams, teamChangeHandler, user }) => {
+const AddTeam = ({
+  teams,
+  teamChangeHandler,
+  user,
+}: {
+  teams: TeamInterface[];
+  teamChangeHandler: (value: { id: string }[]) => void;
+  user: UserInterFace | null;
+}) => {
   // Filter teams which user is in the directors array
   const filteredTeams = teams.filter((team) => {
-    return team.directors.map((director) => director._id).includes(user._id);
+    if (user === null) return false;
+    if (team.directors.length === 0) return false;
+    return team.directors.map((director) => director.id).includes(user.id);
   });
   return (
     <Box>
@@ -656,7 +706,7 @@ const AddTeam = ({ teams, teamChangeHandler, user }) => {
         multiple
         limitTags={2}
         id="multiple-limit-tags"
-        options={teams}
+        options={filteredTeams}
         getOptionLabel={(team) => `${team.teamName} `}
         renderInput={(params) => (
           <TextField
@@ -684,6 +734,17 @@ function AddSubproject({
   subProjectDescriptionError,
   subProjctError,
   AddSubprojectHandler,
+}: {
+  subprojectName: string;
+  subprojectDescription: string;
+  onSubprojectNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubprojectDescriptionChange: (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => void;
+  subProjectNameError: boolean;
+  subProjectDescriptionError: boolean;
+  subProjctError: boolean;
+  AddSubprojectHandler: () => void;
 }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -759,8 +820,19 @@ function AddSubproject({
 }
 
 // SubProjectCard
-function SubProjectCard({ subProject, index, DeleteSubprojectHandler }) {
-  const theme = useTheme();
+function SubProjectCard({
+  subProject,
+  index,
+  DeleteSubprojectHandler,
+}: {
+  subProject: {
+    name: string;
+    description: string;
+  };
+  index: number;
+  DeleteSubprojectHandler: (index: number) => void;
+}) {
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{
@@ -799,6 +871,15 @@ function ReviewAndCreateProject({
   subProjectList,
   shareWithTeam,
   teamList,
+}: {
+  projectName: string;
+  projectDescription: string;
+  subProjectList: {
+    name: string;
+    description: string;
+  }[];
+  shareWithTeam: boolean;
+  teamList: TeamInterface[];
 }) {
   return (
     <Box

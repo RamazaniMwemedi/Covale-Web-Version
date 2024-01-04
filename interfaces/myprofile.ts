@@ -375,6 +375,10 @@ export interface FileInterface {
 export interface TeamInterface {
   id: string;
   teamName: string;
+  directors: UserInterFace[];
+  members: UserInterFace[];
+  projects: ProjectInterface[];
+  // notifications: NotificationInterface[];
 }
 
 export interface ProjectInterface {

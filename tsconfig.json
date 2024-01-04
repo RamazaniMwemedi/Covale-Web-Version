@@ -29,6 +29,6 @@
     "Redux/slices/calendar.js",
     "Redux/slices/chat.js",
     "pages/components/chats/ChatSectionLeft.tsx"
-, "pages/components/mediaFiles/FileDisplayComponent.tsx", "pages/components/projects/NewProject.js"  ],
+, "pages/components/mediaFiles/FileDisplayComponent.tsx", "pages/components/projects/NewProject.tsx"  ],
   "exclude": ["node_modules"]
 }
