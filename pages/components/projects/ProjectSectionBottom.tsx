@@ -14,25 +14,56 @@ import { useTheme } from "@mui/styles";
 import { Avatar } from "@mui/material";
 import FileIcone from "../mediaFiles/FileIcon";
 import moment from "moment";
-const ProjectSectionBottom = ({ value, project, showChats }) => {
-  const theme = useTheme();
-  const teamStore = useSelector((state) => state.teams);
+import {
+  FileInterface,
+  ProjectInterface,
+  RootState,
+  TaskInterface,
+  TeamInterface,
+  ThemeInterface,
+  UserInterFace,
+} from "../../../interfaces/myprofile";
+const ProjectSectionBottom = ({
+  value,
+  project,
+  showChats,
+}: {
+  value: string;
+  project: ProjectInterface;
+  showChats: boolean;
+}) => {
+  const theme: ThemeInterface = useTheme();
+  const teamStore = useSelector((state: RootState) => state.teams);
   const teamList = teamStore ? teamStore.teams : [];
-  const allProjectTeams = new Array();
+  const allProjectTeams: TeamInterface[] = [];
+
   if (project) {
     for (let index = 0; index < project.teams.length; index++) {
-      const teamId = project.teams[index];
+      const teamId = project.teams[index].id;
       const team = teamList
         ? teamList.find((team) => team && team.id === teamId)
-        : [];
-      allProjectTeams.push(team);
+        : undefined;
+
+      if (team) {
+        allProjectTeams.push(team);
+      }
     }
   }
 
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState<TeamInterface | null>(null);
 
-  const handleSelectTeam = (teamId) => {
-    setSelectedTeam(allProjectTeams.find((team) => team && team.id === teamId));
+  const handleSelectTeam = (teamId: string) => {
+    const foundTeam = allProjectTeams.find(
+      (team) => team && team.id === teamId
+    );
+
+    if (foundTeam) {
+      setSelectedTeam(foundTeam);
+    } else {
+      // Handle the case where the team with the specified teamId is not found
+      // For example, you might want to show an error message or handle it in another way.
+      console.error(`Team with ID ${teamId} not found.`);
+    }
   };
 
   const router = useRouter();
@@ -48,7 +79,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
   const taskStatus = project && project.taskStatus;
 
   // All Tasks
-  const allTasks = new Array();
+  const allTasks: TaskInterface[] = [];
   if (project) {
     for (let index = 0; index < project.subProjects.length; index++) {
       const subProjectFromProject = project.subProjects[index];
@@ -60,8 +91,8 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
   }
 
   const [showFile, setShowFile] = useState(false);
-  const [file, setFile] = useState(null);
-  const handleShowFile = (file) => {
+  const [file, setFile] = useState<FileInterface | null>(null);
+  const handleShowFile = (file: FileInterface) => {
     // If file.fileUrl includes https:// then setFile to file and setShowVideoPlayer to true
     if (file.fileUrl.includes("https://")) {
       setFile(file);
@@ -83,7 +114,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
             display: "flex",
           }}
         >
-          {showFile && (
+          {showFile && file && (
             <FileDisplayComponent
               handleCloseShowVideoPlayer={handleCloseShowFile}
               file={file}
@@ -91,9 +122,11 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
           )}
 
           <Box
-            sx={{
-              // flex: 0.6,
-            }}
+            sx={
+              {
+                // flex: 0.6,
+              }
+            }
           >
             <TabContext value={value}>
               <TabPanel value="Tasks">
@@ -146,7 +179,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                   <Typography variant="h2">Members</Typography>
                   <ProjectMember
                     members={project.members}
-                    managers={project.managers}
+                    // managers={project.managers}
                     taskStatus={project.taskStatus}
                     allTasks={allTasks}
                   />
@@ -175,6 +208,10 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                     const lastMessage = lastMessageObject
                       ? lastMessageObject.message
                       : "";
+
+                    const sender = lastMessageObject
+                      ? (lastMessageObject.sender as UserInterFace)
+                      : null;
                     return (
                       <Box
                         sx={{
@@ -213,13 +250,13 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                                   fontSize: "10px",
                                 }}
                               >
-                                {lastMessageObject.sender.firstname[0]}
-                                {lastMessageObject.sender.lastname[0]}
+                                {sender ? sender.firstname[0] : ""}
+                                {sender ? sender.lastname[0] : ""}
                               </Avatar>
                               <Box>
                                 <Typography variant="body2">
-                                  {lastMessageObject.sender.firstname}{" "}
-                                  {lastMessageObject.sender.lastname}
+                                  {sender ? sender.firstname : ""}{" "}
+                                  {sender ? sender.lastname : ""}
                                 </Typography>
                                 <Box
                                   sx={{
@@ -227,7 +264,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                                     gap: "5px",
                                   }}
                                 >
-                                  {lastMessageObject.file.map((file) => (
+                                  {lastMessageObject.files.map((file) => (
                                     <FileIcone
                                       key={file.id}
                                       fileType={file.fileType}
@@ -239,7 +276,7 @@ const ProjectSectionBottom = ({ value, project, showChats }) => {
                                     {lastMessage}
                                   </Typography>
                                   <Typography variant="caption">
-                                    {moment(lastMessage.createdAt).format(
+                                    {moment(lastMessageObject.createdAt).format(
                                       "dd DD, MMMM"
                                     )}
                                   </Typography>

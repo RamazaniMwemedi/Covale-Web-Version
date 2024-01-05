@@ -1,34 +1,40 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 
 import ProjectSectionTop from "./ProjectSectionTop";
 import ProjectSectionBottom from "./ProjectSectionBottom";
 import { useProject, useSubProjectsTasks } from "../../../hooks/projects";
 import { useTheme } from "@mui/styles";
+import { ThemeInterface } from "../../../interfaces/myprofile";
 
 // Get a projects which much the Project Id
 
 const ProjectSection = () => {
   const router = useRouter();
-  const projectId = router.query.project;
-  const subProjectId = router.query.subproject;
+  const projectId = router.query.project as string;
+  const subProjectId = router.query.subproject as string;
   const project = useProject(projectId);
   const tasks = useSubProjectsTasks(projectId, subProjectId);
   const [tabValue, setTabValue] = useState("Tasks");
-  const [taskViewValue, setTaskViewValue] = useState("kanban");
+  const [taskViewValue, setTaskViewValue] = useState<"list" | "kanban">(
+    "kanban"
+  );
   const [showChats, setShowChats] = useState(false);
 
   const toggleShowChat = () => setShowChats((prev) => !prev);
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
 
-  const valueChangeHandler = (e, newValue) => {
-    e.preventDefault();
+  const valueChangeHandler = (
+    event: SyntheticEvent<Element, Event>,
+    newValue: any
+  ) => {
+    event.preventDefault();
     setTabValue(newValue);
   };
 
-  const taskViewValueChangeHandler = (e, newValue) => {
+  const taskViewValueChangeHandler = (_: any, newValue: any) => {
     setTaskViewValue(newValue);
   };
 
@@ -39,7 +45,7 @@ const ProjectSection = () => {
         width: "100%",
         backgroundColor: theme.colors.background,
         // display: "grid",
-        placeItems: !project && "center",
+        placeItems: !project ? "center" : "inherit",
       }}
     >
       {project ? (
@@ -52,9 +58,9 @@ const ProjectSection = () => {
             showChats={showChats}
           />
           <ProjectSectionBottom
-            taskViewValue={taskViewValue}
+            // taskViewValue={taskViewValue}
             value={tabValue}
-            taskViewValueChangeHandler={taskViewValueChangeHandler}
+            // taskViewValueChangeHandler={taskViewValueChangeHandler}
             showChats={showChats}
             project={project}
           />

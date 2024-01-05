@@ -361,11 +361,13 @@ export interface MessageInterface {
   id: string;
   message: string;
   sentAt: string;
-  sender: string;
+  sender: string | UserInterFace;
+  createdAt: string;
   files: FileInterface[];
 }
 
 export interface FileInterface {
+  id: string;
   fileName: string;
   fileUrl: string;
   fileUri: string;
@@ -378,18 +380,48 @@ export interface TeamInterface {
   directors: UserInterFace[];
   members: UserInterFace[];
   projects: ProjectInterface[];
-  // notifications: NotificationInterface[];
+  messages: MessageInterface[];
+  files: FileInterface[];
 }
 
 export interface ProjectInterface {
   id: string;
   title: string;
+  taskStatus: ["Pending" | "In Progress" | "Completed"];
+  description: string;
+  teams: TeamInterface[];
   subProjects: SubProjectsInterface[];
+  files: FileInterface[];
+  members:UserInterFace[]
 }
 
 export interface SubProjectsInterface {
   id: string;
-  tasks: {}[];
+  tasks: TaskInterface[];
+}
+
+export interface TaskInterface {
+  title: string;
+  description: string;
+  assignor: UserInterFace; // Assuming assignor is an ObjectId or a string
+  assignees: UserInterFace[];
+  startDate: Date;
+  dueDate: Date;
+  status: string;
+  createdAt: Date;
+  subProject: string; // Assuming subProject is optional
+  flag: string;
+  subTasks: {
+    title: string;
+    done: boolean;
+  }[];
+  files: FileInterface[];
+  comments: {
+    author: UserInterFace | string;
+    content: string;
+    createdAt: Date;
+    likes: string[];
+  }[];
 }
 
 export interface NotificationInterface {
