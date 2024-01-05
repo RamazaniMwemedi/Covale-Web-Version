@@ -9,6 +9,11 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { useRouter } from "next/router";
+import { SyntheticEvent } from "react";
+import {
+  ProjectInterface,
+  ThemeInterface,
+} from "../../../interfaces/myprofile";
 
 const ProjectSectionTop = ({
   valueChangeHandler,
@@ -16,8 +21,17 @@ const ProjectSectionTop = ({
   project,
   showChats,
   toggleShowChat,
+}: {
+  valueChangeHandler: (
+    event: SyntheticEvent<Element, Event>,
+    newValue: any
+  ) => void;
+  value: string;
+  project: ProjectInterface;
+  showChats: boolean;
+  toggleShowChat: () => void;
 }) => {
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   const router = useRouter();
   const subProjectId = router.query.subproject;
 
@@ -153,7 +167,17 @@ const ProjectSectionTop = ({
 
 export default ProjectSectionTop;
 
-function ProjectTopTabs({ valueChangeHandler, value }) {
+function ProjectTopTabs({
+  valueChangeHandler,
+  value,
+}: {
+  valueChangeHandler: (
+    event: SyntheticEvent<Element, Event>,
+    newValue: any
+  ) => void;
+
+  value: string;
+}) {
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <Tabs
@@ -183,7 +207,18 @@ function ProjectTopTabs({ valueChangeHandler, value }) {
   );
 }
 
-function TotalAvatars({ valueChangeHandler, value, project }) {
+function TotalAvatars({
+  valueChangeHandler,
+  value,
+  project,
+}: {
+  valueChangeHandler: (
+    event: SyntheticEvent<Element, Event>,
+    newValue: any
+  ) => void;
+  value: string;
+  project: ProjectInterface;
+}) {
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
       <Tabs

@@ -397,6 +397,8 @@ export interface ProjectInterface {
 
 export interface SubProjectsInterface {
   id: string;
+  title: string;
+  description: string;
   tasks: TaskInterface[];
 }
 
