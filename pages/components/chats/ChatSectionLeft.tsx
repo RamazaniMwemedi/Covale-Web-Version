@@ -334,12 +334,7 @@ const Mid = ({
 
 const UserMessage: FC<{
   message: MessageInterface;
-  handleShowFile: (file: {
-    fileName: string;
-    fileUrl: string;
-    fileUri: string;
-    fileType: string;
-  }) => void;
+  handleShowFile: (file: FileInterface) => void;
 }> = ({ message, handleShowFile }) => {
   const purple1 = purple[700];
   const purple2 = purple[400];
@@ -476,12 +471,7 @@ const UserMessage: FC<{
 
 const ColleagueMessage: FC<{
   message: MessageInterface;
-  handleShowFile: (file: {
-    fileName: string;
-    fileUrl: string;
-    fileUri: string;
-    fileType: string;
-  }) => void;
+  handleShowFile: (file: FileInterface) => void;
 }> = ({ message, handleShowFile }) => {
   const theme: ThemeInterface = useTheme();
   const router = useRouter();
@@ -603,12 +593,7 @@ const Bottom: FC<{
   handleChooseFileIcon: () => void;
   chatFileInput: any;
   handleChooseFile: () => void;
-  handleRemoveFile: (file: {
-    fileName: string;
-    fileUrl: string;
-    fileUri: string;
-    fileType: string;
-  }) => void;
+  handleRemoveFile: (file: FileInterface) => void;
   chatFiles: FileInterface[];
   handleChooseFileIcon2: () => void;
   chatFileInput2: any;

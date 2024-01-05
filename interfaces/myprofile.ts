@@ -148,7 +148,7 @@ export interface CropperImageInterface {
 }
 export interface FileObject {
   albumName: string;
-  file: CropperImageInterface;
+  file: FileInterface;
 }
 export interface CroppImageAvatarProp {
   image: CropperImageInterface;
@@ -392,7 +392,7 @@ export interface ProjectInterface {
   teams: TeamInterface[];
   subProjects: SubProjectsInterface[];
   files: FileInterface[];
-  members:UserInterFace[]
+  members: UserInterFace[];
 }
 
 export interface SubProjectsInterface {
