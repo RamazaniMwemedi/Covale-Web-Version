@@ -1,9 +1,9 @@
 // URLs object
 const URLS = {
   // Production URL
-  prodServerURL: "https://covale.onrender.com",
-  prodRtcURL: "https://covale-rtc-server.onrender.com",
-  prodSecuritySerURL: "https://covale-security-server.onrender.com",
+  prodServerURL: "http://34.244.219.105:5005",
+  prodRtcURL: "http://34.244.219.105:5055",
+  prodSecuritySerURL: "http://34.244.219.105:5006",
   // Development URL
   devServerURL: "http://localhost:5005",
   devRtcURL: "http://localhost:5055",

@@ -39,13 +39,13 @@ export const useJoinNotificationRoom = (userId: string) => {
   }, [userId]);
 };
 
-export const useRecieveNewNotification = (user: string) => {
+export const useRecieveNewNotification = (userId: string) => {
   const dispatch = useDispatch();
   useEffect(() => {
     notificationSocket.on("new_notification", (data: any) => {
       dispatch(addNewNotification(data));
     });
-  }, [notificationSocket, user]);
+  }, [notificationSocket, userId]);
 };
 
 module.exports = {

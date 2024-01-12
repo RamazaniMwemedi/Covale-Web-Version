@@ -53,6 +53,7 @@
     "@types/node": "^18.15.11",
     "@types/react-html-parser": "^2.0.2",
     "@types/react-swipeable-views": "^0.13.1",
+    "@types/uuid": "^9.0.7",
     "@types/validator": "^13.11.2",
     "eslint": "^8.32.0",
     "eslint-plugin-react": "^7.32.2",

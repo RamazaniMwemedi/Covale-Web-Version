@@ -56,7 +56,7 @@ export const useJoinTeamRoom = (id: string) => {
   }, [id]);
 };
 
-export const useRecieveNewTeamMessage = (user: string, userId: string) => {
+export const useRecieveNewTeamMessage = (userId: string) => {
   const dispatch = useDispatch();
   useEffect(() => {
     teamSocket.on("receive_message_to_team", (data: any) => {
@@ -69,7 +69,7 @@ export const useRecieveNewTeamMessage = (user: string, userId: string) => {
         );
       }
     });
-  }, [teamSocket, user]);
+  }, [teamSocket, userId]);
 };
 const mod = {
   useTeamId,

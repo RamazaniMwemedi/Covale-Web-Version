@@ -127,7 +127,14 @@ const deleteTeamById = async (token: string, id: string) => {
   }
 };
 
-const createATopic = async (token: string, teamId: string, topicObject: string) => {
+const createATopic = async (
+  token: string,
+  teamId: string,
+  topicObject: {
+    title: string;
+    description: string;
+  }
+) => {
   if (token) {
     const response = await axios.post(
       `${config.SERVER_ADDRESS}/api/v1/team/${teamId}/topics/new`,
@@ -143,7 +150,11 @@ const createATopic = async (token: string, teamId: string, topicObject: string) 
 };
 
 // /topics/:topicId/reply
-const replyToTopic = async (token: string, topicId: string, messageObject: string) => {
+const replyToTopic = async (
+  token: string,
+  topicId: string,
+  messageObject: FormData
+) => {
   if (token) {
     const response = await axios.post(
       `${config.SERVER_ADDRESS}/api/v1/team/topics/${topicId}/reply`,
