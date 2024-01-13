@@ -18,6 +18,7 @@ import {
   RootState,
   ThemeInterface,
 } from "../../../interfaces/myprofile";
+import moment from "moment";
 
 export default function Chat({ chat }: { chat: ChatInterface }) {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function Chat({ chat }: { chat: ChatInterface }) {
     if (lastMessageObject) {
       const date = new Date(lastMessageObject.sentAt);
       // Time ago function
-      const time = timeAgo(date);
+      const time = moment(date).fromNow() as string;
       setLastMessageSentAt(time);
     }
   }, [lastMessageObject]);

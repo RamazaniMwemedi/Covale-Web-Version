@@ -452,7 +452,13 @@ const UserMessage: FC<{
                 }}
                 onClick={() => handleShowFile(file)}
               >
-                <FileComponent file={file} />
+                <FileComponent
+                  displayFile
+                  height={200}
+                  width={200}
+                  key={"FileComponent"}
+                  file={file}
+                />
               </Box>
             );
           })}

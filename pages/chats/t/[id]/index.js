@@ -195,6 +195,7 @@ export default function Chat() {
       message: encryptedMessage,
       files: chatFiles,
       chatRoom: id,
+      sentAt: new Date(),
     };
     setChatFiles([]);
 
