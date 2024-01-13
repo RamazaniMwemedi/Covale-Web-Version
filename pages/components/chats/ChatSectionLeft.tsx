@@ -88,7 +88,7 @@ const ChatSectionLeft = ({
   onEmojiClick: (_: any, emojiObject: any) => void;
   chatFileInput: any;
   handleChooseFileIcon: () => void;
-  handleChooseFile: () => void;
+  handleChooseFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleRemoveFile: (file: FileInterface) => void;
   chatFiles: FileInterface[];
   handleChooseFileIcon2: () => void;
@@ -316,7 +316,7 @@ const Mid = ({
         }}
       >
         {messages.map((message) => {
-          return message.sender === user.id ? (
+          return message.sender.id === user.id ? (
             <UserMessage message={message} handleShowFile={handleShowFile} />
           ) : (
             <ColleagueMessage
@@ -520,12 +520,12 @@ const ColleagueMessage: FC<{
     >
       {/* Avatar */}
       <Avatar
-        sx={{
-          width: 25,
-          height: 25,
-          marginRight: "6px",
-        }}
-      />
+        src={message.sender.profilePic ? message.sender.profilePic.fileUrl : ""}
+        sx={{ textTransform: "uppercase" }}
+      >
+        {message.sender.firstname[0]}
+        {message.sender.lastname[0]}
+      </Avatar>
       {/* Message */}
       <Box
         sx={{
@@ -592,7 +592,7 @@ const Bottom: FC<{
   onEmojiClick: (_: any, emojiObject: any) => void;
   handleChooseFileIcon: () => void;
   chatFileInput: any;
-  handleChooseFile: () => void;
+  handleChooseFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleRemoveFile: (file: FileInterface) => void;
   chatFiles: FileInterface[];
   handleChooseFileIcon2: () => void;
@@ -847,7 +847,7 @@ const Bottom: FC<{
 const MenuListComposition: FC<{
   handleChooseFileIcon: () => void;
   chatFileInput: any;
-  handleChooseFile: () => void;
+  handleChooseFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ handleChooseFileIcon, chatFileInput, handleChooseFile }) => {
   const [open, setOpen] = React.useState(false);
   const anchorRef: any = React.useRef(null);
@@ -936,7 +936,7 @@ const MenuListComposition: FC<{
                         }}
                         onChange={(e) => {
                           handleClose(e);
-                          handleChooseFile();
+                          handleChooseFile(e);
                         }}
                       />
                       Upload file

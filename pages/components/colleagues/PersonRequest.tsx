@@ -31,7 +31,13 @@ const PersonRequest: FC<{
   const router = useRouter();
   const acceptingConnectionHandler = async () => {
     setAccepeting((prev) => !prev);
-    if (user.id && token) {
+    if (!secreteToken) {
+      alert("Something went wrong. Please refresh the page and try again");
+      setAccepeting((prev) => !prev);
+
+      return;
+    }
+    if (user.id && token && secreteToken) {
       const response = await acceptFriendRequest(user.id, token);
       if (response.chatId) {
         // chatId;

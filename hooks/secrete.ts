@@ -20,8 +20,9 @@ export const useGetSecreteToken = () => {
   const [secreteToken, setSecreteToken] = useState<string>("");
   useEffect(() => {
     const logedinUser = JSON.parse(localStorage.getItem("logedinUser") || "{}");
+
     const secreteToken = logedinUser && logedinUser.secreteToken;
-    setSecreteToken(secreteToken.secreteToken);
+    setSecreteToken(secreteToken);
   }, []);
   return secreteToken;
 };

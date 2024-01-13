@@ -1,7 +1,11 @@
 import axios from "axios";
 import config from "../config/index";
 // http://localhost:3000/
-const sendMessege = async (token: string, id: string, formData: FormData) => {
+export const sendMessege = async (
+  token: string,
+  id: string,
+  formData: FormData
+) => {
   const response = await axios.post(
     `${config.SERVER_ADDRESS}/api/v1/chats/message/${id}`,
     formData,
@@ -14,7 +18,7 @@ const sendMessege = async (token: string, id: string, formData: FormData) => {
   return response.data;
 };
 
-const sendMessageToColleague = async (
+export const sendMessageToColleague = async (
   token: string,
   colleaguesId: string,
   message: string
@@ -34,7 +38,7 @@ const sendMessageToColleague = async (
 };
 
 // Get all chats
-const getChats = async (token: string) => {
+export const getChats = async (token: string) => {
   const response = await axios.get(`${config.SERVER_ADDRESS}/api/v1/chats`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -43,7 +47,7 @@ const getChats = async (token: string) => {
   return response.data;
 };
 
-const getChatById = async (token: string, id: string) => {
+export const getChatById = async (token: string, id: string) => {
   const response = await axios.get(
     `${config.SERVER_ADDRESS}/api/v1/chats/${id}`,
     {

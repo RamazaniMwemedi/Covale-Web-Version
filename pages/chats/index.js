@@ -189,7 +189,7 @@ export default function Chat() {
     setChatMessage("");
     const newMessage = {
       idFromClient: uuid,
-      sender: user.id,
+      sender: { id: user.id },
       message: encryptedMessage,
       files: chatFiles,
       chatRoom: id,

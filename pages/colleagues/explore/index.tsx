@@ -313,7 +313,7 @@ const Person: React.FC<{
         >
           <Box display={"flex"} justifyContent={"space-around"}>
             <Avatar
-              src={user.profilePic.fileUrl}
+              src={user.profilePic ? user.profilePic.fileUrl : ""}
               sx={{ width: 80, height: 80, textTransform: "uppercase" }}
             >
               {user.firstname[0]}
@@ -394,7 +394,7 @@ const Person: React.FC<{
           </Box>
           <Box
             sx={{
-              mt: -2,
+              // mt: -2,
               // marginLeft: "-10px",
             }}
           >

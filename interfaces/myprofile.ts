@@ -361,7 +361,7 @@ export interface MessageInterface {
   id: string;
   message: string;
   sentAt: string;
-  sender: string | UserInterFace;
+  sender: UserInterFace;
   createdAt: string;
   files: FileInterface[];
 }

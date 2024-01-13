@@ -51,6 +51,7 @@ import {
   Link,
   CardMedia,
   Chip,
+  Avatar,
 } from "@mui/material";
 
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -153,11 +154,15 @@ const About = () => {
                   }}
                   key={colleague.id}
                 >
-                  <CardMedia
+                  <Avatar
                     sx={{ height: 110, width: 110, borderRadius: 4 }}
-                    image={colleague.profilePic.fileUrl}
+                    src={
+                      colleague.profilePic ? colleague.profilePic.fileUrl : ""
+                    }
                     title={colleague.username}
-                  />
+                  >
+                    {colleague.firstname[0]} {colleague.lastname[0]}
+                  </Avatar>
                   <Typography
                     gutterBottom
                     variant="body1"
@@ -2100,11 +2105,13 @@ const EducationAndCertificationCard: FC<EducationAndCertificationCardProp> = ({
           {formattedDuration}
         </Typography>
         <br />
-        <Box sx={{
-          display:"grid",
-          gridTemplateColumns:"repeat(min-content, auto)",
-          gap:""
-        }}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(min-content, auto)",
+            gap: "",
+          }}
+        >
           {skills.map((skill) => (
             <Chip key={skill} label={skill} size="small" sx={{ mr: 1 }} />
           ))}
