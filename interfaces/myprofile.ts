@@ -350,6 +350,8 @@ export interface WorkExperience {
 export interface ChatInterface {
   id: string;
   colleagueUsername: string;
+  colleagueFirstName: string;
+  colleagueLastName: string;
   colleagueProfilePic: {
     fileUrl: string;
   };

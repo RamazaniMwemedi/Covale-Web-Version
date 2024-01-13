@@ -110,12 +110,12 @@ export default function Chat({ chat }: { chat: ChatInterface }) {
                 // Separate the last message and the time
                 display: "flex",
                 justifyContent: "space-between",
-                gap: "50%",
+                gap: "35%",
                 alignItems: "center",
               }}
             >
-              <Typography variant="subtitle1">
-                {chat.colleagueUsername}
+              <Typography variant="subtitle2">
+                {chat.colleagueFirstName} {chat.colleagueLastName}
               </Typography>
               {/* sentAt */}
               <Typography variant="caption">{lastMessageSentAt}</Typography>

@@ -130,6 +130,8 @@ const ChatSectionLeft = ({
             colleagueProfilePic={
               chat.colleagueProfilePic && chat.colleagueProfilePic.fileUrl
             }
+            colleagueFirstName={chat.colleagueFirstName}
+            colleagueLastName={chat.colleagueLastName}
           />
           <Box
             sx={{
@@ -174,11 +176,15 @@ const TopBar = ({
   showRightHandler,
   showRight,
   colleagueProfilePic,
+  colleagueFirstName,
+  colleagueLastName,
 }: {
   colleagueUsername: string;
   showRightHandler: () => void;
   showRight: boolean;
   colleagueProfilePic: string;
+  colleagueFirstName: string;
+  colleagueLastName: string;
 }) => {
   const theme: ThemeInterface = useTheme();
   return (
@@ -221,14 +227,25 @@ const TopBar = ({
         >
           {colleagueUsername[0]}
         </Avatar>
-        <Typography
-          variant="h6"
-          sx={{
-            paddingLeft: "10px",
-          }}
-        >
-          {colleagueUsername}
-        </Typography>
+        <Box>
+          <Typography
+            variant="h6"
+            sx={{
+              paddingLeft: "10px",
+            }}
+          >
+            {colleagueFirstName} {colleagueLastName}
+          </Typography>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{
+              paddingLeft: "10px",
+            }}
+          >
+            {colleagueUsername}
+          </Typography>
+        </Box>
       </Box>
       {/* Right */}
       <Box
