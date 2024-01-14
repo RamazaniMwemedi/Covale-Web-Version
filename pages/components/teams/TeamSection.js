@@ -154,7 +154,7 @@ const TeamSection = ({
         >
           <Box
             sx={{
-              flex: "60%",
+              flex: "73%",
               display: "flex",
               justifyContent: "flex-end",
               flexDirection: "column",
@@ -200,7 +200,7 @@ const TeamSection = ({
           {showRight && (
             <Box
               sx={{
-                flex: "40%",
+                flex: "25%",
                 borderLeft: `2px solid ${theme.colors.background1}`,
               }}
             >

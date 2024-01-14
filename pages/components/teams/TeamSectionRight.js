@@ -130,7 +130,7 @@ const Menu = ({ team }) => {
       sx={{
         padding: "5px",
         backgroundColor: theme.colors.background1,
-        height: "100vh",
+        minHeight: "100vh",
         borderTopRightRadius: "8px",
       }}
     >
@@ -150,7 +150,33 @@ const Menu = ({ team }) => {
         <Typography variant="h5">Menu</Typography>
         <TeamMenuOption teamId={team.id} />
       </Box>
-      <Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Avatar
+          sx={{ width: "120px", height: "120px" }}
+          // src={colleagueProfilePic}
+        >
+          {/* {colleagueUsername[0]} */}
+        </Avatar>
+        <Typography
+          component="h6"
+          variant="h6"
+          sx={{
+            fontSize: "1.2rem",
+            paddingTop: "15px",
+          }}
+        >
+          {team.teamName}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Team • {team.members.length}
+        </Typography>
+        <br />
         <br />
       </Box>
       <Media handleShowFile={handleShowFile} team={team} files={team.files} />
@@ -554,6 +580,8 @@ const Media = ({ files, handleShowFile }) => {
           display: "flex",
           backgroundColor: theme.colors.background1,
           padding: "10px",
+          borderRadius: "5px",
+          mt:3
         }}
       >
         <Typography variant="subtitle1">Media</Typography>
@@ -652,6 +680,11 @@ const Photos = ({ photosFiles, handleShowFile }) => {
                     quality={100}
                     style={{
                       borderRadius: "3px",
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      margin: "auto",
+                      display: "block",
+                      objectFit: "contain",
                     }}
                   />
                 </ImageListItem>
