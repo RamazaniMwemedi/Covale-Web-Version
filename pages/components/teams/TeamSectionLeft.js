@@ -139,6 +139,7 @@ const TeamSectionLeft = ({
             topicsDisplay={topicsDisplay}
             participantsDisplay={participantsDisplay}
             menuDisplay={menuDisplay}
+            teamMembers={team.members}
           />
           <Box
             sx={{
@@ -200,6 +201,7 @@ const TopBar = ({
   topicsDisplay,
   participantsDisplay,
   menuDisplay,
+  teamMembers,
 }) => {
   const theme = useTheme();
   return (
@@ -236,16 +238,23 @@ const TopBar = ({
         }}
       >
         <Avatar sx={{ width: 45, height: 45 }} />
-        {teamName && (
-          <Typography
-            variant="h6"
-            sx={{
-              paddingLeft: "10px",
-            }}
-          >
+
+        <Box
+          sx={{
+            paddingLeft: "10px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "center",
+          }}
+        >
+          <Typography component="span" variant="h6">
             {teamName}
           </Typography>
-        )}
+          <Typography variant="caption" color="text.secondary" component="span">
+            {teamMembers.map((member) => `${member.username} ,`)}
+          </Typography>
+        </Box>
       </Box>
       {/* Right */}
       <Box
