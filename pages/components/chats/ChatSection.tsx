@@ -106,6 +106,8 @@ const ChatSection = ({
                 colleagueProfilePic={
                   chat.colleagueProfilePic && chat.colleagueProfilePic.fileUrl
                 }
+                colleagueFirstName={chat.colleagueFirstName}
+                colleagueLastName={chat.colleagueLastName}
               />
             </Box>
           ) : null}

@@ -26,7 +26,15 @@ const ChatSectionRight: FC<{
   colleagueUsername: string;
   files: FileInterface[];
   colleagueProfilePic: string;
-}> = ({ colleagueUsername, files, colleagueProfilePic }) => {
+  colleagueFirstName: string;
+  colleagueLastName: string;
+}> = ({
+  colleagueUsername,
+  files,
+  colleagueProfilePic,
+  colleagueFirstName,
+  colleagueLastName,
+}) => {
   const [showFile, setShowFile] = useState(false);
   const [file, setFile] = useState<FileInterface | null>(null);
   const handleShowFile = (file: FileInterface) => {
@@ -74,6 +82,8 @@ const ChatSectionRight: FC<{
             <Colleague
               colleagueUsername={colleagueUsername}
               colleagueProfilePic={colleagueProfilePic}
+              colleagueFirstName={colleagueFirstName}
+              colleagueLastName={colleagueLastName}
             />
             <br />
           </Box>
@@ -100,7 +110,14 @@ export default ChatSectionRight;
 const Colleague: FC<{
   colleagueUsername: string;
   colleagueProfilePic: string;
-}> = ({ colleagueUsername, colleagueProfilePic }) => {
+  colleagueFirstName: string;
+  colleagueLastName: string;
+}> = ({
+  colleagueUsername,
+  colleagueProfilePic,
+  colleagueFirstName,
+  colleagueLastName,
+}) => {
   return (
     <Box
       sx={{
@@ -125,12 +142,17 @@ const Colleague: FC<{
         }}
       >
         <Typography
+          component="span"
+          variant="h6"
           sx={{
             fontSize: "1.2rem",
             paddingTop: "15px",
           }}
         >
-          {colleagueUsername}
+          {colleagueFirstName} {colleagueLastName}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" component="span">
+          @{colleagueUsername}
         </Typography>
       </Box>
     </Box>

@@ -260,53 +260,55 @@ export default function Chat() {
 
   const teamSendMessageHandle = async () => {
     if (!keyPair) return;
-    const uuid = uuidv4();
-    const formData = new FormData();
-    const encryptedMessage = await encryptMessage(
-      teamMessage,
-      keyPair.publicKey
-    );
+    if (teamMessage.trim().length > 0 || teamFiles.length > 0) {
+      const uuid = uuidv4();
+      const formData = new FormData();
+      const encryptedMessage = await encryptMessage(
+        teamMessage.length > 0 ? teamMessage : " ",
+        keyPair.publicKey
+      );
 
-    for (const file of teamFiles) {
-      formData.append("files", file.file);
+      for (const file of teamFiles) {
+        formData.append("files", file.file);
+      }
+
+      formData.append("message", encryptedMessage);
+      formData.append("idFromClient", uuid);
+      setTeamMessage("");
+      const teamNewMessage = {
+        sender: {
+          username: user.username,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          id: user.id,
+        },
+        message: encryptedMessage,
+        idFromClient: uuid,
+        file: teamFiles,
+      };
+      setTeamFiles([]);
+      setTeamMessage("");
+      dispatch(
+        addNewMessageToTeamId({
+          teamId: id,
+          teamNewMessage,
+        })
+      );
+      const sentMessage = await sendTeamMessege(token, id, formData);
+
+      teamSocket.emit("send_message_to_team", {
+        teamId: id,
+        message: sentMessage,
+      });
+      dispatch(
+        updateTeamMessageId({
+          teamId: id,
+          id: sentMessage.id,
+          idFromClient: sentMessage.idFromClient,
+          file: sentMessage.files,
+        })
+      );
     }
-
-    formData.append("message", encryptedMessage);
-    formData.append("idFromClient", uuid);
-    setTeamMessage("");
-    const teamNewMessage = {
-      sender: {
-        username: user.username,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        id: user.id,
-      },
-      message: encryptedMessage,
-      idFromClient: uuid,
-      file: teamFiles,
-    };
-    setTeamFiles([]);
-    setTeamMessage("");
-    dispatch(
-      addNewMessageToTeamId({
-        teamId: id,
-        teamNewMessage,
-      })
-    );
-    const sentMessage = await sendTeamMessege(token, id, formData);
-
-    teamSocket.emit("send_message_to_team", {
-      teamId: id,
-      message: sentMessage,
-    });
-    dispatch(
-      updateTeamMessageId({
-        teamId: id,
-        id: sentMessage.id,
-        idFromClient: sentMessage.idFromClient,
-        file: sentMessage.files,
-      })
-    );
   };
 
   // Topic state handlers

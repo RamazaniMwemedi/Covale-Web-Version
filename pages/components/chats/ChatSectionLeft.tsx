@@ -196,7 +196,7 @@ const TopBar = ({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        textAlign: "center",
+        // textAlign: "center",
         paddingLeft: "5px",
         // z-index
         zIndex: "1",
@@ -217,7 +217,7 @@ const TopBar = ({
           // centerd
           justifyContent: "space-between",
           alignItems: "center",
-          textAlign: "center",
+          // textAlign: "center",
         }}
       >
         <Avatar
@@ -227,23 +227,20 @@ const TopBar = ({
         >
           {colleagueUsername[0]}
         </Avatar>
-        <Box>
-          <Typography
-            variant="h6"
-            sx={{
-              paddingLeft: "10px",
-            }}
-          >
+        <Box
+          sx={{
+            paddingLeft: "10px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            justifyContent: "center",
+          }}
+        >
+          <Typography component="span" variant="h6">
             {colleagueFirstName} {colleagueLastName}
           </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{
-              paddingLeft: "10px",
-            }}
-          >
-            {colleagueUsername}
+          <Typography variant="caption" color="text.secondary" component="span">
+            @{colleagueUsername}
           </Typography>
         </Box>
       </Box>

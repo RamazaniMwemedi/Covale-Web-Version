@@ -36,7 +36,7 @@ export const getKeyPairs = async (secreteToken: string) => {
 
 export const encryptMessage = async (message: string, privateKey: string) => {
   const response = await axios.post("/api/encrypt", {
-    text: message,
+    text: message.length > 0 ? message : " ",
     privateKey: privateKey,
   });
   return response.data.message;
