@@ -809,7 +809,13 @@ const UserMessage = ({
                         }}
                         onClick={() => handleShowTeamFile(file)}
                       >
-                        <FileComponent file={file} />
+                        <FileComponent
+                          displayFile
+                          height={200}
+                          width={200}
+                          key={"FileComponent"}
+                          file={file}
+                        />
                       </Box>
                     );
                   })}
@@ -957,7 +963,13 @@ const ColleagueMessage = ({
                         }}
                         onClick={() => handleShowTeamFile(file)}
                       >
-                        <FileComponent file={file} />
+                        <FileComponent
+                          displayFile
+                          height={200}
+                          width={200}
+                          key={"FileComponent"}
+                          file={file}
+                        />
                       </Box>
                     );
                   })}
