@@ -4,22 +4,27 @@ import { useRouter } from "next/router";
 import { useTheme } from "@mui/material/styles";
 import { decryptMessage } from "../../../services/encrypt";
 import { useSelector } from "react-redux";
-import { timeAgo } from "../../../tools/tools";
+import {
+  RootState,
+  TeamInterface,
+  ThemeInterface,
+} from "../../../interfaces/myprofile";
 
-export default function Team({ team }) {
+export default function Team({ team }: { team: TeamInterface }) {
   const router = useRouter();
   const id = router.query.id;
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   // messages
   const messages = team ? team.messages : null;
   // last message in messages array if there is a message else return an empty string using higher order function
   const lastMessageObject = messages ? messages[messages.length - 1] : null;
   const lastMessage = lastMessageObject ? lastMessageObject.message : "";
-  const [lastMessageSentAt, setLastMessageSentAt] = useState("");
 
   const [decryptedMessage, setDecryptedMessage] = useState("");
   // key pair
-  const keyPairStore = useSelector((state) => state.keyPairs.keyPairs);
+  const keyPairStore = useSelector(
+    (state: RootState) => state.keyPairs.keyPairs
+  );
   const keyPair = keyPairStore
     ? keyPairStore.find((key) => key.modelId === team.id)
     : null;
@@ -27,7 +32,7 @@ export default function Team({ team }) {
     const messageToDecrypt = lastMessage;
 
     setDecryptedMessage(
-      await decryptMessage(messageToDecrypt, keyPair.privateKey)
+      await decryptMessage(messageToDecrypt, keyPair ? keyPair.privateKey : "")
     );
   };
 
@@ -36,18 +41,6 @@ export default function Team({ team }) {
       decreptMessageHandler();
     }
   }, [keyPair, lastMessage]);
-  const [time, setTime] = useState(0);
-  useEffect(() => {
-    if (lastMessageObject) {
-      const date = new Date(lastMessageObject.sentAt);
-      // Time ago function
-      const time = timeAgo(date);
-      setLastMessageSentAt(time);
-      setTimeout(() => {
-        setTime((p) => ++p);
-      }, time);
-    }
-  }, [time]);
 
   return (
     <List
