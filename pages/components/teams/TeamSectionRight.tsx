@@ -220,7 +220,7 @@ const TopicsParent: FC<{
   handleClickedTopic: () => void;
   clickedTopicId: string;
   // Topic
-  topicMessage: TeamMessageInterface[];
+  topicMessage: string;
   topicMessageChangeHandler: () => void;
   topicSendMessageHandle: () => void;
   topicOnEmojiClick: () => void;
@@ -390,7 +390,7 @@ const TopicSection: FC<{
   topic: TopicInterface;
   handleClickedTopic: (id: string) => void;
   // Topic
-  topicMessage: TeamMessageInterface[];
+  topicMessage: string;
   topicMessageChangeHandler: () => void;
   topicSendMessageHandle: () => void;
   topicOnEmojiClick: () => void;
@@ -550,12 +550,19 @@ const TopicSection: FC<{
                 if (!user) return;
                 return message.sender.id === user.id ? (
                   <UserMessage
+                    goToTopic={() => {}}
+                    handleClickedTopic={() => {}}
                     message={message}
                     user={user}
                     handleShowTeamFile={handleShowTeamFile}
                   />
                 ) : (
-                  <ColleagueMessage message={message} user={user} />
+                  <ColleagueMessage
+                    message={message}
+                    goToTopic={() => {}}
+                    handleClickedTopic={() => {}}
+                    handleShowTeamFile={() => {}}
+                  />
                 );
               })}
             </Box>
@@ -567,12 +574,18 @@ const TopicSection: FC<{
               teamFileInput={topicFileInput}
               teamFileInput2={topicFileInput2}
               teamFiles={topicFiles}
-              teamFilesChangeHandler={topicFilesChangeHandler}
+              // teamFilesChangeHandler={topicFilesChangeHandler}
               teamMessage={topicMessage}
               teamMessageChangeHandler={topicMessageChangeHandler}
               teamOnEmojiClick={topicOnEmojiClick}
               teamSendMessageHandle={topicSendMessageHandle}
               topicId={topic.id}
+              createTopicHandler={() => {}}
+              startTopic={false}
+              toggleTopicHandler={() => {}}
+              topicDescriptionChangeHandler={() => {}}
+              topicTitle=""
+              topicTitleChangeHandler={() => {}}
             />
           </Box>
         </Box>

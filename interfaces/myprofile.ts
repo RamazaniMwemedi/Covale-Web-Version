@@ -405,7 +405,7 @@ export interface TeamInterface {
   directors: UserInterFace[];
   members: UserInterFace[];
   projects: ProjectInterface[];
-  messages: MessageInterface[];
+  messages: TeamMessageInterface[];
   files: FileInterface[];
   topics: TopicInterface[];
   invited: UserInterFace;
