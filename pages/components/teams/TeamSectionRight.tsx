@@ -17,7 +17,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import Image from "next/image";
 
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { purple } from "@mui/material/colors";
 
@@ -29,6 +29,15 @@ import FileComponent from "../mediaFiles/FileComponent";
 import TeamMenuOption from "./TeamMenuOption";
 import { timeAgo } from "../../../tools/tools";
 import { Bottom, ColleagueMessage, UserMessage } from "./TeamSectionLeft";
+import {
+  FileInterface,
+  RootState,
+  TeamInterface,
+  TeamMessageInterface,
+  ThemeInterface,
+  TopicInterface,
+  UserInterFace,
+} from "../../../interfaces/myprofile";
 
 const TeamSectionRight = ({
   option,
@@ -48,6 +57,24 @@ const TeamSectionRight = ({
   topicFileInput,
   topicFiles,
   topicFileInput2,
+}: {
+  option: "TOPIC" | "MENU" | "PARTICIPANT" | "PROJECTS";
+  team: TeamInterface;
+  handleClickedTopic: () => void;
+  clickedTopicId: string;
+  // Topic
+  topicMessage: any;
+  topicMessageChangeHandler: () => void;
+  topicSendMessageHandle: () => void;
+  topicOnEmojiClick: () => void;
+  handleChooseFileIconTopic: () => void;
+  handleChooseFileIcon2Topic: () => void;
+  handleChooseFileTopic: () => void;
+  handleRemoveFileTopic: () => void;
+  topicFilesChangeHandler: () => void;
+  topicFileInput: any;
+  topicFiles: FileInterface[];
+  topicFileInput2: any;
 }) => {
   switch (option) {
     case "PARTICIPANT":
@@ -76,7 +103,7 @@ const TeamSectionRight = ({
         />
       );
     case "PROJECTS":
-      return <Projects team={team} />;
+      return <Projects />;
     default:
       break;
   }
@@ -84,8 +111,10 @@ const TeamSectionRight = ({
 
 export default TeamSectionRight;
 
-const Participant = ({ team }) => {
-  const theme = useTheme();
+const Participant: FC<{
+  team: TeamInterface;
+}> = ({ team }) => {
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{
@@ -112,11 +141,13 @@ const Participant = ({ team }) => {
     </Box>
   );
 };
-const Menu = ({ team }) => {
-  const theme = useTheme();
+const Menu: FC<{
+  team: TeamInterface;
+}> = ({ team }) => {
+  const theme: ThemeInterface = useTheme();
   const [showFile, setShowFile] = useState(false);
-  const [file, setFile] = useState(null);
-  const handleShowFile = (file) => {
+  const [file, setFile] = useState<FileInterface>();
+  const handleShowFile = (file: FileInterface) => {
     if (file.fileUrl.includes("https://")) {
       setFile(file);
       setShowFile(true);
@@ -134,12 +165,12 @@ const Menu = ({ team }) => {
         borderTopRightRadius: "8px",
       }}
     >
-      {showFile && (
+      {showFile && file ? (
         <FileDisplayComponent
           handleCloseShowVideoPlayer={handleCloseShowFile}
           file={file}
         />
-      )}
+      ) : null}
       <Box
         sx={{
           display: "flex",
@@ -179,12 +210,29 @@ const Menu = ({ team }) => {
         <br />
         <br />
       </Box>
-      <Media handleShowFile={handleShowFile} team={team} files={team.files} />
+      <Media handleShowFile={handleShowFile} files={team.files} />
     </Box>
   );
 };
 
-const TopicsParent = ({
+const TopicsParent: FC<{
+  topics: TopicInterface[];
+  handleClickedTopic: () => void;
+  clickedTopicId: string;
+  // Topic
+  topicMessage: TeamMessageInterface[];
+  topicMessageChangeHandler: () => void;
+  topicSendMessageHandle: () => void;
+  topicOnEmojiClick: () => void;
+  handleChooseFileIconTopic: () => void;
+  handleChooseFileIcon2Topic: () => void;
+  handleChooseFileTopic: () => void;
+  handleRemoveFileTopic: () => void;
+  topicFilesChangeHandler: () => void;
+  topicFileInput: any;
+  topicFileInput2: any;
+  topicFiles: FileInterface[];
+}> = ({
   topics,
   handleClickedTopic,
   clickedTopicId,
@@ -203,7 +251,9 @@ const TopicsParent = ({
   topicFiles,
 }) => {
   if (clickedTopicId) {
-    const clickedTopic = topics.find((topic) => topic.id === clickedTopicId);
+    const clickedTopic = topics.find(
+      (topic) => topic.id === clickedTopicId
+    ) as TopicInterface;
     return (
       <TopicSection
         topic={clickedTopic}
@@ -228,8 +278,11 @@ const TopicsParent = ({
   }
 };
 
-const Topics = ({ topics, handleClickedTopic }) => {
-  const theme = useTheme();
+const Topics: FC<{
+  topics: TopicInterface[];
+  handleClickedTopic: () => void;
+}> = ({ topics, handleClickedTopic }) => {
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{
@@ -275,8 +328,11 @@ const Topics = ({ topics, handleClickedTopic }) => {
   );
 };
 
-const Topic = ({ topic, handleClickedTopic }) => {
-  const theme = useTheme();
+const Topic: FC<{
+  topic: TopicInterface;
+  handleClickedTopic: (id: string) => void;
+}> = ({ topic, handleClickedTopic }) => {
+  const theme: ThemeInterface = useTheme();
   // last message
   const lastMessage = topic.messages
     ? topic.messages[topic.messages.length - 1]
@@ -325,14 +381,28 @@ const Topic = ({ topic, handleClickedTopic }) => {
           : topic.description}
       </Typography>
       {/* Last Message  */}
-      {lastMessage && (
-        <MessageComponentForTopic message={lastMessage} user={null} />
-      )}
+      {lastMessage && <MessageComponentForTopic message={lastMessage} />}
     </Box>
   );
 };
 
-const TopicSection = ({
+const TopicSection: FC<{
+  topic: TopicInterface;
+  handleClickedTopic: (id: string) => void;
+  // Topic
+  topicMessage: TeamMessageInterface[];
+  topicMessageChangeHandler: () => void;
+  topicSendMessageHandle: () => void;
+  topicOnEmojiClick: () => void;
+  handleChooseFileIconTopic: () => void;
+  handleChooseFileIcon2Topic: () => void;
+  handleChooseFileTopic: () => void;
+  handleRemoveFileTopic: () => void;
+  topicFilesChangeHandler: () => void;
+  topicFileInput: any;
+  topicFileInput2: any;
+  topicFiles: FileInterface[];
+}> = ({
   topic,
   handleClickedTopic,
   // Topic
@@ -349,13 +419,13 @@ const TopicSection = ({
   topicFileInput2,
   topicFiles,
 }) => {
-  const theme = useTheme();
-  const userStore = useSelector((state) => state.user);
+  const theme: ThemeInterface = useTheme();
+  const userStore = useSelector((state: RootState) => state.user);
   const user = userStore.user ? userStore.user : null;
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<FileInterface>();
 
   const [showFile, setShowFile] = useState(false);
-  const handleShowTeamFile = (file) => {
+  const handleShowTeamFile = (file: FileInterface) => {
     // If file.fileUrl includes https:// then setFile to file and setShowVideoPlayer to true
     if (file.fileUrl.includes("https://")) {
       setFile(file);
@@ -376,18 +446,18 @@ const TopicSection = ({
       }}
     >
       {" "}
-      {showFile && (
+      {showFile && file ? (
         <FileDisplayComponent
           handleCloseShowVideoPlayer={handleCloseShowFile}
           file={file}
         />
-      )}{" "}
-      {showFile && (
+      ) : null}
+      {showFile && file ? (
         <FileDisplayComponent
           handleCloseShowVideoPlayer={handleCloseShowFile}
           file={file}
         />
-      )}
+      ) : null}
       <Box
         sx={{
           display: "flex",
@@ -402,7 +472,7 @@ const TopicSection = ({
         >
           <IconButton
             aria-label="delete"
-            onClick={() => handleClickedTopic(null)}
+            onClick={() => handleClickedTopic("")}
           >
             <ArrowBackRoundedIcon />
           </IconButton>
@@ -477,6 +547,7 @@ const TopicSection = ({
               }}
             >
               {topic.messages.map((message) => {
+                if (!user) return;
                 return message.sender.id === user.id ? (
                   <UserMessage
                     message={message}
@@ -510,8 +581,10 @@ const TopicSection = ({
   );
 };
 
-const MessageComponentForTopic = ({ message }) => {
-  const theme = useTheme();
+const MessageComponentForTopic: FC<{ message: TeamMessageInterface }> = ({
+  message,
+}) => {
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{
@@ -546,8 +619,11 @@ const MessageComponentForTopic = ({ message }) => {
   );
 };
 
-const Media = ({ files, handleShowFile }) => {
-  const theme = useTheme();
+const Media: FC<{
+  files: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ files, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const imageFiles = files.filter((file) => file.fileType.includes("image"));
   const videoFiles = files.filter((file) => file.fileType.includes("video"));
   const documentFiles = files.filter((file) =>
@@ -581,7 +657,7 @@ const Media = ({ files, handleShowFile }) => {
           backgroundColor: theme.colors.background1,
           padding: "10px",
           borderRadius: "5px",
-          mt:3
+          mt: 3,
         }}
       >
         <Typography variant="subtitle1">Media</Typography>
@@ -634,8 +710,11 @@ const Media = ({ files, handleShowFile }) => {
 // Sub Components
 
 // Media components
-const Photos = ({ photosFiles, handleShowFile }) => {
-  const theme = useTheme();
+const Photos: FC<{
+  photosFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ photosFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -669,11 +748,10 @@ const Photos = ({ photosFiles, handleShowFile }) => {
               rowHeight={80}
             >
               {photosFiles.map((photosFile) => (
-                <ImageListItem key={photosFile.img}>
+                <ImageListItem key={photosFile.fileName}>
                   <Image
                     onClick={() => handleShowFile(photosFile)}
                     src={`${photosFile.fileUrl}?w=110&h=80&fit=crop&auto=format`}
-                    srcSet={`${photosFile.fileUrl}?w=110&h=80&fit=crop&auto=format&dpr=2 2x`}
                     alt="Picture of the author"
                     width={110}
                     height={80}
@@ -696,8 +774,11 @@ const Photos = ({ photosFiles, handleShowFile }) => {
     </Box>
   );
 };
-const Videos = ({ videoFiles, handleShowFile }) => {
-  const theme = useTheme();
+const Videos: FC<{
+  videoFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ videoFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -743,8 +824,11 @@ const Videos = ({ videoFiles, handleShowFile }) => {
     </Box>
   );
 };
-const Documents = ({ documentFiles, handleShowFile }) => {
-  const theme = useTheme();
+const Documents: FC<{
+  documentFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ documentFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -789,8 +873,11 @@ const Documents = ({ documentFiles, handleShowFile }) => {
   );
 };
 
-const MediaXls = ({ xlsFiles, handleShowFile }) => {
-  const theme = useTheme();
+const MediaXls: FC<{
+  xlsFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ xlsFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
@@ -836,13 +923,16 @@ const MediaXls = ({ xlsFiles, handleShowFile }) => {
   );
 };
 
-const MediaPdf = ({ pdfFiles, handleShowFile }) => {
+const MediaPdf: FC<{
+  pdfFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ pdfFiles, handleShowFile }) => {
   const [show, setShow] = useState(false);
 
   const toggleShow = () => {
     setShow((prev) => !prev);
   };
-  const theme = useTheme();
+  const theme: ThemeInterface = useTheme();
   return (
     <Box
       sx={{
@@ -882,8 +972,11 @@ const MediaPdf = ({ pdfFiles, handleShowFile }) => {
     </Box>
   );
 };
-const MediaPpt = ({ pptFiles, handleShowFile }) => {
-  const theme = useTheme();
+const MediaPpt: FC<{
+  pptFiles: FileInterface[];
+  handleShowFile: (file: FileInterface) => void;
+}> = ({ pptFiles, handleShowFile }) => {
+  const theme: ThemeInterface = useTheme();
   const [show, setShow] = useState(false);
   const toggleShow = () => {
     setShow((prev) => !prev);
@@ -929,7 +1022,7 @@ const MediaPpt = ({ pptFiles, handleShowFile }) => {
 };
 
 // Directors
-const Directors = ({ directors }) => {
+const Directors: FC<{ directors: UserInterFace[] }> = ({ directors }) => {
   return (
     <Box>
       <Box
@@ -956,7 +1049,7 @@ const Directors = ({ directors }) => {
   );
 };
 
-const AllMembers = ({ members }) => {
+const AllMembers: FC<{ members: UserInterFace[] }> = ({ members }) => {
   return (
     <Box>
       <Box
@@ -983,8 +1076,10 @@ const AllMembers = ({ members }) => {
 };
 
 // Participant Comonents
-const ParticipantItem = ({ participant }) => {
-  const theme = useTheme();
+const ParticipantItem: FC<{ participant: UserInterFace }> = ({
+  participant,
+}) => {
+  const theme: ThemeInterface = useTheme();
   return (
     <ListItemButton
       sx={{
@@ -992,7 +1087,7 @@ const ParticipantItem = ({ participant }) => {
         width: "100%",
         gap: "10px",
         borderRadius: "8px",
-        backgroundColor: (theme.vars || theme).palette.action.hover,
+        backgroundColor: theme.palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
         "@media (hover: none)": {
           backgroundColor: "transparent",
@@ -1013,7 +1108,10 @@ const ParticipantItem = ({ participant }) => {
   );
 };
 
-const InvitedMembers = ({ teamId, members }) => {
+const InvitedMembers: FC<{ teamId: string; members: UserInterFace[] }> = ({
+  teamId,
+  members,
+}) => {
   // Show InviteMembers State
   const [showInviteMembers, setShowInviteMembers] = useState(false);
   // showInviteMembers handler
@@ -1056,7 +1154,12 @@ const InvitedMembers = ({ teamId, members }) => {
   );
 };
 
-const MediaName = ({ name, show, toggleShow, length }) => {
+const MediaName: FC<{
+  name: string;
+  show: boolean;
+  toggleShow: () => void;
+  length: number;
+}> = ({ name, show, toggleShow, length }) => {
   return (
     <Box
       sx={{
@@ -1079,20 +1182,22 @@ const MediaName = ({ name, show, toggleShow, length }) => {
   );
 };
 
-const UnReadNotificationsBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    backgroundColor: purple[500],
-    color: "white",
-    fontWeight: "bold",
-    fontSize: "10px",
-    width: "20px",
-    height: "20px",
-    borderRadius: "50%",
-    right: -3,
-    p: "0 4px",
-    border: `2px solid ${theme.palette.background.paper}`,
-  },
-}));
+const UnReadNotificationsBadge = styled(Badge)(
+  ({ theme }: { theme: ThemeInterface }) => ({
+    "& .MuiBadge-badge": {
+      backgroundColor: purple[500],
+      color: "white",
+      fontWeight: "bold",
+      fontSize: "10px",
+      width: "20px",
+      height: "20px",
+      borderRadius: "50%",
+      right: -3,
+      p: "0 4px",
+      border: `2px solid ${theme.palette.background.paper}`,
+    },
+  })
+);
 
 // Projects
 const Projects = () => {

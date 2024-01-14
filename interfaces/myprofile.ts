@@ -368,6 +368,29 @@ export interface MessageInterface {
   files: FileInterface[];
 }
 
+export interface TeamMessageInterface {
+  id: string;
+  message: string;
+  sentAt: string;
+  sender: UserInterFace;
+  createdAt: string;
+  files: FileInterface[];
+  topic: TopicInterface;
+  teamRoom: string;
+  topicRoom: string;
+}
+
+export interface TopicInterface {
+  id: string;
+  title: string;
+  description: string;
+  messageId: string;
+  messages: TeamMessageInterface[];
+  files: FileInterface[];
+  teamId: string;
+  createdAt: string;
+}
+
 export interface FileInterface {
   id: string;
   fileName: string;
@@ -384,6 +407,9 @@ export interface TeamInterface {
   projects: ProjectInterface[];
   messages: MessageInterface[];
   files: FileInterface[];
+  topics: TopicInterface[];
+  invited: UserInterFace;
+  createdAt: string;
 }
 
 export interface ProjectInterface {
