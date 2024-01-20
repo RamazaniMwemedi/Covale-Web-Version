@@ -28,7 +28,11 @@
     "hooks/projects.ts",
     "Redux/slices/calendar.js",
     "Redux/slices/chat.js",
-    "pages/components/chats/ChatSectionLeft.tsx"
-, "pages/components/mediaFiles/FileDisplayComponent.tsx", "pages/components/projects/NewProject.tsx", "pages/components/projects/StyledItemRoot.js", "pages/components/teams/TeamSectionLeft.tsx"  ],
+    "pages/components/chats/ChatSectionLeft.tsx",
+    "pages/components/mediaFiles/FileDisplayComponent.tsx",
+    "pages/components/projects/NewProject.tsx",
+    "pages/components/projects/StyledItemRoot.js",
+    "pages/components/teams/TeamSectionLeft.tsx"
+  ],
   "exclude": ["node_modules"]
 }
